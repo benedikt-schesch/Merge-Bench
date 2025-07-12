@@ -50,10 +50,10 @@ if [[ -d "$ROOT_DIR" ]]; then
                         END { print v, r, s, c }
                     ' "$logfile"
                 )
-                
+
                 # Format model name for display
                 display_model="$model"
-                
+
                 # Special formatting for known models
                 case "$model" in
                     "api/deepseek-r1")
@@ -95,10 +95,10 @@ if [[ -d "$ROOT_DIR" ]]; then
                         display_model=$(echo "$model" | sed 's/-/ /g; s/\b\(.\)/\u\1/g')
                         ;;
                 esac
-                
+
                 # Capitalize 'b' suffix for billions
                 display_model=$(echo "$display_model" | sed -r 's/([0-9]+(\.[0-9]+)?)b/\1B/g')
-                
+
                 # print one row
                 echo "${display_model} & ${correct}\\% & ${semantic}\\% & ${raise}\\% & ${valid}\\% \\\\" >> "$OUTPUT_FILE"
                 echo "✅ Added $model to table"
@@ -141,16 +141,16 @@ LATEX
     echo "🖨 Generating PDF version of the table"
     pdflatex -output-directory "$(dirname "$OUTPUT_FILE")" "$TEX_WRAPPER" > /dev/null 2>&1
     PDF_FILE="$(dirname "$OUTPUT_FILE")/results_table_wrapper.pdf"
-    
+
     if [[ -f "$PDF_FILE" ]]; then
         convert -density 300 "$PDF_FILE" -quality 90 "$JPEG_OUTPUT_FILE" 2>/dev/null
         echo "✅ JPG version written to $JPEG_OUTPUT_FILE"
-        
+
         # Rename to final PDF name
         mv "$PDF_FILE" "$(dirname "$OUTPUT_FILE")/results_table.pdf"
         echo "✅ PDF version written to $(dirname "$OUTPUT_FILE")/results_table.pdf"
     fi
-    
+
     # Cleanup temporary LaTeX files
     echo "🧹 Cleaning up temporary LaTeX files"
     rm -f "$(dirname "$OUTPUT_FILE")"/*.aux "$(dirname "$OUTPUT_FILE")"/*.log "$(dirname "$OUTPUT_FILE")"/*.out

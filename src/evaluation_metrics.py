@@ -77,7 +77,9 @@ def merged_conflict_reward(
         elif code_block == answers[idx].strip():
             # Exact match
             rewards.append(1.0)
-        elif normalize_java_code(code_block) == normalize_java_code(answers[idx].strip()):
+        elif normalize_java_code(code_block) == normalize_java_code(
+            answers[idx].strip()
+        ):
             # Semantic match (ignoring whitespace/comments)
             rewards.append(0.5)
         elif code_block == goal_code_block:

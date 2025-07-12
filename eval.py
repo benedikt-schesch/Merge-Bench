@@ -103,6 +103,12 @@ def main() -> None:
         default=32,
         help="Maximum number of parallel workers for API calls",
     )
+    parser.add_argument(
+        "--max_samples",
+        type=int,
+        default=None,
+        help="Maximum number of samples to evaluate (useful for testing)",
+    )
     args = parser.parse_args()
 
     # Validate model name
@@ -115,6 +121,11 @@ def main() -> None:
 
     # Load the dataset
     dataset = load_from_disk(args.dataset_path)[args.split]
+
+    # Limit dataset size if max_samples is specified
+    if args.max_samples is not None and args.max_samples < len(dataset):
+        dataset = dataset.select(range(args.max_samples))
+        logger.info(f"Limited dataset to {args.max_samples} samples")
 
     logger.info("Starting evaluation...")
     logger.info(f"Model: {args.model_name}")

@@ -8,10 +8,13 @@ import os
 import subprocess
 import sys
 
+
 def main() -> None:
     """Main function to demonstrate evaluation of multiple models."""
     # Check if API keys are set
-    if not os.environ.get("DEEPSEEK_API_KEY") and not os.environ.get("OPENROUTER_API_KEY"):
+    if not os.environ.get("DEEPSEEK_API_KEY") and not os.environ.get(
+        "OPENROUTER_API_KEY"
+    ):
         print("Error: No API keys found!")
         print("Please set one of the following environment variables:")
         print("  export DEEPSEEK_API_KEY='your-key-here'")
@@ -44,10 +47,14 @@ def main() -> None:
 
         # Run evaluation
         cmd = [
-            "python", "eval.py",
-            "--model_name", model,
-            "--dataset_path", dataset_path,
-            "--max_workers", "8"  # Adjust based on your API rate limits
+            "python",
+            "eval.py",
+            "--model_name",
+            model,
+            "--dataset_path",
+            dataset_path,
+            "--max_workers",
+            "8",  # Adjust based on your API rate limits
         ]
 
         try:
@@ -66,6 +73,7 @@ def main() -> None:
         print("Check tables/results_table.md for results")
     except subprocess.CalledProcessError as e:
         print(f"❌ Error generating performance table: {e}")
+
 
 if __name__ == "__main__":
     main()
