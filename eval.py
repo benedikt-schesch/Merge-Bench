@@ -1,33 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Evaluation script for merge outputs.
-Loads the same dataset as in training and computes:
-  - % with valid thinking format
-  - % with valid Java markdown formatting
-  - % that correctly raise the merge conflict (i.e. preserve the original conflict)
-  - % that are correctly resolved
+Evaluation script for merge conflict resolution benchmark.
+Evaluates API-based models on merge conflict resolution tasks.
 """
 
 import argparse
 from pathlib import Path
-from typing import Optional
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 from loguru import logger
-import unsloth
-from transformers import TextStreamer
-import torch
 from datasets import load_from_disk
-from train import (
+from src.evaluation_metrics import (
     merged_conflict_reward,
     format_reward,
     java_markdown_reward,
 )
-from src.variables import MAX_SEQUENCE_LENGTH, MAX_OUTPUT_LENGTH, MODEL_NAME
 from src.utils import cached_query_deepseek_api, cached_query_openrouter
 
-# Define remote/api model identification
+# Define API model names and prefixes
 API_MODEL_NAMES = {"api/deepseek-r1", "o3"}
 API_MODEL_PREFIXES = (
     "openai",
@@ -47,90 +38,45 @@ def is_api_model(model_name: str) -> bool:
     )
 
 
-open("eval.log", "w", encoding="utf-8").close()  # pylint: disable=consider-using-with
+# Clear log file
+with open("eval.log", "w", encoding="utf-8"):
+    pass
 logger.add("eval.log", backtrace=True, diagnose=True)
 
 
-def model_inference(example, model, tokenizer, text_streamer):
-    """Perform model inference."""
-    if model == "api/deepseek-r1":
-        # Bypass local model and call deepseek_sft_data's query_deepseek_api
+def model_inference(example: dict, model_name: str) -> str:
+    """Perform model inference using API."""
+    if model_name == "api/deepseek-r1":
         response = cached_query_deepseek_api(example["question"])
         if response is None:
             return ""
         reasoning = response["reasoning"]
         result = response["result"]
-        # Combine them into a single string that the rest of the eval script expects
+        # Combine them into a single string that the evaluation expects
         full_completion = f"<think>\n{reasoning}</think>\n{result}"
         return full_completion
-    if isinstance(model, str) and is_api_model(model):
-        # Bypass local model and call openrouter's query_openrouter
-        response = cached_query_openrouter(example["question"], model)
-        if response is None:
-            return ""
-        result = response["result"]
-        reasoning = getattr(result, "reasoning", "No reasoning found")
-        # Combine them into a single string that the rest of the eval script expects
-        full_completion = f"<think>\n{reasoning}</think>\n{result}"
-        return full_completion
-    # Generate a completion for the given prompt.
-    inputs = tokenizer.apply_chat_template(
-        example["prompt"],  # type: ignore
-        add_generation_prompt=True,
-        tokenize=True,
-        return_tensors="pt",
-    ).to(model.device)  # type: ignore
 
-    # Generate with a max number of new tokens.
-    output_tokens = model.generate(
-        input_ids=inputs,
-        streamer=text_streamer,
-        max_new_tokens=MAX_OUTPUT_LENGTH,
-        use_cache=True,
-    )
-    # Get the full completion before truncation.
-    full_completion = tokenizer.decode(output_tokens[0], skip_special_tokens=False)
+    # All other models go through OpenRouter
+    response = cached_query_openrouter(example["question"], model_name)
+    if response is None:
+        return ""
+    result = response["result"]
+    reasoning = response.get("reasoning", "No reasoning found")
+    # Combine them into a single string that the evaluation expects
+    full_completion = f"<think>\n{reasoning}</think>\n{result}"
     return full_completion
 
 
-def get_model(
-    model_name, load_in_4bit: bool = True, lora_weights: Optional[str] = None
-):
-    """Load the model and tokenizer."""
-    # Load the model and tokenizer (using same parameters as in training)
-    if model_name == "api/deepseek-r1":
-        return "api/deepseek-r1", None, None
-    if is_api_model(model_name):
-        return model_name, None, None
-    if "unsloth" in model_name or "output" in model_name:
-        model, tokenizer = unsloth.FastLanguageModel.from_pretrained(
-            model_name=model_name,
-            max_seq_length=MAX_SEQUENCE_LENGTH,
-            load_in_4bit=load_in_4bit,
-        )
-        unsloth.FastLanguageModel.for_inference(model)
-    else:
-        from transformers import AutoModelForCausalLM, AutoTokenizer  # pylint: disable=import-outside-toplevel
-
-        model = AutoModelForCausalLM.from_pretrained(model_name)
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-    if lora_weights:
-        model.load_adapter(lora_weights)
-
-    print(f"Device: {model.device}")
-    text_streamer = TextStreamer(tokenizer)  # type: ignore
-    return model, tokenizer, text_streamer
-
-
-def main():  # pylint: disable=too-many-locals, too-many-statements, too-many-branches
+def main() -> None:
     """Main function for evaluation script."""
-    parser = argparse.ArgumentParser(description="Evaluation script for merge outputs.")
+    parser = argparse.ArgumentParser(
+        description="Evaluation script for merge conflict resolution benchmark."
+    )
     parser.add_argument(
         "--model_name",
         type=str,
-        default=MODEL_NAME,
-        help="Model name to load",
+        required=True,
+        help="API model name (e.g., 'api/deepseek-r1', 'anthropic/claude-3.5-sonnet')",
     )
     parser.add_argument(
         "--dataset_path",
@@ -152,49 +98,39 @@ def main():  # pylint: disable=too-many-locals, too-many-statements, too-many-br
         help="Dataset split to evaluate",
     )
     parser.add_argument(
-        "--lora_weights",
-        type=str,
-        default=None,
-        help="Path to the LoRA weights",
-    )
-    parser.add_argument(
-        "--load_in_4bit",
-        type=lambda x: str(x).lower() == "true",
-        default=False,
-        help="Load model in 4bit mode",
+        "--max_workers",
+        type=int,
+        default=32,
+        help="Maximum number of parallel workers for API calls",
     )
     args = parser.parse_args()
 
-    # Load the dataset (using the same training data)
+    # Validate model name
+    if not is_api_model(args.model_name):
+        logger.error(
+            f"Model '{args.model_name}' is not a supported API model. "
+            f"Supported prefixes: {', '.join(API_MODEL_PREFIXES)}"
+        )
+        return
+
+    # Load the dataset
     dataset = load_from_disk(args.dataset_path)[args.split]
 
     logger.info("Starting evaluation...")
+    logger.info(f"Model: {args.model_name}")
+    logger.info(f"Dataset: {args.dataset_path}")
+    logger.info(f"Split: {args.split}")
     logger.info(f"Loaded {len(dataset)} examples.")
 
-    model_name = args.model_name
-    load_in_4bit = args.load_in_4bit
-    lora_weights = args.lora_weights
-
-    torch.set_grad_enabled(False)
+    # Set up output directory
     output_dir = Path(args.output_dir)
-
-    # Extract dataset name from dataset_path, assuming format 'merges/{dataset_name}/dataset'
     parts = args.dataset_path.split("/")
     dataset_name = parts[1] if len(parts) > 2 else "default"
-    output_dir = output_dir / dataset_name / args.split
-    if lora_weights:
-        output_dir = output_dir / lora_weights
-    elif load_in_4bit:
-        output_dir = output_dir / f"{model_name}-loaded-4bit"
-    else:
-        output_dir = output_dir / model_name
-    # Set up file to store full outputs before truncation.
+    output_dir = output_dir / dataset_name / args.split / args.model_name
     output_dir.mkdir(parents=True, exist_ok=True)
     logger.add(output_dir / "eval.log", backtrace=True, diagnose=True)
 
-    # Lazy model loading: initialize as None.
-    model, tokenizer, text_streamer = None, None, None
-
+    # Initialize counters
     total = 0
     count_thinking = 0
     count_java_md = 0
@@ -202,77 +138,56 @@ def main():  # pylint: disable=too-many-locals, too-many-statements, too-many-br
     count_resolved_perfectly = 0
     count_resolved_semantically = 0
 
-    # Loop over the examples in the dataset.
-    # Pre-generate full completions in parallel for remote models
-    if is_api_model(model_name):
-        if model is None:
-            model, tokenizer, text_streamer = get_model(
-                model_name, load_in_4bit, lora_weights
-            )
+    # Pre-generate completions in parallel
+    def generate_completion(item: tuple) -> None:
+        idx, example = item
+        output_file_path = output_dir / f"example_{idx}.txt"
+        if not output_file_path.exists():
+            logger.info(f"Processing example {idx}...")
+            full = model_inference(example, args.model_name)
+            output_file_path.write_text(full, encoding="utf-8")
 
-        def _gen(args):
-            idx, example = args
-            output_file_path = output_dir / f"example_{idx}.txt"
-            if not output_file_path.exists():
-                logger.info(f"Parallel processing example {idx}...")
-                full = model_inference(example, model, tokenizer, text_streamer)
-                output_file_path.write_text(full, encoding="utf-8")
-
-        with ThreadPoolExecutor(max_workers=32) as executor:
-            # Show progress bar for parallel pre-generation
-            list(
-                tqdm(
-                    executor.map(_gen, enumerate(dataset)),
-                    total=len(dataset),
-                    desc="Pre-generating full completions",
-                )
+    # Generate completions in parallel
+    with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
+        list(
+            tqdm(
+                executor.map(generate_completion, enumerate(dataset)),
+                total=len(dataset),
+                desc="Generating completions",
             )
-    pbar = tqdm(dataset)
+        )
+
+    # Evaluate completions
+    pbar = tqdm(dataset, desc="Evaluating")
     for idx, example in enumerate(pbar):
         total += 1
 
         output_file_path = output_dir / f"example_{idx}.txt"
-        print(f"Output file path: {output_file_path}")
-        if output_file_path.exists():
-            logger.info(f"Loading example {idx} from file...")
-            with open(output_file_path, "r", encoding="utf-8") as f:
-                full_completion = f.read()
-        else:
-            logger.info(f"Processing example {idx}...")
-            # Load the model lazily if not already loaded.
-            if model is None:
-                model, tokenizer, text_streamer = get_model(
-                    model_name, load_in_4bit, lora_weights
-                )
-            full_completion = model_inference(example, model, tokenizer, text_streamer)
-            # Write the full completion to file.
-            with open(output_file_path, "w", encoding="utf-8") as output_file:
-                output_file.write(full_completion)
-        if "<｜Assistant｜>" in full_completion:
-            completion = full_completion.split("<｜Assistant｜>", 1)[1]
-        elif "<|im_start|>assistant" in full_completion:
-            completion = full_completion.split("<|im_start|>assistant", 1)[1]
-        elif is_api_model(model_name):
-            completion = full_completion
-        else:
-            raise ValueError("Could not find completion in full output.")
+        if not output_file_path.exists():
+            logger.warning(f"Missing output for example {idx}")
+            continue
 
-        # Wrap prompt text into the expected structure.
+        with open(output_file_path, "r", encoding="utf-8") as f:
+            full_completion = f.read()
+
+        # Extract completion
+        completion = full_completion
+
+        # Wrap prompt text into the expected structure
         completions = [[{"content": completion}]]
-        prompts = [[{"content": example["question"]}]]  # type: ignore
-        answers = [example["answer"]]  # type: ignore
+        prompts = [[{"content": example["question"]}]]
+        answers = [example["answer"]]
 
-        # Evaluate the thinking format.
-        if format_reward(completions, log_wandb=False)[0] > 0:
+        # Evaluate the thinking format
+        if format_reward(completions)[0] > 0:
             count_thinking += 1
 
-        # Evaluate the Java markdown formatting.
-        if java_markdown_reward(completions, log_wandb=False)[0] > 0:
+        # Evaluate the Java markdown formatting
+        if java_markdown_reward(completions)[0] > 0:
             count_java_md += 1
 
-        reward = merged_conflict_reward(prompts, completions, answers, log_wandb=False)[
-            0
-        ]
+        # Evaluate merge conflict resolution
+        reward = merged_conflict_reward(prompts, completions, answers)[0]
 
         # If the model raises a conflict
         if reward == 0.1:
@@ -285,18 +200,18 @@ def main():  # pylint: disable=too-many-locals, too-many-statements, too-many-br
 
         # If the model resolves the conflict perfectly
         if reward == 1.0:
-            logger.info(f"Resolved {idx}.")
+            logger.info(f"Perfectly resolved {idx}.")
             count_resolved_perfectly += 1
 
-        # Update progress bar with current percentages.
+        # Update progress bar with current percentages
         pbar.set_postfix(
             {
                 "Correct": f"{100 * count_resolved_perfectly / total:.2f}%",
-                "Semantic Correct": f"{100 * count_resolved_semantically / total:.2f}%",
+                "Semantic": f"{100 * count_resolved_semantically / total:.2f}%",
             }
         )
 
-    # Compute final percentages.
+    # Compute final percentages
     pct_thinking = 100 * count_thinking / total if total > 0 else 0
     pct_java_md = 100 * count_java_md / total if total > 0 else 0
     pct_conflict = 100 * count_conflict_preserved / total if total > 0 else 0
@@ -305,7 +220,10 @@ def main():  # pylint: disable=too-many-locals, too-many-statements, too-many-br
         100 * count_resolved_semantically / total if total > 0 else 0
     )
 
+    # Log results
+    logger.success("=" * 60)
     logger.success("Evaluation Results:")
+    logger.success(f"Model: {args.model_name}")
     logger.success(f"Total merges evaluated: {total}")
     logger.success(f"Percentage with valid thinking format: {pct_thinking:.2f}%")
     logger.success(f"Percentage with valid Java markdown format: {pct_java_md:.2f}%")
@@ -314,6 +232,24 @@ def main():  # pylint: disable=too-many-locals, too-many-statements, too-many-br
         f"Percentage semantically correctly resolved merges: {pct_resolved_semantic:.2f}%"
     )
     logger.success(f"Percentage correctly resolved merges: {pct_resolved:.2f}%")
+    logger.success("=" * 60)
+
+    # Save results to file
+    results_file = output_dir / "results.txt"
+    with open(results_file, "w", encoding="utf-8") as f:
+        f.write(f"Model: {args.model_name}\n")
+        f.write(f"Dataset: {args.dataset_path}\n")
+        f.write(f"Split: {args.split}\n")
+        f.write(f"Total merges evaluated: {total}\n")
+        f.write(f"Percentage with valid thinking format: {pct_thinking:.2f}%\n")
+        f.write(f"Percentage with valid Java markdown format: {pct_java_md:.2f}%\n")
+        f.write(f"Percentage correctly raising merge conflict: {pct_conflict:.2f}%\n")
+        f.write(
+            f"Percentage semantically correctly resolved merges: {pct_resolved_semantic:.2f}%\n"
+        )
+        f.write(f"Percentage correctly resolved merges: {pct_resolved:.2f}%\n")
+
+    logger.info(f"Results saved to {results_file}")
 
 
 if __name__ == "__main__":

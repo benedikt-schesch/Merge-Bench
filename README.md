@@ -1,12 +1,12 @@
-# LLMerge
+# Merge-Bench
 
-[![CI](https://github.com/benedikt-schesch/LLMerge/actions/workflows/ci.yml/badge.svg)]
+[![CI](https://github.com/benedikt-schesch/Merge-Bench/actions/workflows/ci.yml/badge.svg)]
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)]
 
-A toolkit for constructing and analyzing merge conflict datasets, and training models to automatically resolve merge conflicts in code. 🤖
+A benchmarking toolkit for evaluating Large Language Models (LLMs) on merge conflict resolution in code. 🤖
 
-Evaluation results 🚀:
+## Evaluation Results 🚀
 
 | Model | Correct merges | Semantic merges | Raising conflict | Valid Java markdown |
 | --- | ---: | ---: | ---: | ---: |
@@ -36,32 +36,33 @@ Evaluation results 🚀:
 - [Prerequisites 📋](#prerequisites)
 - [Installation ⚙️](#installation)
 - [Usage](#usage)
-- [Dataset Construction 🗂️](#dataset-construction)
-- [Training 🚀](#training)
-- [Evaluation 📊](#evaluation)
+- [Evaluation Metrics 📊](#evaluation-metrics)
+- [API Configuration](#api-configuration)
+- [Caching](#caching)
 - [Project Structure](#project-structure)
 - [License](#license)
 
 ## Features ✨
 
-- 🛠️ Build customizable merge conflict datasets from Git history.
-- 📊 Compute conflict metrics and analyze resolution strategies.
-- 🤖 Train and evaluate models to resolve merge conflicts in Java code.
-- ⚙️ Support full and test datasets with configurable size.
+- 📊 Evaluate LLMs on merge conflict resolution tasks
+- 🤖 Support for both local models and API-based models (OpenAI, Anthropic, DeepSeek, etc.)
+- ⚡ Efficient caching mechanism for API responses
+- 📈 Comprehensive evaluation metrics
+- 🔄 Parallel evaluation support for faster processing
 
 ## Prerequisites
 
 - Python 3.8 or later
-- Git
-- CUDA-enabled GPU (optional, for training)
+- CUDA-enabled GPU (optional, for local models)
+- API keys for cloud-based models (if using)
 
 ## Installation ⚙️
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/benedikt-schesch/LLMerge.git
-   cd LLMerge
+   git clone https://github.com/benedikt-schesch/Merge-Bench.git
+   cd Merge-Bench
    ```
 
 2. Create and activate a virtual environment:
@@ -79,61 +80,62 @@ Evaluation results 🚀:
    uv sync
    ```
 
-> **Tip:** If you encounter CUDA issues, try:
+> **Tip:** If you encounter CUDA issues with local models, try:
 > ```bash
 > uv pip install -U transformers
 > ```
 
 ## Usage
 
-### Small Test Run
+### Dataset Preparation
 
-```bash
-./dataset_build_scripts/build_dataset_small.sh -g -m -b
+This repository focuses on evaluation. To build datasets, use the companion repository [Merge-Bench-Builder](https://github.com/benedikt-schesch/Merge-Bench-Builder).
+
+Place your prepared dataset in the expected location:
+```
+merges/repos_reaper_test/dataset/
 ```
 
-### Full Dataset (e.g., 1000 merges)
+### Running Evaluation
+
+#### Single Model Evaluation
 
 ```bash
-./dataset_build_scripts/build_dataset_reaper_1000.sh -g -m -b
+python eval.py --model_name "unsloth/DeepSeek-R1-Distill-Qwen-14B" --dataset_path "merges/repos_reaper_test/dataset"
 ```
 
-### Test Dataset
+#### API Model Evaluation
+
+For API-based models, set the appropriate environment variables:
 
 ```bash
-./dataset_build_scripts/build_dataset_reaper_test.sh -g -m -b
+# For DeepSeek
+export DEEPSEEK_API_KEY="your-api-key"
+python eval.py --model_name "api/deepseek-r1"
+
+# For OpenRouter models
+export OPENROUTER_API_KEY="your-api-key"
+python eval.py --model_name "anthropic/claude-3.5-sonnet"
 ```
 
-All scripts support:
-- `-g`: Run get & extract steps
-- `-m`: Compute metrics
-- `-b`: Build final dataset
-- `--test_size <fraction>`: Fraction reserved for testing (default: 0.2)
-- `--max_num_merges <n>`: Max merges to include (default: 100)
-
-## Training 🚀
-
-1. **Stage 1:** 1500 epochs, learning rate = 5e-5
-
-   ```bash
-   python3 train.py --epochs 1500 --learning_rate 5e-5
-   ```
-
-2. **Stage 2:** Resume training for 2000 epochs, learning rate = 1e-5
-
-   ```bash
-   python3 train.py --epochs 2000 --learning_rate 1e-5 --resume
-   ```
-
-## Evaluation 📊
-
-Evaluate all checkpoints in parallel:
+#### Parallel Evaluation of Multiple API Models
 
 ```bash
-./src/scripts/eval_all_checkpoints.sh <n_processes>
+./src/scripts/eval_api_models.sh <n_processes> <dataset_path>
 ```
 
-Build the performance table:
+Example:
+```bash
+# Evaluate all configured models with 4 parallel workers
+./src/scripts/eval_api_models.sh 4
+
+# Evaluate with a custom dataset
+./src/scripts/eval_api_models.sh 4 "merges/custom_dataset/dataset"
+```
+
+### Building Performance Tables
+
+After evaluation, generate a performance comparison table:
 
 ```bash
 ./src/scripts/build_performance_table.sh
@@ -141,24 +143,57 @@ Build the performance table:
 
 Results will be saved to `tables/results_table.tex`.
 
+## Evaluation Metrics 📊
+
+The evaluation framework measures four key metrics:
+
+1. **Correct Merges**: Percentage of conflicts resolved exactly matching the ground truth
+2. **Semantic Merges**: Percentage of conflicts resolved semantically correctly (ignoring whitespace/comments)
+3. **Raising Conflict**: Percentage where the model preserves the original conflict markers
+4. **Valid Java Markdown**: Percentage of responses with properly formatted Java code blocks
+
+## API Configuration
+
+### Supported API Models
+
+- **DeepSeek**: `api/deepseek-r1`
+- **OpenAI**: Models starting with `openai/`
+- **Anthropic**: Models starting with `anthropic/`
+- **Other providers via OpenRouter**: `qwen/`, `meta/`, `google/`, `x-ai/`, `deepseek/`
+
+### Environment Variables
+
+Set the following environment variables for API access:
+
+```bash
+export DEEPSEEK_API_KEY="your-deepseek-api-key"
+export OPENROUTER_API_KEY="your-openrouter-api-key"
+```
+
+## Caching
+
+The evaluation system includes an intelligent caching mechanism:
+
+- API responses are cached in `query_cache/` directory
+- Cache is organized by model name
+- Each unique prompt generates a hash-based cache key
+- Cached responses are automatically reused to save API costs
+
 ## Project Structure
 
 ```
 .
-├── dataset_build_scripts/
-│   ├── build_dataset_small.sh
-│   ├── build_dataset_reaper_1000.sh
-│   └── build_dataset_reaper_test.sh
+├── eval.py                    # Main evaluation script
 ├── src/
-│   ├── get_conflict_files.py
-│   ├── extract_conflict_blocks.py
-│   ├── metrics_conflict_blocks.py
-│   └── build_dataset.py
-├── train.py
-├── resolve_conflict.py
-├── tables/
-├── README.md
-└── LICENSE
+│   ├── evaluation_metrics.py  # Evaluation metrics and reward functions
+│   ├── utils.py              # Caching and utility functions
+│   ├── variables.py          # Configuration variables
+│   └── scripts/
+│       ├── eval_api_models.sh      # Parallel evaluation of API models
+│       └── build_performance_table.sh  # Generate performance tables
+├── tables/                    # Evaluation results
+├── query_cache/              # API response cache
+└── eval_outputs/             # Detailed evaluation outputs
 ```
 
 ## License

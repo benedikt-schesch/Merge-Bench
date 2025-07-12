@@ -59,7 +59,8 @@ def load_from_cache(cache_key: str, model_name: str) -> Optional[Dict[str, str]]
     cache_file = CACHE_DIR / model_name / f"{cache_key}.json"
     if cache_file.exists():
         with open(cache_file, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data: Dict[str, str] = json.load(f)
+            return data
     return None
 
 
@@ -156,7 +157,10 @@ def cached_query_openrouter(prompt: str, model: str) -> Optional[Dict[str, str]]
             content = resp.choices[0].message.content
             reasoning = getattr(resp.choices[0].message, "reasoning_content", None)
 
-            result = {"prompt": prompt, "result": content}
+            if content is None:
+                raise ValueError("Response is missing content")
+
+            result: Dict[str, str] = {"prompt": prompt, "result": content}
             if reasoning is not None:
                 result["reasoning"] = reasoning
 

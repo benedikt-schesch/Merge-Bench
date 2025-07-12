@@ -1,67 +1,67 @@
 [project]
-name = "llmerge"
+name = "merge-bench"
 version = "0.1.0"
-description = "Merging using LLMs"
+description = "A benchmarking toolkit for evaluating Large Language Models on merge conflict resolution"
 readme = "README.md"
-requires-python = ">=3.12.0"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Benedikt Schesch", email = "benedikt.schesch@example.com"},
+]
+keywords = ["merge-conflicts", "llm", "evaluation", "benchmark"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
 dependencies = [
-    "gitpython>=3.1.44",
-    "loguru>=0.7.3",
-    "matplotlib>=3.10.1",
-    "mypy>=1.15.0",
-    "pandas>=2.2.3",
-    "pre-commit>=4.1.0",
-    "pylint>=3.3.4",
-    "ruff>=0.9.9",
-    "timeout-decorator>=0.5.0",
-    "tqdm>=4.67.1",
-    "unsloth>=2025.3.18",
-    "uv>=0.6.6",
-    "vllm==0.7.3",
-    "wandb>=0.19.8",
+    "tqdm>=4.66.0",
+    "loguru>=0.7.0",
+    "datasets>=2.14.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
 ]
 
-[tool.ruff]
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".ipynb_checkpoints",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pyenv",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "site-packages",
-    "venv",
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.7.0",
+    "isort>=5.12.0",
+    "flake8>=6.1.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.3.3",
 ]
+
+[project.urls]
+Homepage = "https://github.com/benedikt-schesch/Merge-Bench"
+Repository = "https://github.com/benedikt-schesch/Merge-Bench"
+Issues = "https://github.com/benedikt-schesch/Merge-Bench/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.black]
 line-length = 88
-indent-width = 4
+target-version = ['py38']
 
-[tool.ruff.format]
-quote-style = "double"
-skip-magic-trailing-comma = false
-line-ending = "auto"
+[tool.isort]
+profile = "black"
+line_length = 88
 
 [tool.mypy]
-exclude = [
-    'repos/',
-    '.venv',
-    'train.py',
-    'eval.py',
-]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

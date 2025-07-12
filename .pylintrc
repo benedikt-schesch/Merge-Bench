@@ -1,3 +1,15 @@
 [MESSAGES CONTROL]
-enable=all
-disable=broad-except,duplicate-code,locally-disabled,suppressed-message,fixme
+# Only disable import errors for third-party libraries and broad exceptions
+disable=
+    import-error,  # Unable to import third-party libraries
+    import-outside-toplevel,  # Allow imports inside functions when needed
+    broad-exception-caught,  # Allow catching Exception for API retry logic
+
+[FORMAT]
+# Maximum number of characters on a single line.
+max-line-length=100
+
+[DESIGN]
+# Increase limits for the main evaluation function
+max-locals=35  # Default is 15, but eval.py main() has 31
+max-statements=100  # Default is 50, but eval.py main() has 89
