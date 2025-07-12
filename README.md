@@ -1,8 +1,8 @@
 # Merge-Bench
 
-[![CI](https://github.com/benedikt-schesch/Merge-Bench/actions/workflows/ci.yml/badge.svg)]
+![CI](https://github.com/benedikt-schesch/Merge-Bench/actions/workflows/ci.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)]
+![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)
 
 A benchmarking toolkit for evaluating Large Language Models (LLMs) on merge conflict resolution in code. 🤖
 
