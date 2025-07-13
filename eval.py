@@ -55,31 +55,26 @@ def extract_completion(full_completion: str, model_name: str) -> str:
 
 def model_inference(example: dict, model_name: str, verbose: bool = False) -> str:
     """Universal model inference using ModelFactory"""
-    try:
-        # Create model instance using the factory
-        model = ModelFactory.create_model(model_name)
+    # Create model instance using the factory
+    model = ModelFactory.create_model(model_name)
 
-        if verbose:
-            logger.info(f"[VERBOSE] Using model: {model_name}")
-            logger.info("[VERBOSE] Input prompt:")
-            logger.info("-" * 80)
-            logger.info(example["question"])
-            logger.info("-" * 80)
+    if verbose:
+        logger.info(f"[VERBOSE] Using model: {model_name}")
+        logger.info("[VERBOSE] Input prompt:")
+        logger.info("-" * 80)
+        logger.info(example["question"])
+        logger.info("-" * 80)
 
-        # Generate response
-        response = model.inference(example["question"])
+    # Generate response
+    response = model.inference(example["question"])
 
-        if verbose:
-            logger.info("[VERBOSE] Model response:")
-            logger.info("-" * 80)
-            logger.info(response)
-            logger.info("-" * 80)
+    if verbose:
+        logger.info("[VERBOSE] Model response:")
+        logger.info("-" * 80)
+        logger.info(response)
+        logger.info("-" * 80)
 
-        return response
-
-    except Exception as e:
-        logger.error(f"Model inference failed for {model_name}: {e}")
-        return ""
+    return response
 
 
 def main() -> None:
