@@ -65,7 +65,7 @@ def model_inference(example: dict, model_name: str, verbose: bool = False) -> st
         logger.info("-" * 80)
         logger.info(example["question"])
         logger.info("-" * 80)
-    
+
     if model_name == "api/deepseek-r1":
         response = cached_query_deepseek_api(example["question"])
         if response is None:
@@ -74,13 +74,13 @@ def model_inference(example: dict, model_name: str, verbose: bool = False) -> st
         result = response["result"]
         # Combine them into a single string that the evaluation expects
         full_completion = f"<think>\n{reasoning}</think>\n{result}"
-        
+
         if verbose:
             logger.info("[VERBOSE] Model response:")
             logger.info("-" * 80)
             logger.info(full_completion)
             logger.info("-" * 80)
-        
+
         return full_completion
 
     # All other models go through OpenRouter
@@ -91,18 +91,19 @@ def model_inference(example: dict, model_name: str, verbose: bool = False) -> st
     reasoning = response.get("reasoning", "No reasoning found")
     # Combine them into a single string that the evaluation expects
     full_completion = f"<think>\n{reasoning}</think>\n{result}"
-    
+
     if verbose:
         logger.info("[VERBOSE] Model response:")
         logger.info("-" * 80)
         logger.info(full_completion)
         logger.info("-" * 80)
-    
+
     return full_completion
 
 
 def main() -> None:
     """Main function for evaluation script."""
+    # pylint: disable=too-many-branches,too-many-statements
     parser = argparse.ArgumentParser(
         description="Evaluation script for merge conflict resolution benchmark."
     )
@@ -162,7 +163,7 @@ def main() -> None:
     # Construct dataset path from language
     dataset_name = LANGUAGE_DATASETS[args.language]
     dataset_path = f"merges/{dataset_name}/dataset"
-    
+
     # Check if dataset exists
     if not Path(dataset_path).exists():
         logger.error(f"Dataset not found at {dataset_path}")
@@ -252,11 +253,12 @@ def main() -> None:
 
         # Evaluate merge conflict resolution
         reward = merged_conflict_reward(prompts, completions, answers)[0]
-        
+
         if args.verbose:
             logger.info(f"[VERBOSE] Evaluating example {idx}...")
             # Import extract_code_block for verbose mode
             from src.utils import extract_code_block
+
             extracted_code = extract_code_block(completion)
             logger.info("[VERBOSE] Extracted code block:")
             logger.info("-" * 80)
@@ -310,7 +312,9 @@ def main() -> None:
     logger.success(f"Language: {args.language}")
     logger.success(f"Total merges evaluated: {total}")
     logger.success(f"Percentage with valid thinking format: {pct_thinking:.2f}%")
-    logger.success(f"Percentage with valid {args.language} markdown format: {pct_code_md:.2f}%")
+    logger.success(
+        f"Percentage with valid {args.language} markdown format: {pct_code_md:.2f}%"
+    )
     logger.success(f"Percentage correctly raising merge conflict: {pct_conflict:.2f}%")
     logger.success(
         f"Percentage semantically correctly resolved merges: {pct_resolved_semantic:.2f}%"
@@ -327,7 +331,9 @@ def main() -> None:
         f.write(f"Split: {args.split}\n")
         f.write(f"Total merges evaluated: {total}\n")
         f.write(f"Percentage with valid thinking format: {pct_thinking:.2f}%\n")
-        f.write(f"Percentage with valid {args.language} markdown format: {pct_code_md:.2f}%\n")
+        f.write(
+            f"Percentage with valid {args.language} markdown format: {pct_code_md:.2f}%\n"
+        )
         f.write(f"Percentage correctly raising merge conflict: {pct_conflict:.2f}%\n")
         f.write(
             f"Percentage semantically correctly resolved merges: {pct_resolved_semantic:.2f}%\n"

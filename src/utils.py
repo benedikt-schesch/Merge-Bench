@@ -41,7 +41,16 @@ def normalize_code(code: str, language: str = "generic") -> str:
     For whitespace-sensitive languages, whitespace is preserved.
     """
     # Handle different comment styles based on language
-    if language in ["javascript", "java", "c", "cpp", "csharp", "rust", "php", "typescript"]:
+    if language in [
+        "javascript",
+        "java",
+        "c",
+        "cpp",
+        "csharp",
+        "rust",
+        "php",
+        "typescript",
+    ]:
         # C-style comments
         code = BLOCK_COMMENT_RE.sub("", code)
         code = LINE_COMMENT_RE.sub("", code)
@@ -56,15 +65,15 @@ def normalize_code(code: str, language: str = "generic") -> str:
         # Go uses C-style comments
         code = BLOCK_COMMENT_RE.sub("", code)
         code = LINE_COMMENT_RE.sub("", code)
-    
+
     # Skip whitespace normalization for whitespace-sensitive languages
     if language not in ["python", "go", "ruby"]:
         # Remove extra whitespace for non-sensitive languages
         code = WHITESPACE_RE.sub(" ", code)
         return code.strip()
-    else:
-        # For whitespace-sensitive languages, just strip leading/trailing whitespace
-        return code.strip()
+
+    # For whitespace-sensitive languages, just strip leading/trailing whitespace
+    return code.strip()
 
 
 def extract_code_block(text: str) -> Optional[str]:
@@ -77,10 +86,10 @@ def extract_code_block(text: str) -> Optional[str]:
     # This pattern matches ```anything or just ```
     pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
     match = pattern.search(text)
-    
+
     if match:
         return match.group(1).strip()
-    
+
     return None
 
 
