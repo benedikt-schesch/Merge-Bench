@@ -79,7 +79,7 @@ class UnSlothModel(ModelInterface):  # pylint: disable=too-few-public-methods
         formatted_prompt = self._tokenizer.apply_chat_template(
             chat,
             add_generation_prompt=True,
-            tokenize=False,
+            tokenize=True,
             return_tensors="pt",
         ).to(self._model.device)  # type: ignore
 
