@@ -11,37 +11,67 @@ import time
 from openai import OpenAI
 from loguru import logger
 
-JAVA_MARKDOWN_RE = re.compile(r"```java\n(.*?)\n```", re.DOTALL)
+# Language to markdown identifier mapping
+LANGUAGE_MARKDOWN = {
+    "javascript": "javascript",
+    "rust": "rust",
+    "c": "c",
+    "cpp": "cpp",
+    "csharp": "csharp",
+    "php": "php",
+    "python": "python",
+    "ruby": "ruby",
+    "java": "java",
+    "generic": "code",  # fallback for unknown languages
+}
 
-# For normalizing Java code
+# For normalizing code
 BLOCK_COMMENT_RE = re.compile(r"/\*[\s\S]*?\*/")
 LINE_COMMENT_RE = re.compile(r"//.*")
+HASH_COMMENT_RE = re.compile(r"#.*")
 WHITESPACE_RE = re.compile(r"\s+")
 
 CONFLICT_MARKERS = ["<<<<<<<", "=======", "|||||||", ">>>>>>>"]
 
 
-def normalize_java_code(code: str) -> str:
+def normalize_code(code: str, language: str = "generic") -> str:
     """
-    Normalizes Java code by removing block comments, line comments,
-    and extra whitespace (so we focus on core semantics).
+    Normalizes code by removing comments and extra whitespace
+    (so we focus on core semantics).
     """
-    code = BLOCK_COMMENT_RE.sub("", code)
-    code = LINE_COMMENT_RE.sub("", code)
+    # Handle different comment styles based on language
+    if language in ["javascript", "java", "c", "cpp", "csharp", "rust", "php"]:
+        # C-style comments
+        code = BLOCK_COMMENT_RE.sub("", code)
+        code = LINE_COMMENT_RE.sub("", code)
+    elif language in ["python", "ruby"]:
+        # Hash comments
+        code = HASH_COMMENT_RE.sub("", code)
+        # Python/Ruby also have multi-line strings that can act as comments
+        # This is a simplified approach
+        code = re.sub(r'"""[\s\S]*?"""', "", code)
+        code = re.sub(r"'''[\s\S]*?'''", "", code)
+    
+    # Remove extra whitespace
     code = WHITESPACE_RE.sub(" ", code)
     return code.strip()
 
 
 def extract_code_block(text: str) -> Optional[str]:
     """
-    Extracts the code block from a markdown-formatted text:
-       ```java
-       ... some code ...
-       ```
-    Returns None if there's no Java code block.
+    Extracts the code block from a markdown-formatted text.
+    Matches any language specifier in the markdown code block.
+    Returns None if there's no code block.
     """
-    match = JAVA_MARKDOWN_RE.search(text)
-    return match.group(1).strip() if match else None
+    # Match any code block with any language specifier (or none)
+    # This pattern matches ```anything or just ```
+    pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
+    match = pattern.search(text)
+    
+    if match:
+        return match.group(1).strip()
+    
+    return None
 
 
 DEEPSEEK_API_URL = "https://api.deepseek.com"

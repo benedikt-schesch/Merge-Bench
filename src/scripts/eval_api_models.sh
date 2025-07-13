@@ -5,8 +5,8 @@ set -e
 # Default maximum number of parallel jobs
 MAX_PARALLEL=${1:-4}
 
-# Default dataset path
-DATASET_PATH=${2:-"merges/repos_reaper_test/dataset"}
+# Default language
+LANGUAGE=${2:-"rust"}
 
 # List of API models to evaluate
 MODELS=(
@@ -20,7 +20,7 @@ MODELS=(
 )
 
 echo "Evaluating ${#MODELS[@]} models with maximum of $MAX_PARALLEL parallel jobs"
-echo "Dataset: $DATASET_PATH"
+echo "Language: $LANGUAGE"
 
 running=0
 
@@ -31,8 +31,8 @@ for model in "${MODELS[@]}"; do
         running=$((running - 1))
     fi
 
-    echo "Starting evaluation for $model"
-    python3 eval.py --model_name "$model" --dataset_path "$DATASET_PATH" &
+    echo "Starting evaluation for $model on $LANGUAGE"
+    python3 eval.py --model_name "$model" --language "$LANGUAGE" &
     running=$((running + 1))
 done
 
@@ -43,4 +43,4 @@ echo "All evaluations completed."
 
 # Generate performance table
 echo "Generating performance table..."
-./src/scripts/build_performance_table.sh
+./src/scripts/build_performance_table.sh "$LANGUAGE"

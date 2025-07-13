@@ -3,10 +3,9 @@
 
 import re
 from typing import List, Dict
-from src.utils import extract_code_block, normalize_java_code
+from src.utils import extract_code_block, normalize_code
 
 # Pre-compile regex patterns for performance
-JAVA_MARKDOWN_RE = re.compile(r"```java\n(.*?)\n```", re.DOTALL)
 THINKING_RE = re.compile(r"^(?:[\s\S]*?)\n</think>\n(?:[\s\S]*)$", re.DOTALL)
 
 # Conflict markers
@@ -34,18 +33,25 @@ def format_reward(completions: List[List[Dict[str, str]]]) -> List[float]:
     return rewards
 
 
-def java_markdown_reward(completions: List[List[Dict[str, str]]]) -> List[float]:
+def code_markdown_reward(completions: List[List[Dict[str, str]]]) -> List[float]:
     """
     Evaluates if the answer contains a properly formatted Java code block.
 
     Returns:
-        1.0 if the answer contains ```java...``` markdown
+        1.0 if the answer contains ```...``` markdown
         0.0 otherwise
     """
-    rewards = [
-        1.0 if JAVA_MARKDOWN_RE.search(extract_answer(c[0]["content"])) else 0.0
-        for c in completions
-    ]
+    # Match any code block with any language specifier (or none)
+    pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
+    
+    rewards = []
+    for c in completions:
+        answer = extract_answer(c[0]["content"])
+        if pattern.search(answer):
+            rewards.append(1.0)
+        else:
+            rewards.append(0.0)
+    
     return rewards
 
 
@@ -77,7 +83,7 @@ def merged_conflict_reward(
         elif code_block == answers[idx].strip():
             # Exact match
             rewards.append(1.0)
-        elif normalize_java_code(code_block) == normalize_java_code(
+        elif normalize_code(code_block) == normalize_code(
             answers[idx].strip()
         ):
             # Semantic match (ignoring whitespace/comments)
