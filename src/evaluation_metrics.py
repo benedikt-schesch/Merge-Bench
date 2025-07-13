@@ -2,7 +2,6 @@
 """Evaluation metrics for merge conflict resolution benchmark"""
 
 import re
-from typing import List, Dict
 from src.utils import extract_code_block, normalize_code
 
 # Pre-compile regex patterns for performance
@@ -21,7 +20,7 @@ def extract_answer(text: str) -> str:
     return parts[-1] if len(parts) > 1 else parts[0]
 
 
-def format_reward(completions: List[List[Dict[str, str]]]) -> List[float]:
+def format_reward(completion: str) -> float:
     """
     Evaluates if the completion matches the expected thinking format.
 
@@ -29,13 +28,12 @@ def format_reward(completions: List[List[Dict[str, str]]]) -> List[float]:
         0.5 if the completion has the correct <think>...</think> format
         0.0 otherwise
     """
-    rewards = [0.5 if THINKING_RE.match(c[0]["content"]) else 0.0 for c in completions]
-    return rewards
+    return 0.5 if THINKING_RE.match(completion) else 0.0
 
 
-def code_markdown_reward(completions: List[List[Dict[str, str]]]) -> List[float]:
+def code_markdown_reward(completion: str) -> float:
     """
-    Evaluates if the answer contains a properly formatted Java code block.
+    Evaluates if the answer contains a properly formatted code block.
 
     Returns:
         1.0 if the answer contains ```...``` markdown
@@ -44,22 +42,11 @@ def code_markdown_reward(completions: List[List[Dict[str, str]]]) -> List[float]
     # Match any code block with any language specifier (or none)
     pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
 
-    rewards = []
-    for c in completions:
-        answer = extract_answer(c[0]["content"])
-        if pattern.search(answer):
-            rewards.append(1.0)
-        else:
-            rewards.append(0.0)
-
-    return rewards
+    answer = extract_answer(completion)
+    return 1.0 if pattern.search(answer) else 0.0
 
 
-def merged_conflict_reward(
-    prompts: List[List[Dict[str, str]]],
-    completions: List[List[Dict[str, str]]],
-    answers: List[str],
-) -> List[float]:
+def merged_conflict_reward(prompt: str, completion: str, answer: str) -> float:
     """
     Evaluates the quality of merge conflict resolution.
 
@@ -70,26 +57,21 @@ def merged_conflict_reward(
         0.0 otherwise
     """
     # Extract the conflicted code block from the prompt
-    goal_code_block = extract_code_block(prompts[0][-1]["content"])
+    goal_code_block = extract_code_block(prompt)
 
-    rewards = []
-    for idx, completion in enumerate(completions):
-        # Extract code block from the answer portion
-        answer_text = extract_answer(completion[0]["content"])
-        code_block = extract_code_block(answer_text)
+    # Extract code block from the answer portion
+    answer_text = extract_answer(completion)
+    code_block = extract_code_block(answer_text)
 
-        if code_block is None:
-            rewards.append(0.0)
-        elif code_block == answers[idx].strip():
-            # Exact match
-            rewards.append(1.0)
-        elif normalize_code(code_block) == normalize_code(answers[idx].strip()):
-            # Semantic match (ignoring whitespace/comments)
-            rewards.append(0.5)
-        elif code_block == goal_code_block:
-            # Model preserved the conflict
-            rewards.append(0.1)
-        else:
-            rewards.append(0.0)
-
-    return rewards
+    if code_block is None:
+        return 0.0
+    if code_block == answer.strip():
+        # Exact match
+        return 1.0
+    if normalize_code(code_block) == normalize_code(answer.strip()):
+        # Semantic match (ignoring whitespace/comments)
+        return 0.5
+    if code_block == goal_code_block:
+        # Model preserved the conflict
+        return 0.1
+    return 0.0

@@ -16,19 +16,7 @@ from src.evaluation_metrics import (
     format_reward,
     code_markdown_reward,
 )
-from src.utils import cached_query_deepseek_api, cached_query_openrouter
-
-# Define API model names and prefixes
-API_MODEL_NAMES = {"api/deepseek-r1", "o3"}
-API_MODEL_PREFIXES = (
-    "openai",
-    "anthropic",
-    "qwen",
-    "meta",
-    "google",
-    "x-ai",
-    "deepseek",
-)
+from src.model_factory import ModelFactory
 
 # Language to dataset mapping
 LANGUAGE_DATASETS = {
@@ -45,13 +33,6 @@ LANGUAGE_DATASETS = {
 }
 
 
-def is_api_model(model_name: str) -> bool:
-    """Check if the model is an API model."""
-    return model_name in API_MODEL_NAMES or any(
-        model_name.startswith(prefix) for prefix in API_MODEL_PREFIXES
-    )
-
-
 # Clear log file
 with open("eval.log", "w", encoding="utf-8"):
     pass
@@ -59,46 +40,32 @@ logger.add("eval.log", backtrace=True, diagnose=True)
 
 
 def model_inference(example: dict, model_name: str, verbose: bool = False) -> str:
-    """Perform model inference using API."""
-    if verbose:
-        logger.info("[VERBOSE] Input prompt:")
-        logger.info("-" * 80)
-        logger.info(example["question"])
-        logger.info("-" * 80)
+    """Universal model inference using ModelFactory"""
+    try:
+        # Create model instance using the factory
+        model = ModelFactory.create_model(model_name)
 
-    if model_name == "api/deepseek-r1":
-        response = cached_query_deepseek_api(example["question"])
-        if response is None:
-            return ""
-        reasoning = response["reasoning"]
-        result = response["result"]
-        # Combine them into a single string that the evaluation expects
-        full_completion = f"<think>\n{reasoning}</think>\n{result}"
+        if verbose:
+            logger.info(f"[VERBOSE] Using model: {model_name}")
+            logger.info("[VERBOSE] Input prompt:")
+            logger.info("-" * 80)
+            logger.info(example["question"])
+            logger.info("-" * 80)
+
+        # Generate response
+        response = model.inference(example["question"])
 
         if verbose:
             logger.info("[VERBOSE] Model response:")
             logger.info("-" * 80)
-            logger.info(full_completion)
+            logger.info(response)
             logger.info("-" * 80)
 
-        return full_completion
+        return response
 
-    # All other models go through OpenRouter
-    response = cached_query_openrouter(example["question"], model_name)
-    if response is None:
+    except Exception as e:
+        logger.error(f"Model inference failed for {model_name}: {e}")
         return ""
-    result = response["result"]
-    reasoning = response.get("reasoning", "No reasoning found")
-    # Combine them into a single string that the evaluation expects
-    full_completion = f"<think>\n{reasoning}</think>\n{result}"
-
-    if verbose:
-        logger.info("[VERBOSE] Model response:")
-        logger.info("-" * 80)
-        logger.info(full_completion)
-        logger.info("-" * 80)
-
-    return full_completion
 
 
 def main() -> None:
@@ -111,7 +78,9 @@ def main() -> None:
         "--model_name",
         type=str,
         required=True,
-        help="API model name (e.g., 'api/deepseek-r1', 'anthropic/claude-3.5-sonnet')",
+        help="Universal model identifier. Supports:\n"
+        "  API models: 'api/deepseek-r1', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4'\n"
+        "  Local checkpoints: 'checkpoint/path/to/model'",
     )
     parser.add_argument(
         "--language",
@@ -136,7 +105,7 @@ def main() -> None:
     parser.add_argument(
         "--max_workers",
         type=int,
-        default=32,
+        default=1,
         help="Maximum number of parallel workers for API calls",
     )
     parser.add_argument(
@@ -151,14 +120,6 @@ def main() -> None:
         help="Enable verbose mode to print model inputs and outputs",
     )
     args = parser.parse_args()
-
-    # Validate model name
-    if not is_api_model(args.model_name):
-        logger.error(
-            f"Model '{args.model_name}' is not a supported API model. "
-            f"Supported prefixes: {', '.join(API_MODEL_PREFIXES)}"
-        )
-        return
 
     # Construct dataset path from language
     dataset_name = LANGUAGE_DATASETS[args.language]
@@ -238,21 +199,18 @@ def main() -> None:
         # Extract completion
         completion = full_completion
 
-        # Wrap prompt text into the expected structure
-        completions = [[{"content": completion}]]
-        prompts = [[{"content": example["question"]}]]
-        answers = [example["answer"]]
-
         # Evaluate the thinking format
-        if format_reward(completions)[0] > 0:
+        if format_reward(completion) > 0:
             count_thinking += 1
 
         # Evaluate the code markdown formatting
-        if code_markdown_reward(completions)[0] > 0:
+        if code_markdown_reward(completion) > 0:
             count_code_md += 1
 
         # Evaluate merge conflict resolution
-        reward = merged_conflict_reward(prompts, completions, answers)[0]
+        reward = merged_conflict_reward(
+            example["question"], completion, example["answer"]
+        )
 
         if args.verbose:
             logger.info(f"[VERBOSE] Evaluating example {idx}...")
@@ -341,6 +299,8 @@ def main() -> None:
         f.write(f"Percentage correctly resolved merges: {pct_resolved:.2f}%\n")
 
     logger.info(f"Results saved to {results_file}")
+
+    logger.info("Evaluation completed")
 
 
 if __name__ == "__main__":

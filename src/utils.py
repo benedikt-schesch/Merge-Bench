@@ -93,7 +93,6 @@ def extract_code_block(text: str) -> Optional[str]:
     return None
 
 
-DEEPSEEK_API_URL = "https://api.deepseek.com"
 CACHE_DIR = Path("query_cache")
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -119,52 +118,6 @@ def save_to_cache(cache_key: str, response: Dict[str, str], model_name: str) -> 
     cache_file = CACHE_DIR / model_name / f"{cache_key}.json"
     with open(cache_file, "w", encoding="utf-8") as file:
         json.dump(response, file, indent=4)
-
-
-def query_deepseek_api(prompt: str) -> Optional[Dict[str, str]]:
-    """Query the DeepSeek R1 API for conflict resolution with retries."""
-    api_key = os.environ.get("DEEPSEEK_API_KEY")
-    if not api_key:
-        logger.error("DEEPSEEK_API_KEY environment variable not set")
-        raise ValueError("DEEPSEEK_API_KEY key not set")
-    client = OpenAI(api_key=api_key, base_url=DEEPSEEK_API_URL)
-
-    for attempt in range(3):
-        try:
-            response = client.chat.completions.create(
-                model="deepseek-reasoner",
-                messages=[{"role": "user", "content": prompt}],  # type: ignore
-                stream=False,
-            )
-
-            reasoning = response.choices[0].message.reasoning_content  # type: ignore
-            result = response.choices[0].message.content
-
-            if reasoning is None or result is None:
-                raise ValueError("Response is missing reasoning or content")
-
-            return {"prompt": prompt, "reasoning": reasoning, "result": result}
-
-        except Exception as e:
-            logger.error(f"Attempt {attempt + 1} failed: {e}")
-            if attempt < 2:
-                time.sleep(2)  # Short delay before retry
-            else:
-                raise  # Raise exception after 3 failed attempts
-    raise ValueError("Failed to query DeepSeek API after 3 attempts")
-
-
-def cached_query_deepseek_api(prompt: str) -> Optional[Dict[str, str]]:
-    """Query the DeepSeek R1 API with caching."""
-    cache_key = get_cache_key(prompt)
-    cached_response = load_from_cache(cache_key, "deepseek_cache")
-    if cached_response:
-        logger.info(f"Using cached response for prompt: {prompt}")
-        return cached_response
-    response = query_deepseek_api(prompt)
-    if response:
-        save_to_cache(cache_key, response, "deepseek_cache")
-    return response
 
 
 def cached_query_openrouter(prompt: str, model: str) -> Optional[Dict[str, str]]:
