@@ -96,17 +96,10 @@ def main() -> None:
         help="Directory to store evaluation outputs",
     )
     parser.add_argument(
-        "--split",
-        type=str,
-        default="test",
-        choices=["train", "test"],
-        help="Dataset split to evaluate (default: test)",
-    )
-    parser.add_argument(
         "--max_workers",
         type=int,
         default=1,
-        help="Maximum number of parallel workers for API calls",
+        help="Maximum number of parallel workers",
     )
     parser.add_argument(
         "--max_samples",
@@ -132,11 +125,7 @@ def main() -> None:
         return
 
     # Load the dataset
-    try:
-        dataset = load_from_disk(dataset_path)[args.split]
-    except Exception as e:
-        logger.error(f"Failed to load dataset from {dataset_path}: {e}")
-        return
+    dataset = load_from_disk(dataset_path)["test"]
 
     # Limit dataset size if max_samples is specified
     if args.max_samples is not None and args.max_samples < len(dataset):
@@ -147,12 +136,11 @@ def main() -> None:
     logger.info(f"Model: {args.model_name}")
     logger.info(f"Language: {args.language}")
     logger.info(f"Dataset: {dataset_path}")
-    logger.info(f"Split: {args.split}")
     logger.info(f"Loaded {len(dataset)} examples.")
 
     # Set up output directory
     output_dir = Path(args.output_dir)
-    output_dir = output_dir / args.language / args.split / args.model_name
+    output_dir = output_dir / args.language / args.model_name
     output_dir.mkdir(parents=True, exist_ok=True)
     logger.add(output_dir / "eval.log", backtrace=True, diagnose=True)
 
@@ -286,7 +274,6 @@ def main() -> None:
         f.write(f"Model: {args.model_name}\n")
         f.write(f"Language: {args.language}\n")
         f.write(f"Dataset: {dataset_path}\n")
-        f.write(f"Split: {args.split}\n")
         f.write(f"Total merges evaluated: {total}\n")
         f.write(f"Percentage with valid thinking format: {pct_thinking:.2f}%\n")
         f.write(
