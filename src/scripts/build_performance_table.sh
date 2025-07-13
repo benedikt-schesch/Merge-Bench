@@ -61,14 +61,14 @@ echo "| --- | ---: | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
 for ROOT_DIR in "${ROOT_DIRS[@]}"; do
     if [[ -d "$ROOT_DIR" ]]; then
         echo "📂 Processing directory: $ROOT_DIR"
-        
+
         # Add language header if processing all languages
         if [[ "$LANGUAGE" == "all" ]]; then
             LANG_NAME=$(basename $(dirname "$ROOT_DIR"))
             echo "\\multicolumn{5}{l}{\\textbf{${LANG_NAME^}}} \\\\" >> "$OUTPUT_FILE"
             echo "| **${LANG_NAME^}** | | | | |" >> "$MD_OUTPUT_FILE"
         fi
-        
+
         for model_dir in "$ROOT_DIR"/*; do
             if [[ -d "$model_dir" ]]; then
                 model=$(basename "$model_dir")
@@ -143,7 +143,7 @@ for ROOT_DIR in "${ROOT_DIRS[@]}"; do
                 fi
             fi
         done
-        
+
         # Add spacing between languages if processing all
         if [[ "$LANGUAGE" == "all" ]]; then
             echo "\\addlinespace" >> "$OUTPUT_FILE"

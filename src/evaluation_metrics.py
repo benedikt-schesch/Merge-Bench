@@ -43,7 +43,7 @@ def code_markdown_reward(completions: List[List[Dict[str, str]]]) -> List[float]
     """
     # Match any code block with any language specifier (or none)
     pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
-    
+
     rewards = []
     for c in completions:
         answer = extract_answer(c[0]["content"])
@@ -51,7 +51,7 @@ def code_markdown_reward(completions: List[List[Dict[str, str]]]) -> List[float]
             rewards.append(1.0)
         else:
             rewards.append(0.0)
-    
+
     return rewards
 
 
@@ -83,9 +83,7 @@ def merged_conflict_reward(
         elif code_block == answers[idx].strip():
             # Exact match
             rewards.append(1.0)
-        elif normalize_code(code_block) == normalize_code(
-            answers[idx].strip()
-        ):
+        elif normalize_code(code_block) == normalize_code(answers[idx].strip()):
             # Semantic match (ignoring whitespace/comments)
             rewards.append(0.5)
         elif code_block == goal_code_block:
