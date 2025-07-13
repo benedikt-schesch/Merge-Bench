@@ -94,17 +94,10 @@ class UnSlothModel(ModelInterface):  # pylint: disable=too-few-public-methods
             use_cache=True,
         )
 
-        # Decode and extract assistant response
+        # Decode full completion
         full_completion: str = self._tokenizer.decode(
             output_tokens[0], skip_special_tokens=False
         )
 
-        # Extract only the new generated text (after the prompt)
-        if "<｜Assistant｜>" in full_completion:
-            completion = full_completion.split("<｜Assistant｜>", 1)[1]
-        elif "<|im_start|>assistant" in full_completion:
-            completion = full_completion.split("<|im_start|>assistant", 1)[1]
-        else:
-            raise ValueError("Could not find completion in full output.")
-
-        return completion
+        # Return the full completion (raw output) for consistency with legacy cache
+        return full_completion

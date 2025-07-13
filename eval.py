@@ -18,6 +18,7 @@ from src.evaluation_metrics import (
 )
 from src.utils import extract_code_block
 from src.model_factory import ModelFactory
+from src.api_model import APIModel
 
 # Language to dataset mapping
 LANGUAGE_DATASETS = {
@@ -39,6 +40,17 @@ LANGUAGE_DATASETS = {
 with open("eval.log", "w", encoding="utf-8"):
     pass
 logger.add("eval.log", backtrace=True, diagnose=True)
+
+
+def extract_completion(full_completion: str, model_name: str) -> str:
+    """Extract completion from full model output"""
+    if "<｜Assistant｜>" in full_completion:
+        return full_completion.split("<｜Assistant｜>", 1)[1]
+    if "<|im_start|>assistant" in full_completion:
+        return full_completion.split("<|im_start|>assistant", 1)[1]
+    if APIModel.is_api_model(model_name):
+        return full_completion
+    raise ValueError("Could not find completion in full output.")
 
 
 def model_inference(example: dict, model_name: str, verbose: bool = False) -> str:
@@ -186,8 +198,8 @@ def main() -> None:
         with open(output_file_path, "r", encoding="utf-8") as f:
             full_completion = f.read()
 
-        # Extract completion
-        completion = full_completion
+        # Extract completion from raw output using legacy extraction logic
+        completion = extract_completion(full_completion, args.model_name)
 
         # Evaluate the thinking format
         if format_reward(completion) > 0:

@@ -37,7 +37,10 @@ class APIModel(ModelInterface):
 
         result = response["result"]
         reasoning = response.get("reasoning", "No reasoning found")
-        return f"<think>\n{reasoning}</think>\n{result}"
+        completion = f"<think>\n{reasoning}</think>\n{result}"
+
+        # Return clean completion - extraction logic handles API models as-is
+        return completion
 
     @classmethod
     def is_api_model(cls, model_name: str) -> bool:
