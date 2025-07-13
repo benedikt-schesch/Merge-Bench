@@ -76,17 +76,12 @@ class UnSlothModel(ModelInterface):  # pylint: disable=too-few-public-methods
                 {"role": "user", "content": prompt},
             ]
 
-        formatted_prompt = self._tokenizer.apply_chat_template(
+        inputs = self._tokenizer.apply_chat_template(
             chat,
             add_generation_prompt=True,
             tokenize=True,
             return_tensors="pt",
         ).to(self._model.device)  # type: ignore
-
-        # Generate
-        inputs = self._tokenizer(formatted_prompt, return_tensors="pt").to(
-            self._model.device
-        )
 
         output_tokens = self._model.generate(
             input_ids=inputs,
