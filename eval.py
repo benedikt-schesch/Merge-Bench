@@ -21,6 +21,7 @@ from src.model_factory import ModelFactory
 # Language to dataset mapping
 LANGUAGE_DATASETS = {
     "javascript": "repos_github_javascript",
+    "java": "reaper_java_1000_1200",
     "rust": "repos_github_rust",
     "c": "repos_reaper_c",
     "cpp": "repos_reaper_cpp",
