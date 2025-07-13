@@ -252,42 +252,15 @@ def main() -> None:
     )
 
     # Log results
-    logger.success("=" * 60)
     logger.success("Evaluation Results:")
-    logger.success(f"Model: {args.model_name}")
-    logger.success(f"Language: {args.language}")
     logger.success(f"Total merges evaluated: {total}")
     logger.success(f"Percentage with valid thinking format: {pct_thinking:.2f}%")
-    logger.success(
-        f"Percentage with valid {args.language} markdown format: {pct_code_md:.2f}%"
-    )
+    logger.success(f"Percentage with valid markdown format: {pct_code_md:.2f}%")
     logger.success(f"Percentage correctly raising merge conflict: {pct_conflict:.2f}%")
     logger.success(
         f"Percentage semantically correctly resolved merges: {pct_resolved_semantic:.2f}%"
     )
     logger.success(f"Percentage correctly resolved merges: {pct_resolved:.2f}%")
-    logger.success("=" * 60)
-
-    # Save results to file
-    results_file = output_dir / "results.txt"
-    with open(results_file, "w", encoding="utf-8") as f:
-        f.write(f"Model: {args.model_name}\n")
-        f.write(f"Language: {args.language}\n")
-        f.write(f"Dataset: {dataset_path}\n")
-        f.write(f"Total merges evaluated: {total}\n")
-        f.write(f"Percentage with valid thinking format: {pct_thinking:.2f}%\n")
-        f.write(
-            f"Percentage with valid {args.language} markdown format: {pct_code_md:.2f}%\n"
-        )
-        f.write(f"Percentage correctly raising merge conflict: {pct_conflict:.2f}%\n")
-        f.write(
-            f"Percentage semantically correctly resolved merges: {pct_resolved_semantic:.2f}%\n"
-        )
-        f.write(f"Percentage correctly resolved merges: {pct_resolved:.2f}%\n")
-
-    logger.info(f"Results saved to {results_file}")
-
-    logger.info("Evaluation completed")
 
 
 if __name__ == "__main__":
