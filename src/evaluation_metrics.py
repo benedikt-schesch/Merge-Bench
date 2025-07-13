@@ -46,9 +46,17 @@ def code_markdown_reward(completion: str) -> float:
     return 1.0 if pattern.search(answer) else 0.0
 
 
-def merged_conflict_reward(prompt: str, completion: str, answer: str) -> float:
+def merged_conflict_reward(
+    prompt: str, completion: str, answer: str, language: str = "generic"
+) -> float:
     """
     Evaluates the quality of merge conflict resolution.
+
+    Args:
+        prompt: The prompt containing the merge conflict
+        completion: The model's completion
+        answer: The ground truth answer
+        language: The programming language for proper normalization
 
     Returns:
         1.0 if the resolution exactly matches the ground truth
@@ -68,7 +76,7 @@ def merged_conflict_reward(prompt: str, completion: str, answer: str) -> float:
     if code_block == answer.strip():
         # Exact match
         return 1.0
-    if normalize_code(code_block) == normalize_code(answer.strip()):
+    if normalize_code(code_block, language) == normalize_code(answer.strip(), language):
         # Semantic match (ignoring whitespace/comments)
         return 0.5
     if code_block == goal_code_block:

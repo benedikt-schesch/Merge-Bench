@@ -211,7 +211,7 @@ def main() -> None:
 
         # Evaluate merge conflict resolution
         reward = merged_conflict_reward(
-            example["question"], completion, example["answer"]
+            example["question"], completion, example["answer"], args.language
         )
 
         if args.verbose:
