@@ -35,12 +35,12 @@ class UnSlothModel(ModelInterface):  # pylint: disable=too-few-public-methods
 
     def __init__(self, model_name: str) -> None:
         self._model_name = model_name
-        if "sft_" in self._model_name:
-            self._system_prompt = False
-            self._max_seq_length = MAX_SEQUENCE_LENGTH_SFT
-        else:
-            self._system_prompt = True
-            self._max_seq_length = MAX_SEQUENCE_LENGTH
+        self._system_prompt = "sft_" not in self._model_name
+        self._max_seq_length = (
+            MAX_SEQUENCE_LENGTH_SFT
+            if ("sft_" in self._model_name or "distill_" in self._model_name)
+            else MAX_SEQUENCE_LENGTH
+        )
         self._model = None
         self._tokenizer = None
         self._model = None
