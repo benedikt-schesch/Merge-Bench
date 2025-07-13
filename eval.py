@@ -16,6 +16,7 @@ from src.evaluation_metrics import (
     format_reward,
     code_markdown_reward,
 )
+from src.utils import extract_code_block
 from src.model_factory import ModelFactory
 
 # Language to dataset mapping
@@ -203,9 +204,8 @@ def main() -> None:
 
         if args.verbose:
             logger.info(f"[VERBOSE] Evaluating example {idx}...")
-            # Import extract_code_block for verbose mode
-            from src.utils import extract_code_block
-
+            logger.info("[VERBOSE] Completion:")
+            logger.info(completion)
             extracted_code = extract_code_block(completion)
             logger.info("[VERBOSE] Extracted code block:")
             logger.info("-" * 80)
