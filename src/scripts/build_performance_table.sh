@@ -35,6 +35,8 @@ if [[ "$LANGUAGE" == "all" ]]; then
         "eval_outputs/php/test"
         "eval_outputs/python/test"
         "eval_outputs/ruby/test"
+        "eval_outputs/go/test"
+        "eval_outputs/typescript/test"
     )
 else
     # Process specific language

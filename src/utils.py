@@ -38,9 +38,10 @@ def normalize_code(code: str, language: str = "generic") -> str:
     """
     Normalizes code by removing comments and extra whitespace
     (so we focus on core semantics).
+    For whitespace-sensitive languages, whitespace is preserved.
     """
     # Handle different comment styles based on language
-    if language in ["javascript", "java", "c", "cpp", "csharp", "rust", "php"]:
+    if language in ["javascript", "java", "c", "cpp", "csharp", "rust", "php", "typescript"]:
         # C-style comments
         code = BLOCK_COMMENT_RE.sub("", code)
         code = LINE_COMMENT_RE.sub("", code)
@@ -51,10 +52,19 @@ def normalize_code(code: str, language: str = "generic") -> str:
         # This is a simplified approach
         code = re.sub(r'"""[\s\S]*?"""', "", code)
         code = re.sub(r"'''[\s\S]*?'''", "", code)
+    elif language == "go":
+        # Go uses C-style comments
+        code = BLOCK_COMMENT_RE.sub("", code)
+        code = LINE_COMMENT_RE.sub("", code)
     
-    # Remove extra whitespace
-    code = WHITESPACE_RE.sub(" ", code)
-    return code.strip()
+    # Skip whitespace normalization for whitespace-sensitive languages
+    if language not in ["python", "go", "yaml", "makefile"]:
+        # Remove extra whitespace for non-sensitive languages
+        code = WHITESPACE_RE.sub(" ", code)
+        return code.strip()
+    else:
+        # For whitespace-sensitive languages, just strip leading/trailing whitespace
+        return code.strip()
 
 
 def extract_code_block(text: str) -> Optional[str]:

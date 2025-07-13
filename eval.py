@@ -40,6 +40,8 @@ LANGUAGE_DATASETS = {
     "php": "repos_reaper_php",
     "python": "repos_reaper_python",
     "ruby": "repos_reaper_ruby",
+    "go": "repos_github_go",
+    "typescript": "repos_github_typescript",
 }
 
 
