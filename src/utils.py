@@ -58,7 +58,7 @@ def normalize_code(code: str, language: str = "generic") -> str:
         code = LINE_COMMENT_RE.sub("", code)
     
     # Skip whitespace normalization for whitespace-sensitive languages
-    if language not in ["python", "go", "yaml", "makefile"]:
+    if language not in ["python", "go"]:
         # Remove extra whitespace for non-sensitive languages
         code = WHITESPACE_RE.sub(" ", code)
         return code.strip()
