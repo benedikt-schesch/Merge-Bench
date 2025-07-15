@@ -16,13 +16,6 @@ OUTPUT_FILE="tables/results_table.tex"
 MD_OUTPUT_FILE="tables/results_table.md"
 
 mkdir -p "$(dirname "$OUTPUT_FILE")"
-if [[ -f "$OUTPUT_FILE" ]]; then
-    read -p "$OUTPUT_FILE already exists. Overwrite? [y/N]: " confirm
-    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        echo "Aborting."
-        exit 1
-    fi
-fi
 
 # ─── 2. Define languages and collect all models ───────────────────────────────
 LANGUAGES=(
