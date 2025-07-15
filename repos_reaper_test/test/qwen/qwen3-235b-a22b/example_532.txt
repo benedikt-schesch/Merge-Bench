@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The provided code snippet contains a merge conflict between two versions of a constructor in Java. The core difference lies in the utility method used (`IOUtil.toByteArray(in)` vs. `IOUtils.toByteArray(in)`). Both versions aim to achieve the same result: convert an `InputStream` to a byte array and pass it to another constructor alongside a determined media type. While the intent and semantics on both sides appear identical (loading `InputStream` contents into memory for further processing), the class name discrepancy introduces ambiguity.
+
+Without additional context about which utility class (`IOUtil` or `IOUtils`) is intended or implemented within the project, it's impossible to determine the correct resolution from a semantic standpoint. Both methods are intended to perform the same function but refer to different utility classes, which could indicate refactoring, a naming conflict, or a usage from different libraries.
+
+Given the instruction to only resolve when the intent is clear and to return the snippet as-is in ambiguous scenarios, the resolution remains the original code with conflict markers.
+
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+```

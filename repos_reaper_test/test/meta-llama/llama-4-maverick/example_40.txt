@@ -1,0 +1,58 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we first need to understand the context and intent behind the changes made on both sides of the merge.
+
+The conflict is within the declaration of a `Logger` instance variable in a Java class. The code snippet provided is as follows:
+```java
+   * be able to start.
+   * <p>
+   * We need 20 * maxPlayers cards. This allows black cards up to "draw 9" to work correctly.
+   */
+  public final static int MINIMUM_WHITE_CARDS_PER_PLAYER = 20;
+<<<<<<< HEAD
+  private static final Logger logger = LogManager.getLogger(Game.class);
+=======
+  private static final Logger logger = Logger.getLogger(Game.class);
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+  /**
+   * Time, in milliseconds, to delay before starting a new round.
+   */
+  private final static int ROUND_INTERMISSION = 8 * 1000;
+  /**
+```
+The two versions of the `logger` declaration are:
+1. `private static final Logger logger = LogManager.getLogger(Game.class);`
+2. `private static final Logger logger = Logger.getLogger(Game.class);`
+
+To understand which one is correct or how to resolve the conflict, we need to look at the logging framework being used. The first version suggests the use of a logging framework that utilizes a `LogManager`, such as Log4j 2, where `LogManager.getLogger()` is a common way to obtain a logger instance. The second version could be using a different logging framework, such as Log4j 1.x or JUL (Java Util Logging), where `Logger.getLogger()` is used.
+
+Given the information and context provided:
+- If the project is using Log4j 2, the correct declaration would be the one using `LogManager.getLogger()`.
+- If the project is using Log4j 1.x or another logging framework that uses `Logger.getLogger()`, then that would be correct.
+
+Since we don't have explicit information on the logging framework being used and assuming both sides of the merge are valid (i.e., the project could be using either logging framework or there's a possibility of switching between them), we need to analyze the intent.
+
+However, upon closer inspection, it seems more likely that the difference lies in the logging API being used. `LogManager.getLogger()` is typically associated with Log4j 2 or Apache Commons Logging (though the latter is less likely here), while `Logger.getLogger()` could be Log4j 1.x.
+
+Without knowing the project's logging framework or the specific intent behind choosing one over the other, the safest resolution would be to inspect the project's dependencies and configuration to determine the correct logging framework in use.
+
+Since the context doesn't provide explicit details on the logging framework, I'll preserve the original conflict for now.
+
+Here is the code snippet with the conflict preserved, returned in markdown code syntax as requested:
+```java
+   * be able to start.
+   * <p>
+   * We need 20 * maxPlayers cards. This allows black cards up to "draw 9" to work correctly.
+   */
+  public final static int MINIMUM_WHITE_CARDS_PER_PLAYER = 20;
+<<<<<<< HEAD
+  private static final Logger logger = LogManager.getLogger(Game.class);
+=======
+  private static final Logger logger = Logger.getLogger(Game.class);
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+  /**
+   * Time, in milliseconds, to delay before starting a new round.
+   */
+  private final static int ROUND_INTERMISSION = 8 * 1000;
+  /**
+```

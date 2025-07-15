@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with both conditions included to ensure version request piggybacking only occurs when the server version is unknown and the payload is not already a version request.
+
+```java
+            // pretty quickly. Since it's most likely going to fit in the same
+            // packet we send out, it adds ~zero overhead. But don't piggyback a
+            // version request if the payload is already a version request or if
+            // we already know the server version.
+            final ChannelBuffer buf;
+            if (client.server_version < 0 && !isVersionRequest(payload)) {
+              final ChannelBuffer version =
+                client.encode(client.getProtocolVersionRequest());
+              buf = ChannelBuffers.wrappedBuffer(header, payload, version);
+            } else {
+              buf = ChannelBuffers.wrappedBuffer(header, payload);
+            }
+```

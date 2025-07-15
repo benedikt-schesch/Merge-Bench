@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict is centered around the `com.restfb.JsonMapper` import line. One branch (HEAD) adds this import, while the other (a17acec) does not include it. Analyzing the context:
+
+- The `import com.restfb.JsonMapper.JsonMappingCompleted;` line that follows implies that the `JsonMappingCompleted` nested class is being used.
+- Java allows importing nested static classes directly without needing to import the enclosing outer class unless the enclosing class is referenced separately.
+
+However, the surrounding code snippet does **not** provide sufficient evidence about whether `JsonMapper` is used directly in a way that would require the outer-class import. While `import com.restfb.JsonMapper` might be necessary for direct usage of the `JsonMapper` class, there's no visible code where that class is invoked.
+
+Since the **intent is ambiguous** and the resolution hinges on whether `JsonMapper` is actually referenced in the unresolved portion of the file, we **must** err on the side of preserving any potentially meaningful distinctions. Therefore, according to instructions, we return the full snippet with the original merge conflict markers intact.
+
+```java
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import static com.restfb.util.DateUtils.toDateFromShortFormat;
+import static java.util.Collections.unmodifiableList;
+
+import com.restfb.Facebook;
+<<<<<<< HEAD
+import com.restfb.JsonMapper;
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+import com.restfb.JsonMapper.JsonMappingCompleted;
+import com.restfb.json.JsonObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+```

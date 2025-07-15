@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at the code with the merge conflict, I can see that both sides are trying to send a `WorldChangeMessage` but with different parameters. One side includes a `false` parameter and uses `world.getData()` while the other doesn't have the boolean parameter and uses `world.getDatatable()`. 
+
+Here's the resolved code with the merge conflict:
+
+```java
+		session.send(new EntityTransformMessage(player.getId(), new Transform(p, rot, Vector3.ONE), getRepositionManager()));
+	}
+
+	@Override
+	protected void worldChanged(World world) {
+		session.send(false, new WorldChangeMessage(world, world.getData()));
+	}
+
+	@Override
+	public void updateBlock(Chunk chunk, int x, int y, int z, BlockMaterial material, short data) {
+		session.send(new BlockUpdateMessage(chunk.getBlock(x, y, z)));
+```
+
+I resolved the conflict by choosing the second version because:
+1. It appears to use an updated API method `world.getData()` instead of `world.getDatatable()`
+2. It includes an additional `false` parameter to `session.send()` which likely indicates a specific behavior change that was intended in the newer version.

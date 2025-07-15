@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see two different approaches to handling an exception:
+1. The HEAD version logs the exception message using a logger
+2. The incoming change (6209970) comments out the logging and instead uses direct printing to stdout with additional formatting
+
+Since both changes seem to be for debugging purposes, and the incoming change adds more visibility of the exception through multiple outputs, I'll resolve by preserving both approaches but ensuring the exception is still thrown.
+
+```java
+  static {
+    try {
+      IS_WINDOWS =
+          StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
+    } catch (Throwable ex) {
+      Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
+      ex.printStackTrace();
+      System.out.println("*********************************************************");
+      System.out.println(ex.getMessage());
+      throw ex;
+    }
+  }
+
+  /** Directory to store data. */
+
+```

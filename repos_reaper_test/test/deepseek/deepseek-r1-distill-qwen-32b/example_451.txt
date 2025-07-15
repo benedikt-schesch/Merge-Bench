@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we'll adopt the changes from the right side (1acff436c...) as they introduce a necessary filter parameter and adjust the method's access level. Here's the resolved code:
+
+```java
+     * @param handler  handler where to receive the information
+     * @param len      Maximum length of metadata column
+     * @param rb       ResourceBundle for I18N
+     * @see Setter#asAnnotatedElement()
+     */
+    private void printOption(PrintWriter out, OptionHandler handler, int len, ResourceBundle rb, OptionHandlerFilter filter) {
+    	// Hiding options without usage information
+    	if (handler.option.usage() == null ||
+            handler.option.usage().length() == 0 ||
+            !filter.select(handler)) {
+    		return;
+```
+
+This change adds the `filter` parameter for option filtering and makes the method private, encapsulating it within the class.

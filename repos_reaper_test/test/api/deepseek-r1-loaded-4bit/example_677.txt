@@ -1,0 +1,27 @@
+<think>
+Okay, let's look at this merge conflict. The problem is in the Java imports. In the HEAD version, they're importing HttpSessionRequestCache from org.springframework.security.web.savedrequest. In the other branch, they're importing RequestCache from the same package and also adding Encryptors from org.springframework.security.crypto.encrypt.
+
+First, I need to understand what each side is doing. The HEAD adds HttpSessionRequestCache, which is a specific implementation of RequestCache. The other branch adds RequestCache (the interface) and Encryptors. Since Encryptors is a new import from a different package, that's probably a separate addition. The conflict is between HttpSessionRequestCache and RequestCache.
+
+But wait, maybe both changes are compatible. The branch might be changing from using the concrete class to the interface RequestCache, which is a more flexible approach. Meanwhile, the HEAD is adding the concrete class. However, if the other branch's import of RequestCache is replacing HttpSessionRequestCache, then there's a conflict. But perhaps they can coexist if both are needed, but that's unlikely.
+
+Alternatively, maybe in the code, one side is using the interface and the other the concrete type. The correct resolution would be to keep both imports if both are used elsewhere. But since in the conflict, one is replacing the other, maybe the intended change is to switch to the interface (RequestCache) and add Encryptors. So the resolved imports should include both Encryptors and RequestCache, and remove HttpSessionRequestCache. Because the other branch's change is adding a new import (Encryptors) and changing the RequestCache import to the interface, while the HEAD is adding the concrete class. The correct resolution would be to take both new imports from the conflicting branch and remove the HEAD's HttpSessionRequestCache. So the merged imports would have Encryptors, RequestCache, and the other existing imports. Therefore, the conflict can be resolved by including both new imports from the two branches, but since they're on the same line, we need to choose between the two. Wait, the conflict is between the two import lines. The HEAD has HttpSessionRequestCache, and the other branch has RequestCache and Encryptors. So the correct way is to include both Encryptors and RequestCache, and remove HttpSessionRequestCache. Because the other branch is adding Encryptors and changing the import to RequestCache (the interface), while the HEAD is adding the concrete class. The merge should take both changes: add Encryptors and switch to RequestCache, thus removing the HttpSessionRequestCache import. So the resolved line would import both Encryptors and RequestCache, and drop HttpSessionRequestCache. Therefore, the merged code should have the imports from the other branch (caaf8a9) because they include the new Encryptors and the interface import, which is more general. So the conflict is resolved by keeping the changes from both branches where possible. But since the two imports are on conflicting lines, we need to merge them. The HEAD line is importing HttpSessionRequestCache, and the other branch is importing Encryptors and RequestCache. Since Encryptors is a new addition, and RequestCache is replacing HttpSessionRequestCache (as it's the interface), the correct resolution is to include both Encryptors and RequestCache, and remove the HttpSessionRequestCache import. Therefore, the merged imports should be:
+
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.web.savedrequest.RequestCache;
+
+So combining both from the other branch. Therefore, the resolved code would have those two imports instead of the HEAD's single import. That way, both the addition of Encryptors and the switch to RequestCache are included.</think>
+```java
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.social.UserIdSource;
+import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
+import org.springframework.social.config.annotation.EnableSocial;
+import org.springframework.social.config.annotation.SocialConfigurer;
+import org.springframework.social.connect.Connection;
+```

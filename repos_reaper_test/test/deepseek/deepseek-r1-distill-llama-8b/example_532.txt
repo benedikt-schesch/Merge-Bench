@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The conflict is due to a method name typo where one uses "IOUtil" and the other uses "IOUtils". To resolve, the left side should be updated to use "IOUtils".
+
+```java
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+=======
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b
+```
+
+```diff
+diff --git a/path/to/Resource.java b/path/to/Resource.java
+index abcdef1..33a5914 100644
+--- a/path/to/Resource.java
++++ b/path/to/Resource.java
+@@ -1,10 +1,10 @@
+ 	 *
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+>>>>>>> b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b
+```

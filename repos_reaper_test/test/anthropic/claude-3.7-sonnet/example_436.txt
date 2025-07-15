@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears that one branch is trying to unregister a `libraryUpdateReceiver` in addition to the `videoUpdateReceiver` that's already in the code. Since both receivers should be unregistered when the component stops, I'll resolve by keeping both unregister blocks.
+
+```java
+        try {
+            getActivity().unregisterReceiver(videoUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        try {
+            getActivity().unregisterReceiver(libraryUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onAddClicked(CharSequence user, CharSequence password,
+```

@@ -1,0 +1,34 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is in the VideoStatus class. The HEAD version adds a serialVersionUID field, while the other branch (a17acec) doesn't have it. 
+
+First, I should check if both changes are compatible. The serialVersionUID is used for serialization in Java. If one side added it and the other didn't, maybe it's just a matter of including both changes. But wait, in the conflict, the HEAD adds the line, and the other branch removes it. So the conflict is between adding and not having it.
+
+Wait, looking at the code: the HEAD has the serialVersionUID declaration, and the other branch (a17acec) doesn't. So the conflict markers show that in HEAD, the line is present, and in the other branch, it's removed.
+
+But why would the other branch remove it? Maybe they didn't have it in their version. So when merging, we need to decide whether to keep the serialVersionUID or not.
+
+In Java, if a class implements Serializable, it's recommended to have a serialVersionUID. If the class AbstractFacebookType implements Serializable, then adding the serialVersionUID in the subclass VideoStatus is a good practice. If the other branch removed it, perhaps they didn't have it, but the HEAD added it for serialization purposes.
+
+The surrounding code: the class is a static inner class VideoStatus extending AbstractFacebookType. The Javadoc comment is about the video status. The conflict is just about the presence of the serialVersionUID field.
+
+Since the HEAD adds it and the other branch doesn't have it, maybe the correct resolution is to keep the serialVersionUID. Because the other branch's change might not have included it, but the HEAD's addition is intentional. Unless the other branch intentionally removed it, but the commit message isn't provided here.
+
+Alternatively, perhaps the other branch's version didn't have the serialVersionUID, and the HEAD added it. When merging, we should keep the HEAD's addition. Because in the absence of any conflicting intent, adding the serialVersionUID is a safe choice for serialization.
+
+So the resolved code would include the serialVersionUID line. Therefore, the conflict markers should be removed, keeping the HEAD's line and the other branch's lack of lines. Wait, the conflict is between HEAD adding the line and the other branch not having it. So in the merged code, the line should remain. Because the other branch didn't modify that line; perhaps the line was added in HEAD and not present in the other branch. So when merging, the addition should stay.
+
+Therefore, the correct resolution is to keep the serialVersionUID declaration. So the merged code will have that line, and the conflict markers are removed.</think>
+```java
+   * Represents the <a href="https://developers.facebook.com/docs/graph-api/reference/video-status/">Video Status Graph
+   * API type</a>.
+   */
+  public static class VideoStatus extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Status of a video.
+     * 
+     * Either "ready" (uploaded, encoded, thumbnails extracted), "processing" (not ready yet) or "error" (processing
+     * failed).
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+            // bind to service
+            mServiceConnection = new OpenPgpServiceConnection(
+                    PgpHandler.this, providerPackageName, this);
+            mServiceConnection.bindToService();
+
+            bindingDialog = new ProgressDialog(this);
+            bindingDialog.setMessage(this.getResources().getString(R.string.okc_progress_text));
+            bindingDialog.setCancelable(false);
+            bindingDialog.show();
+
+            registered = true;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+```
+
+**Merge Resolution Explanation:**
+- Both sides of the merge attempted to enhance the binding process but in different ways.
+- The HEAD side added a ProgressDialog to provide visual feedback during binding.
+- The new branch added state tracking (`registered = true`) and enabled the home button for navigation.
+- These changes are complementary and can coexist to provide both user feedback and proper navigation handling.

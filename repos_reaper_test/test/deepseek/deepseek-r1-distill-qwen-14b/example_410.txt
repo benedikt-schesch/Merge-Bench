@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we combined the correct approaches from both sides. The property is set using `ASCIIDOCTOR_ATTRIBUTES.getKey()` for consistency, and the return type is `DocumentModel` to match the test assertions.
+
+```java
+    }
+
+    @Test
+    public void parseAsciidocFileWithCustomAttribute() {
+
+<<<<<<< HEAD
+        config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES,"source-highlighter=prettify,testattribute=I Love Jbake");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+=======
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify,testattribute=I Love Jbake");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+>>>>>>> d68ddea7554653e7928d220f68a3af13bfb30cdb
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("I Love Jbake")
+```

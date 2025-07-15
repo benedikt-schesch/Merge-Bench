@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Here is the resolved snippet with the conflict addressed by merging both sides' contributions:
+
+```java
+            // bind to service
+            mServiceConnection = new OpenPgpServiceConnection(
+                    PgpHandler.this, providerPackageName, this);
+            mServiceConnection.bindToService();
+
+            bindingDialog = new ProgressDialog(this);
+            bindingDialog.setMessage(this.getResources().getString(R.string.okc_progress_text));
+            bindingDialog.setCancelable(false);
+            bindingDialog.show();
+
+            registered = true;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+```
+
+The resolution includes:
+1. **ProgressDialog addition (HEAD side):** Shows a user-friendly spinner while binding to a service (important for UI feedback).
+2. **Code continuation (other branch):** Retains `registered = true` and `setDisplayHomeAsUpEnabled()` from the other branch to ensure UI logic progresses after binding initiates.
+
+Both changes are necessary for full functionality: the ProgressDialog informs the user of the binding process, and the subsequent flags enable proper navigation behavior.

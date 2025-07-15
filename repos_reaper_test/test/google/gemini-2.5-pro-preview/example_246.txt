@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises from a difference in formatting for the method signature, specifically how the `throws IOException` clause is placed and indented, and a trailing space in one of the versions. Both versions are semantically identical in terms of the Java code's behavior.
+
+-   **HEAD** places `throws IOException {` on the same line as the method parameters.
+-   **1cb2531c41db7942eca2b75f500cfe7e4a8cad81** places `throws IOException {` on a new line with additional indentation. It also includes a trailing space after `Configuration originalConf)`.
+
+The intent of both branches is to define the `mergeSplitSpecificConf` method with the same parameters and the same `throws` clause. The difference is purely stylistic.
+
+Given that the semantic meaning is identical, the resolution can be based on common coding style preferences:
+1.  The trailing space in the `1cb2531c41db7942eca2b75f500cfe7e4a8cad81` version (`originalConf) `) is generally undesirable.
+2.  Placing the `throws` clause on the same line as the method signature (as in HEAD) is a common and acceptable Java style, especially when the line length is manageable.
+3.  The specific indentation of the `throws` clause in `1cb2531c41db7942eca2b75f500cfe7e4a8cad81` (`            throws IOException {`) is a valid stylistic choice but might be less common than same-line or a standard next-line indent.
+
+Considering these points, the HEAD version appears to be a cleaner and more standard representation.
+
+```java
+     * is based and merge it with the Conf supplied
+     *
+     * package level access so that this is not publicly used elsewhere
+     * @throws IOException
+     */
+    static void mergeSplitSpecificConf(LoadFunc loadFunc, PigSplit pigSplit, Configuration originalConf)
+    throws IOException {
+        // set up conf with entries from input specific conf
+        Job job = new Job(originalConf);
+        loadFunc.setLocation(getLoadLocation(pigSplit.getInputIndex(),
+                originalConf), job);
+        // The above setLocation call could write to the conf within
+
+```

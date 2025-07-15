@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the changes introduced by both sides.
+
+The original code before the merge conflict is not entirely visible, but we can infer from the provided snippet that there's a method `measureUser` that is being modified. 
+
+The `HEAD` version (the local version) of `measureUser` takes three parameters: `TestUser user`, `ResultList recommendations`, and `Context context`. It uses `context.recommender` and `user` to select good items.
+
+The version from `ae1b395ec63b1333c717fdac150e0860cf0326e0` (the version being merged) modifies `measureUser` to take four parameters: `TestUser user`, `int targetLength`, `ResultList recommendations`, and `Context context`. It removes the use of `context.recommender` when selecting good items, directly using `user` instead.
+
+To resolve this conflict, we must understand the intent behind both changes. The change in `HEAD` does not introduce any new parameters but uses `context.recommender` and `user` for selecting good items. The change from `ae1b395ec63b1333c717fdac150e0860cf0326e0` introduces a new parameter `targetLength` and simplifies the selection of good items by removing `context.recommender`.
+
+The introduction of `targetLength` in the merged version suggests that it might be intended for future use or is part of a new feature. However, within the provided snippet, `targetLength` is not used.
+
+To resolve the conflict while preserving the intent of both changes, we should consider whether `targetLength` is necessary and whether the simplification of `goodItems.selectItems` is desired.
+
+Since `targetLength` is not used within the provided snippet and its purpose is not clear from the given context, and assuming that the removal of `context.recommender` is a valid change (as it simplifies the method call and potentially aligns with other parts of the codebase or a refactoring effort), a semantically resolved version could incorporate both the new parameter and the simplified `goodItems.selectItems` call.
+
+However, without more context on how `targetLength` is intended to be used or if it's part of a larger feature, directly using it or removing it becomes speculative.
+
+Let's directly resolve it by incorporating the changes, assuming that `targetLength` is part of a valid change, even though it's not used.
+
+```java
+        return new AggregateResult(context).withSuffix(suffix);
+    }
+
+    @Nonnull
+    @Override
+    public MetricResult measureUser(TestUser user, int targetLength, ResultList recommendations, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, user);
+        if (good.isEmpty()) {
+            logger.warn("no good items for user {}", user.getUserId());
+        }
+
+        Integer rank = null;
+```

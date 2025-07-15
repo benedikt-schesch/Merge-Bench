@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the changes introduced by both sides of the merge.
+
+The code snippet is a part of a Java class, specifically a constructor for `PleaseThrottleException`. The constructor takes four parameters: `msg`, `cause`, `rpc`, and `deferred`. The conflict arises in the type declaration of the `deferred` parameter.
+
+On the left side of the conflict (`HEAD`), the `deferred` parameter is declared as `final Deferred deferred`. On the right side (`d543609051366758e579ad168361daadd74cdf7f`), it is declared as `final Deferred<?> deferred`.
+
+The change from `Deferred` to `Deferred<?>` introduces a generic type parameter `?`, which is a wildcard representing an unknown type. This change is likely intended to make the `Deferred` class type-safe by specifying that it can hold any type.
+
+To resolve this conflict, we need to understand the intent behind both versions. The original code (left side) uses a raw type `Deferred`, which might lead to warnings about unchecked operations if `Deferred` is defined with type parameters. The updated code (right side) uses a parameterized type `Deferred<?>`, which is safer as it explicitly indicates that the type parameter is unknown.
+
+Given that the change to `Deferred<?>` is likely aimed at improving type safety without restricting the type that `Deferred` can represent, and assuming that the rest of the codebase is compatible with this change (since it's a more specific and safer type declaration), the resolution should favor the more type-safe version.
+
+Thus, the conflict can be resolved by choosing the right side's version (`final Deferred<?> deferred`), as it maintains backward compatibility while enhancing type safety.
+
+Here is the resolved snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+   * @param deferred A deferred one can wait on before retrying the failed RPC.
+   */
+  PleaseThrottleException(final String msg,
+                          final HBaseException cause,
+                          final HBaseRpc rpc,
+                          final Deferred<?> deferred) {
+    super(msg, cause);
+    this.rpc = rpc;
+    this.deferred = deferred;
+  }
+
+
+```

@@ -1,0 +1,27 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is in the requestTokenInfo() method. Both sides are trying to build an HTTP request and set the parser, but they're doing it differently.
+
+Looking at the HEAD version: They add the parser to the authSubTransport and then build the request using buildGetRequest(), setting the URL directly. The other branch (f125361) uses createRequestFactory().buildGetRequest() with a GenericUrl, and adds the parser to the request instead of the transport.
+
+Hmm. The key differences are where the parser is added and how the request is constructed. Adding the parser to the transport might affect all subsequent requests, while adding it to the request is more specific. The URL is constructed using GenericUrl in one and set directly in the other.
+
+I should check which approach is correct. If the parser should be per-request, adding it to the request makes sense. Also, using the request factory with GenericUrl is the more modern or correct approach in some HTTP libraries. The HEAD version modifies the transport, which could have side effects. The other branch's method is probably better because it's more encapsulated.
+
+So the resolution would be to take the code from the f125361 branch, which builds the request using the factory and GenericUrl, and adds the parser to the request. That way, the parser is only used for this specific request, which is safer. The transport isn't modified, so other uses of authSubTransport aren't affected.
+
+Therefore, the merged code should use the HttpRequest creation from the f125361 side, including the GenericUrl, and add the parser to the request. That combines both intents without conflicting changes.</think>
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public TokenInfoResponse requestTokenInfo() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+    return request.execute().parseAs(TokenInfoResponse.class);
+  }
+
+  /** Updates the authorization headers. */
+  private void updateAuthorizationHeaders() {
+```

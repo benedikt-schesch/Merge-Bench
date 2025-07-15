@@ -1,0 +1,26 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is between the HEAD version and the commit 1488b22ce313803d012c8ace36c3b12f930ee309.
+
+Looking at the two versions, the method signature differs. The HEAD version has a void return type, while the other branch returns an ExecJob object. The method name and parameters are the same except for the return type.
+
+Hmm, in Java, you can't have two methods with the same name and parameter types but different return types. So this is a conflict that can't be resolved automatically by just choosing one. But wait, maybe one of the changes is adding a return type while the other isn't. Let me check the context.
+
+The surrounding comments mention storing results, so perhaps the method was modified to return ExecJob to allow chaining or tracking the job status, which is a meaningful change. The HEAD version might be an older version that didn't return anything. 
+
+Since the conflicting change is about the return type, the correct resolution would be to take the version that returns ExecJob because that's a more recent change and provides additional functionality. The void return type might be outdated. Also, the comment in both versions is the same, so the intent is to keep the default store function but adjust the return type.
+
+So the resolved method should have the ExecJob return type and return the result of the store method. Therefore, the correct code is the one from the branch commit, which returns ExecJob.</think>
+```java
+     * @param id The alias to store
+     * @param filename The file to which to store to
+     * @throws IOException
+     */
+
+    public ExecJob store(String id, String filename) throws IOException {
+        return store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+    }
+        
+    /**
+     *  forces execution of query (and all queries from which it reads), in order to store result in file
+     */
+```

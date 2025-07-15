@@ -1,0 +1,68 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the Java imports. Both sides are importing some classes from the same packages, but there are differences. 
+
+In the HEAD version, they import JobConf from org.apache.hadoop.mapred and PigServer.ExecType from org.apache.pig. The other side, from commit 1488b22, imports FuncSpec and ExecType directly from org.apache.pig, and also adds an import for ElementDescriptor.
+
+Wait, the ExecType is coming from different paths. In HEAD, it's PigServer.ExecType, and in the other branch, it's org.apache.pig.ExecType. Maybe one of these is a static import or a class that was moved. I should check if PigServer.ExecType is the same as ExecType in the other branch. Perhaps in one version, ExecType was an inner class of PigServer, and in the other, it's a top-level class. If both changes are trying to import the correct ExecType, we need to figure out which one is correct based on the project's current state.
+
+But since this is a merge conflict, maybe both changes are valid but from different refactorings. For example, maybe one branch moved ExecType to be a top-level class, so the import changed. The other branch might have added JobConf and FuncSpec.
+
+The goal is to combine both sets of imports without conflicts. So we need to include all necessary imports. Let's list the imports from both sides:
+
+HEAD adds:
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.Main;
+import org.apache.pig.PigServer.ExecType;
+
+The other branch adds:
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+
+Wait, both have import org.apache.pig.Main; so that's a duplicate. Also, ExecType is imported differently. So the conflict is between PigServer.ExecType and org.apache.pig.ExecType. Also, FuncSpec and JobConf are added in each branch.
+
+To resolve, we need to take both FuncSpec and JobConf imports. For ExecType, we need to pick the correct one. If in the current codebase, ExecType is a top-level class, then the correct import is org.apache.pig.ExecType. If it's an inner class of PigServer, then PigServer.ExecType is correct. But since both branches are part of the merge, maybe one branch updated the import to reflect a change in the library. For example, if PigServer.ExecType was deprecated and moved to a top-level ExecType, then the correct import is the top-level one.
+
+Assuming that the other branch (1488b22) is updating to use the top-level ExecType, then we should use that. Also, since FuncSpec is added there, and JobConf is added in HEAD, both are needed. Also, ElementDescriptor is present in both contexts, but I think that's part of the existing code, so no conflict there.
+
+So the resolved imports should include:
+
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+
+But wait, Main is imported in both, so we can keep it once. So combining both, the merged imports would be:
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.executionengine.ExecException;
+import org.apache.pig.backend.executionengine.ExecutionEngine;
+
+That way, both JobConf and FuncSpec are included, and ExecType is imported correctly from the top-level. Also, duplicates like Main are only included once. The ElementDescriptor is already present in the existing code, so no change there. The spacing should be preserved as per the original, with each import on its own line. So the conflict markers are removed, and the correct imports are combined.</think>
+```java
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.executionengine.ExecException;
+import org.apache.pig.backend.executionengine.ExecutionEngine;
+
+```

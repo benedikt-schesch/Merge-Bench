@@ -1,0 +1,35 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is in a test method. Both sides are trying to test that after iterating through three pages, the iterator has no more elements and that calling next() again throws an exception.
+
+In the HEAD version, they're using assertThat(it.hasNext()).isFalse(); which is probably using AssertJ's fluent assertions. Then they call it.next(); and failBecauseExceptionWasNotThrown with the exception class. 
+
+In the other branch (a17acec), they're using assertFalse(it.hasNext()); which is likely JUnit's traditional assertions. Then they call it.next(); and fail with the exception's class name as a string. 
+
+The main differences are the assertion style and how the failure is triggered. The semantic intent is the same: check that hasNext is false, then try to get next and expect an exception. 
+
+To resolve this, I should choose the version that aligns with the project's existing testing framework. If they're using AssertJ, keeping the HEAD version makes sense. But if the project uses JUnit's assertFalse, then the other branch is correct. However, looking at the fail methods: HEAD uses failBecauseExceptionWasNotThrown, which is part of AssertJ's exception assertions, whereas the other side uses a generic fail() with a message. 
+
+Wait, actually, when you expect an exception to be thrown, the proper way in JUnit is to use expected in @Test or catch the exception. But here, they're manually triggering a fail if the exception isn't thrown. However, the HEAD version's failBecauseExceptionWasNotThrown is more specific and might be part of a custom assertion or a library method. The other side's fail is just a generic fail with a message. 
+
+Alternatively, maybe the test is structured to expect that calling it.next() after the iterator is exhausted should throw NoSuchElementException. So both sides are trying to test that, but using different assertion methods. 
+
+The key is to ensure that the test correctly fails if the exception isn't thrown. The HEAD's approach uses a custom method to fail with the specific exception, which is better because it's more descriptive and might be part of a framework that checks the exception type. The other side just fails with the exception's name as a string, which is less precise. 
+
+But maybe the project uses a mix of both. However, in a merge conflict, if we can't be sure, we might need to choose one. Since the surrounding code isn't provided, but looking at the test method names and structure, it's possible that the project prefers AssertJ's fluent assertions. Therefore, keeping the HEAD version would be appropriate. 
+
+So the resolved code would take the HEAD's assertions and the fail method. Therefore, the conflict is resolved by selecting the HEAD's changes and discarding the other branch's changes.</think>
+```java
+    ConnectionIterator<FacebookType> it = connection.iterator();
+    it.next(); // first page
+    it.next(); // second page
+    it.next(); // third and last page
+
+    assertThat(it.hasNext()).isFalse();
+    it.next();
+    failBecauseExceptionWasNotThrown(NoSuchElementException.class);
+  }
+
+  @Test
+  public void checkIterator_withCursor() {
+    Connection<FacebookType> connection = createCursorConnection();
+```

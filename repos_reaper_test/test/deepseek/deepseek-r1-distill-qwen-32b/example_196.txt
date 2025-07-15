@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two approaches to setting the className variable. Both branches are trying to achieve the same goal of determining the class name based on funcSpec or alias, but they use different methods. The left branch uses getClassNameFromSpec, while the right branch incorrectly attempts to call a method on a potentially null object. The correct resolution uses the safe approach from the left branch.
+
+Here's the resolved code snippet:
+
+```java
+        if (definedFunctions != null) {
+            funcSpec = definedFunctions.get(alias);
+        }
+        if (funcSpec != null) {
+            className = getClassNameFromSpec(funcSpec);
+        } else {
+            className = getClassNameFromSpec(alias);
+        }
+        return resolveClassName(className);
+    }
+  
+    public Object instantiateFuncFromAlias(String alias) throws IOException {
+```

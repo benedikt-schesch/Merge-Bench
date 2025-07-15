@@ -1,0 +1,23 @@
+<think>
+Okay, let's look at this merge conflict. The HEAD version has the execute() method right after the @Override annotation. The other side, from commit f1253614bee81db4cd5344faaa5c73a5c51b2c5b, adds an addHeader method with its own @Override. 
+
+So the conflict is between the two @Override methods. The HEAD doesn't have the addHeader method, while the other branch does. To resolve this, both methods should be included because they're both valid overrides. The addHeader method from the other branch comes first, then the execute() method from HEAD.
+
+Looking at the code structure, the addHeader method is added before execute(). The conflict markers are around these two methods. So the correct resolution is to keep both methods, ensuring that each has their own @Override annotation. The spacing after the execute() method's closing brace might need adjustment, but the user said to preserve spacing as is. So I'll merge both methods, placing addHeader first followed by execute(), removing the conflict markers.</think>
+```java
+  public MockLowLevelHttpRequest(String url) {
+    this.url = url;
+  }
+
+  @Override
+  public void addHeader(String name, String value) {
+    headers.put(name, value);
+  }
+
+  @Override
+  public LowLevelHttpResponse execute() throws IOException {
+    return new MockLowLevelHttpResponse();
+  }
+
+  @Override
+```

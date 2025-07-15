@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+I see a merge conflict between two different versions of the `getVersion()` method. Each side is returning a different default version ("1.4" in HEAD vs "1.2" in the other branch). Since I don't have enough context to determine which default version is more appropriate, I will return the snippet with the conflict markers preserved:
+
+```java
+    @Override
+    public String getVersion() {
+        String version = null;
+        try {
+            version = ServerInfo.class.getPackage().getImplementationVersion();
+<<<<<<< HEAD
+        } catch (Exception e) {
+        }
+        return version != null ? version : "1.4";
+=======
+        } catch (Exception e) {}
+        return version != null ? version : "1.2";
+>>>>>>> c85cbed209c6bf46d7456c18480f2de60b8652b4
+    }
+
+    @Override
+    public String getStartupTime() {
+        return startupTime;
+
+```

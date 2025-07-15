@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+As a semantic merge conflict resolution expert, I observe an ambiguity in the snippet: the variable `args` is being treated in two mutually exclusive ways depending on its type. In the first head (`args.size() > 0`), it appears `args` is assumed to be a `Collection` or similar object with a `size()` method. In the second head (`args.length > 0`), it is treated as an array with a `.length` property.
+
+The correct resolution depends strongly on the actual declaration and usage context of `args`, which is not visible in the provided fragment. Given the lack of additional clarity about the type of `args`, we cannot safely resolve the conflict without risking introducing a bug.
+
+Therefore, the conflict is returned as-is. You must resolve this manually by verifying the correct type of `args` elsewhere in the codebase.
+
+---
+
+Here is the unchanged code snippet containing the conflict:
+
+```java
+        throw new RuntimeException("Cannot instantiate:" + className, ioe) ;
+    }
+
+    try {
+        // Do normal instantiation
+<<<<<<< HEAD
+        if (args != null && args.size() > 0) {
+            Class paramTypes[] = new Class[args.size()];
+=======
+        if (args != null && args.length > 0) {
+            Class paramTypes[] = new Class[args.length];
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+            for (int i = 0; i < paramTypes.length; i++) {
+                paramTypes[i] = String.class;
+            }
+            Constructor c = objClass.getConstructor(paramTypes);
+<<<<<<< HEAD
+
+```

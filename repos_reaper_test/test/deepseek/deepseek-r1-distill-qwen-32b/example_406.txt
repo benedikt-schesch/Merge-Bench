@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we analyze both approaches. Both aim to save the player's display name but differ in method calls. The second method is more concise and directly accesses the current player from the GC instance. Therefore, we adopt the second approach for clarity and efficiency.
+
+```java
+@Override
+public void onSaveInstanceState(Bundle outState) {
+	super.onSaveInstanceState(outState);
+	try {
+		if (((MainActivity) getActivity()).getGC().isConnected())
+			outState.putString("player", ((MainActivity) getActivity()).getGC()
+					.getCurrentPlayer().getDisplayName());
+		else
+			outState.remove("player");
+	} catch (Exception e) {
+		if (Logger.LOG)
+			Logger.log(e);
+	}
+}
+```

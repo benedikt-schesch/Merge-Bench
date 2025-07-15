@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The conflict is between removing the `emptyFacebookMap()` test and adding a new `emptyObject()` test with similar functionality but a more generic name. Both tests appear to verify that an object with a default `id` is serialized correctly, but the new test replaces the more specific one.
+
+Since the intent seems to be verifying the JSON serialization of empty objects in general rather than specifically for `MapObject`, and the more generic name might be preferable, the change is likely intentional to rename and keep just the new test.
+
+```java
+    ListObject obj = new ListObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+
+<<<<<<< HEAD
+  @Test
+  public void emptyFacebookMap() {
+    MapObject obj = new MapObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  /**
+   * Can we handle the empty object?
+   */
+  @Test
+  public void emptyObject() {
+
+```

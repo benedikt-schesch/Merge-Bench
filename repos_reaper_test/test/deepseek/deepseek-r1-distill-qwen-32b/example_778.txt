@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to understand the intent behind both changes. The original code directly assigns the `versions` value. The conflicting change introduces bitwise operations, which likely aims to preserve certain flags while setting the maximum versions.
+
+Here is the resolved code:
+
+```java
+  public GetRequest maxVersions(final int versions) {
+    if (versions <= 0) {
+      throw new IllegalArgumentException("Need a strictly positive number: "
+                                         + versions);
+    }
+    this.versions = (versions << 1) | (this.versions & EXIST_FLAG);
+    return this;
+  }
+
+  /**
+   * Returns the maximum number of versions to return for each cell scanned.
+```

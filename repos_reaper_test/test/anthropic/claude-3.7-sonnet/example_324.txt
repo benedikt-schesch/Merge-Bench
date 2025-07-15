@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that the main branch (HEAD) is adding a resource map array, while the other branch (d71053b) is adding a method to set toast resources. These appear to be different features that don't conflict logically, though they're placed at the same location.
+
+Here's how I would resolve the conflict:
+
+```java
+        intent.setClass(mActivity, cls);
+        mActivity.startActivity(intent);
+
+    }
+
+    private static final int[] mResourceMap = new int[] {
+            R.drawable.point_right, R.drawable.point_center,
+            R.drawable.point_left };
+
+    public void setToastResource(int[] resourceIds) {
+        mToastEnabled = true;
+        mToastResourcesMap = resourceIds;
+    }
+
+    private void maybeShowToast(int whichActicity) {
+        if (mToastEnabled && whichActicity < mToastResourcesMap.length) {
+            final Toast myToast = new Toast(mActivity);
+            final ImageView myView = new ImageView(mActivity);
+
+```

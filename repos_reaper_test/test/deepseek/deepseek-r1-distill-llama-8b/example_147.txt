@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from a typo in the `getPropierties()` method call and potentially differing property keys. The correct method is `getProperties()`, and the property key `opt.accumulator` is the standard. Thus, the right side's corrected line should be used.
+
+```java
+        pigServer.registerQuery("B = group A by id;");
+        pigServer.registerQuery("C = foreach B generate group," +
+                "org.apache.pig.test.utils.AccumulativeSumBag(A);");
+
+        checkAccumulatorOff("C");
+<<<<<<< HEAD
+        pigServer.getPropeties().setProperty(
+                PigConfiguration.OPT_ACCUMULATOR, "true");
+=======
+        pigServer.getProperties().setProperty("opt.accumulator", "true");
+>>>>>>> 5e2f75cb9f2d357f135a4cb3d2f905fb78fa9d40
+    }
+
+    private void checkAccumulatorOff(String alias) {
+        try {
+            Iterator<Tuple> iter = pigServer.openIterator(alias);
+```

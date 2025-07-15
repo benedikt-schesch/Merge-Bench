@@ -1,0 +1,29 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is a constructor for a Resource class in Java. The conflict is between two versions of the same line. The HEAD version uses IOUtil.toByteArray(in), while the other branch uses IOUtils.toByteArray(in). The difference is the class name: IOUtil vs IOUtils. 
+
+First, I need to figure out which one is correct. Both IOUtil and IOUtils are common utility class names for I/O operations. However, IOUtils is more standard, especially if this is using Apache Commons IO, where the correct class is IOUtils. The HEAD version might have a typo, or perhaps it's a custom utility class.
+
+Looking at the surrounding code, the parameters are the same except for the media type determination. Both sides are trying to pass the byte array from the InputStream, the href, and determine the media type. The intent here is to convert the InputStream to a byte array using the correct utility method.
+
+If the project uses Apache Commons IO, then IOUtils is correct. If there's a custom IOUtil class in the project, then that's correct. Since the conflict is about the class name, without more context, it's ambiguous. However, given that IOUtils is more commonly used in Java ecosystems, it's possible that the branch version (0d25a18) is correct, and the HEAD has a typo. 
+
+But since the user hasn't provided additional context about the project's dependencies or custom classes, I can't be certain. Therefore, the safest approach is to leave the conflict as is, indicating that the intent is ambiguous without further information. Alternatively, if I assume that one of them is correct based on common practices, I might resolve it to IOUtils. But the user instructed to return the same snippet if unsure. Since the class names differ, and without knowing which is correct, the conflict remains unresolved.</think>
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> 0d25a18153c4751a6a7e51055c740287d9c1186e
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+``` 
+
+The conflict remains unresolved because the difference between `IOUtil` and `IOUtils` appears to be a potential typo vs correct class name, but without knowing which utility class actually exists in the codebase (common options being a custom `IOUtil` vs Apache Commons' `IOUtils`), we can't safely determine the intended resolution. The surrounding context and parameters are otherwise identical.

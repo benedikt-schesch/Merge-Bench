@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both changes:
+
+1. The HEAD version creates a ServerSocket and then starts a try block, presumably to be followed by a finally block that would close the serverSocket.
+2. The incoming change uses a try-with-resources statement that will automatically close the ServerSocket when the block is exited.
+
+The intent is clearly to ensure proper resource management. The try-with-resources approach (from the incoming change) is a cleaner and safer Java 7+ pattern for ensuring resources are closed. I'll resolve in favor of that approach:
+
+```java
+	private List<TestEvent> sendMessageWithServerSocket(String input) throws UnknownHostException, IOException, ClassNotFoundException {
+		return sendMessageWithServerSocket(new String[] { input });
+	}
+
+	private List<TestEvent> sendMessageWithServerSocket(String... messages) throws UnknownHostException, IOException, ClassNotFoundException {
+		try (ServerSocket serverSocket = new ServerSocket(0)) {
+			RuntimeEnvironment fakeEnvironment = fakeEnvironment();
+			File file = fakeEnvironment.createClasspathArgumentFile();
+			
+			ClasspathArgumentBuilder classpathArgumentBuilder = new FileClasspathArgumentBuilder(file);
+			factory.startProcess(serverSocket.getLocalPort(), fakeEnvironment, classpathArgumentBuilder);
+```

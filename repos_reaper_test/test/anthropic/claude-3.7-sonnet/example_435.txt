@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it appears that one side (HEAD) is adding a `mSharedPreferences` field to the class, while the other side (308db82) is removing it.
+
+Since the context doesn't show how this field is used, and there's no clear indicator of the intent, I'll resolve it by accepting the version that includes the field declaration, as removing a field that might be used elsewhere could cause compilation errors.
+
+```java
+    private Timer mBackgroundTimer;
+    private String mBackgroundImageUrl;
+    private ArrayObjectAdapter mAdapter;
+    private CardPresenter mCardPresenter;
+    private TvShowsCardPresenter mTvShowsCardPresenter;
+    private SharedPreferences mSharedPreferences;
+
+    private BroadcastReceiver videoUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+
+```

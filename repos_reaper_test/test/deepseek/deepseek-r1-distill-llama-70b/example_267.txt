@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Since both versions of the code are functionally identical and only differ in indentation, I will preserve the original indentation from the HEAD version. The conflict is purely syntactic (whitespace) rather than semantic.
+
+Here is the resolved code:
+
+```java
+    }
+
+    private DataBag createDataBag(int numBags) {
+        String bagType = null;
+        if (PigMapReduce.sJobConfInternal.get() != null) {
+               bagType = PigMapReduce.sJobConfInternal.get().get("pig.cachedbag.type");
+           }
+
+        if (bagType != null && bagType.equalsIgnoreCase("default")) {
+            return new NonSpillableDataBag();
+        }
+        return new InternalCachedBag(numBags);
+
+```

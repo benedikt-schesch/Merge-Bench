@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in terms of intent and semantics. The conflict appears to be about which property-related imports to include in the `ActionMapping` class. Let's break it down:
+
+- **HEAD (Left side)**: Includes a wildcard import `org.structr.core.property.*`, which brings in all property-related classes from the `org.structr.core.property` package. This suggests an intent to use a broad set of property definitions without specifying each one individually, possibly for simplicity or to cover all possible property types.
+
+- **d72e83e (Right side)**: Includes specific imports for `EndNodes`, `Property`, `StartNodes`, and `StringProperty` from the same package. This suggests an intent to be explicit about which property classes are used in the code, potentially for clarity or to avoid unnecessary imports.
+
+**Semantic Intent Analysis**:
+- Both sides aim to include necessary property classes for defining properties in the `ActionMapping` class (likely for data modeling in the Structr framework).
+- The difference is in the approach: generality (HEAD) vs. specificity (d72e83e).
+- There is no indication of functional difference since the wildcard import covers all specific classes mentioned in the right side. However, explicit imports are generally considered better practice for readability and to avoid potential namespace conflicts.
+
+**Resolution Decision**:
+Since the specific imports on the right side are a subset of what the wildcard import covers, and explicit imports are preferred for clarity in most coding guidelines, I will resolve the conflict by adopting the explicit imports from the right side (`d72e83e`).
+
+Here is the resolved code snippet with the full context preserved as provided:
+
+```java
+package org.structr.web.entity.event;
+
+import org.structr.common.PropertyView;
+import org.structr.common.View;
+import org.structr.core.entity.AbstractNode;
+import org.structr.core.property.EndNodes;
+import org.structr.core.property.Property;
+import org.structr.core.property.StartNodes;
+import org.structr.core.property.StringProperty;
+import org.structr.web.entity.dom.DOMElement;
+import org.structr.web.entity.dom.DOMNode;
+import org.structr.web.entity.dom.relationship.*;
+
+public class ActionMapping extends AbstractNode {
+
+```

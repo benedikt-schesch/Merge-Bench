@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, one side is using `BitmapTexture` while the other is using `BitmapTextureAtlas` for the `mScoreFontTexture` variable. This appears to be a class renaming or API change.
+
+Since the newer revision (91801fdd) uses `BitmapTextureAtlas`, which is likely the updated class name in a newer version of the library, I'll resolve the conflict by using the newer class.
+
+```java
+		return new LimitedFPSEngine(engineOptions, FPS);
+	}
+
+	@Override
+	public void onLoadResources() {
+		this.mScoreFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+
+		FontFactory.setAssetBasePath("font/");
+		this.mScoreFont = FontFactory.createFromAsset(this.mScoreFontTexture, this, "LCD.ttf", 32, true, Color.WHITE);
+
+		this.mEngine.getTextureManager().loadTexture(this.mScoreFontTexture);
+
+```

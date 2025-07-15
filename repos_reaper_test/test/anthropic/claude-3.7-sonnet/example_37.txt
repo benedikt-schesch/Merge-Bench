@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears there's a conflict between importing two different utility methods:
+1. From HEAD: `import static io.airlift.command.Cli.buildCli`
+2. From commit a647950: `import static io.airlift.command.SingleCommand.singleCommand`
+
+Since there's not enough context to determine which import is needed by the test class (or if both might be needed), I'll preserve the conflict as instructed when the intent is ambiguous:
+
+```java
+import io.airlift.command.command.CommandRemove;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+<<<<<<< HEAD
+import static io.airlift.command.Cli.buildCli;
+=======
+import static io.airlift.command.SingleCommand.singleCommand;
+>>>>>>> a647950590fa8dec1925101321699283f22a8bff
+
+@Test
+public class HelpTest
+{
+<<<<<<< HEAD
+```

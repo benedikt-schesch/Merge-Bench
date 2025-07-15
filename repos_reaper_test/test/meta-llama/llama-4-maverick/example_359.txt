@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is from a Java class `UrlEncodedParser` and is part of the documentation for a method or class related to parsing URL-encoded data. The documentation explains how the parser handles declared fields of type `Collection` and how it deals with input parameters that do not have a corresponding declared field.
+
+The conflict arises from the difference in the documentation between the two versions being merged. The version from `HEAD` (the current branch) has a paragraph that is not present in the version from the commit `01a6cc54669b5ebf1ea1c3e27e424bba99a0ef3c`. The conflicting paragraph discusses what happens when there is no declared field for an input parameter name.
+
+Let's analyze the intent and semantics:
+
+1. **Understanding the Change in `HEAD`**: The paragraph in `HEAD` explains the behavior when there's no declared field for an input parameter. It mentions that unless the input `data` parameter is a `Map`, such parameters are ignored. If it is a `Map`, the parameter value is stored as a string or as an `ArrayList<String>` for repeated parameters.
+
+2. **Understanding the Change in the Other Commit**: The other version (from the commit `01a6cc54669b5ebf1ea1c3e27e424bba99a0ef3c`) seems to be missing the closing `</p>` tag in the subsequent paragraph. However, upon closer inspection, it appears that the content is almost identical except for the presence of the closing `</p>` tag.
+
+Given the information and analyzing the intent:
+
+- Both versions are documenting the behavior of the parser regarding undeclared fields and input parameters.
+- The main difference is the presence of the closing `</p>` tag in the `HEAD` version, which is necessary for proper HTML formatting.
+
+To resolve the conflict while preserving the intent and semantics of both sides, we should ensure that the documentation is accurate and properly formatted.
+
+Here is the resolved snippet in markdown code syntax:
+
+```java
+   * parameter is the declared field class. Declared fields of type {@link Collection} are used to
+   * support repeating data key names, so each member of the collection is an additional data key
+   * value. They are parsed the same as "primitive" fields, except that the generic type parameter
+   * of the collection is used as the {@link Class} parameter.
+   * </p>
+   *
+   * <p>
+   * If there is no declared field for an input parameter name, it will be ignored unless the input
+   * {@code data} parameter is a {@link Map}. If it is a map, the parameter value will be stored
+   * either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated parameters.
+   * </p>
+```
+
+The resolution involves keeping the paragraph explaining the behavior for undeclared fields (from `HEAD`) and ensuring the HTML formatting is correct by including the closing `</p>` tag. This maintains the semantic intent of both versions and resolves the conflict.

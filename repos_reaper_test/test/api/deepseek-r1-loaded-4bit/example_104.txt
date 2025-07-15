@@ -1,0 +1,26 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the method declaration of `isNotEqualTo` in a Java class. Both sides are trying to define the same method, but there's a difference in the spacing around the parameter.
+
+The HEAD version has `public ShortAssert isNotEqualTo(short expected){` with no space before the opening brace. The other side, from commit 61056d6, has `public ShortAssert isNotEqualTo(short expected) {` with a space before the brace. 
+
+The actual content of the methods is the same; both call `shorts.assertNotEqualTo` with the same parameters. The only difference is the code style regarding the placement of the opening brace. 
+
+In Java, it's common to have the opening brace on the same line as the method declaration, with a space before it. So the version from 61056d6 follows that common style. The HEAD version lacks the space, which might be inconsistent with the project's coding standards.
+
+Since the intent of both changes is the same—to implement the `isNotEqualTo` method—the conflict is purely stylistic. To resolve this, we should choose the version that matches the project's established style. If both are acceptable but the project prefers one style, we go with that. Here, since the conflict is minor and both are correct syntactically, but the second version has the more conventional spacing, it's safe to adopt that. 
+
+Therefore, the correct resolution is to keep the method declaration with the space before the brace, as in the 61056d6 version, and remove the conflict markers. The surrounding context remains unchanged, and the rest of the code isn't affected. So the resolved code will have the method with the space, and the conflict markers are removed.</think>
+```java
+>>>>>>> 61056d641fa4f45156766a8c333ee3f4179fcae7
+    shorts.assertEqualTo(description, actual, expected);
+    return this;
+  }
+
+  public ShortAssert isNotEqualTo(short expected) {
+    shorts.assertNotEqualTo(description, actual, expected);
+    return this;
+  }
+
+<<<<<<< HEAD
+
+```

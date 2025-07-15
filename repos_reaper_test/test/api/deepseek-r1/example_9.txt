@@ -1,0 +1,21 @@
+<think>
+Okay, let's take a look at this merge conflict. The code has a conflict between the HEAD version and the other branch. In the HEAD, there's a method called disconnected() that was added. The other branch doesn't have that method; instead, it's just the @Override for getFileSystem(). 
+
+So, the conflict is about whether to keep the disconnected() method or not. To resolve this, I need to understand the intent of both changes. The HEAD adds a new method, probably to handle disconnection by stopping with a reason. The other branch might have removed it, but more likely, the other branch just didn't have that method when it was developed.
+
+Since merge conflicts happen when both branches modify the same area, here the HEAD added a method between the return world; and the @Override. The other branch didn't have that method, so when merging, the conflict arises. To resolve, we should keep both changes. That means including the disconnected() method from HEAD and the getFileSystem() from both, which they both have. There's no overlap in functionality here; the methods are separate. So the correct resolution is to keep the disconnected() method and the @Override for getFileSystem(). The conflict markers can be removed, keeping both parts.</think>
+```java
+			throw new IllegalStateException("Unable to add new world to the scheduler");
+		}
+		return world;
+	}
+
+	public void disconnected() {
+		stop("Disconnected for some unknown reason!");
+	}
+
+	@Override
+	public FileSystem getFileSystem() {
+		return filesystem;
+	}
+```

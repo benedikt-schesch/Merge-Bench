@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to determine which approach aligns better with the intended functionality and library usage.
+
+**Analysis:**
+- The code is adding key-value pairs to a `JSONObject`
+- The left side (HEAD) uses `add()` and catches `ParseException`
+- The right side uses `put()` and catches `JsonException`
+
+**Resolution:**
+The change from `add()` to `put()` appears to be part of an update to the JSON processing library being used. `put()` is the more commonly used method for adding key-value pairs in many JSON libraries.
+
+Here is the resolved code:
+
+```java
+        throw new IllegalArgumentException(
+          "Provided queries must have non-blank keys and values. You provided: " + queries);
+      }
+
+      try {
+        jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (JsonException e) {
+        // Shouldn't happen unless bizarre input is provided
+        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
+      }
+    }
+```

@@ -1,0 +1,26 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java imports section. The HEAD branch has some static imports, and the other branch (813d480c0d5d482664c5a509543f15a2883e7a11) adds an import for java.util.Arrays.asList.
+
+First, I need to understand what each side is doing. The HEAD version imports emptyList and unmodifiableList from java.util.Collections. The other branch adds asList from java.util.Arrays. Since these are static imports, both are likely used in the code. 
+
+The conflict markers show that the incoming branch adds the asList import along with the existing ones from HEAD. So the correct resolution would be to include all the necessary imports from both sides. The HEAD doesn't have asList, but the other branch does. Since the other branch's code includes the asList import and keeps the existing ones, merging them would mean including all three: emptyList, unmodifiableList, and asList.
+
+I should check if there are any duplicates or if any imports are missing. The HEAD has emptyList and unmodifiableList, while the other branch adds asList and keeps the other two. So combining both, the merged imports should have all three: asList, emptyList, and unmodifiableList. The order might not matter, but it's best to preserve the order from the incoming branch if possible. Wait, looking at the conflict, the other branch's section includes asList first, then emptyList and unmodifiableList. So the merged imports should be in that order. 
+
+Therefore, resolving the conflict by including all three imports in the order presented in the incoming branch. That way, both changes are incorporated without conflict. There's no ambiguity here since the two sides are adding different imports, and the conflict is just about adding a new import alongside existing ones. So the resolved code should have the static imports from both branches merged correctly.</think>
+```java
+ * Copyright @2010-2011 the original author or authors.
+ */
+package org.fest.assertions.internal;
+
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static org.fest.util.Collections.isEmpty;
+import static org.fest.util.Collections.nonNullElements;
+import static org.fest.util.Introspection.descriptorForProperty;
+
+import java.beans.PropertyDescriptor;
+
+```

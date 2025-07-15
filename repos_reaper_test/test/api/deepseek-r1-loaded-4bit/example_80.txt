@@ -1,0 +1,16 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in a Java interface called DoubleLocalizable. Both sides are modifying the method declaration for getString(). The HEAD version has "public String getString();" while the other branch has "String getString();". 
+
+In Java, interface methods are public by default, so explicitly stating public is redundant. The branch removing the public modifier is just following the convention, making the code cleaner. Since both versions are semantically the same, the conflict can be resolved by choosing the version without the public keyword. Also, there's another conflict marker after the second comment. The HEAD side has an extra line break before the method, but the other side doesn't. Since the second method's comment is present, the correct resolution would be to remove the conflict markers and keep the method without public, and ensure the spacing is correct. The extra line in HEAD might be a mistake, so it's better to follow the branch that doesn't have the extra space. So the resolved code would use "String getString();" for both methods, without the extra line.</think>
+```java
+   */
+  public interface DoubleLocalizable {
+    /**
+     * @return The first user-visible string that is associated with this enum value.
+     */
+    String getString();
+
+    /**
+     * @return The second user-visible string that is associated with this enum value.
+     */
+```

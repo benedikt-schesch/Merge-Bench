@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears the difference is the import of JUnit classes. The HEAD version includes the import for `org.junit.*` while the 06e8633 commit removes this import.
+
+To resolve this, I need to determine if the JUnit import is required for this test class. Since this is a test class for `AbstractAssert#as(Description)` and is named with "Tests" in the filename, it's likely that JUnit is needed. However, without seeing the actual test methods, I can't be 100% certain.
+
+Given the limited context and considering this is a test class (as indicated by the Javadoc), keeping the JUnit import seems appropriate:
+
+```java
+import org.fest.assertions.api.AbstractAssert;
+import org.fest.assertions.api.ConcreteAssert;
+import org.fest.assertions.description.Description;
+import org.fest.test.ExpectedException;
+import org.junit.*;
+
+/**
+ * Tests for <code>{@link AbstractAssert#as(Description)}</code>
+ * 
+ * @author Alex Ruiz
+```

@@ -1,0 +1,27 @@
+<think>
+Okay, let's look at this merge conflict. The code snippet is from a Java class called PageStartInfo, which extends AbstractFacebookType. The conflict is between the HEAD version and a17acec0655b8058aaf4d336ba2a1352aa49e2fe.
+
+In the HEAD version, there's a line declaring a serialVersionUID as 1L. The other branch doesn't have this line. The rest of the code, the @Getter, @Setter, and @Facebook annotations, and the 'type' field are the same in both versions.
+
+So the conflict is about whether to include the serialVersionUID. Since serialVersionUID is used for serialization in Java, if the class implements Serializable, then having this field is important for versioning. The HEAD version adds it, while the other branch might have removed it or never had it.
+
+But wait, the class extends AbstractFacebookType. I should check if that parent class already declares a serialVersionUID. If it does, then maybe the child class doesn't need it. Alternatively, if the parent doesn't implement Serializable, then the child might not need it either. However, if the child class is intended to be serializable and the parent doesn't provide the serialVersionUID, then including it here is necessary.
+
+Looking at the code, the conflict is only about the presence of the serialVersionUID. Since both sides are adding the same annotations and field after that, the main decision is whether to keep the serialVersionUID or not.
+
+If the HEAD added it for a reason, like ensuring consistent serialization, and the other branch didn't have it, maybe because they thought it's unnecessary, then we need to determine which is correct. If the class is indeed serializable and the parent doesn't provide the UID, then keeping it is better. But if the parent already handles it, then it's redundant.
+
+Since the user hasn't provided info about the parent class, we have to make a best guess. However, in Java, if a class implements Serializable and doesn't define a serialVersionUID, the compiler generates one, but it's better practice to define it explicitly for version control. So if the HEAD added it, maybe that's the correct approach. The other branch might have removed it by mistake or intentionally. Without more context, it's safer to keep the serialVersionUID to avoid potential serialization issues. Therefore, resolving the conflict by keeping the line from HEAD.</think>
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class PageStartInfo extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook
+    private String type;
+```

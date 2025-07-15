@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict is resolved by taking the definition of the MUTATE constant from the right side, as it adds a needed constant for the RPC method name while maintaining the existing interface structure.
+
+```java
+  /**
+   * Package-private interface to mark RPCs that are changing data in HBase.
+   * @since 1.4
+   */
+  interface IsEdit {
+    /** RPC method name to use with HBase 0.95+.  */
+    static final byte[] MUTATE = { 'M', 'u', 't', 'a', 't', 'e' };
+  }
+
+  /*
+   * This class, although it's part of the public API, is mostly here to make
+   * it easier for this library to manipulate the HBase RPC protocol.
+```

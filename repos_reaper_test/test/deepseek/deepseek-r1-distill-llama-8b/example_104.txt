@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The code shows a merge conflict between two different methods:
+1. On the left (`<<<<<<»: `public ShortAssert isNotEqualTo(short expected) {`), someone added a method `assertSame` and returned `this`.
+2. On the right (`>>>>>>>>`, `public ShortAssert isNotEqualTo(short expected) {`), the same method was present but later conflicting with a new method.
+
+Since both methods are independent, the conflict is likely due to parallel edits. The methods can be both kept If both are needed.
+
+To resolve, include both; they are separate methods.
+
+```java
+>>>>>>> 61056d641fa4f45156766a8c333ee3f4179fcae7
+    shorts.assertEqualTo(description, actual, expected);
+    return this;
+  }
+
+<<<<<<< HEAD
+  public ShortAssert isNotEqualTo(short expected){
+=======
+  public ShortAssert isNotEqualTo(short expected) {
+>>>>>>> 61056d641fa4f45156766a8c333ee3f4179fcae7
+    shorts.assertNotEqualTo(description, actual, expected);
+    return this;
+  }
+
+<<<<<<< HEAD
+
+```

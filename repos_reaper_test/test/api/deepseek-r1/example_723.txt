@@ -1,0 +1,24 @@
+<think>
+Okay, let's tackle this merge conflict. The code is in Java, and the conflict is between two different lines added to the same spot. The HEAD version adds a line for "SmsReportDelivery", while the other branch adds "MessageResultsAPIEnable". 
+
+First, I need to understand what both changes are doing. Both are putting boolean preferences into an editor. The key here is to determine if these two lines are related or if they're separate features. Since the variables are different (smsReportDelivery vs messageResultsAPIEnable), they're likely separate settings. 
+
+In a typical SharedPreferences setup, each putBoolean call adds a different preference. Unless there's a reason these can't coexist, the correct resolution would be to include both lines. The original code probably had one, and each branch added the other. 
+
+So, the conflict markers should be removed, and both lines should be kept. The order might not matter, but it's best to preserve the order from both branches if possible. Looking at the context, the HEAD adds "SmsReportDelivery" after the existing lines, and the other branch adds "MessageResultsAPIEnable" in the same place. Since they're adjacent, combining them by placing one after the other makes sense.
+
+Therefore, the resolved code should include both editor.putBoolean calls. No other lines are conflicting, so the rest of the context remains unchanged. The commit line and the following comment are part of the existing code and should stay as is.</think>
+```java
+        editor.putBoolean("EnableBlacklist", enableBlacklist);
+        editor.putBoolean("EnableWhitelist", enableWhitelist);
+        editor.putBoolean("EnableLog", enableLog);
+        editor.putInt("BatteryLevel", batteryLevel);
+        editor.putString("AlertPhoneNumber", alertPhoneNumber);
+        editor.putBoolean("SmsReportDelivery", smsReportDelivery);
+        editor.putBoolean("MessageResultsAPIEnable", messageResultsAPIEnable);
+        editor.commit();
+    }
+
+    /**
+     * This methods removes old preferences to omit problem caused by AutoTime and taskCheck values
+```

@@ -1,0 +1,33 @@
+<think>
+Okay, let's take a look at this merge conflict. The user provided a Java code snippet with a conflict between the HEAD and another branch. The task is to resolve this conflict by understanding the intent of both sides.
+
+First, I'll examine the conflicting sections. In the HEAD version, there's a method called showCustomizeDialog() that creates a CustomizeFragment and shows it. The other branch (308db8205...) has removed this method entirely.
+
+I need to figure out why there's a conflict. Maybe one branch added the showCustomizeDialog method, and the other branch deleted it. Or perhaps one branch modified the surrounding code. Looking at the context, the conflict occurs between the closing brace of a method (probably the one that shows AddSourceDialogFragment) and the declaration of the UpdateBackgroundTask inner class.
+
+In the HEAD version, after showing the AddSourceDialog, there's a new method showCustomizeDialog. The other branch doesn't have this method, so it's likely that the other branch either never had it or removed it. 
+
+To resolve this, I need to determine if both changes are compatible. If the HEAD added the method and the other branch didn't touch it, then keeping the method makes sense. However, if the other branch removed it, there might be a reason. But in the given code, the other branch just deletes the method. So perhaps the HEAD added the method, and the other branch is from an older version that doesn't have it. 
+
+But wait, the conflict markers show that the HEAD has the method, and the other branch has nothing in that spot. So when merging, if both branches are modifying the same area, but one adds code and the other doesn't, the correct resolution would be to keep the added method unless there's a reason not to. Since there's no indication of a semantic conflict (like both branches modifying the same lines), the safest approach is to accept the HEAD's addition of the showCustomizeDialog method. The other branch's side doesn't have any changes there, so it's just adding new code that the other branch doesn't conflict with.
+
+Therefore, the resolved code should include the showCustomizeDialog method from HEAD. The conflict markers are removed, and the method remains. The rest of the code from both branches is preserved without changes.</think>
+```java
+        AddSourceDialogFragment addSourceDialog = AddSourceDialogFragment.newInstance();
+        addSourceDialog.setTargetFragment(this, 0);
+        addSourceDialog.show(fm, AddSourceDialogFragment.class.getSimpleName());
+    }
+
+    private void showCustomizeDialog() {
+        FragmentManager fragmentManager = getFragmentManager();
+        CustomizeFragment customizeFragment = new CustomizeFragment();
+        customizeFragment.setTargetFragment(this, 0);
+        customizeFragment.show(fragmentManager, CustomizeFragment.class.getSimpleName());
+    }
+
+    private class UpdateBackgroundTask extends TimerTask {
+        @Override
+        public void run() {
+            mHandler.post(new Runnable() {
+                @Override
+```

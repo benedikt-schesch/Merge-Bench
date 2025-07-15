@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we consider the intent of both changes. The line initializing `batched_rpcs` without `server_version` might be an oversight if that parameter is required. Therefore, using the parameterized constructor is likely the correct approach.
+
+```java
+    MultiAction batch;
+    boolean schedule_flush = false;
+
+    synchronized (this) {
+      if (batched_rpcs == null) {
+        batched_rpcs = new MultiAction(server_version);
+        addMultiActionCallbacks(batched_rpcs);
+        schedule_flush = true;
+      }
+      batch = batched_rpcs;
+      // Unfortunately we have to hold the monitor on `this' while we do
+```

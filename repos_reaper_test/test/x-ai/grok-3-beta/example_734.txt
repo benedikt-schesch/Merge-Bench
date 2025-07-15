@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved, as I'm returning it in markdown code syntax without modifying the context or spacing. Below the snippet, I will explain my analysis of the intent and semantics of both sides of the merge conflict to propose a resolution.
+
+```java
+                return false;
+            }
+
+            // Detect drag of the side bar or review drawer
+            if (Math.abs(e1.getY() - e2.getY()) < SWIPE_MAX_OFF_PATH) {
+<<<<<<< HEAD
+                if (e1.getRawX() < Util.getScreenSize(CameraActivity.this).x / SIDEBAR_THRESHOLD_FACTOR) {
+=======
+                if (e1.getRawX() < Util.getScreenSize(CameraActivity.this)
+                        .x / SIDEBAR_THRESHOLD_FACTOR) {
+>>>>>>> c923751783db11df8cb8dc1909ab59605492344c
+                    if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE ||
+                            e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
+                        mSideBar.slide(-distanceX);
+                        mWidgetRenderer.notifySidebarSlideStatus(-distanceX);
+                        mCancelSwipe = true;
+```
+
+### Analysis and Resolution Explanation:
+
+**Intent and Semantics of Both Sides:**
+- Both sides of the merge conflict are checking if a touch event (`e1.getRawX()`) occurs within a certain threshold of the screen width to detect a sidebar drag gesture. The threshold is calculated as a fraction of the screen width (`Util.getScreenSize(CameraActivity.this).x / SIDEBAR_THRESHOLD_FACTOR`).
+- The difference between the two versions lies in the formatting of the code rather than the functionality:
+  - The `HEAD` version has the condition on a single line: `if (e1.getRawX() < Util.getScreenSize(CameraActivity.this).x / SIDEBAR_THRESHOLD_FACTOR) {`
+  - The `c923751783db11df8cb8dc1909ab59605492344c` version splits the condition across two lines for readability: `if (e1.getRawX() < Util.getScreenSize(CameraActivity.this)` followed by `.x / SIDEBAR_THRESHOLD_FACTOR) {`
+- Semantically, both versions are identical in terms of functionality; they perform the same check and produce the same result.
+
+**Proposed Resolution:**
+Since the difference is purely stylistic (line break for readability) and does not affect the logic or intent, I recommend adopting the version from the `c923751783db11df8cb8dc1909ab59605492344c` branch because it improves readability by breaking the long line into two parts. This makes the code easier to understand, especially in contexts where screen width or formatting constraints might make long lines less readable.
+
+**Resolved Code (for reference, not part of the returned snippet):**
+If I were to resolve this, the resolved version would look like:
+```java
+                if (e1.getRawX() < Util.getScreenSize(CameraActivity.this)
+                        .x / SIDEBAR_THRESHOLD_FACTOR) {
+```
+However, as per the instructions, I have preserved the original snippet with the conflict markers intact in the markdown code block above.
+
+If there is any additional context or clarification needed regarding the intent of either branch (e.g., coding style guidelines for the project), I would be happy to reconsider the resolution. For now, the conflict snippet is returned as is.

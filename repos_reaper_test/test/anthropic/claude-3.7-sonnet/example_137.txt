@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I see that:
+
+1. The HEAD version directly compiles the logical plan using `HExecutionEngine`
+2. The incoming change (`d95d3beb`) adds an optimization step before compilation and uses `MRExecutionEngine` instead
+
+This appears to be a change in execution engines, with an added optimization step. I'll resolve it by preserving both the optimization step and using what appears to be the newer execution engine type.
+
+```java
+    }
+
+    public static PhysicalPlan buildPp(PigServer pigServer, String query)
+    throws Exception {
+        LogicalPlan lp = buildLp( pigServer, query );
+        lp.optimize(pigServer.getPigContext());
+        return ((HExecutionEngine)pigServer.getPigContext().getExecutionEngine()).compile(lp,
+                pigServer.getPigContext().getProperties());
+    }
+
+    public static LogicalPlan parse(String query, PigContext pc) throws FrontendException {
+        Map<String, String> fileNameMap = new HashMap<String, String>();
+
+```

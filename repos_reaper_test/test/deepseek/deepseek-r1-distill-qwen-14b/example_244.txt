@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict is purely stylistic, with both sides correctly assigning `combinedSplits`. The merge can be resolved by choosing the formatting that aligns with the project's style preferences. If following a code style guide that prefers line wrapping for readability, the right side's format is better. Otherwise, the left side is acceptable.
+
+```java
+        } else {
+            long maxCombinedSplitSize = conf.getLong("pig.maxCombinedSplitSize", 0);
+            if (maxCombinedSplitSize== 0)
+                // default is the block size
+                maxCombinedSplitSize = blockSize;
+<<<<<<< HEAD
+            List<List<InputSplit>> combinedSplits =
+                MapRedUtil.getCombinePigSplits(oneInputSplits, maxCombinedSplitSize, conf);
+=======
+            List<List<InputSplit>> combinedSplits = 
+                    MapRedUtil.getCombinePigSplits(oneInputSplits, maxCombinedSplitSize, conf);
+>>>>>>> 1cb2531c41db7942eca2b75f500cfe7e4a8cad81
+            for (int i = 0; i < combinedSplits.size(); i++)
+                pigSplits.add(createPigSplit(combinedSplits.get(i), inputIndex, targetOps, i, conf));
+            return pigSplits;
+        }
+    }
+```

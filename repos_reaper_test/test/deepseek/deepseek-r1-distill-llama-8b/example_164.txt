@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, since both sides are identical, we can preserve both changes. However, it's more common to keep the later code if there were edits, but without changes, no action is needed.
+
+```java
+    static public InputStream open(String fileSpec, PigContext pigContext) throws IOException {
+        fileSpec = checkDefaultPrefix(pigContext.getExecType(), fileSpec);
+        if (!fileSpec.startsWith(LOCAL_PREFIX)) {
+            init(pigContext);
+            ElementDescriptor elem = pigContext.getDfs().asElement(fullPath(fileSpec, pigContext));
+            return openDFSFile(elem);
+        }
+        else {
+            fileSpec = fileSpec.substring(LOCAL_PREFIX.length());
+            //buffering because we only want buffered streams to be passed to load functions.
+```

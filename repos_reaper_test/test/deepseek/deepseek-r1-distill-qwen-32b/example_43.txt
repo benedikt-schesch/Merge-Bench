@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflict is about which field the method synchronizes on - `spectator` vs `spectators`. Given the context of the method removing a spectator, it likely operates on a collection of spectators rather than a single one. Synchronizing on `spectators` makes more sense for thread safety when modifying the collection.
+
+Here is the resolved snippet:
+
+```java
+  }
+
+  /**
+   * Remove a spectator from the game.
+   * <br/>
+   * Synchronizes on {@link #spectators}.
+   *
+   * @param user Spectator to remove from the game.
+   */
+  public void removeSpectator(final User user) {
+    logger.info(String.format("Removing spectator %s from game %d.", user.toString(), id));
+
+```

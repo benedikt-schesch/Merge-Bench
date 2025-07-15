@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict involves adding a new boolean parameter `gameChatEnabled` with a `@GameChatEnabled` annotation to the constructor. The constructor body already includes the initialization for this field, so we need to ensure the constructor parameters are correctly merged.
+
+Given the context, we should include `gameChatEnabled` in the constructor parameters while preserving the correct order and annotations.
+
+```java
+  private final ConnectedUsers users;
+  private final boolean gameChatEnabled;
+
+  @Inject
+  public GameChatHandler(final GameManager gameManager, final ChatFilter chatFilter,
+                         final ConnectedUsers users, @GameChatEnabled final boolean gameChatEnabled) {
+    super(gameManager);
+    this.chatFilter = chatFilter;
+    this.users = users;
+    this.gameChatEnabled = gameChatEnabled;
+  }
+```

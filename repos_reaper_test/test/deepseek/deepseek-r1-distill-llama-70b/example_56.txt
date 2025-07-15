@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict appears to be purely stylistic, with one version splitting the method calls across lines and the other writing them on a single line. The functionality is identical - both create a Hibernate query to fetch PyxCardSets, set the parameter list, and execute the query. 
+
+Since there is no semantic difference between the two versions, but rather only formatting, I will return the snippet with the conflict unresolved as the intent is not ambiguous. You can choose whichever style you prefer:
+
+```java
+    synchronized (options.cardSetIds) {
+      try {
+        final List<CardSet> cardSets = new ArrayList<>();
+
+        if (!options.getPyxCardSetIds().isEmpty()) {
+<<<<<<< HEAD
+          @SuppressWarnings("unchecked") final List<CardSet> pyxCardSets = session
+              .createQuery("from PyxCardSet where id in (:ids)")
+              .setParameterList("ids", options.getPyxCardSetIds()).list();
+=======
+          @SuppressWarnings("unchecked") final List<CardSet> pyxCardSets = session.createQuery("from PyxCardSet where id in (:ids)").setParameterList("ids", options.getPyxCardSetIds()).list();
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42e
+          cardSets.addAll(pyxCardSets);
+        }
+
+        // Not injecting the service itself because we might need to assisted inject it later
+        // with card id stuff.
+```

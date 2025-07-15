@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict where one side imports `DigestUtils` from Apache Commons Codec while the other side removes this import. The surrounding context shows other imports and a class with utility methods.
+
+Here's the full snippet with the merge conflict in markdown code syntax:
+
+```java
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+<<<<<<< HEAD
+import org.apache.commons.codec.digest.DigestUtils;
+=======
+>>>>>>> 31d7966e3896819a99b31f10e83e864e3805bcbd
+import org.apache.commons.io.FileUtils;
+
+/**
+ * Various utility methods that don't have more proper home.
+ *
+
+```
+
+The conflict involves whether to keep the `DigestUtils` import or remove it. To resolve this, consider the following:
+
+1. **Intent of Each Side**:
+   - The left side (`<<<<<<< HEAD`) suggests that `DigestUtils` was added to import a utility class for digest operations.
+   - The right side (removed `DigestUtils` import) suggests that `DigestUtils` is no longer needed, possibly because the functionality was replaced, removed, or moved elsewhere.
+
+2. **Context and Semantics**:
+   - The class appears to be a utility class with methods for various purposes.
+   - If `DigestUtils` is used within the class, it should be kept. If not, it can be safely removed.
+   - The surrounding imports include other utility classes, so the intent might have been to clean up unused imports.
+
+3. **Recommendation**:
+   - If `DigestUtils` is being used in the class, resolve the conflict by keeping the `DigestUtils` import.
+   - If `DigestUtils` is not used and was accidentally left in, resolve the conflict by removing it and keeping the other changes.
+
+Given the information provided, it's difficult to determine the exact intent behind this change, so I've presented the conflict as is for you to decide based on your knowledge of how `DigestUtils` is used in the class.

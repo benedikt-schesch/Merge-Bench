@@ -1,0 +1,13 @@
+<think>
+No reasoning found</think>
+The conflict arises from the order of the commands in the string concatenation. The `scan` command should come before `mscan`, and `mscan` should come before other commands like `cas`. The `HEAD` version has `mscan` in the correct position, so it should be preferred.
+
+```java
+                       + "  scan <table> [start] [family] [qualifier] [stop] [regexp]\n"
+                       + "  mscan <table> [start] [family[:qualifier[,qualifier]]/[family...]] [stop] [regexp]\n"
+                       + "  cas <table> <key> <family> <qualifier> <expected> <value>\n"
+                       + "Variants that acquire an explicit row-lock:\n"
+                       + "  lget <table> <key> [family] [qualifiers ...]\n"
+                       + "  lput <table> <key> <family> <qualifier> <value>\n"
+                       + "  ldelete <table> <key> <family> <qualifier>\n"
+```

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to reconcile the differences between the two versions while preserving the intended functionality.
+
+1. **Parameter Type Consideration**: The HEAD branch uses `MiniGenericCluster`, which might be necessary for accepting a broader range of cluster types. This suggests it's a generic method that shouldn't be restricted to a specific cluster implementation.
+
+2. **OS Compatibility Handling**: The other branch includes code to handle Windows-specific path separators. This is essential for ensuring the method works correctly across different operating systems.
+
+**Solution**: Retain the `MiniGenericCluster` parameter from the HEAD branch to maintain flexibility and incorporate the Windows path handling to ensure compatibility.
+
+```java
+            throw new IOException(e);
+        }
+
+    }
+
+<<<<<<< HEAD
+    static public void copyFromClusterToLocal(MiniGenericCluster cluster,
+            String fileNameOnCluster, String localFileName) throws IOException {
+=======
+    static public void copyFromClusterToLocal(MiniGenericCluster cluster, 
+            String fileNameOnCluster, String localFileName) throws IOException {
+        if (Util.WINDOWS) {
+            fileNameOnCluster = fileNameOnCluster.replace('\\', '/');
+            localFileName = localFileName.replace('\\', '/');
+        }
+>>>>>>> 8923da8cd49c041d99fd5996ddf807f54915c79e
+        File parent = new File(localFileName).getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        PrintWriter writer = new PrintWriter(new FileWriter(localFileName));
+```

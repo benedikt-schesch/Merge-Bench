@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I'll analyze this merge conflict by looking at the semantics and intent of both sides.
+
+The conflict appears to be in a Java method where both sides are trying to compute the same `finalPos` value by adding `distance` to `getTranslationY()` and clamping it at 0. The code is almost identical on both sides:
+
+- Both compute `finalPos = getTranslationY() + distance`
+- Both clamp `finalPos` at 0
+- The surrounding context (setting translation Y and handling alpha) is identical
+
+Since there's no semantic difference between the two versions, and the code is essentially the same, we can resolve the conflict by taking either version. I'll keep the original context version since it's already present in the file.
+
+Here is the resolved code:
+
+```java
+        float finalPos = getTranslationY() + distance;
+        if (finalPos > 0) {
+            finalPos = 0;
+        }
+
+        setTranslationY(finalPos);
+
+        if (getAlpha() == 0.0f) {
+            setVisibility(View.VISIBLE);
+            setAlpha(1.0f);
+```

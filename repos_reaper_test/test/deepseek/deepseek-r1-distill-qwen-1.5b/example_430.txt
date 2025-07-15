@@ -1,0 +1,46 @@
+<think>
+No reasoning found</think>
+```java
+                    ListRow row = findListRow(category);
+
+                    // if found add this video
+                    // if not, create a new row and add it
+                    if (row != null) {
+                        ((SortedArrayObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedArrayObjectAdapter listRowAdapter = new SortedArrayObjectAdapter(
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+                                videoNameComparator, mCardPresenter);
+                        listRowAdapter.add(video);
+
+                        HeaderItem header = new HeaderItem(0, category, null);
+                       lien.add(0, new ListRow(header, listRowAdapter));
+=======
+                    ListRow row = findListRow(category);
+
+                    // if found add this video
+                    // if not, create a new row and add it
+                    if (row != null) {
+                        ((SortedArrayObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedArrayObjectAdapter listRowAdapter = new SortedArrayObjectAdapter(
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+                                videoNameComparator, mCardPresenter);
+                        listRowAdapter.add(video);
+
+                        HeaderItem header = new HeaderItem(0, category, null);
+                       .pageX.add(0, new ListRow(header, listRowAdapter));
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+```
+
+In this solution:
+1. Both approaches maintain state without separate `بدل`s, so withholding the `Dup配套设施` is problematic.
+2. Reuse the same SortedArrayObjectAdapter to create each sorted object.
+3. Instead of redeclaring SortedArrayObjectAdapter in the if clause, we keep it as is for all scenarios.
+
+Plus, inyield:
+- No `Dup` instance is required
+- No need for hot-declared `SortedArrayObjectAdapter`s
+- More efficient and cleaner code using the same instance
+
+This simplified approach mirrors many current да techniques, but uses deeply modified and purposeried adapters than before, with no implicit Desire(a)s for table differences.

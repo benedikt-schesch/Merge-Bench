@@ -1,0 +1,114 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the code snippet carefully.
+
+The conflict is between the HEAD version and the commit 1488b22ce313803d012c8ace36c3b12f930ee309. The conflict is around the declaration of the session variable.
+
+In the HEAD, the code has a line "Session session;" with a tab before it. In the other branch, that line is removed, but then there's a line "Session session;" with four spaces. Wait, actually, looking again, the HEAD version adds the line with a tab, and the other branch might have a different indentation or perhaps the line was moved.
+
+Wait, the code in the conflict shows that in HEAD, there's a line with "Session session;" indented with a tab, and then in the other branch, that line is removed. But after the conflict markers, there's another line "Session session;" with four spaces. Hmm, maybe the other branch has the session declaration after some other code.
+
+Wait, let me parse the code again. The conflict is:
+
+<<<<<<< HEAD
+
+	Session session;
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+    Session session;
+
+    ChannelDirectTCPIP channel;
+
+So in the HEAD, the session is declared with a tab indentation. The other branch doesn't have that line (since between ======= and >>>>>>> there's nothing), but after the conflict ends, there's a line with four spaces indentation for Session session. Wait, that's confusing. So the code after the conflict markers has "Session session;" again. So maybe the other branch had the session declaration moved or modified.
+
+Wait, perhaps the original code in the other branch had the session declaration without the tab, and in HEAD someone added it with a tab, but in the other branch, maybe it's part of a different change. Alternatively, maybe the other branch added the session declaration after the channel, but that's not clear.
+
+Alternatively, maybe the conflict is that in HEAD, the session was added, and in the other branch, it's already present but with different indentation. But looking at the code, the conflict markers show that in HEAD, there's a line with a tab-indented "Session session;", and the other branch (between ======= and >>>>>>) has nothing. But after the conflict markers, the code has "Session session;" with four spaces. So perhaps the correct resolution is to keep the session declaration once, with the correct indentation.
+
+Wait, the code after the conflict is:
+
+    Session session;
+
+    ChannelDirectTCPIP channel;
+
+So in the other branch, after the conflict, the session is declared with four spaces. The HEAD version added a session declaration with a tab. But if the other branch's code already has the session declaration after the conflict markers, then perhaps the conflict is because both branches added the same line but with different indentation.
+
+So the correct way to resolve this is to remove the conflict markers and ensure that the session is declared once, using the correct indentation. Since in the code after the conflict, the session is declared with four spaces, which is standard Java indentation (tabs are often replaced with spaces in many projects). However, the project's style guide would dictate whether to use tabs or spaces, but given that the other line uses four spaces, maybe the correct indentation is four spaces.
+
+But wait, in the code before the conflict, there's a line:
+
+    private static final Log log = LogFactory.getLog(SSHSocketImpl.class);
+
+Which is indented with four spaces. Then in HEAD, the session is declared with a tab. The other branch's code, after the conflict, declares session with four spaces. So maybe the HEAD introduced a tab, which is inconsistent with the project's style. The other branch either didn't have that line (but the code after conflict shows it does) or maybe the line was moved.
+
+Alternatively, maybe the conflict is because the session declaration was added in both branches, but in different places. Let me think again.
+
+Looking at the code:
+
+Original lines:
+
+ */
+class SSHSocketImpl extends SocketImpl {
+    
+    private static final Log log = LogFactory.getLog(SSHSocketImpl.class);
+<<<<<<< HEAD
+
+	Session session;
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+    Session session;
+
+    ChannelDirectTCPIP channel;
+
+So in the HEAD, between the log declaration and the session declaration, there's a line with a tab-indented "Session session;". In the other branch, that line is not present (since between ======= and >>>>>> there's nothing). But after the conflict markers, the code has "Session session;" with four spaces. So the conflict arises because one branch added the session declaration with a tab, and the other branch added it with four spaces, or perhaps the other branch already had it with four spaces, leading to a duplication.
+
+But the result is that the session is declared twice: once in the HEAD part and once after the conflict. But that can't be right. Wait, no: the code after the conflict is part of the other branch's code. So the conflict is between the HEAD adding a line with a tab, and the other branch not having that line but having the line after the conflict. Wait, maybe the other branch's code is:
+
+Original code:
+
+private static final Log log = ...;
+
+Then, in the other branch, after that line, there's:
+
+    Session session;
+
+    ChannelDirectTCPIP channel;
+
+But in the HEAD, someone added a line with a tab-indented "Session session;" between the log and the session declaration. So when merging, Git sees that in HEAD, there's an added line, and in the other branch, the line is added after the log, leading to a conflict.
+
+But in reality, both branches are adding the same variable declaration, but with different indentation. So the correct resolution is to have the variable declared once. Since the other branch's code already has the declaration with four spaces, the HEAD's addition is redundant, but maybe the indentation is wrong. Therefore, the correct resolution is to remove the conflicting lines (the HEAD's tab-indented line) and keep the session declaration from the other branch.
+
+Alternatively, if the HEAD's addition is necessary, but the indentation is incorrect, then adjust the indentation to four spaces.
+
+But looking at the code, the session is declared twice: once in the HEAD's part and once after the conflict. That would cause a duplicate variable declaration error in Java. Therefore, the correct resolution is to remove the duplicate declaration.
+
+So the conflict arises because both branches added the same variable, but in different positions. Therefore, the correct way is to keep one instance of the session declaration. Since the other branch's code has it after the conflict marker, and the HEAD has it before, but with a tab, we need to choose which one to keep.
+
+But in the code after the conflict, the session is declared with four spaces, which is consistent with the log line's indentation. Therefore, the correct resolution is to remove the HEAD's line (with the tab) and keep the session declaration from the other branch, which is properly indented with four spaces.
+
+Therefore, the resolved code should have the session declared once, with four spaces indentation, and the channel declaration remains.
+
+So the merged code would be:
+
+ */
+class SSHSocketImpl extends SocketImpl {
+    
+    private static final Log log = LogFactory.getLog(SSHSocketImpl.class);
+
+    Session session;
+
+    ChannelDirectTCPIP channel;
+
+That way, the duplicate declaration is removed, and the correct indentation is used.</think>
+```java
+ * things to SSH.
+ */
+class SSHSocketImpl extends SocketImpl {
+    
+    private static final Log log = LogFactory.getLog(SSHSocketImpl.class);
+
+    Session session;
+
+    ChannelDirectTCPIP channel;
+```

@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises between two merge branches regarding how static imports are handled. One branch uses `import static junit.framework.Assert.*;` (wildcard import), while the other explicitly imports specific methods `assertEquals` and `assertSame` using `import static junit.framework.Assert.assertEquals;` and `import static junit.framework.Assert.assertSame;`.
+
+The intent of both branches is to import assertion methods from `junit.framework.Assert`. The branch using explicit imports (`assertEquals` and `assertSame`) follows a more precise and safer practice by avoiding potential name conflicts and reducing cognitive load. This practice is recommended for cleaner and more maintainable code.
+
+To resolve the conflict, we will adopt the explicit imports from the branch that uses `assertEquals` and `assertSame`, as it is more restrictive and avoids potential issues with wildcard imports.
+
+```java
+ *
+ * Copyright @2010-2011 the original author or authors.
+ */
+package org.fest.assertions.api.abstract_;
+
+<<<<<<< HEAD
+import static junit.framework.Assert.*;
+import static org.fest.test.ErrorMessages.descriptionIsNull;
+import static org.fest.test.ExpectedException.none;
+=======
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertSame;
+import static org.fest.test.ErrorMessages.descriptionIsNull;
+import static org.fest.test.ExpectedException.none;
+
+>>>>>>> 06e86330876dee7fcb135679416b04a7161cf65
+import static org.fest.assertions.test.TestData.someDescription;
+import static org.fest.test.ErrorMessages.descriptionIsNull;
+import static org.fest.test.ExpectedException.none;
+
+import org.junit.Before;
+```

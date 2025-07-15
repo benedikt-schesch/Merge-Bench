@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the code on the left side seems to be an older approach using a different constructor for `PigContext` with `ExecType` and `Properties`, while the right side initializes a builder and parses a plan. The right side is more detailed and probably intended, so we will use it.
+
+```java
+        return buildPlan(query, LogicalPlanBuilder.class.getClassLoader());
+    }
+
+    public LogicalPlan buildPlan(String query, ClassLoader cldr) {
+        LogicalPlanBuilder.classloader = cldr;
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+        PigContext pigContext = new PigContext(ExecType.LOCAL, new Properties());
+        
+        LogicalPlanBuilder builder = new LogicalPlanBuilder(pigContext); //
+
+        try {
+            LogicalPlan lp = builder.parse("Test-Plan-Builder",
+                                           query,
+```

@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first analyze the context and the changes proposed by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a rendering or drawing loop, possibly in a game or graphical application. The context involves updating a scene and then drawing it onto a canvas.
+
+1. The first part of the code updates the scene by calling `scene.update();`. This suggests that the scene is being prepared or updated for rendering.
+
+2. The drawing part is where the conflict arises. 
+   - The local version (`HEAD`) directly draws the `scene.viewport.bitmap` onto the canvas using `canvas.drawBitmap`. This implies that the scene's viewport bitmap is being directly rendered onto the canvas.
+   - The incoming change (`b31a7c324865e2149027b61f6310d03a48a36746`) introduces a method call `scene.draw(canvas);`, suggesting that the scene itself is responsible for drawing onto the canvas. This encapsulates the drawing logic within the `scene` object.
+
+To resolve the conflict, we must consider the intent behind both changes. The local change directly draws the bitmap, which is straightforward and implies that the rendering logic is either tightly coupled with the caller or that the scene's bitmap is being directly manipulated or accessed.
+
+The incoming change, however, suggests a more object-oriented approach where the `scene` object is responsible for its own drawing. This could be part of a design where scenes are self-contained and can manage their rendering.
+
+Both approaches can be valid depending on the design and requirements of the application. However, if we are to choose one based on the information given:
+
+- If the application is designed with the scene being responsible for its rendering, the incoming change (`scene.draw(canvas);`) is more aligned with object-oriented principles and encapsulation.
+
+- If the rendering logic is intended to be managed outside the scene, the local change might be more appropriate.
+
+Since both versions achieve a similar goal (drawing the scene) but through different means, and without additional context on the design intent, we can consider the incoming change as potentially more encapsulated and flexible.
+
+However, to preserve the functionality of both (in case they are not entirely equivalent), one might consider a resolution that checks if the scene's drawing method is intended to replace or complement the direct bitmap drawing.
+
+Let's directly examine the resolution in the required format:
+
+```java
+		
+		// tell the scene to update it's viewport bitmap
+		scene.update();
+		
+		// draw it
+		scene.draw(canvas);
+    	if (DEBUG){
+    		long now = System.currentTimeMillis();
+			double n = ((double)now)/1000L;
+			double s = ((double)startTime)/1000L;
+			double fps = 1L/(n-s);
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict to understand the intent and semantics behind both changes.
+
+Looking at the conflict:
+- The `HEAD` version constructs a `Game` object with 11 parameters.
+- The other branch (`ed08e371978529db8a908e266dc1a8add1d37967`) constructs a `Game` object with 13 parameters, adding two additional providers at the end.
+
+The intent seems to be that the other branch has updated the `Game` class constructor to include additional parameters (`falseProvider` and `gameOptionsProvider`). This likely indicates an enhancement or feature addition to the `Game` class that requires these extra providers. Since the branch version includes more parameters, it suggests a newer or more complete version of the constructor, possibly reflecting an updated API or added functionality.
+
+I will resolve the conflict by adopting the version from the branch `ed08e371978529db8a908e266dc1a8add1d37967` as it seems to be the updated implementation with additional necessary parameters.
+
+Here is the resolved code snippet including the full context, preserved exactly as provided:
+
+```java
+
+    // remove game 1 out from under it, to make sure it'll fix itself
+    gameManager.getGames().remove(1);
+    assertEquals(1, gameManager.get().intValue());
+    gameManager.getGames().put(1,
+        new Game(1, cuMock, gameManager, timer, null, null, null, metricsMock, falseProvider,
+            formatProvider, falseProvider, formatProvider, falseProvider, gameOptionsProvider));
+    assertEquals(-1, gameManager.get().intValue());
+
+    gameManager.destroyGame(2);
+    gameManager.destroyGame(0);
+    assertEquals(2, gameManager.get().intValue());
+
+```

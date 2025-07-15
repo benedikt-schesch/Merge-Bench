@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Here's the fix with the override:
+
+```java
+			should = should && isPrimitive(new Mirror().on(definedIn).reflect().field(fieldName).getType());
+		return should;
+	}
+
+	private static boolean isCompatiblePath(Entry<String, Class<?>> path, Class definedIn, String fieldName) {
+=======
+		return path.getValue().equals(definedIn) && (path.getKey().equals(fieldName) || path.getKey().endsWith("." + fieldName))
+>>>>>>> 992d8a9fda2816185b36d585fafd6d5d
+
+	}
+
+	@Override
+	public String serializedClass(Class type) {
+		if (type == null) return super.serializedClass(type);
+>>>>>>> 138d9d8997aea80c77b36f874af9435aa
+```

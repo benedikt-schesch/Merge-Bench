@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the changes introduced on both sides of the conflict.
+
+### Original Code Before Conflict
+
+The original code before the merge conflict is not directly available, but based on the conflict markers (`<<<<<<< HEAD` and `>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b`), we can infer the changes made on both branches.
+
+### Changes Introduced
+
+1. **Left Side (HEAD):**
+   - The `authSubTransport.addParser(AuthKeyValueParser.INSTANCE);` line is added before building the `HttpRequest`.
+   - The `HttpRequest` is built using `authSubTransport.buildGetRequest();`, and the URL is set using `request.setUrl()`.
+
+2. **Right Side (f1253614bee81db4cd5344faaa5c73a5c51b2c5b):**
+   - The `HttpRequest` is created using a `RequestFactory` obtained from `authSubTransport.createRequestFactory()`.
+   - The URL for the request is set during the construction of the `HttpRequest` using `new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo")`.
+   - The parser is added to the `request` using `request.addParser(AuthKeyValueParser.INSTANCE);`.
+
+### Intent and Semantics
+
+The intent on both sides appears to be to correctly configure an `HttpRequest` to fetch token information and parse the response. The left side directly uses `authSubTransport` to build the request and then sets the URL. The right side uses a more specific approach by creating a `RequestFactory` from `authSubTransport` to build the request with a `GenericUrl`.
+
+### Resolving the Conflict
+
+To resolve the conflict, we need to understand if the changes on both sides are complementary or if one approach is preferred over the other. 
+
+1. Both sides are adding `AuthKeyValueParser.INSTANCE` to parse the response, which is a common intent.
+2. The difference lies in how the `HttpRequest` is constructed and configured.
+
+The right side (`f1253614bee81db4cd5344faaa5c73a5c51b2c5b`) seems to be using a more structured approach by creating a request factory and using a `GenericUrl`, which is a more specific and possibly preferred way of handling URLs in the context of the used HTTP client library.
+
+### Resolution
+
+Since both changes aim at achieving a similar outcome but through slightly different methods, and the right-hand side change seems to be more in line with potentially updated or recommended practices (using `RequestFactory` and `GenericUrl`), we can lean towards resolving the conflict by choosing the right-hand side changes while ensuring that the parser is correctly added.
+
+However, directly taking the right-hand side change achieves the same outcome in terms of functionality (building a GET request to the specified URL and parsing the response) and seems to follow a more modern or specific pattern for the library being used.
+
+Thus, the resolved code snippet, without modifying the surrounding context and preserving the original spacing, is:
+
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public TokenInfoResponse requestTokenInfo() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+    return request.execute().parseAs(TokenInfoResponse.class);
+  }
+
+  /** Updates the authorization headers. */
+  private void updateAuthorizationHeaders() {
+```

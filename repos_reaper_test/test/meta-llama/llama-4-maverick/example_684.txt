@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the intent and semantics of both sides of the merge.
+
+The code snippet is written in Java and appears to be handling a situation where certain principals (users or groups) are missing during a data deployment process. The `missingPrincipals` list is being used to store the names of these missing principals.
+
+Both versions of the conflicted code are constructing a warning message to be logged and possibly displayed to the user. The message includes a title, a descriptive text, and a list of the missing principals.
+
+The differences between the two versions are:
+
+1. The wording of the descriptive text: The `HEAD` version uses "resource access permissions or node ownership" and "missing permissions/ownerships," while the other version uses "grants or node ownership" and "missing grants/ownerships." Both versions convey a similar meaning, but the terminology differs.
+2. The punctuation at the end of the first sentence of the descriptive text: The `HEAD` version uses a period (`.`), while the other version uses an exclamation mark (`!`).
+3. The method used to join the `missingPrincipals` list into a string: The `HEAD` version uses `String.join()`, while the other version uses a stream to sort the list before joining it with `Collectors.joining()`.
+
+To resolve the conflict, we should consider the intent behind both versions. It seems that both versions are trying to improve the clarity and informativeness of the warning message. 
+
+The other version (`83418dbbb7fe923f2aef29aa4f23d01886e1b965`) appears to have made more significant changes, including sorting the list of missing principals, which could be considered an improvement for user experience as it makes the list more readable.
+
+Here is the resolved code snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+		applyConfigurationFileIfExists(context, source.resolve("post-data-deploy.conf"), DEPLOYMENT_DATA_IMPORT_STATUS);
+
+		if (!missingPrincipals.isEmpty()) {
+
+			final String title = "Missing Principal(s)";
+			final String text = "The following user(s) and/or group(s) are missing for grants or node ownership during <b>data deployment</b>.<br>"
+					+ "Because of these missing grants/ownerships, <b>node access rights are not identical to the export you just imported</b>!"
+					+ "<ul><li>" + missingPrincipals.stream().sorted().collect(Collectors.joining("</li><li>")) + "</li></ul>"
+					+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-data-deploy.conf</a> and re-importing.";
+
+			logger.info("\n###############################################################################\n"
+					+ "\tWarning: " + title + "!\n"
+```

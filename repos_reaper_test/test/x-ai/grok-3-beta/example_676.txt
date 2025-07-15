@@ -1,0 +1,64 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict preserved, presented in markdown code syntax exactly as provided, without any modifications to the context or spacing. Following the snippet, I will explain my analysis and resolution of the conflict based on the intent and semantics of both sides of the merge.
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+<<<<<<< HEAD
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+=======
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+```
+
+### Analysis and Resolution
+
+#### Intent and Semantics of Both Sides:
+- **HEAD (Left Side):** The intent here is to store a token using `jdbcTemplate.update` with parameters based on `account.getId()`, `token.getProviderId()`, `token.getValue()`, and `token.getSecret()`. There is no conditional logic, implying that the update operation should occur for all token types.
+- **Branch (Right Side - 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6):** The intent introduces a conditional check with `if (token.isAccessToken())`, meaning the update operation only happens if the token is specifically an access token. Additionally, it uses `token.getResourceId()` instead of `token.getProviderId()` as one of the parameters, suggesting a change in how the token is associated (possibly a refactoring or correction in the data model).
+  
+#### Key Differences:
+1. **Conditional Logic:** The right side introduces a condition to only process access tokens, while the left side processes all tokens.
+2. **Parameter Difference:** The left side uses `token.getProviderId()` and the right side uses `token.getResourceId()`. This likely reflects a change in naming or logic about how tokens are tied to resources or providers.
+  
+#### Resolution Rationale:
+- The conditional logic (`if (token.isAccessToken())`) on the right side appears to be a deliberate refinement to restrict the operation to access tokens only. This could be a bug fix or feature enhancement to prevent unintended token storage.
+- The switch from `getProviderId()` to `getResourceId()` suggests a data model change or correction in terminology. Since the method signature already includes a `resourceId` parameter and the right side aligns with `token.getResourceId()`, it is likely that `getResourceId()` is the intended field to use, especially as `resourceId` is passed as a method argument and might be related to the token's context.
+- Preserving the conditional logic and updated field name seems to align with the more specific and likely more recent intent from the right side (branch), while the left side (HEAD) appears to be a more general, possibly outdated approach.
+
+#### Resolved Code:
+Based on the above analysis, I will resolve the conflict by adopting the conditional logic and the updated parameter from the right side (branch). Below is the resolved snippet in markdown code syntax, keeping the surrounding context identical:
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+```
+
+This resolution prioritizes the specific behavior introduced in the branch (conditional check for access tokens and updated field reference to `getResourceId()`), which aligns with a more precise intent and likely reflects an updated design or bug fix. If there is a need to store non-access tokens, this would require further discussion or additional logic, but based on the provided snippet, the branch's intent appears more contextually relevant.

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+    synchronized (options.cardSetIds) {
+      try {
+        final List<CardSet> cardSets = new ArrayList<>();
+
+        if (!options.getPyxCardSetIds().isEmpty()) {
+          @SuppressWarnings("unchecked") final List<CardSet> pyxCardSets = session
+              .createQuery("from PyxCardSet where id in (:ids)")
+              .setParameterList("ids", options.getPyxCardSetIds()).list();
+          cardSets.addAll(pyxCardSets);
+        }
+
+        // Not injecting the service itself because we might need to assisted inject it later
+        // with card id stuff.
+
+```

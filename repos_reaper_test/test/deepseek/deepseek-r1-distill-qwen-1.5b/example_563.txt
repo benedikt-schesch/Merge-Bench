@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To fix this, we need to correct the validation by ensuring that an empty JSON source (like an empty string) does not pass validation. 
+
+Here are the necessary changes:
+
+```java
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+>>>>>>> b6d22b56e3e697d3c0c8fc3c8ceb35474affd54
+```
+
+```java
+  @Test(expected = FacebookJsonMappingException.class)
+  public void checkInvalidJson() {
+    new Connection<User>(new DefaultFacebookClient(Version.LATEST), "", User.class);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+```
+
+This add ensures that an empty source string triggers a validation error like "Failed by value fq(" only if the validation is sensitive.

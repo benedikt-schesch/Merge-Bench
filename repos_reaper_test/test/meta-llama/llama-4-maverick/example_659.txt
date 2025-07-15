@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a test class or a component within a larger software system, likely related to Android development given the presence of `AndroidBuildService`. The class has a field `registry` of type `BuildListenerRegistry` injected via the `@Inject` annotation, and another field `buildService` of type `AndroidBuildService`.
+
+The merge conflict arises from the introduction of a new field `projectConfigurationManager` of type `IProjectConfigurationManager` on one side of the merge (the "theirs" side, indicated by `>>>>>>> b782a4bb6b4349d23790909d1e67891adbaa126c`). The other side (the "ours" side, indicated by `<<<<<<< HEAD`) does not have this field.
+
+To resolve this conflict semantically, we need to consider the intent behind both versions. The "ours" side does not include the `projectConfigurationManager` field, suggesting that either it's not needed or its necessity hasn't been incorporated into this version. The "theirs" side introduces this field, indicating a requirement or enhancement that involves project configuration management.
+
+Since there's no indication that the introduction of `projectConfigurationManager` conflicts with the existing functionality or fields (like `registry` and `buildService`), and assuming it's a valid addition for the functionality intended by "their" changes, we should consider including it.
+
+The `setUp` method is annotated with `@SuppressWarnings("restriction")`, suggesting it's using restricted APIs, possibly from internal packages not intended for public use. However, this is orthogonal to the merge conflict at hand.
+
+Given that there's no apparent conflict in the intent (as the new field doesn't seem to interfere with the existing ones or method), and assuming that the addition of `projectConfigurationManager` serves a necessary purpose (like managing project configurations, which could be related to the `buildService`), the resolution involves including the new field.
+
+Here is the resolved snippet in markdown code syntax, preserving the original context and spacing:
+```java
+	@Inject
+	private BuildListenerRegistry registry;
+
+	protected AndroidBuildService buildService;
+
+	private IProjectConfigurationManager projectConfigurationManager;
+
+	@Override
+	@SuppressWarnings("restriction")
+    protected void setUp() throws Exception {
+	    super.setUp();
+```

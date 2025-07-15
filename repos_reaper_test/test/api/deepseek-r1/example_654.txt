@@ -1,0 +1,28 @@
+<think>
+Okay, let's tackle this merge conflict. So, the conflict is in the constructor of the Connection class in Java. The HEAD version has nothing between the constructor declaration and the check for null JSON. The other branch, a17acec, adds a line initializing dataList as a new ArrayList.
+
+First, I need to understand what both sides are doing. The HEAD version probably removed that line, or maybe it's from a different change. The other branch is adding an initialization of dataList. But why is there a conflict here?
+
+Looking at the surrounding code, the constructor starts with some parameters, then in the conflicting area, the HEAD has no code, while the other branch adds the dataList initialization. Then, both proceed to check if json is null.
+
+Wait, maybe the dataList initialization was added in one branch and not present in the other. So when merging, Git detects that one branch added a line where the other didn't have anything. That's a conflict.
+
+To resolve this, I need to decide if the dataList initialization should be included. Since the HEAD side doesn't have it, but the other branch does, perhaps the correct resolution is to include the dataList line. Because maybe the HEAD version removed it by mistake, or the other branch added it as part of a necessary initialization.
+
+Alternatively, maybe the dataList is used later in the constructor. If the HEAD version doesn't have it, but the other branch does, perhaps the ArrayList is needed. Without more context, it's hard to tell. But since the user asked to resolve based on intent and semantics, and if both changes are compatible, we should include both.
+
+Wait, but in the code, the conflict is between the constructor's opening and the null check. The HEAD has no code there, the other branch adds the dataList initialization. So the correct resolution would be to include the dataList initialization line from the a17acec branch into the merged code. Because that line is adding a new variable, which might be necessary for the class's functionality. The HEAD version might have an older version without that line, and the other branch is adding it. So unless there's a reason to exclude it, including it would resolve the conflict.
+
+Therefore, the resolved code should have the dataList initialization line. So the merged code would have that line added. The rest of the code (the null check) is the same in both branches, so no conflict there. So the final code would include the dataList line.</think>
+```java
+   *           If the provided {@code json} is invalid.
+   * @since 1.6.7
+   */
+  @SuppressWarnings("unchecked")
+  public Connection(FacebookClient facebookClient, String json, Class<T> connectionType) {
+    List<T> dataList = new ArrayList<T>();
+
+    if (json == null) {
+      throw new FacebookJsonMappingException("You must supply non-null connection JSON.");
+    }
+```

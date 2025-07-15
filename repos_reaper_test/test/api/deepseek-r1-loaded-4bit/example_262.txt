@@ -1,0 +1,23 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict in the import statements. The task is to resolve the conflict by understanding the intent of both sides.
+
+Looking at the conflict, the HEAD version has an import for POLocalRearrange, and then the other branch (88ae4a5) adds an import for POPackage. The conflict arises because both branches are adding different imports in the same place.
+
+The goal here is to combine both imports without duplication. Since the imports are in the same package, they should just be listed one after the other. The correct resolution would be to include both POLocalRearrange and POPackage in the list, maintaining alphabetical order if that's the project's convention. However, the original order might not be alphabetical, so it's safer to preserve the order from both branches. 
+
+In the original code, after POLocalRearrange in HEAD, the other branch adds POPackage. So merging them would mean placing POPackage right after POLocalRearrange. Then continue with the other imports like POSkewedJoin. This way, both new imports are included without any conflict. There's no overlap or duplication here, just adding two different imports. So the resolved code should list both imports in the order they appear from both branches.</think>
+```java
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFRJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFilter;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POForEach;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POLoad;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POLocalRearrange;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPackage;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POSkewedJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POSort;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POSplit;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POStore;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.Packager;
+```
+
+Note: I preserved all imports from both branches since they're adding different classes from the same package. The conflict was simply about adding POPackage import in one branch while HEAD had other unrelated imports. I also maintained the original ordering pattern from the file. However, there appears to be a typo in two of the imports (`executionengine` vs `executionengine` in POSplit and Packager imports) that existed in the original snippet and should be fixed separately.

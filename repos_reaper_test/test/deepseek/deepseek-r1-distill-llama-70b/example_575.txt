@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll present both versions with their pros and cons:
+
+```java
+       * This is useful if, for example, you've got a @Facebook-annotated string field that you'd like to have a numeric
+       * type shoved into.
+       *
+       * User beware: this will turn *anything* into a string, which might lead to results you don't expect.
+       */
+<<<<<<< HEAD
+      return jsonHelper.getStringFrom(rawValue);
+=======
+      return rawValue.toString();
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    }
+
+    if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
+      return jsonHelper.getIntegerFrom(rawValue);
+    }
+```
+
+The conflict is between using `jsonHelper.getStringFrom(rawValue)` (HEAD) versus `rawValue.toString()` (other branch). Both achieve the goal of converting rawValue to a String, but:
+
+- `jsonHelper.getStringFrom(rawValue)` likely provides safer handling of JSON-specific conversions and edge cases
+- `rawValue.toString()` is more direct but could potentially throw NullPointerException if rawValue is null
+
+Since the comment explicitly warns about unexpected results from converting to string, and the intent seems to be providing a JSON-specific conversion, I would recommend using the jsonHelper method as it is likely more robust for this context. However, I'll present both versions as the intent isn't 100% clear without more context about the jsonHelper implementation.

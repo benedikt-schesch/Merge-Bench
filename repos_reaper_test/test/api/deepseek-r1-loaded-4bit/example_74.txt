@@ -1,0 +1,69 @@
+<think>
+Okay, let's tackle this merge conflict. The code snippet has a conflict between the HEAD version and the branch version. The conflict is in the line where one side has `customDecksServiceProvider` and the other has `cardcastServiceProvider`. Both are Provider instances but for different services. 
+
+First, I need to understand the intent behind both changes. The HEAD version uses `CustomCardsService`, while the other branch uses `CardcastService`. These might be two different services that the class depends on. If the class actually needs both providers, then both should be included. But if they're renaming or replacing one with the other, that's different.
+
+Looking at the surrounding context, there are other providers like `uniqueIdProvider`. The order of declarations might matter here. The original order in HEAD has `customDecksServiceProvider` followed by `uniqueIdProvider`, while the other branch has `cardcastServiceProvider` instead. 
+
+If these two services are meant to coexist, then both providers should be present. However, it's possible that one was a replacement for the other. Maybe the branch is adding a new service and the HEAD has another, or perhaps it's a rename due to a refactor. Without more context, it's hard to tell. 
+
+If the conflict is because both branches added a new provider but with different names, the correct resolution would be to keep both. However, if they're modifying the same line (same variable for different services), that's a conflict. Since the conflict markers show they're on the same line, it's a true conflict. 
+
+But maybe `CardcastService` is a replacement for `CustomCardsService`, perhaps a rename or a different implementation. If that's the case, the correct one depends on which branch's change is the correct one. But since I don't have that context, I should consider if both are needed. 
+
+Alternatively, maybe the variable name was updated in one branch and the other branch added a different one. Wait, looking at the code, the lines around are the same except for that one line. So both branches are adding a Provider, but for different services. 
+
+If the class now requires both providers, then both lines should be included. But the conflict is on the same line, meaning both changes modified the same part. So in reality, one branch added `customDecksServiceProvider` and the other added `cardcastServiceProvider` in the same spot. 
+
+In that case, the user needs to decide which one to keep. But since the user asked to resolve based on intent and semantics, maybe both are needed. However, in Java, you can't have two variables declared in the same place. So the correct resolution would be to include both declarations, one after the other. 
+
+Wait, looking at the code, the conflict is between two different variables. The HEAD has `customDecksServiceProvider` and the other branch has `cardcastServiceProvider`. So the correct resolution is to include both, but that would require inserting both lines. However, the conflict is on the same line in the code, meaning that in the original file, that line was modified by both branches. 
+
+Therefore, the correct way is to keep both variables. So the resolved code should have both Provider lines. Let me check the original code again. The original code in HEAD has:
+
+private final Provider<CustomCardsService> customDecksServiceProvider;
+
+And the other branch has:
+
+private final Provider<CardcastService> cardcastServiceProvider;
+
+So the conflict is on the same line. Therefore, the user probably intended to have both providers, but since they're on the same line in the code, the merge conflict arises. The correct resolution is to include both lines. Therefore, the resolved code should list both providers one after the other. 
+
+So, the merged code would have:
+
+private final Provider<CustomCardsService> customDecksServiceProvider;
+private final Provider<CardcastService> cardcastServiceProvider;
+private final Provider<String> uniqueIdProvider;
+
+But the original conflict is between the two lines. So the user needs to decide which one to keep, or if both are needed. Since I'm supposed to resolve based on intent and semantics, and if both are valid and necessary, then both should be included. However, without knowing the rest of the code, it's possible that one was a replacement. 
+
+Alternatively, maybe the two variables are part of different features and both are required. For example, the class might need both a custom decks service and a cardcast service. In that case, the correct resolution is to keep both lines. 
+
+So, the resolved code would include both providers, in the order they appear in the respective branches. Since HEAD is first, maybe the order is HEAD's line first, then the other branch's line. 
+
+Therefore, the merged code would have:
+
+  private final ScheduledThreadPoolExecutor globalTimer;
+  private final Provider<CustomCardsService> customDecksServiceProvider;
+  private final Provider<CardcastService> cardcastServiceProvider;
+  private final Provider<String> uniqueIdProvider;
+
+This way, both providers are included. The conflict is resolved by taking both changes. 
+
+But wait, in the original code, the conflict is on the same line. So in the original file, that line was modified by both branches. So Git doesn't know which one to pick. The correct resolution is to manually include both variables. 
+
+Therefore, the answer should merge both lines, adding both providers. So the final code after resolution includes both declarations.</think>
+```java
+  /**
+   * Lock to prevent missing timer updates.
+   */
+  private final Object roundTimerLock = new Object();
+  private final ScheduledThreadPoolExecutor globalTimer;
+  private final Provider<CustomCardsService> customDecksServiceProvider;
+  private final Provider<CardcastService> cardcastServiceProvider;
+  private final Provider<String> uniqueIdProvider;
+  private Player host;
+  private BlackDeck blackDeck;
+  private BlackCard blackCard;
+  private WhiteDeck whiteDeck;
+```

@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The conflict appears to be about changing the class used to deserialize the picture data and adjusting the way the JSON data is extracted.
+
+**Analysis:**
+- The left side (`<<<<<<< HEAD`) uses `ProfilePictureSource.class` and accesses `rawPicture.get("data")`.
+- The right side (`>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe`) uses `User.Picture.class` and accesses `rawPicture.getJsonObject("data")`.
+
+It seems the right side is:
+1. Getting the "data" field as a JsonObject instead of a generic value
+2. Mapping to `User.Picture.class` instead of `ProfilePictureSource.class`
+
+Since the right side appears to be using more specific JSON handling and a more specific class, it likely represents the desired state.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    String picJson = rawPicture.get("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  /**
+   * The user's hometown name.
+   * 
+
+```

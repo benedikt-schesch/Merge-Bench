@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+```java
+    @Test
+    public void testRankWithEmptyData() throws Exception {
+      String query = "DATA = LOAD 'empty' USING mock.Storage();"
+        + "A = rank DATA;"
+        + "store A into 'empty_result' using mock.Storage();";
+
+      Util.registerMultiLineQuery(pigServer, query);
+<<<<<<< HEAD
+      List<Tuple> expected = Util.getTuplesFromConstantTupleStrings(new String[]{});
+      Util.checkQueryOutputsAfterSort(data.get("empty_result"), expected);
+=======
+      Multiset<Tuple> expected = ImmutableMultiset.of();
+      verifyExpected(data.get("empty_result"), expected);
+>>>>>>> b91691ef1d20e616fd9c37d4018eb0db78db8898
+    }
+
+    @Test
+    public void testRankWithSplitInMap() throws Exception {
+        String query = "R1 = LOAD 'testsplit' USING mock.Storage() AS (a:int,b:int);"
+```

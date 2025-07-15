@@ -1,0 +1,21 @@
+<think>
+Okay, let's look at this merge conflict. The code in question is the setAspectRatio method. Both sides are adding a check for the ratio being less than or equal to zero, but they format it differently. The HEAD version uses a single line without braces, while the other branch uses braces for the if statement. 
+
+The main conflict is the formatting of the if block. Java allows both styles, but using braces is generally considered better practice to avoid potential errors. However, since the rest of the code after the conflict is the same (ratio = 1 / ratio and the subsequent check), the semantic intent is the same.
+
+To resolve this, I should choose the version with braces because it's more readable and less error-prone. The exception is thrown in both cases, so combining them by taking the braced version makes sense. The rest of the code remains unchanged as both branches have the same lines after the conflict markers. So, the resolved code will have the if statement with braces and keep the subsequent lines as they are.</think>
+```java
+        super(context, attrs);
+        setAspectRatio(4.0 / 3.0);
+    }
+
+    public void setAspectRatio(double ratio) {
+        if (ratio <= 0.0) {
+            throw new IllegalArgumentException();
+        }
+
+        ratio = 1 / ratio;
+
+        if (mAspectRatio != ratio) {
+            mAspectRatio = ratio;
+```

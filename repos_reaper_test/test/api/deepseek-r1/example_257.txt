@@ -1,0 +1,27 @@
+<think>
+Okay, let's look at this merge conflict. The code snippet shows imports in a Java file. The conflict is between the HEAD version and another branch. The HEAD has an import for PhysicalOperator, while the other branch adds an import for MultiQueryPackager from a different package.
+
+First, I need to check if these imports are necessary and if they can coexist. The HEAD has 'import org.apache.pig.backend.hadoop.executionengine.physicalLayer.PhysicalOperator;' and the other branch adds 'import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.MultiQueryPackager;'. 
+
+Looking at the package structure, PhysicalOperator is in physicalLayer, and MultiQueryPackager is in physicalLayer.relationalOperators. These are different classes in different packages, so both imports are needed. Since they don't conflict with each other, the correct resolution is to include both imports.
+
+The original code in HEAD doesn't have the MultiQueryPackager import, and the other branch adds it. The conflict markers can be removed, keeping both imports. The order of imports might not matter here, but typically, they are grouped by package. However, the existing code seems to list imports in the order they were added. Since the two imports are from different sub-packages, they should both be present. Therefore, resolving the conflict by including both lines without any conflict markers.</think>
+```java
+import java.util.List;
+import java.util.Set;
+
+import org.apache.pig.PigException;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.PhysicalOperator;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.MultiQueryPackager;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POCollectedGroup;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POCounter;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PODemux;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFRJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFilter;
+```
+
+The conflict is resolved by keeping both imports since they reference different classes in different packages:
+1. `PhysicalOperator` from `physicalLayer` package
+2. `MultiQueryPackager` from `physicalLayer.relationalOperators` package
+
+The ordering follows the original structure where the base package import (`PhysicalOperator`) comes before its relationalOperators sub-package imports. All other context and spacing is preserved exactly as provided.

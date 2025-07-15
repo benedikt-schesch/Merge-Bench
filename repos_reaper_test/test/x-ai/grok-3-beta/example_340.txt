@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+```java
+	/**
+	 * @param v
+	 * @deprecated use {@link WithHeaderActivity#setRefreshAnimation(boolean)}
+	 */
+	protected void animRotate(View v) {
+<<<<<<< HEAD
+	    setRefreshAnimation(true);
+=======
+	    // TODO: 经过几天的测试发现, 旋转按钮才是真正的性能瓶颈, 它增加了N倍的GC压力, 使得所有其他操作都变得缓慢.
+		if (false && null != v) {
+			Animation anim = AnimationUtils.loadAnimation(v.getContext(),
+					R.anim.rotate360);
+			v.startAnimation(anim);
+		}
+>>>>>>> a3f439a563675a41df75fdb5d086275846ae1e4d
+	}
+	
+    /**
+     * Start/Stop Top Refresh Button's Animation
+     * 
+```
+
+I'm unable to resolve this merge conflict definitively due to ambiguous intent on both sides. Let's analyze the two versions:
+
+- **HEAD Side**: This side simply calls `setRefreshAnimation(true)`, which likely enables a refresh animation as suggested by the deprecated notice in the Javadoc. The intent seems to be maintaining compatibility or transitioning to a new method for controlling animations.
+- **a3f439a Side**: This side includes a detailed comment about performance issues with the rotation button causing significant GC pressure. The code is effectively disabled with `if (false && null != v)`, preventing the animation from running, though the original logic for starting an animation is preserved (likely for reference or potential re-enablement). The intent appears to be addressing performance concerns by disabling the animation.
+
+**Analysis**: The conflict arises between maintaining functionality (HEAD) and addressing performance issues by disabling the feature (a3f439a). Without additional context about the project's priorities (e.g., whether performance optimization takes precedence over maintaining the animation feature) or whether `setRefreshAnimation(true)` already handles the performance issue in a different way, it's unclear which side should be favored. Additionally, it's uncertain if the deprecated method should still trigger animations or fully delegate to the new method mentioned in the Javadoc.
+
+Therefore, I'm returning the snippet with the conflict markers intact, as the resolution requires further input from the development team or additional context about the intended behavior of `setRefreshAnimation` and the project's stance on the performance issue.

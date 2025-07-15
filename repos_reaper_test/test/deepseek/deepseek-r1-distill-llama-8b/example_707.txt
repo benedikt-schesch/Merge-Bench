@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to determine the correct implementation based on the intent. The left side includes URL encoding to properly handle special characters in the user parameter, preventing potential issues when constructing the URL. The right side lacks this encoding, which could lead to incorrect URL formation. Therefore, the left side is preferred as it ensures proper encoding.
+
+```java
+	}
+	}
+
+	@Override
+	public PlaylistRemote[] getUserPlaylist(String user) throws JSONException, WSError {
+		try {
+			user = URLEncoder.encode(user, "UTF-8");
+			String jsonString = doGet("id+name+url+duration/playlist/json/playlist_user/?order=starred_desc&user_idstr="+user);
+			return PlaylistFunctions.getPlaylists(new JSONArray(jsonString));
+		} catch (UnsupportedEncodingException e) {
+>>>>>>> 5e4c2091dc2827219ba601937e8686bcb90bae78
+```

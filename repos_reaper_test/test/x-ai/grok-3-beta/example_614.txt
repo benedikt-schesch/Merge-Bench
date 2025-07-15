@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'm returning the code snippet with the merge conflict unresolved because the intent behind the differing assertions on `page.getLikesCount()` and `page.getLikes()` is ambiguous without additional context about the codebase or the purpose of these methods. Both sides of the merge seem to be checking a value related to "likes" with the same expected value (3L), but they use different method names (`getLikesCount()` vs. `getLikes()`). This could indicate a renaming or a difference in API design, and resolving it requires understanding the correct method to use in this context.
+
+Here is the original snippet with the conflict preserved:
+
+```java
+  @Test
+  public void checkV2_6_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonFromClasspath("v2_6/page-with-fancount"), Page.class);
+    assertNotNull(page);
+    assertEquals(3L, page.getFanCount().longValue());
+<<<<<<< HEAD
+    assertEquals(3L, page.getLikesCount().longValue());
+=======
+    assertEquals(3L, page.getLikes().longValue());
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  @Test
+  public void checkV2_5_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonFromClasspath("v2_5/page-with-likes"), Page.class);
+
+```

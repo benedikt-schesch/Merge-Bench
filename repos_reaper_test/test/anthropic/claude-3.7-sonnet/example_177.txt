@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, the main difference is that the `1488b22ce313803d012c8ace36c3b12f930ee309` branch adds three static constants: `RECORD_1`, `RECORD_2`, and `RECORD_3`. These constants are likely used within the BinStorage functionality. Since they add functionality without removing or conflicting with anything in the `HEAD` version, I'll merge them in.
+
+```java
+import org.apache.pig.impl.logicalLayer.FrontendException;
+import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.apache.pig.impl.logicalLayer.schema.SchemaMergeException;
+import org.apache.pig.impl.util.WrappedIOException;
+
+
+public class BinStorage implements ReversibleLoadStoreFunc {
+    public static final byte RECORD_1 = 0x21;
+    public static final byte RECORD_2 = 0x31;
+    public static final byte RECORD_3 = 0x41;
+
+    Iterator<Tuple>     i              = null;
+    protected BufferedPositionedInputStream in = null;
+    private DataInputStream inData = null;
+    protected long                end            = Long.MAX_VALUE;
+    
+```

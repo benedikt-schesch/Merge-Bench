@@ -1,0 +1,28 @@
+<think>
+Okay, let's take a look at this merge conflict. The user wants me to resolve it by understanding the intent of both sides. The conflict is in a Java code snippet where properties are being set. The HEAD version doesn't have the two lines from the other branch, which are adding properties for "Comment.Attachment.methods" and "Comment.Comments.methods". 
+
+First, I need to check if these lines are adding new entries or modifying existing ones. Since they're new properties, and they're between the Comment.methods and Conversation.methods lines, it's likely that both branches are adding different properties. The HEAD branch might have removed those lines, but more probably, the other branch added them. Since there's no overlap in the keys (the property names are different), this is a straightforward case of incorporating both changes.
+
+The conflict markers show that the two lines were added in the a17acec branch. The HEAD version doesn't have them, but since they are new and don't conflict with any other lines, the correct resolution is to keep both. Therefore, removing the conflict markers and including both lines in the correct order. The surrounding context before and after the conflict is the same, so inserting the two lines from the other branch after the Comment.methods line should resolve the conflict without issues. There's no ambiguity here because the two properties are unique and don't interfere with existing code. So the resolved code should include all the lines from both versions in the appropriate place.</think>
+```java
+    props.setProperty("CategorizedFacebookType.methods",
+      joinMethods(fetchMethodsFromClass(CategorizedFacebookType.class)));
+    props.setProperty("Category.methods", joinMethods(fetchMethodsFromClass(Category.class)));
+    props.setProperty("Checkin.methods", joinMethods(fetchMethodsFromClass(Checkin.class)));
+    props.setProperty("Comment.methods", joinMethods(fetchMethodsFromClass(Comment.class)));
+    props.setProperty("Comment.Attachment.methods", joinMethods(fetchMethodsFromClass(StoryAttachment.class)));
+    props.setProperty("Comment.Comments.methods", joinMethods(fetchMethodsFromClass(Comment.Comments.class)));
+    props.setProperty("Conversation.methods", joinMethods(fetchMethodsFromClass(Conversation.class)));
+    props.setProperty("Conversation.Tag.methods", joinMethods(fetchMethodsFromClass(Conversation.Tag.class)));
+    props.setProperty("DeAuth.methods", joinMethods(fetchMethodsFromClass(DeAuth.class)));
+    props.setProperty("Event.methods", joinMethods(fetchMethodsFromClass(Event.class)));
+    props.setProperty("Event.Category.methods", joinMethods(fetchMethodsFromClass(Event.Category.class)));
+```
+
+Rationale: Both branches are adding property declarations for different Facebook API entity methods. The conflict-free merge preserves:
+1. The existing property declarations from both branches
+2. Maintains alphabetical order based on property keys
+3. Adds the new Comment-related method declarations from the feature branch while keeping the Conversation-related declarations from HEAD
+4. There's no overlap in the specific property keys being set ("Comment.Attachment.methods" and "Comment.Comments.methods" are distinct from all others)
+
+The resolution maintains all functionality from both branches without semantic overlap or duplication.

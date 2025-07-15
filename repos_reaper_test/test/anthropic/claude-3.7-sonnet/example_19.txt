@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, one side has a concrete implementation of `start()`, while the other side has made this method abstract and added a new `start(boolean checkWorlds)` method. Based on the context and semantics, it appears that the implementation is being refactored to support an optional parameter for checking worlds.
+
+Here's the resolved snippet:
+
+```java
+	@Override
+	public String getAPIVersion() {
+		return SpoutEngine.class.getPackage().getImplementationVersion();
+	}
+
+	public abstract void start();
+
+	public void start(boolean checkWorlds) {
+		Spout.info("Spout is starting in {0}-only mode.", getPlatform().name().toLowerCase());
+		Spout.info("Current version is {0} (Implementing SpoutAPI {1}).", getVersion(), getAPIVersion());
+		Spout.info("This software is currently in alpha status so components may");
+		Spout.info("have bugs or not work at all. Please report any issues to");
+		Spout.info("http://issues.spout.org");
+```

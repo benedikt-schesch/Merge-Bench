@@ -1,0 +1,50 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java test methods. Let me look at the two versions.
+
+In the HEAD version, they're using assertThat(att).hasContentType("image/png"); which looks like an assertion from a library like AssertJ, using a fluent style. The other side, from commit a17acec, is using assertEquals("image/png", att.getContentType()); which is the standard JUnit assertion.
+
+The goal of both seems to be the same: verify that the content type is "image/png". The difference is in the assertion method used. Since both are valid but use different testing frameworks/styles, I need to choose one. However, maybe the project is standardizing on one assertion style. Without more context, it's hard to tell which is preferred.
+
+But the user asked to consider the intent and semantics. Both assertions check the same thing. If I can confirm that both are acceptable, maybe the HEAD version is introducing a new style, while the other is the old. Alternatively, maybe they can coexist, but that's unlikely in the same test.
+
+Wait, the tests are in different methods. Wait, no, looking at the code, the conflict is in the checkContentTypeBytes_imagePng test method. So the two versions are modifying the same line in the same test.
+
+So the conflict is between using AssertJ's hasContentType versus JUnit's assertEquals. The semantic intent is the same. To resolve, I need to pick one. If the project has switched to using AssertJ, then keeping the HEAD version makes sense. Alternatively, if the other branch is correct, maybe. But without more context, perhaps the best approach is to choose one based on which is more readable or standard.
+
+Alternatively, maybe the content type check could be done in a way that satisfies both, but I don't think so. The user might have a preference for one assertion style. Since the conflict is in the same test, the correct resolution is to pick one of the two assertions.
+
+The user's instruction says to resolve the conflict by considering the intent and semantics. Both are trying to assert the content type. So either line is correct semantically. But since the two branches changed the same line, we have to choose one.
+
+If I can't determine which one is correct, I should leave the conflict. But the user wants a resolution if possible. Let me check if both lines are equivalent. The HEAD uses a fluent assertion, which might be more modern. The other uses the traditional JUnit assertEquals. If the rest of the test class uses AssertJ, then HEAD is correct. If it's using JUnit, then the other is correct.
+
+But the surrounding context in the code snippet shows another test: checkContentTypeBytes_html. Let me see what assertion it uses. The code after the conflict shows:
+
+  @Test
+  public void checkContentTypeBytes_html() {
+    String attachmentData = "this is a short string";
+
+But there's no assertion shown here. However, maybe in the rest of the file, other tests use one style or the other. Since the user didn't provide the full file, I can't check. So, in this case, the conflict is between two assertion styles. Without knowing the project's preferred style, it's ambiguous. Therefore, according to the user's instructions, if the intent is ambiguous or I'm not sure, I should return the same snippet with the conflict. But wait, maybe there's another way to reconcile them.
+
+Wait, the two assertions are functionally equivalent. They both check that the content type is "image/png". So the semantic intent is the same. Therefore, perhaps either line is acceptable. However, since the user wants a resolved version, I need to pick one. But how?
+
+Alternatively, maybe the lines are compatible and can be merged. But no, they are conflicting changes to the same line. So I have to choose one. If the user's team prefers AssertJ, then the HEAD version is better. Otherwise, the other. Since I don't have that context, maybe the best approach is to present the resolved code using one of them. But the user said if not sure, return the conflict. But the user also said to resolve if possible by considering intent and semantics.
+
+Since both lines do the same thing, perhaps either is acceptable. But the user is asking me to make a decision. Let me think: perhaps the HEAD version is a refactor to use a more fluent assertion, while the other is the original. If the project is moving towards AssertJ, then HEAD is correct. Alternatively, maybe the other branch is a bug fix. Without context, I can't tell. But according to the problem statement, I should resolve it if the intent is clear.
+
+The key is that both assertions are checking the same value. The conflict is only about the assertion method used. Therefore, the intent is clear, and either line would work. But since the user is a merge conflict expert, perhaps they want to choose the most appropriate based on common practices.
+
+In many projects, using AssertJ's fluent assertions is preferred for better readability. So maybe resolving to the HEAD version is better. Therefore, I'll choose the HEAD's line and remove the conflict markers.</think>
+```java
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.png", attachmentData.getBytes());
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_html() {
+    String attachmentData = "this is a short string";
+
+```

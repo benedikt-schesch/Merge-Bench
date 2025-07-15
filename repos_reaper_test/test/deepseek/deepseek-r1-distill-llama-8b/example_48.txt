@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflicting code involves converting a list of `User` objects to an array and then creating a list of their nicknames. Both sides perform the same operation, but one uses an inefficient array size calculation. The resolved code uses a more efficient size determination, so it replaces the earlier version.
+
+```java
+    for (final Player player : playersCopy) {
+      playerNames.add(player.getUser().getNickname());
+    }
+    info.put(GameInfo.PLAYERS, playerNames);
+
+<<<<<<< HEAD
+    final User[] spectatorsCopy = spectators.toArray(new User[spectators.size()]);
+    final List<String> spectatorNames = new ArrayList<String>(spectatorsCopy.length);
+=======
+    final User[] spectatorsCopy = spectators.toArray(new User[0]);
+    final List<String> spectatorNames = new ArrayList<String>(spectatorsCopy.length);
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+    for (final User spectator : spectatorsCopy) {
+      spectatorNames.add(spectator.getNickname());
+    }
+    info.put(GameInfo.SPECTATORS, spectatorNames);
+```

@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+Okay, I will analyze the intents of both sides and provide a merged version.
+
+**Analysis of Intents:**
+
+*   **`HEAD` Branch (Current/Yours):**
+    *   The primary intent is to perform a `seekTo` operation.
+    *   It explicitly fetches the `MediaPlayer` instance using `mMediaPlayers.get(mPreparedQuery)` and assigns it to a local variable `sMediaPlayer`. This ensures that the operation is performed on the player specifically associated with `mPreparedQuery` at the time of the call.
+    *   It uses a single-line `if` statement without curly braces.
+    *   The cast `(int)msec` has no space after `(int)`.
+
+*   **`ab8ddfc2d347e46622cd1d2bd517db3312181b66` Branch (Incoming/Theirs):**
+    *   The primary intent is also to perform a `seekTo` operation.
+    *   It assumes that `sMediaPlayer` is an already defined and accessible variable (likely a class member/field). It does *not* fetch or define `sMediaPlayer` within this method.
+    *   It uses curly braces `{}` for the `if` block, which is generally considered good practice for clarity and to prevent accidental errors if more statements are added to the block later.
+    *   The cast `(int) msec` has a space after `(int)`.
+
+**Semantic Resolution:**
+
+The crucial difference lies in how `sMediaPlayer` is obtained:
+1.  `HEAD` dynamically fetches it based on `mPreparedQuery`. This is robust if `mPreparedQuery` is the single source of truth for which player should be active, or if there's a risk of a class member `sMediaPlayer` being stale.
+2.  `ab8ddfc2d347e46622cd1d2bd517db3312181b66` relies on an existing `sMediaPlayer`. This would be appropriate if `sMediaPlayer` is a class member that is reliably updated elsewhere (e.g., in `prepare` methods) to always reflect the correct, prepared player.
+
+**Decision for Merging:**
+To combine the best of both while prioritizing robust behavior:
+*   **Retain Explicit Fetching (from `HEAD`):** It's generally safer to explicitly get the `MediaPlayer` instance tied to `mPreparedQuery` within the `seekTo` method. This avoids potential issues with a stale class member if `mPreparedQuery` changes and the member `sMediaPlayer` isn't updated synchronously. The local variable declaration `MediaPlayer sMediaPlayer = ...` will shadow any class member with the same name within this method's scope, making the intent clear.
+*   **Adopt Braces (from `ab8ddfc2d347e46622cd1d2bd517db3312181b66`):** Using curly braces for `if` statements is a common best practice for readability and maintainability.
+*   **Adopt Spacing in Cast (from `ab8ddfc2d347e46622cd1d2bd517db3312181b66`):** The spacing `(int) msec` is a minor stylistic choice, but adopting it from one branch provides consistency if that style is used elsewhere.
+
+This approach merges the functional strength of `HEAD` (ensuring the correct player is used via `mPreparedQuery`) with the stylistic improvements of `ab8ddfc2d347e46622cd1d2bd517db3312181b66`.
+
+```java
+>>>>>>> ab8ddfc2d347e46622cd1d2bd517db3312181b66
+    }
+
+    @Override
+    public void seekTo(long msec) {
+        MediaPlayer sMediaPlayer = mMediaPlayers.get(mPreparedQuery);
+        if (sMediaPlayer != null) {
+            sMediaPlayer.seekTo((int) msec);
+        }
+    }
+
+    @Override
+    public void tryPrepareNext(final Query query) {
+        TomahawkRunnable r = new TomahawkRunnable(1) {
+
+```

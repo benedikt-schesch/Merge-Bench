@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, both sides have the same code but with different indentation levels. The intent is clearly the same on both sides. I'll resolve it by choosing the version with the correct indentation:
+
+```java
+    }
+
+    private DataBag createDataBag(int numBags) {
+        String bagType = null;
+        if (PigMapReduce.sJobConfInternal.get() != null) {
+            bagType = PigMapReduce.sJobConfInternal.get().get("pig.cachedbag.type");
+        }
+
+        if (bagType != null && bagType.equalsIgnoreCase("default")) {
+            return new NonSpillableDataBag();
+        }
+        return new InternalCachedBag(numBags);
+```

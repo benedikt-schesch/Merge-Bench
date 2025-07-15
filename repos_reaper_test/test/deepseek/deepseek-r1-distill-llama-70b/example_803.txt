@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Here is the merged code that incorporates the version check to handle compatibility issues:
+
+```java
+    return size;
+  }
+
+  /** Serializes this request.  */
+  ChannelBuffer serialize(final byte server_version) {
+    if (server_version >= RegionClient.SERVER_VERSION_095_OR_ABOVE) {
+      throw new UnsupportedOperationException("Row locks are not supported with"
+                                            + " this version of HBase ("
+                                            + server_version + ").");
+    }
+    final ChannelBuffer buf = newBuffer(server_version,
+                                        predictSerializedSize());
+    buf.writeInt(2);  // Number of parameters.
+
+    writeHBaseByteArray(buf, region.name());
+```

@@ -1,0 +1,29 @@
+<think>
+Okay, let's take a look at this merge conflict. The code is in Java, and the conflict is in the method playersToUsers(). The two versions are differing in how they create a Player array and initialize the ArrayList.
+
+In the HEAD version, they're using players.toArray(new Player[players.size()]) which is a traditional way to convert a collection to an array by providing an array of the correct size. Then they initialize the ArrayList with new ArrayList<User>(playersCopy.length). The other branch (from commit 5added2) uses players.toArray(new Player[0]) which is a more modern approach because it's considered safer and sometimes more efficient, as the JVM can optimize the array creation. Also, they're using the diamond operator <> when creating the ArrayList, which is shorter and cleaner.
+
+So, the intent of both sides is to convert the players collection to an array and then create an ArrayList of Users with the correct initial capacity. The differences are stylistic and in the way the array is created. The diamond operator is allowed here because the type can be inferred, and using new Player[0] is actually a recommended practice now because it avoids a potential race condition and can be more efficient in some cases. 
+
+The rest of the code is the same. So, resolving this conflict would involve taking the changes from both branches. Use new Player[0] for the array creation and use the diamond operator for the ArrayList. Since the ArrayList's initial capacity is just a performance optimization, using playersCopy.length is correct in both cases. 
+
+So the resolved code would have:
+
+final Player[] playersCopy = players.toArray(new Player[0]);
+users = new ArrayList<>(playersCopy.length);
+
+That combines both changes. There's no semantic conflict here because both changes are compatible and improve the code. So the merge conflict markers can be removed with these lines.</think>
+```java
+  /**
+   * @return A list of all {@code User}s in this game.
+   */
+  private List<User> playersToUsers() {
+    final List<User> users;
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    users = new ArrayList<>(playersCopy.length);
+    for (final Player player : playersCopy) {
+      users.add(player.getUser());
+    }
+    synchronized (spectators) {
+      users.addAll(spectators);
+```

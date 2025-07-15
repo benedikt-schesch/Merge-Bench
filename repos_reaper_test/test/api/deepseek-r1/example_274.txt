@@ -1,0 +1,27 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is between the HEAD version and the other branch's version. Let me look at the code around the conflict.
+
+In the HEAD part, after the catch block, there's a log statement saying "Rewrite: POPackage->POForEach to POJoinPackage". The other branch adds a line where they put something into mr.phyToMRMap and changes the log message to "Rewrite: POPackage->POForEach to POPackage(JoinPackager)".
+
+So the conflicting parts are the addition of the mr.phyToMRMap.put line and the different log messages. The question is whether both changes are needed or if they conflict. 
+
+Looking at the intent, maybe the branch added the put line as part of their changes, which is important for mapping. The log messages are slightly different, but perhaps the correct one is from the branch since it mentions JoinPackager specifically. 
+
+To resolve, I should include both the put line from the branch and the log message from the branch, but check if the HEAD log message is necessary. Wait, no, because the conflict is between the two versions. The HEAD doesn't have the put line, and the branch does. So merging would require taking both the put line and the adjusted log message from the branch. But wait, in the conflict markers, the HEAD version doesn't have the put line, and the branch version does. So the correct resolution is to include the put line and the branch's log message. Therefore, the resolved code should have both the put statement and the modified log message.
+
+So the merged code would have the line mr.phyToMRMap.put(forEach, pack); from the branch, and the log message from the branch. The HEAD's log message is replaced by the branch's. Therefore, the conflict is resolved by taking both changes from the branch.</think>
+```java
+            } catch (PlanException e) {
+                int errCode = 2029;
+                String msg = "Error rewriting join package.";
+                throw new MRCompilerException(msg, errCode, PigException.BUG, e);
+            }
+            mr.phyToMRMap.put(forEach, pack);
+            LogFactory.getLog(LastInputStreamingOptimizer.class).info(
+                    "Rewrite: POPackage->POForEach to POPackage(JoinPackager)");
+        }
+
+    }
+
+    private static class FindKeyTypeVisitor extends PhyPlanVisitor {
+```

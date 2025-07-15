@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Based on the code snippet, it appears there's a merge conflict in a test method handling a `GoogleJsonResponseException`. Let me resolve this by considering the intent on both sides:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    String expectedMessage = "403\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+  }
+
+  public void testFrom_detailsErrorObject() throws Exception {
+    HttpTransport transport = new ErrorTransport("{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid value\"}", Json.MEDIA_TYPE);
+    HttpRequest request =
+```
+
+I've resolved the conflict by keeping the HEAD version, which seems to be more specific in its assertions. The HEAD version correctly uses the `responseException` variable (while the other branch uses an undefined `ge` variable), and it asserts a more specific expected message including both the status code and URL.

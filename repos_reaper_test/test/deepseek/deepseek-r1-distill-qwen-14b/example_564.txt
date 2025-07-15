@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in the `checkInvalidJson` test method where one side includes an assertion that an exception should be thrown and the other side does not. 
+
+The test method is annotated to expect `FacebookJsonMappingException`, which means it should throw this exception. Both changes seem to have the same intent: ensuring that invalid JSON triggers the correct exception. Including the explicit assertion clarifies the test's intent.
+
+```java
+  }
+
+  @Test(expected = FacebookJsonMappingException.class)
+  public void checkInvalidJson() {
+    new Connection<User>(new DefaultFacebookClient(Version.LATEST), "{", User.class);
+<<<<<<< HEAD
+    failBecauseExceptionWasNotThrown(FacebookJsonMappingException.class);
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  @Test
+  public void checkIterator_reachAllElements() {
+    Connection<FacebookType> connection = create3PageConnection();
+```

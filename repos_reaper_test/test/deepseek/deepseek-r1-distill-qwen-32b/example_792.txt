@@ -1,0 +1,13 @@
+<think>
+No reasoning found</think>
+```java
+               + " ignore this if we're shutting down", e);
+    } else {
+      LOG.error("Unexpected exception from downstream on " + c, e);
+    }
+    if (c.isOpen()) {
+      Channels.close(c);  // Will trigger channelClosed(), which will cleanup()
+    } else {              // else: presumably a connection timeout.
+      cleanup(c);         // => need to cleanup() from here directly.
+    }
+```

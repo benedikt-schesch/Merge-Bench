@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to identify which side correctly parses the message payload. The original code in HEAD had a comment about an incrementing number at offset+1, which isn't used. The other side removed this comment and parsed sceneId and time from offset+3 and offset+2. Assuming the latter correctly reflects the payload structure, we adopt those changes.
+
+```java
+    public void handleApplicationCommandRequest(SerialMessage serialMessage, int offset, int endpoint) {
+        logger.debug("NODE {}: Received central scene command (v{})", this.getNode().getNodeId(), this.getVersion());
+        int command = serialMessage.getMessagePayloadByte(offset);
+        switch (command) {
+            case SCENE_SET:
+                int sceneId = serialMessage.getMessagePayloadByte(offset + 3);
+                int time = serialMessage.getMessagePayloadByte(offset + 2);
+                if (time > 127) {
+                    // Values of 128 and above are in minutes (128 = 1 minute)
+                    time = (time - 127) * 60;
+```

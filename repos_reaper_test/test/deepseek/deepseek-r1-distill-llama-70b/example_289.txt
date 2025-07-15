@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict appears to be about initializing variables before creating DataBags. The other branch adds `numInputs` and `readOnce` initialization, which the HEAD does not have, while the HEAD initializes `dbs` which the other branch does not have. The intention is likely to include all of these initializations together.
+
+Here's the resolved code:
+
+```java
+                if (bagType != null && bagType.equalsIgnoreCase("default")) {
+                    useDefaultBag = true;
+                }
+            }
+        }
+        int numInputs = pkgr.getNumInputs(keyWritable.getIndex());
+        boolean[] readOnce = new boolean[numInputs];
+        for (int i = 0; i < numInputs; i++)
+            readOnce[i] = false;
+
+        if (isInputAttached()) {
+            // Create numInputs bags
+            DataBag[] dbs = null;
+            dbs = new DataBag[numInputs];
+            DataBag[] dbs = null;
+            dbs = new DataBag[numInputs];
+```
+
+However, I notice that there is a duplicate initialization of `dbs`. If this is intentional, it stays. Otherwise, it should be removed.

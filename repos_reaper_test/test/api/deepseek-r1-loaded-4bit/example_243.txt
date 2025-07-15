@@ -1,0 +1,85 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the two versions.
+
+The conflict is around the line where isMultiQuery is assigned. The HEAD version uses PigConfiguration.OPT_MULTIQUERY with a default value of "true". The other side uses the string "opt.multiquery" and the same default.
+
+First, I should check what PigConfiguration.OPT_MULTIQUERY is. It's likely a constant that holds the string "opt.multiquery". So both sides are trying to get the same property, but one uses the constant and the other the string literal.
+
+Using the constant is better practice because if the property name ever changes, you only need to update the constant. So the HEAD version is preferable here. However, the spacing is different. The HEAD version is indented with four spaces, while the other has eight. Looking at the surrounding code, the indentation level should match the context. The line before has "boolean isMultiQuery =", so maybe the correct indentation is four spaces. The other version has more spaces, which might be a mistake.
+
+So the resolution would be to take the HEAD version's code but ensure the indentation is correct. Wait, the original code's conflict shows that the HEAD has four spaces and the other side has eight. But in Java, indentation is usually four spaces per level. The line is inside a method, so the indentation should be two levels (8 spaces) perhaps. Let me check the surrounding lines. The line after the conflict is "if (isMultiQuery) {" which is indented with eight spaces. So the assignment line should also be indented eight spaces. Wait, the HEAD version in the conflict has four spaces, which is less than the surrounding code. The other side has eight. That might be an issue.
+
+Wait, looking at the code before the conflict: the line starts with "boolean isMultiQuery =", which is probably indented with eight spaces (two levels). Then the conflict lines have HEAD with four spaces and the other side with eight. So the correct indentation is eight spaces. Therefore, the second version (from commit 1cb2531) has the correct indentation, but uses the string literal instead of the constant. The HEAD uses the constant but wrong indentation.
+
+So the correct resolution would be to use the constant from HEAD but with the correct indentation of eight spaces. Wait, but how can I do that? The HEAD version's line is indented four spaces, which is less than the surrounding code. That's probably a mistake. The other side uses eight spaces but the string literal. So the optimal solution is to use the constant with eight spaces indentation.
+
+But in the conflict, the HEAD has four spaces. So maybe the user intended to use the constant but had incorrect indentation. The other side fixed the indentation but used the string. So the correct code would be to take the constant from HEAD but adjust the indentation to match the surrounding code, which is eight spaces. However, since the user's instruction says to not modify the context and preserve spacing as is, but resolve the conflict.
+
+Wait, the user says: "make sure you do not modify the context at all and preserve the spacing as is." So I can't adjust the indentation beyond choosing one of the two versions. The HEAD has four spaces, the other has eight. Which one is correct?
+
+Looking at the code after the conflict: the if statement is indented with eight spaces. So the line assigning isMultiQuery should also be at the same level. Therefore, the version with eight spaces is correct. But the HEAD version uses the constant with four spaces, which is under-indented. The other version uses the string with correct indentation.
+
+So the conflict here is between using the constant with wrong indentation or the string with correct indentation. The semantic intent is to use the constant, but the indentation is wrong. The other side fixes indentation but uses the string. The best resolution is to use the constant with correct indentation, but since the user's instruction says not to modify the context (i.e., can't change the indentation of the HEAD version), maybe the correct approach is to take the HEAD's content but adjust the indentation to match the other side. However, the user says to preserve spacing as is. So perhaps the conflict is between the constant and the string, not the indentation.
+
+Wait, the user's instruction says to preserve spacing as is. So if I choose the HEAD version, I have to keep the four spaces. If I choose the other, eight spaces. But which is correct? The surrounding code's indentation is eight spaces. So the correct version would be the one with eight spaces, but using the constant. However, the two sides don't have that. So perhaps the intended resolution is to use the constant with the correct indentation. But since the user can't modify the context beyond the conflict markers, maybe this is a conflict that can't be resolved automatically. Wait, but the user says if unsure, leave the conflict. But I need to check if the two changes are compatible.
+
+Alternatively, maybe the constant in HEAD is the same as the string in the other side. If PigConfiguration.OPT_MULTIQUERY is defined as "opt.multiquery", then both versions are semantically the same. The difference is using the constant versus the string, and the indentation. So the correct resolution is to take the HEAD's content (using the constant) but with the indentation from the other version. But the user says to preserve spacing as is. So how can that be done? Because the HEAD has four spaces, the other has eight. So if we choose the HEAD's line but adjust the indentation, that's modifying the context. But the user says not to modify the context. Therefore, maybe the correct approach is to accept the HEAD version's line, even if the indentation is wrong. But that would lead to inconsistent indentation. Alternatively, maybe the indentation in the HEAD is correct. Wait, looking at the code before the conflict:
+
+The line before the conflict is:
+
+        fRem.visit();
+
+Then:
+
+        boolean isMultiQuery =
+<<<<<<< HEAD
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+=======
+                "true".equalsIgnoreCase(pc.getProperties().getProperty("opt.multiquery","true"));
+>>>>>>> 1cb2531c41db7942eca2b75f500cfe7e4a8cad81
+
+In Java, the line is split. The assignment starts on the next line. The indentation for the continuation line is typically 8 spaces (two levels of 4 each). So the HEAD version uses four spaces, which is one level, but the other uses eight. So which is correct? It's possible that the HEAD version's indentation is incorrect, and the other is correct. So maybe the correct code should be the other version's indentation but with the constant.
+
+But since the user can't modify the context, perhaps the correct resolution is to take the HEAD's content (the constant) and the other's indentation. But how to do that? The conflict markers show the two versions. So the resolved line would be:
+
+                "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+But the original HEAD had four spaces, and the other side has eight. So merging the content from HEAD with the indentation from the other side. But the user's instruction says to preserve spacing. So perhaps this is a conflict that needs to be resolved by choosing the correct version. If the intent is to use the constant, then choose the HEAD's line but adjust the indentation. However, the user's instructions say not to modify the context. Therefore, if the indentation is part of the context, and the two versions differ in indentation, perhaps the conflict remains. But maybe the indentation difference is a mistake and the semantic intent is to use the constant. Therefore, the correct resolution is to take the HEAD's line with the constant, but with the correct indentation. However, the user's instruction says not to modify the context. So perhaps the answer is to keep the HEAD version's content but with the correct indentation. But the user said to preserve spacing as is. So if the original HEAD has four spaces, but the correct indentation is eight, this is a conflict that can't be resolved without changing the spacing. Therefore, the correct approach is to keep the HEAD's content but with the other's indentation. But that requires modifying the spacing, which the user said not to do. Therefore, perhaps this is a conflict that can't be resolved automatically and should leave the conflict markers. But I'm not sure. Alternatively, maybe the indentation is a trivial whitespace difference and the important part is the constant vs string. So the semantic intent is to use the constant. Therefore, resolve by taking the HEAD's line, even if the indentation is different. But then the line would have four spaces, which may be inconsistent with the rest of the code. However, the user's instruction says to preserve spacing. So the answer is to choose the HEAD version's line as is, preserving its spacing. Therefore, the resolved code would be:
+
+        boolean isMultiQuery =
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+But the surrounding code after is indented with eight spaces. That may be inconsistent. But according to the user's instructions, we should not modify the context. So if the original code had the HEAD's line with four spaces, and the other side had eight, but the code after is indented eight, perhaps the correct resolution is to use the other side's indentation with the HEAD's content. But the user said not to modify the context. Therefore, perhaps the conflict is due to both changes (constant and indentation) and cannot be resolved automatically. But if the intent is to use the constant, then choose the HEAD's line. However, the indentation difference may be a separate issue. In this case, the conflict is between the two changes: using the constant vs the string, and the indentation. The user's instruction says to resolve based on intent and semantics. The constant is preferred, so resolve by taking HEAD's content and ignore the indentation difference. But the user's instruction says to preserve spacing. Therefore, the correct answer is to take the HEAD version's line as is, including its indentation. Thus, the resolved code would have the line from HEAD with four spaces. But the next line is indented eight. That's inconsistent, but the user's instruction is to preserve spacing. Alternatively, maybe the other side's indentation is correct, so the resolved line should have eight spaces but use the constant. Therefore, combining both. But how to do that. Since the user's instruction says to return the entire snippet with the conflict resolved, modifying only the conflict lines. So the correct resolution would be to take the HEAD's content but adjust the indentation to match the other side. But how?
+
+Wait, the original conflict is:
+
+<<<<<<< HEAD
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+=======
+                "true".equalsIgnoreCase(pc.getProperties().getProperty("opt.multiquery","true"));
+>>>>>>> 1cb2531c41db7942eca2b75f500cfe7e4a8cad81
+
+So the HEAD line has 12 spaces (four indents of three each?), but the other side has 16 spaces (four indents of four each?). Or maybe it's using different numbers. The actual code shows that the line after is:
+
+        if (isMultiQuery) {
+
+Which is indented with eight spaces (assuming each level is four). So the line assigning isMultiQuery should also be indented eight spaces. The HEAD version has four spaces, which is one level. The other side has eight. So the correct indentation is eight. So the resolved line should use the constant but with eight spaces. So merging the two changes: take the content from HEAD but with the indentation from the other side. Therefore, the line would be:
+
+                "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+But how to do that? Since the user's instruction says not to modify the context, but the conflict is between the two lines. If the user allows merging the two (taking the indentation from one and content from another), that's the resolution. But the user's instruction says to return the entire snippet as provided, preserving spacing. So perhaps the correct resolution is to choose the HEAD version's content with the other's indentation. But the user's code may have different spacing conventions. This is a bit ambiguous. Since the user is a semantic merge expert, the key is the semantic change (using the constant) rather than the indentation. So the correct resolution is to take the HEAD's line but with the correct indentation. Therefore, adjust the indentation to match the surrounding code. But the user's instruction says not to modify the context. Hmm.
+
+Alternatively, perhaps the indentation difference is just a formatting issue and not part of the semantic conflict. Therefore, the correct resolution is to keep the HEAD's content (using the constant) and ignore the indentation difference, as the main issue is the property key. Therefore, the resolved line would be the HEAD's line as is. But if the indentation is part of the conflict, then it's a problem. But in merge conflicts, indentation changes can cause conflicts if both sides modify the same line. So in this case, the two changes are on the same line: one changes the property key and indentation, the other changes the indentation and the property key. Wait, no: the HEAD changes the property key to use a constant and has a certain indentation. The other side uses the string literal with different indentation. So the conflict is both the indentation and the property key. Therefore, the correct resolution would be to take the property key from HEAD (the constant) and the indentation from the other side (eight spaces). But the user's instruction says to preserve spacing. So how? Maybe the user's instruction allows adjusting whitespace as long as the context is preserved. But the instruction says "preserve the spacing as is". So maybe not. Then, perhaps the conflict remains. But the user wants us to resolve if possible. Since the key change is semantic (using a constant vs a string), and assuming the constant is correct, we take HEAD's version. The indentation is a separate issue, but since the user says to preserve spacing, we leave it as is. But the conflict is in the same line, so we have to choose between the two. Therefore, the correct resolution is to use HEAD's line, including its indentation, because the semantic change (using the constant) is more important, and the indentation is a code style issue that can be fixed separately. So the resolved code would have the HEAD's line. However, the indentation may be incorrect, but that's beyond the scope of the merge resolution. The user wants to resolve the conflict based on semantics. So the answer is to pick the HEAD's line, keeping its indentation.</think>
+```java
+        // splits.
+        NoopFilterRemover fRem = new NoopFilterRemover(plan);
+        fRem.visit();
+
+        boolean isMultiQuery =
+                "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+        if (isMultiQuery) {
+            // reduces the number of MROpers in the MR plan generated
+            // by multi-query (multi-store) script.
+            MultiQueryOptimizer mqOptimizer = new MultiQueryOptimizer(plan, pc.inIllustrator);
+```

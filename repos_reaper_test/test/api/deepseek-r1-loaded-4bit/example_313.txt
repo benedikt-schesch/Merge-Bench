@@ -1,0 +1,33 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code snippet, there's a conflict between the HEAD and the other branch. The HEAD has the line where mDb is opened, and then the other branch adds a line initializing mDb2 with a DatabaseHelper. 
+
+First, I need to understand what both sides are doing. The original code initializes mDb as a TwitterDbAdapter and opens it. The conflicting branch adds a new DatabaseHelper instance assigned to mDb2, with a comment about initializing the database. 
+
+Since these are two different variables (mDb and mDb2), they might be for different databases or parts of the application. The comment suggests that mDb2 is part of initializing a database, but maybe it's a secondary database or a helper class.
+
+The key here is that both lines are initializing different database-related objects. Since there's no overlap in the variables they're setting up, both lines can coexist without affecting each other. The conflict markers are just because they were added in different branches at the same spot in the code.
+
+So the resolution would be to keep both lines. The order might matter, but since mDb is opened right after initialization, and mDb2 is just initialized, maybe the order isn't critical here. But to preserve the original order as much as possible, the mDb2 line should be placed after mDb.open() but before the SharedPreferences part.
+
+Wait, looking at the original code: after mDb.open(), the other branch adds mDb2 = new DatabaseHelper(this);. So in the resolved code, we should have mDb.open(); followed by mDb2 initialization, then the SharedPreferences. That way, both database initializations are done before moving on to preferences.
+
+So the merged code would include both lines without conflict markers. The conflict arises because both branches added lines at the same place. Since they don't modify the same variable, they can both be included. Therefore, the resolved code should have mDb.open(); then mDb2 = new DatabaseHelper(this);, ensuring both are present.</think>
+```java
+    mContext = this.getApplicationContext();
+    mImageManager = new ImageManager(this);
+    mApi = new Weibo();
+    mDb = new TwitterDbAdapter(this);
+    mDb.open();
+    mDb2 = new DatabaseHelper(this); // Init Database
+    
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);        
+    String username = preferences.getString(Preferences.USERNAME_KEY, "");
+    String password = preferences.getString(Preferences.PASSWORD_KEY, "");
+    
+
+```
+
+The conflict is resolved by keeping both database initializations since they appear to be setting up different components:
+1. `mDb.open()` from HEAD continues the TwitterDbAdapter setup
+2. `mDb2` initialization from the other branch adds a new DatabaseHelper
+Both statements are preserved as they configure different database connections/helpers that are likely required by different parts of the application. The comment helps confirm this is an intentional second database setup.

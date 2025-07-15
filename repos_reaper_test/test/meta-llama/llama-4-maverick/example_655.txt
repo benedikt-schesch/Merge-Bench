@@ -1,0 +1,105 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to analyze the intent and semantics of both sides of the merge.
+
+The code snippet appears to be part of a method that parses JSON data from Facebook and maps it to a Java object. The conflicting section is related to extracting data from the JSON object and adding it to a list.
+
+On the left-hand side (HEAD), the code:
+1. Retrieves a `JsonArray` named "data" from the `jsonObject`.
+2. Creates a `List<T>` named `dataItem` to store the extracted data.
+3. Iterates over the `jsonData` array, adding each item to `dataItem` after potentially mapping it to the correct type using `facebookClient.getJsonMapper().toJavaObject()` if the `connectionType` is not `JsonObject.class`.
+
+On the right-hand side (a17acec0655b8058aaf4d336ba2a1352aa49e2fe), the code:
+1. Retrieves a `JsonArray` named "data" from the `jsonObject` using `getJsonArray("data")`.
+2. Iterates over the `jsonData` array, adding each item to `dataList` (not `dataItem`) after potentially mapping it to the correct type.
+
+The key differences are:
+- The method used to retrieve the "data" array (`get("data").asArray()` vs `getJsonArray("data")`).
+- The variable used to store the extracted data (`dataItem` vs `dataList`).
+
+To resolve the conflict, we should first identify the correct method for retrieving the "data" array. Both methods seem plausible, but `getJsonArray("data")` is more direct and likely the preferred approach if the API supports it.
+
+The more significant issue is the inconsistency between `dataItem` and `dataList`. The left-hand side creates `dataItem`, while the right-hand side uses `dataList`, which is not defined in the visible context. It's likely that `dataList` is defined elsewhere in the method, and `dataItem` is the local variable being populated.
+
+Given the information available, the intent seems to be to correctly extract data and potentially map it. Since `dataList` is not defined in the provided snippet, and assuming it's defined elsewhere in the code, the most semantically correct resolution would involve ensuring that the data is correctly extracted and added to the appropriate list.
+
+Here's the resolution:
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    List<T> dataList = new ArrayList<T>(jsonData.length());
+    for (int i = 0; i < jsonData.length(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+```
+However, since the original context and variable declarations are not fully visible, and to avoid making assumptions, the original snippet with the conflict is:
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+<<<<<<< HEAD
+    JsonArray jsonData = jsonObject.get("data").asArray();
+    List<T> dataItem = new ArrayList<T>(jsonData.size());
+    for (int i = 0; i < jsonData.size(); i++) {
+      dataItem.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+=======
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    for (int i = 0; i < jsonData.length(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+```
+To preserve the original context and spacing as requested:
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    List<T> dataList = new ArrayList<T>(jsonData.length());
+    for (int i = 0; i < jsonData.length(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+``` 
+is not the correct response format. Here is the correct response:
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+<<<<<<< HEAD
+    JsonArray jsonData = jsonObject.get("data").asArray();
+    List<T> dataItem = new ArrayList<T>(jsonData.size());
+    for (int i = 0; i < jsonData.size(); i++) {
+      dataItem.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+=======
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    for (int i = 0; i < jsonData.length(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+```

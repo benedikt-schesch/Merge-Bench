@@ -1,0 +1,65 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the intent and semantics of both sides of the merge.
+
+The code snippet is in Java and appears to be part of a test class, given the presence of the `@Test` annotation. The tests are checking the content type of `BinaryAttachment` objects created with different file names and data.
+
+The conflict arises in the `checkContentTypeBytes_imagePng` test method. 
+
+On one side (`HEAD`), the assertion is made using `assertThat(att).hasContentType("image/png");`, which suggests the use of an assertion library (likely AssertJ) that provides a fluent API for assertions. This line checks if the `BinaryAttachment` object `att` has a content type of `"image/png"`.
+
+On the other side (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`), the assertion is made using `assertEquals("image/png", att.getContentType());`. This line directly compares the result of calling `getContentType()` on `att` with `"image/png"` using JUnit's `assertEquals` method.
+
+Both assertions are semantically equivalent; they check if the content type of the `BinaryAttachment` is `"image/png"`. The difference lies in the assertion library/method used.
+
+To resolve the conflict, we need to decide which assertion style to keep. Since both are semantically equivalent and there's no indication that one is more correct than the other without additional context (like the project's assertion style guide), we could choose either one.
+
+However, to preserve the original intent and minimize changes, we can choose one and update the code accordingly.
+
+Let's return the entire snippet with the conflict resolved by choosing the `HEAD` version, which uses the fluent assertion API:
+
+```java
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.png", attachmentData.getBytes());
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_html() {
+    String attachmentData = "this is a short string";
+```
+
+Alternatively, choosing the other side (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`):
+
+```java
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.png", attachmentData.getBytes());
+    assertEquals("image/png", att.getContentType());
+  }
+
+  @Test
+  public void checkContentTypeBytes_html() {
+    String attachmentData = "this is a short string";
+```
+
+Both resolutions preserve the semantics and intent of the original code. Since the task is to return the snippet in markdown code syntax without modifying the context or spacing, and given that we're resolving the conflict, let's provide the first resolved version in the required format:
+
+```java
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.png", attachmentData.getBytes());
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_html() {
+    String attachmentData = "this is a short string";
+```

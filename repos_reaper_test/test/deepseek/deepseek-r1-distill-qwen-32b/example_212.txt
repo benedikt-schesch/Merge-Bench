@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the correct approach is to set both `retPos` and `newPos` to the initial position using `zStream.tell()`. This aligns with initializing both variables to the same starting point, which is semantically appropriate given their roles in tracking positions.
+
+```java
+    // and we set retPos to newPos once we have read a character from that block.
+    // see getPos() for more detail
+    private long retPos, newPos = -1;
+
+    public CBZip2InputStream(SeekableInputStream zStream, int blockSize) throws IOException {
+        retPos = newPos = zStream.tell();
+        ll8 = null;
+        tt = null;
+        checkComputedCombinedCRC = blockSize == -1;
+        bsSetStream(zStream);
+        initialize(blockSize);
+    }
+```

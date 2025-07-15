@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet:
+
+```java
+ *
+ */
+public class POStore extends PhysicalOperator {
+
+    private static final long serialVersionUID = 1L;
+    private static Result empty = new Result(POStatus.STATUS_NULL, null);
+    transient private StoreFuncInterface storer;
+    transient private POStoreImpl impl;
+    transient private String counterName = null;
+    private FileSpec sFile;
+    private Schema schema;
+
+```
+
+I resolved the conflict by choosing the `private` access modifier (from the incoming change) over `protected`. The private access modifier is more restrictive and appears to be the intent of the newer version, suggesting that this static field should not be accessed outside this class.

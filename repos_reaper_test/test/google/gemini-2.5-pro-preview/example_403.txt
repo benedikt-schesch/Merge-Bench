@@ -1,0 +1,54 @@
+<think>
+No reasoning found</think>
+The conflict arises from different arguments provided to the `yt-dlp` command for format selection (`-S` option).
+
+**HEAD version:**
+`"-S vcodec:h264,res:576,acodec:aac"`
+
+**Branch `8549031e...` version:**
+`"-S res:576,hcodec:h264,acodec:aac"`
+
+Let's analyze the intent based on the comment:
+"* Download the best video with best vcodec no better than h264 and
+* the best audio with best acodec no better than aac and
+* with neither height nor width larger than 576."
+
+This means the desired format should:
+1.  Use H264 video codec (or a codec not "better" than H264).
+2.  Use AAC audio codec (or a codec not "better" than AAC).
+3.  Have a resolution where height and width are not larger than 576.
+
+The `yt-dlp` option `-S key1:val1,key2:val2,...` is used to sort formats and, when values are provided (like `h264`, `576`, `aac`), it also acts as a filter, meaning formats must match these criteria.
+
+Comparing the two versions:
+1.  **Codec name:** HEAD uses `vcodec:h264`. Branch `8549031e...` uses `hcodec:h264`.
+    `vcodec` is the standard `yt-dlp` key for video codec. `hcodec` is not a standard key and is very likely a typo for `vcodec`.
+2.  **Order of criteria:**
+    *   HEAD: `vcodec:h264` (video codec), then `res:576` (resolution height 576p), then `acodec:aac` (audio codec).
+    *   Branch `8549031e...`: `res:576`, then `hcodec:h264` (intended `vcodec:h264`), then `acodec:aac`.
+
+The primary semantic issue is the `hcodec` typo, which should be `vcodec`.
+Assuming `hcodec` is corrected to `vcodec`, the difference lies in the order of preference for filtering/sorting:
+*   HEAD prioritizes filtering by video codec first, then resolution, then audio codec.
+*   Branch (corrected) prioritizes filtering by resolution first, then video codec, then audio codec.
+
+Since these criteria (`vcodec:h264`, `res:576`, `acodec:aac`) act as filters that all must be met, the order primarily affects readability or potentially subtle tie-breaking if multiple formats match all criteria perfectly. Given "best video with best vcodec" is mentioned first in the comment, prioritizing `vcodec:h264` (as in HEAD) seems slightly more aligned with the comment's textual structure.
+
+The HEAD version is syntactically correct and reflects a plausible interpretation of the comment. The branch version introduces a typo (`hcodec`).
+
+Therefore, the resolution should adopt the HEAD version, as it is correct and the change in the branch introduced an error.
+
+```java
+         * Download the best video with best vcodec no better than h264 and
+         * the best audio with best acodec no better than aac and
+         * with neither height nor width larger than 576.
+         */
+        ProcessBuilder pb = new ProcessBuilder("yt-dlp", "--ignore-config",
+                "--simulate", "--dump-single-json", "-S vcodec:h264,res:576,acodec:aac",
+                "--no-cache-dir", "--no-playlist",
+                "--playlist-end=" + MAX_VIDEOS_PER_PAGE, uri.toString());
+        logger.info("running: " + String.join(" ", pb.command()));
+
+        Process proc = null;
+
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+Here is the resolved code with proper semantic conflict resolution:
+
+```java
+
+  @Test
+  public void postImageToUserFeedWithMessageAndPrivacy() {
+    byte[] imageAsBytes = fetchBytesFromImage();
+    JsonObject privacy = new JsonObject();
+    privacy.put("value", "SELF");
+    DefaultFacebookClient client =
+        new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_2_7);
+    JsonObject obj = client.publish("me/photos", JsonObject.class,
+      BinaryAttachment.with("test.png", imageAsBytes, "image/png"), Parameter.with("privacy", privacy));
+    assertNotNull(obj);
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I'll integrate the changes from the new branch, which uses a more specific method to build the request and adds the parser directly to the request.
+
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public String exchangeForSessionToken() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubSessionToken"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+    SessionTokenResponse sessionTokenResponse =
+        request.execute().parseAs(SessionTokenResponse.class);
+    String sessionToken = sessionTokenResponse.sessionToken;
+    setToken(sessionToken);
+    return sessionToken;
+  }
+```
+
+The resolver adopted the changes from the new branch to construct the request using `createRequestFactory().buildGetRequest()` and added the parser directly to the request, ensuring the correct method and specificity.

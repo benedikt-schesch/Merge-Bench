@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in terms of intent and semantics.
+
+The conflict revolves around the handling of channel closure and cleanup. Let's look at the intent of both sides:
+
+- **HEAD**: Simply closes the channel if it's open, without additional comments or conditional cleanup logic.
+- **d543609**: Adds explanatory comments and includes additional logic to handle cleanup directly if the channel is not open (likely due to a connection timeout).
+
+The intent of **d543609** appears to be more explicit and detailed, providing better clarity and handling for edge cases (e.g., connection timeout). It ensures proper cleanup in scenarios where the channel is not open, which HEAD does not address. Semantically, **d543609** provides a more complete solution for resource management, which aligns with robust error handling and cleanup practices.
+
+Since the intent of **d543609** is clearer and more comprehensive, I'll resolve the conflict by adopting its changes.
+
+Here is the resolved snippet with the full context preserved:
+
+```java
+               + " ignore this if we're shutting down", e);
+    } else {
+      LOG.error("Unexpected exception from downstream on " + c, e);
+    }
+    if (c.isOpen()) {
+      Channels.close(c);  // Will trigger channelClosed(), which will cleanup()
+    } else {              // else: presumably a connection timeout.
+      cleanup(c);         // => need to cleanup() from here directly.
+    }
+  }
+
+  // ------------------------------- //
+  // Low-level encoding and decoding //
+```

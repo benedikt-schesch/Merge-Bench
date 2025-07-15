@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the correct approach is to remove the unused `rpcid` parameter and decide whether the method should be static based on the context, which isn't clear here. However, without more context, the safest resolution is to remove the parameter without changing the static status.
+
+Here's the resolved code snippet:
+
+```java
+   * De-serializes a "Writable" serialized by
+   * {@code HbaseObjectWritable#writeObject}.
+   * @return The de-serialized object (which can be {@code null}).
+   */
+  @SuppressWarnings("fallthrough")
+  Object deserializeObject(final ChannelBuffer buf,
+                           final HBaseRpc request) {
+    switch (buf.readByte()) {  // Read the type of the response.
+      case  1:  // Boolean
+        return buf.readByte() != 0x00;
+      case  6:  // Long
+        return buf.readLong();
+```
+
+However, if making the method static is intentional, the correct lines would be:
+
+```java
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+```

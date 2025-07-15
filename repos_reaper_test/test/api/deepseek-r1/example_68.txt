@@ -1,0 +1,22 @@
+<think>
+Okay, let's look at this merge conflict. The problem is in the Java code where two different sets are being declared. On the HEAD side, there's a Set<Integer> called customDecksIds initialized with a synchronized set of HashSet<Integer>. On the other branch, there's a Set<String> named cardcastDeckIds initialized with a synchronized HashSet<>(). 
+
+First, I need to understand what each side is trying to achieve. The HEAD uses Integer for custom deck IDs, maybe referring to internal numeric identifiers. The other branch uses String for cardcast deck IDs, perhaps because they're using string-based identifiers, like those from the Cardcast API which might use alphanumeric codes.
+
+Since the variable names are different (customDecksIds vs cardcastDeckIds), it's possible they represent different concepts. The HEAD's customDecks might be for user-created decks, while cardcastDeckIds could be specific to external Cardcast decks. If both are necessary, they should both be included. But if they're meant to be the same concept but with different types, that's a conflict.
+
+Looking at the surrounding context, there's no other similar variables. The developer probably intended to track two different types of deck IDs. So the correct resolution is to keep both variables. Therefore, the merged code should have both lines without conflict markers.</think>
+```java
+  private final ConnectedUsers connectedUsers;
+  private final GameManager gameManager;
+  private final Provider<Session> sessionProvider;
+  private final Object blackCardLock = new Object();
+  private final GameOptions options;
+  private final Set<Integer> customDecksIds = Collections.synchronizedSet(new HashSet<Integer>());
+  private final Set<String> cardcastDeckIds = Collections.synchronizedSet(new HashSet<>());
+  private final Metrics metrics;
+  private final Provider<Boolean> showGameLinkProvider;
+  private final Provider<String> gamePermalinkFormatProvider;
+  private final Provider<Boolean> showRoundLinkProvider;
+
+```

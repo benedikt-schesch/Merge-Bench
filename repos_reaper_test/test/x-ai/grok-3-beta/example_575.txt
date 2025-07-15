@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in terms of intent and semantics, and since the resolution seems straightforward in this case, I will provide the resolved version of the code snippet. The context surrounding the conflict will remain unchanged and preserved as provided.
+
+### Analysis of the Merge Conflict
+- **HEAD side (`jsonHelper.getStringFrom(rawValue)`):** The intent here appears to be using a helper method to convert the `rawValue` into a string. This might include specific logic or formatting handled by `jsonHelper` to ensure consistency in how values are converted to strings, possibly tailored for JSON processing.
+- **Other side (`rawValue.toString()`):** The intent here is to directly call the `toString()` method on `rawValue` to convert it to a string. This is a more general approach, relying on Java's default string representation of the object, which might not account for JSON-specific handling.
+- **Semantic Intent:** Both sides aim to convert `rawValue` to a string, likely as part of processing data (possibly JSON deserialization). Given the context mentions of `jsonHelper` elsewhere in the code (e.g., `jsonHelper.getIntegerFrom`), it's probable that the codebase uses `jsonHelper` for consistent handling of JSON data conversions. Therefore, the `HEAD` side's use of `jsonHelper.getStringFrom(rawValue)` aligns better with the apparent design pattern and intent of the code.
+
+### Resolution
+I will resolve the conflict by keeping the `HEAD` side's approach, as it aligns with the consistent use of `jsonHelper` for data conversion in this context.
+
+Here is the resolved snippet with the full context preserved as provided:
+
+```java
+       * This is useful if, for example, you've got a @Facebook-annotated string field that you'd like to have a numeric
+       * type shoved into.
+       *
+       * User beware: this will turn *anything* into a string, which might lead to results you don't expect.
+       */
+      return jsonHelper.getStringFrom(rawValue);
+    }
+
+    if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
+      return jsonHelper.getIntegerFrom(rawValue);
+    }
+```
+
+### Explanation of Choice
+I chose `jsonHelper.getStringFrom(rawValue)` over `rawValue.toString()` because the surrounding code uses `jsonHelper` for other type conversions (e.g., `jsonHelper.getIntegerFrom`), suggesting a design pattern where JSON-specific conversions are handled through this helper. Using `jsonHelper` ensures consistency and possibly handles edge cases or JSON-specific formatting that a direct `toString()` call might miss. If the intent of the other branch was to simplify or avoid dependency on `jsonHelper`, further discussion with the team might be needed, but based on the provided context, `jsonHelper` seems to be the intended approach.

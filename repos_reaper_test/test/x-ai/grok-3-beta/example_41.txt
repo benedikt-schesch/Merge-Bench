@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in the provided code snippet. The conflict appears in a logging statement where the only difference is in the spacing/formatting of the log message (`String.format` parameters). I'll resolve this by choosing a consistent formatting style based on the intent, which is to log a message about resetting the game due to too few players.
+
+Here is the full snippet with the conflict resolved:
+
+```java
+      // this seems terrible
+      if (players.size() == 0) {
+        gameManager.destroyGame(id);
+      }
+      if (players.size() < 3 && state != GameState.LOBBY) {
+        logger.info(String.format("Resetting game %d due to too few players after someone left.", id));
+        resetState(true);
+      } else if (wasJudge) {
+        synchronized (roundTimerLock) {
+          final SafeTimerTask task = new SafeTimerTask() {
+            @Override
+```
+
+### Explanation of Resolution:
+- **Intent Analysis**: Both sides of the merge aim to log the same message about resetting the game due to insufficient players. The difference is purely in the formatting of the `String.format` call (one has the format string and argument on separate lines in the `HEAD` version, while the other has it on a single line in the commit `5adedd248`).
+- **Resolution Choice**: I chose the version from commit `5adedd248` (single line) for simplicity and readability, as it is more concise and aligns with common formatting practices unless a specific style guide dictates otherwise.
+- **Preservation of Context**: The surrounding code and comments are unchanged, maintaining the original spacing and structure as provided.
+
+If there were any ambiguity in intent or additional context suggesting a specific formatting style, I would have retained the conflict markers. However, since the semantic intent is identical, I resolved it with the more compact formatting.

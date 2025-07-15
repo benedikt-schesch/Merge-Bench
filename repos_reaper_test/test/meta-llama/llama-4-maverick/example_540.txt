@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the code snippet and understand the intent behind both the local and remote changes.
+
+The code snippet is written in Java and appears to be part of a Bluetooth-related functionality within a larger application, possibly a plugin for a hybrid mobile app given the presence of `sendPluginResult`. The snippet handles different states of a Bluetooth adapter.
+
+The conflict arises in the `BluetoothAdapter.STATE_TURNING_OFF` case. Let's break down the changes:
+
+1. **Local Changes (HEAD):**
+   - Reset `isAdvertising` to `false` when the Bluetooth adapter is turning off.
+   - Check if `gattServer` is not null before closing it.
+
+2. **Remote Changes (094cb482d0c11e5f16a8f386fd5596e34e562015):**
+   - Only check if `gattServer` is not null before closing it.
+
+The intent behind the local changes seems to ensure that the state `isAdvertising` is correctly reset when the Bluetooth adapter is turning off, in addition to properly closing the `gattServer` if it exists.
+
+The remote changes, on the other hand, focus solely on ensuring `gattServer` is not null before attempting to close it, omitting the reset of `isAdvertising`.
+
+To resolve this conflict, we need to consider whether resetting `isAdvertising` to `false` when the adapter is turning off is necessary or if it's redundant. If the Bluetooth adapter is turning off, it's logical to assume that any advertising process would be terminated or considered inactive. Thus, resetting `isAdvertising` to `false` seems like a reasonable action to maintain a consistent state.
+
+However, since the remote change does not include this reset, it might be that the state of `isAdvertising` is being handled elsewhere or is not considered critical when the adapter is turning off. Without more context, it's a bit ambiguous.
+
+Given the information and focusing on the intent and semantics, a resolution that includes both changes (resetting `isAdvertising` and checking `gattServer` for null before closing) seems reasonable as it covers both aspects. However, the original local change already includes the null check for `gattServer`, so incorporating both intents doesn't add new null checks but retains the reset of `isAdvertising`.
+
+Here is the resolved code snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+
+            if (initPeripheralCallback != null) initPeripheralCallback.sendPluginResult(pluginResult);
+
+            break;
+          case BluetoothAdapter.STATE_TURNING_OFF:
+            // Reset isAdvertising when adapter is turning off
+            if (isAdvertising) isAdvertising = false;
+
+            // Make sure gattServer is not null (in case this triggers when it is null)
+            if (gattServer != null) gattServer.close();
+            break;
+          case BluetoothAdapter.STATE_ON:
+
+            addProperty(returnObj, keyStatus, statusEnabled);
+
+
+```

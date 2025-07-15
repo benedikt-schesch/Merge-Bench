@@ -1,0 +1,112 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the import statements of a Java file. On the HEAD side, they're importing JsonObject and ParseException from com.restfb.json. On the other branch, a17acec, they're importing exceptions from com.restfb.exception, JsonException from com.restfb.json, and also JsonObject.
+
+First, I need to understand the intent of both changes. The HEAD side adds ParseException, which might be used for parsing errors. The other branch adds several exceptions from com.restfb.exception and JsonException. It's possible that the branch is consolidating exception imports or adding new ones needed for error handling.
+
+Looking at the imports, both sides have JsonObject, so that's common. The conflict arises because HEAD has ParseException, and the other branch has JsonException and other exceptions from com.restfb.exception. Since these are different exceptions, the correct resolution would be to include all necessary imports from both sides.
+
+I should check if any of the imports are redundant. For example, if com.restfb.exception.* includes some exceptions that are already imported individually, but in the given code, the other branch is explicitly importing com.restfb.exception.* (the star import) and also JsonException. Wait, no—the other branch's imports are:
+
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+
+So they're importing all from com.restfb.exception, and then specific classes from com.restfb.json. The HEAD side has JsonObject and ParseException from com.restfb.json.
+
+Now, ParseException is from com.restfb.json, same as JsonObject. The other branch has JsonException from the same package. Are ParseException and JsonException both needed? Or did one branch replace the other?
+
+Wait, maybe in the HEAD, they were using ParseException, and in the other branch, they switched to JsonException. Or perhaps both exceptions are used in different parts. Without more context, it's hard to tell. But since both branches are modifying the imports, the correct approach is to merge all unique imports.
+
+So the resolved imports should include:
+
+- com.restfb.exception.* (from the other branch)
+- com.restfb.json.JsonObject (common)
+- com.restfb.json.ParseException (from HEAD)
+- com.restfb.json.JsonException (from other branch)
+
+Wait, but the other branch's imports don't include ParseException. So if we merge, we need to include both ParseException from HEAD and JsonException from the other branch. Also, the other branch adds com.restfb.exception.* which includes multiple exceptions, while the HEAD doesn't have that. So the merged imports should include all of these.
+
+So the resolved import block would have:
+
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+import com.restfb.json.ParseException;
+
+But wait, in the original conflict, the HEAD has:
+
+import com.restfb.json.JsonObject;
+import com.restfb.json.ParseException;
+
+And the other branch has:
+
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+
+So combining these, we need to include the exception.* from the other branch, and both JsonObject (common), ParseException from HEAD, and JsonException from the other branch. Also, the order might matter, but in Java, the order of imports doesn't affect functionality, though style guides might prefer grouping.
+
+But the user said to preserve spacing as is. Looking at the original code, the imports are grouped with static imports first, then regular imports. The conflict is in the regular imports. The original has:
+
+import static ...;
+import static ...;
+import static ...;
+import static ...;
+
+<<<<<<< HEAD
+import com.restfb.json.JsonObject;
+import com.restfb.json.ParseException;
+=======
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+
+Then the rest.
+
+So to resolve, we need to include all the non-conflicting imports. The HEAD adds ParseException, the other branch adds exception.* and JsonException. JsonObject is present in both, so it's kept once.
+
+So the merged imports should be:
+
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+import com.restfb.json.ParseException;
+
+But we need to check if any imports are redundant or conflicting. For example, does com.restfb.exception.* include any of the other exceptions? Probably not, since they're in different packages (exception vs. json).
+
+Therefore, the correct merged imports are combining both sides: adding the exception package imports, and including both JsonException and ParseException from the json package.
+
+So the resolved code would have all four imports: exception.*, JsonException, JsonObject, ParseException. Since JsonObject is in both, it's kept once.
+
+So replacing the conflict markers with those four lines.
+
+Now, check the order. The other branch's order is exception.*, then JsonException, then JsonObject. The HEAD's order is JsonObject, then ParseException. In the merged version, perhaps group the exception.* first, then the json imports. But since the other branch's order is exception.*, then JsonException, then JsonObject, and the HEAD has JsonObject and ParseException, perhaps the merged order should be exception.*, then JsonException, JsonObject, ParseException.
+
+But maybe the original code had the JsonObject before the exception imports. Wait, no: in the original conflict, the HEAD's imports are JsonObject and ParseException, while the other branch's are exception.*, JsonException, JsonObject. So the merged code would have the exception imports first, then the json imports. That makes sense.
+
+So the resolved imports would be:
+
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+import com.restfb.json.ParseException;
+
+This way, all necessary imports from both branches are included. There's no overlap or duplication here. Therefore, the conflict is resolved by combining all the necessary imports from both sides.</think>
+```java
+import static com.restfb.util.StringUtils.isBlank;
+import static com.restfb.util.StringUtils.trimToEmpty;
+import static com.restfb.util.UrlUtils.urlEncode;
+import static java.util.Arrays.asList;
+
+import com.restfb.exception.*;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+import com.restfb.json.ParseException;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+```

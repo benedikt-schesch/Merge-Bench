@@ -1,0 +1,44 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the method signature of getAllResources. The HEAD version has the parameters split into two lines, with "List<Class> resources" on the next line. The other branch, from commit 1d97bfac, has the parameters on the same line. 
+
+I need to determine the intent here. Both versions are syntactically correct. The difference is just formatting—line breaks in method parameters. Since Java allows both styles, this is likely a matter of code style preferences. 
+
+The semantic intent of both branches is the same: to declare a method that takes an Application and a List of Classes. The conflict is purely about formatting. To resolve this, I should choose the version that aligns with the project's coding standards. If the surrounding code tends to have parameters on the same line when they fit, then the second version is better. Alternatively, if the project uses line breaks for each parameter, the HEAD version is correct.
+
+However, without more context on the project's style, it's safer to assume that minimizing changes is better. Since the conflict is about formatting, and both are valid, perhaps the merged version should adopt the more concise format (the second version) to reduce line breaks unless there's a reason to split them. Alternatively, maybe the HEAD version was a recent style change. 
+
+But since the user asked to resolve based on intent and semantics, and both versions are semantically identical, the resolution is to pick one formatting style. If there's no other context, perhaps the second version (from commit 1d97bfac) is preferable because it's more compact. However, if the project's existing code has similar method signatures with parameters split into multiple lines, then HEAD should be kept.
+
+But the user hasn't provided surrounding context beyond this snippet. Looking at the existing code around the conflict: the method before has parameters split into lines, like the HEAD version. For example, the method definition in HEAD is split into two lines, while the other branch has it in one line. Wait, the surrounding code might have other method signatures. Let me check the code around the conflict.
+
+In the provided snippet, the method before the conflict is:
+
+    public static List<Class> getAllResources(Application application,
+            List<Class> resources) {
+
+Which is the HEAD version. The other branch has it on one line. If the existing code in the file uses line breaks for parameters when they are long, then the HEAD version is consistent. But if the project recently changed to having parameters on the same line, the other branch is correct.
+
+Alternatively, maybe the method in the other branch was reformatted. Without more context, it's hard to tell. But since the user said to preserve the context as is, but resolve the conflict, perhaps the best approach is to choose the version that maintains consistency with the rest of the file's style.
+
+But given that the user hasn't provided more of the file, we have to make a judgment. Since the conflict is only in the method signature's formatting, and both are correct, perhaps the correct resolution is to take the version from the other branch (the one-line version) as it's more compact, unless the project's style dictates otherwise.
+
+Wait, but looking at the parameters in the HEAD version: the second parameter is on the next line, indented. That's a common Java practice when parameters don't fit on one line. The other branch's version has both parameters on the same line. If the line length allows, the one-line version is acceptable. If the line was split for length reasons, then HEAD is correct.
+
+But without knowing the line length, perhaps the merge should keep both changes, but that's not possible. Alternatively, the correct resolution is to accept one of the versions. Since the conflict is purely formatting, and both are valid, the resolver can choose either. However, to resolve the conflict, we need to pick one. 
+
+In the absence of additional style information, the safest resolution is to take the version from the incoming branch (the one-line version) because it's a minor formatting change that doesn't affect functionality. Alternatively, if the project uses a formatter that splits parameters onto multiple lines when they exceed a certain length, then the HEAD version is correct.
+
+But given that the user wants a semantic resolution, considering the intent of both sides. Both intend to declare the same method. The conflict is purely stylistic. Therefore, the resolver can choose either, but perhaps the one from the incoming branch (the one-line version) is the intended change, maybe part of a code style reformat. So, the resolved code would take the one-line version.</think>
+```java
+        }
+
+        return definition;
+    }
+
+    public static List<Class> getAllResources(Application application, List<Class> resources) {
+        List<Class> allResources = new ArrayList<>();
+        if (application != null) {
+            if (application.getClasses() != null) {
+                allResources.addAll(application.getClasses());
+            }
+```

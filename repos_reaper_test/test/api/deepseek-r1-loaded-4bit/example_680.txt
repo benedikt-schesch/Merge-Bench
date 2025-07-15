@@ -1,0 +1,24 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is a Java method that constructs a warning message about missing principals during deployment. The conflict arises between the HEAD version and the branch starting with 83418dbbb7fe.
+
+First, I'll compare the two versions. The HEAD version uses "resource access permissions or node ownership" and refers to "missing permissions/ownerships". The message ends with a period. The other branch uses "grants or node ownership" and "missing grants/ownerships", ends with an exclamation mark, and sorts the missing principals before joining them with Collectors.joining.
+
+Looking at the intent: both sides are warning about missing principals but use slightly different terminology. "Grants" might be more specific than "resource access permissions", possibly a terminology update. The exclamation mark adds emphasis. Sorting the principals could improve readability by presenting them in order.
+
+To resolve, we need to merge these changes without losing intent. The text should probably use "grants" if that's the newer term, keep the exclamation, and sort the list. The context around the conflict (like the link to pre-deploy.conf) remains the same. The logger line doesn't have a conflict, so it stays as is.
+
+So the resolved code would take the branch's version of the text, combining the terminology changes, punctuation, and sorting. The rest of the context stays untouched. Make sure the HTML structure is correct and the Collectors.joining is properly imported, but since it's a snippet, we assume necessary imports are present.</think>
+```java
+			applyConfigurationFileIfExists(ctx, postDeployConfFile, DEPLOYMENT_IMPORT_STATUS);
+
+			if (!missingPrincipals.isEmpty()) {
+
+				final String title = "Missing Principal(s)";
+				final String text = "The following user(s) and/or group(s) are missing for grants or node ownership during <b>deployment</b>.<br>"
+						+ "Because of these missing grants/ownerships, <b>the functionality is not identical to the export you just imported</b>!"
+						+ "<ul><li>" + missingPrincipals.stream().sorted().collect(Collectors.joining("</li><li>")) + "</li></ul>"
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+```

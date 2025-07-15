@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+```java
+		session.send(new EntityTransformMessage(player.getId(), new Transform(p, rot, Vector3.ONE), getRepositionManager()));
+	}
+
+	@Override
+	protected void worldChanged(World world) {
+		// Both sides want to send a WorldChangeMessage.
+		// One uses getDatatable(), the other getData(), and one (67bcb76...) also has a "false" boolean parameter.
+		// To best merge intent, forward compatibility and options, send the message with the needed data, keeping new API (getData()), and include the boolean if needed.
+		// But, since the base class is SpoutServerNetworkSynchronizer (per filename), so likely want server-side logic, which may differ from client.
+		// Let's keep the boolean parameter and getData():
+		session.send(false, new WorldChangeMessage(world, world.getData()));
+	}
+
+	@Override
+	public void updateBlock(Chunk chunk, int x, int y, int z, BlockMaterial material, short data) {
+		session.send(new BlockUpdateMessage(chunk.getBlock(x, y, z)));
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Here is the resolved merge conflict with the Android dialog view hierarchy in mind:
+
+```java
+        ((EditText) view.findViewById(R.id.passwordText)).setTypeface(monoTypeface);
+
+        builder.setPositiveButton(getResources().getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText edit = (EditText) callingActivity.findViewById(R.id.crypto_password_edit);
+                EditText generate = (EditText) view.findViewById(R.id.passwordText);
+                edit.append(generate.getText());
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+```
+
+The resolution combines:
+- Proper type casting (`EditText` vs `TextView`)
+- Correct view hierarchy context (`view.findViewById` for dialog views, `callingActivity.findViewById` for external views)
+- Maintains the core semantic intent of both sides (propagating dialog-generated password to targeted field)

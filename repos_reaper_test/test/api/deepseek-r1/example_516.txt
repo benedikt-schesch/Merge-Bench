@@ -1,0 +1,39 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at both sides.
+
+In the HEAD version, they're using mBitmapTexture and BitmapTextureRegionFactory. The method called is clearTextureSources(), and the factory method createTiledFromAsset takes mBitmapTexture, this, and the asset path.
+
+In the other branch, it's mBitmapTextureAtlas and BitmapTextureAtlasTextureRegionFactory. The method is clearTextureAtlasSources(), and the factory method uses mBitmapTextureAtlas. Also, the asset paths include "gfx/" before the filenames.
+
+So, what's the intent here? Both sides are toggling the texture by clearing the current sources and creating a new tiled texture. The main differences are the class and variable names. Maybe one branch refactored the code to use a different class, perhaps BitmapTextureAtlas instead of BitmapTexture. The asset path change adds a directory, which could be a organizational change.
+
+To resolve, I should check if the methods and classes are compatible. If the project moved from BitmapTexture to BitmapTextureAtlas, then the correct version would be the one from the other branch. However, the asset path difference is another change. Both changes might be valid but need to be merged correctly.
+
+Wait, maybe the correct resolution is to use the updated class and method names from the other branch, but ensure the asset path is correct. However, the HEAD version doesn't have "gfx/" in the path. If both changes are intended, perhaps the asset path should include "gfx/", and the class/variable names should be updated. So the resolved code would take the mBitmapTextureAtlas, clearTextureAtlasSources(), and the factory method with the atlas, but also include the "gfx/" path. But does the HEAD's asset path without "gfx/" conflict with the other branch's addition? That's a semantic difference. If one branch added the "gfx/" prefix and the other didn't, that's a conflict that needs to be resolved by choosing the correct path.
+
+Alternatively, maybe the asset path change is separate from the class refactoring. If both changes are correct, the resolved code should have the new class and variable names along with the updated asset path. So the correct merge would be taking the changes from both sides: using mBitmapTextureAtlas, clearTextureAtlasSources(), the correct factory method, and the asset path with "gfx/".
+
+But wait, in the conflict, only one side has the "gfx/" path. So the other branch added that. If both changes are necessary, the merged code should include both the class/variable changes and the asset path. So the resolution would be to take the version from the other branch, which includes both the refactored class names and the asset path. Unless the HEAD's asset path is correct without "gfx/", but that's unclear.
+
+Alternatively, maybe the asset path was modified in one branch and the class in another. The user needs to decide which is correct. But since I'm supposed to resolve based on intent, perhaps both changes are valid. However, if the class names were refactored, it's likely that the other branch's code is more up-to-date, and the asset path with "gfx/" is correct. So the resolved code would use the other branch's version but ensure that the asset path is correct. But how can I be sure?
+
+Alternatively, maybe the asset path difference is a typo or oversight. But without more context, it's hard to tell. If I'm not sure, I should leave the conflict. But the user asked to resolve if possible.
+
+Another angle: The method names changed from clearTextureSources to clearTextureAtlasSources, and the factory method changed from BitmapTextureRegionFactory to BitmapTextureAtlasTextureRegionFactory. This suggests a refactoring where the texture atlas is being used instead of a simple texture. So the other branch's code is part of a larger refactoring to use texture atlases, which is a common optimization. Therefore, the correct resolution is to take the other branch's code, which includes the atlas-related changes and the updated asset path. Thus, the merged code should be the version from the other branch, including the "gfx/" path and the atlas classes.
+
+So, the final code would be the lower part (from the other branch), but I need to make sure that's correct. The user said to preserve context, so the surrounding comments stay the same. Therefore, the resolved code should take the changes from the other branch, as it's likely a refactor, and the asset path is part of that change.</think>
+```java
+	// ===========================================================
+	// Methods
+	// ===========================================================
+
+	private void toggle() {
+		this.mBitmapTextureAtlas.clearTextureAtlasSources();
+		this.mToggleBox = !this.mToggleBox;
+		BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, this.mToggleBox ? "gfx/face_box_tiled.png" : "gfx/face_circle_tiled.png", 0, 0, 2, 1);
+	}
+
+	// ===========================================================
+	// Inner and Anonymous Classes
+	// ===========================================================
+```

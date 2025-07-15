@@ -1,0 +1,64 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, I will analyze the code snippet and the changes introduced by both sides of the merge.
+
+The conflict arises in the `asString()` method. The local changes (`HEAD`) do not introduce any new code before the `String str = null;` line, while the incoming changes (`cbb20c83a4abae0550321f56101bb216b5c8f5bb`) add a conditional debug logging statement.
+
+```java
+        mResponse = null;
+        return is;
+    }
+
+    public String asString() throws ResponseException {
+<<<<<<< HEAD
+=======
+    	if (TwitterApplication.DEBUG){
+    		DebugTimer.betweenStart("AS STRING");
+    	}
+>>>>>>> cbb20c83a4abae0550321f56101bb216b5c8f5bb
+
+        String str = null;
+        InputStream is = asStream();
+        if (null == is) {
+            return str;
+```
+
+The intent behind the incoming change appears to be adding a debug logging or timing measurement when the `TwitterApplication` is in debug mode. The local changes do not modify this part of the code.
+
+To resolve the conflict, I will consider whether the debug logging is relevant and should be included in the merged code. Given that the change is related to debugging and does not affect the main functionality of the `asString()` method, it seems reasonable to include it.
+
+Here's the resolution:
+
+```java
+        mResponse = null;
+        return is;
+    }
+
+    public String asString() throws ResponseException {
+    	if (TwitterApplication.DEBUG){
+    		DebugTimer.betweenStart("AS STRING");
+    	}
+
+        String str = null;
+        InputStream is = asStream();
+        if (null == is) {
+            return str;
+```
+
+However, as per your request, I should return the entire snippet in markdown code syntax without modifying the context or spacing. Thus, the resolved snippet should be presented as is, within the original context and formatting.
+
+```java
+        mResponse = null;
+        return is;
+    }
+
+    public String asString() throws ResponseException {
+    	if (TwitterApplication.DEBUG){
+    		DebugTimer.betweenStart("AS STRING");
+    	}
+
+        String str = null;
+        InputStream is = asStream();
+        if (null == is) {
+            return str;
+```

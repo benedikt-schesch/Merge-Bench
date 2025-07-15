@@ -1,0 +1,25 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java test method. The HEAD version has a test called shouldNotUpdateIfClassesAreNotChanged that uses assertDoesNotThrow around processor.processEvent(emptyEvent()). The other side, from commit ee249315, has the same test method but with a public modifier and calls processor.processEvent followed by verifyNoInteractions(workspace).
+
+First, I need to understand the intent of both changes. The HEAD version is using assertDoesNotThrow to ensure that processing the event doesn't throw an exception. The other branch is ensuring that after processing the event, there are no interactions with the workspace, which is a common verification in mocking setups.
+
+The method name suggests that the test is checking that updates don't happen when classes aren't changed. So both assertions are relevant: the method shouldn't throw, and there should be no interactions with the workspace.
+
+Looking at the surrounding context, the previous test also calls verifyNoInteractions(workspace). So the other branch's addition of that line is consistent. However, the HEAD version uses the more modern JUnit 5 style without the public modifier, which is unnecessary in JUnit 5 tests.
+
+To resolve the conflict, we should combine both assertions. The test should process the event without throwing exceptions and then verify no interactions. Also, the public modifier from the other branch isn't needed in JUnit 5, so we can omit it. So the resolved method will have both the assertDoesNotThrow and the verifyNoInteractions.</think>
+```java
+
+		verifyNoInteractions(workspace);		
+	}
+
+	@Test
+	void shouldNotUpdateIfClassesAreNotChanged() throws CoreException {
+		assertDoesNotThrow(() -> processor.processEvent(emptyEvent()));
+		verifyNoInteractions(workspace);
+	}
+
+	@Test
+	void shouldRespondToPostBuildEvents() {
+		IResourceChangeEvent event = new ResourceChangeEvent(this, POST_BUILD, AUTO_BUILD, null);
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Here is the resolved merge conflict, with all three fields (nameTagVisibility, collisionRule, and color) preserved and ordered according to protocol version semantics:
+
+```java
+            prefix = readString( buf );
+            suffix = readString( buf );
+            friendlyFire = buf.readByte();
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+            {
+                nameTagVisibility = readString( buf );
+                if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_9 )
+                {
+                    collisionRule = readString( buf );
+                }
+                color = buf.readByte();
+            }
+        }
+        if ( mode == 0 || mode == 3 || mode == 4 )
+        {
+            int len = ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 ) ? readVarInt( buf ) : buf.readShort();
+```
+
+### Resolution Strategy:
+- **`nameTagVisibility`** and **`color`** are preserved under Minecraft 1.8 logic (matching HEAD).
+- **`collisionRule`** is conditionally preserved under Minecraft 1.9 logic (from HEAD) to avoid functionally conflicting with the branch-side 1.8 placement.
+- The original structure and spacing are fully maintained.
+- All added fields are preserved with protocol version constraints matching HEAD's implementation.

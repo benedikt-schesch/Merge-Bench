@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to determine which class to use for `mFontTexture`. Both sides are attempting to create a texture for font rendering, but they differ in the approach:
+
+1. **BitmapTexture (HEAD)**: Used for single textures, which is appropriate for a font texture since it doesn't require atlas packing.
+2. **BitmapTextureAtlas (other branch)**: Used for texture atlases, which is typically for managing multiple textures in a single image.
+
+Since font rendering typically uses a single texture, `BitmapTexture` is the more appropriate choice here. Therefore, we will keep the HEAD version.
+
+Here is the resolved code:
+
+```java
+		return new Engine(new EngineOptions(true, ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera));
+	}
+
+	@Override
+	public void onLoadResources() {
+		this.mFontTexture = new BitmapTexture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.BLACK);
+
+		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
+		this.mEngine.getFontManager().loadFont(this.mFont);
+```

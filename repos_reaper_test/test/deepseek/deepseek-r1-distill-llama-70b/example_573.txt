@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Here's the preserved code with the merge conflict resolved. The code from both sides has been combined to maintain the cleanup functionality while keeping the original comment:
+
+```java
+   *           If an error occurs while mapping JSON to Java.
+   */
+  @SuppressWarnings("unchecked")
+  protected <T> T toPrimitiveJavaType(String json, Class<T> type) {
+
+    // cleanup the json string
+    if (json.length() > 1 && json.startsWith("\"") && json.endsWith("\"")) {
+      json = json.replaceFirst("\"", "");
+      json = json.substring(0, json.length() - 1);
+    }
+```
+
+The intent appears to be adding JSON string cleanup functionality that removes surrounding quotes if they exist. I've preserved the comment from the HEAD branch and kept the implementation from the other branch since they are complementary and serve the same purpose.

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The merged result will use the version that accepts String... messages as it allows passing multiple arguments, improving the method's flexibility.
+
+```java
+	private List<TestEvent> sendMessageWithServerSocket(String input) throws UnknownHostException, IOException, ClassNotFoundException {
+		return sendMessageWithServerSocket(new String[] { input });
+	}
+
+	private List<TestEvent> sendMessageWithServerSocket(String... messages) throws UnknownHostException, IOException, ClassNotFoundException {
+		try (ServerSocket serverSocket = new ServerSocket(0)) {
+			RuntimeEnvironment fakeEnvironment = fakeEnvironment();
+			File file = fakeEnvironment.createClasspathArgumentFile();
+			
+			ClasspathArgumentBuilder classpathArgumentBuilder = new FileClasspathArgumentBuilder(file);
+			factory.startProcess(serverSocket.getLocalPort(), fakeEnvironment, classpathArgumentBuilder);
+```

@@ -1,0 +1,35 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at what's going on here. The conflict is between the HEAD commit and another commit with hash d543609. The code is part of a string that lists different commands for a tool, probably a command-line interface for a database or similar system.
+
+In the HEAD version, after the "scan" command line, there's the "cas" command. In the other branch, there's an added "mscan" command line before "cas". The conflict arises because both branches modified the same part of the string but added different lines.
+
+The goal is to merge these changes without losing either command. Since they're both adding new commands, the correct resolution would be to include both lines. The "mscan" command is added in the other branch, and the "cas" is present in both, but probably added in HEAD. Wait, looking at the context, the "cas" line is present after both conflicts. Wait, in the original code, after the conflict markers, the "cas" line is part of both. Wait, let me check again.
+
+The original code has:
+
+<<<<<<< HEAD
+=======
+                       + "  mscan <table> [start] [family[:qualifier[,qualifier]]/[family...]] [stop] [regexp]\n"
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+                       + "  cas <table> <key> <family> <qualifier> <expected> <value>\n"
+
+So in the HEAD version, after "scan", it goes directly to "cas". In the other branch, between "scan" and "cas", they added the "mscan" line. So the conflict is that one side added "mscan" and the other didn't. Therefore, the correct resolution is to keep both lines, placing "mscan" after "scan" and before "cas". Since the two changes are adjacent but not overlapping (except in the conflict marker), the correct merge is to include both lines in the order they appear. The HEAD doesn't have "mscan", and the other branch adds it. So the merged code should include both "scan" and "mscan" lines, followed by "cas". Therefore, the resolved code should have the "mscan" line from the other branch inserted after the "scan" line from HEAD, and then the "cas" line as it is. So the final merged lines would be:
+
+                       + "  scan <table> [start] [family] [qualifier] [stop] [regexp]\n"
+                       + "  mscan <table> [start] [family[:qualifier[,qualifier]]/[family...]] [stop] [regexp]\n"
+                       + "  cas <table> <key> <family> <qualifier> <expected> <value>\n"
+
+That way, both commands are included. The intent of both branches is to add new commands: one adds "mscan", the other might have added "cas" or another command, but looking at the code, "cas" is present in both. Wait, no—the conflict is between the lines after "scan". The HEAD doesn't have "mscan", and the other branch adds it. The line after the conflict in both is "cas", which is present in both, so that's common. Therefore, merging the two should include both "scan" from HEAD and "mscan" from the other branch, followed by "cas". The order is important here. Since "mscan" is added in the other branch, inserting it after "scan" makes sense. There's no overlap in functionality, just two separate commands being added. So the correct resolution is to keep both lines in order, thus combining the changes.</think>
+```java
+                       + "  get <table> <key> [family] [qualifiers ...]\n"
+                       + "  icv <table> <key> <family> <qualifier> [amount]\n"
+                       + "  put <table> <key> <family> <qualifier> <value>\n"
+                       + "  delete <table> <key> [<family> [<qualifier>]]\n"
+                       + "  scan <table> [start] [family] [qualifier] [stop] [regexp]\n"
+                       + "  mscan <table> [start] [family[:qualifier[,qualifier]]/[family...]] [stop] [regexp]\n"
+                       + "  cas <table> <key> <family> <qualifier> <expected> <value>\n"
+                       + "Variants that acquire an explicit row-lock:\n"
+                       + "  lget <table> <key> [family] [qualifiers ...]\n"
+                       + "  lput <table> <key> <family> <qualifier> <value>\n"
+                       + "  ldelete <table> <key> <family> <qualifier>\n"
+```

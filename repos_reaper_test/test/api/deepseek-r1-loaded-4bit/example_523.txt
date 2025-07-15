@@ -1,0 +1,44 @@
+<think>
+Okay, let's see. The user wants me to resolve this merge conflict in the Java code. The conflict is between the HEAD version, which adds a new field `maxImageSize`, and the other branch which doesn't have that line. 
+
+First, I need to understand the intent of both changes. The HEAD side added `maxImageSize`, probably introducing a new configuration option. The other branch might not have that change, maybe it's an older branch or one that didn't include this new field. 
+
+Since both changes are adding or modifying fields, and they're in the same section of variable declarations, the correct resolution would be to keep both changes. But wait, the conflict is that one side adds the line `private int maxImageSize;` and the other side removes it. Wait, no, looking at the conflict markers:
+
+<<<<<<< HEAD
+    private int maxImageSize;
+=======
+>>>>>>> 790b69a0...
+
+So the HEAD version added the line, and the other branch (the one with commit hash 790b69a...) doesn't have that line. So the conflict is because one side added it and the other didn't. 
+
+To resolve this, I need to decide whether to keep the `maxImageSize` field. Since it's a new addition in HEAD, and the other branch didn't touch that part, maybe the correct resolution is to keep the addition. Unless there's a reason the other branch removed it, but the conflict markers suggest that the other branch just didn't have that line. 
+
+But wait, the code in the conflict shows that in HEAD, after `maxUriLength`, there's `maxImageSize`, and in the other branch, that line is absent. So when merging, if both branches modified the same area, but one added a line and the other didn't, the correct resolution is to keep the addition. Unless there's a semantic conflict. 
+
+But the user said to think in terms of intent and semantics. If the other branch didn't have that line, maybe because it's from an older version, then merging should include the new field. So the resolved code should have both `maxUriLength` and `maxImageSize`. 
+
+Therefore, the conflict markers should be removed, keeping the `maxImageSize` line. So the final code after resolution would have:
+
+    private int maxUriLength = DEFAULT_MAX_URI_LENGTH;  //IE8 only allows dataURIs up to 32KB
+    private int maxImageSize;
+    
+    //--------------------------------------------------------------------------
+    // Constructors
+    //--------------------------------------------------------------------------    
+
+But wait, the other branch's side (the one after =======) has nothing, so the conflict is between adding that line and not. So the correct resolution is to keep the line from HEAD. Therefore, the resolved code includes the `maxImageSize` declaration. There's no ambiguity here because the other branch didn't modify that line; it just didn't have it. So the merge should take the HEAD change.</think>
+```java
+    private String code = null;
+    private int options = 1;
+    private String mhtmlRoot = "";
+    private String outputFilename = "";
+    private int maxUriLength = DEFAULT_MAX_URI_LENGTH;  //IE8 only allows dataURIs up to 32KB
+    private int maxImageSize;
+    
+    //--------------------------------------------------------------------------
+    // Constructors
+    //--------------------------------------------------------------------------    
+    
+
+```

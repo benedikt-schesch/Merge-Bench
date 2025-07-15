@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict where the difference is solely in formatting without affecting functionality. The intent of both versions is to execute the same query. Since the conflict is about code style, it can be resolved by choosing either version. Here's the resolved code:
+
+```java
+    synchronized (options.cardSetIds) {
+      try {
+        final List<CardSet> cardSets = new ArrayList<>();
+
+        if (!options.getPyxCardSetIds().isEmpty()) {
+          @SuppressWarnings("unchecked") final List<CardSet> pyxCardSets = session.createQuery("from PyxCardSet where id in (:ids)").setParameterList("ids", options.getPyxCardSetIds()).list();
+          cardSets.addAll(pyxCardSets);
+        }
+
+        // Not injecting the service itself because we might need to assisted inject it later
+        // with card id stuff.
+```

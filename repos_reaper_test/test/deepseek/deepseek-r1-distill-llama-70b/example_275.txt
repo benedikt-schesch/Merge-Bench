@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+To resolve the conflict, we need to combine both changes. The HEAD version checks if fromPkgr is not a MultiQueryPackager and adds shifted key info. The other branch adds an else clause to handle when fromPkgr is a MapKeyPackage. The merged code includes both conditions.
+
+```java
+    private void mergeOneReducePlanWithIndex(PhysicalPlan from,
+            PhysicalPlan to, int initial, int current, byte mapKeyType) throws VisitorException {
+        POPackage pk = (POPackage)from.getRoots().get(0);
+        from.remove(pk);
+        Packager fromPkgr = pk.getPkgr();
+<<<<<<< HEAD
+        if (!(fromPkgr instanceof MultiQueryPackager)) {
+            // XXX the index of the original keyInfo map is always 0,
+            // we need to shift the index so that the lookups works
+            // with the new indexed key
+            addShiftedKeyInfoIndex(initial, fromPkgr);
+=======
+        if (!(fromPkgr instanceof MultiQueryPackager)) {
+            // XXX the index of the original keyInfo map is always 0,
+            // we need to shift the index so that the lookups works
+            // with the new indexed key
+            addShiftedKeyInfoIndex(initial, fromPkgr);
+        } else if (fromPkgr instanceof MapKeyPackage) {
+            mapKeyType = 0;
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+        }
+        if (!(fromPkgr instanceof MultiQueryPackager)) {
+            // XXX the index of the original keyInfo map is always 0,
+            // we need to shift the index so that the lookups works
+            // with the new indexed key
+            addShiftedKeyInfoIndex(initial, fromPkgr);
+        }
+```

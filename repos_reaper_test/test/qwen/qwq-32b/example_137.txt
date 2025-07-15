@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java    }
+
+    public static PhysicalPlan buildPp(PigServer pigServer, String query)
+    throws Exception {
+        LogicalPlan lp = buildLp( pigServer, query );
+        lp.optimize(pigServer.getPigContext());
+        return ((MRExecutionEngine)pigServer.getPigContext().getExecutionEngine()).compile(lp, 
+                pigServer.getPigContext().getProperties());
+    }
+
+    public static LogicalPlan parse(String query, PigContext pc) throws FrontendException {
+        Map<String, String> fileNameMap = new HashMap<String, String>();
+
+```

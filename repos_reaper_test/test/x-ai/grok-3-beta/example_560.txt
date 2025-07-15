@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and provide the snippet as requested. Let's examine the intent and semantics of both sides of the conflict. Both sides are testing the behavior of an iterator when it reaches the end of the collection. They are checking if `hasNext()` returns `false` after the last page and ensuring an exception is thrown when `next()` is called beyond the last element.
+
+- **HEAD**: Uses `assertThat(it.hasNext()).isFalse()` from the AssertJ library for a fluent assertion style. It then calls `it.next()` to trigger an exception and uses `failBecauseExceptionWasNotThrown(NoSuchElementException.class)` to assert that the expected exception was not thrown if the code execution reaches this point (likely part of a testing framework like AssertJ or a custom utility).
+- **a17acec**: Uses a more traditional JUnit assertion with `assertFalse(it.hasNext())`. It also calls `it.next()` to trigger an exception and uses `fail()` with a string message (the exception class name), which is a standard JUnit method to indicate test failure if the expected exception isn't thrown.
+
+**Semantic Analysis**: Both sides have the same intent—verify that `hasNext()` returns `false` when there are no more elements and ensure that calling `next()` throws a `NoSuchElementException`. The difference lies in the testing style and library usage: HEAD uses a fluent assertion style (likely AssertJ), while the other branch uses traditional JUnit assertions.
+
+Since I don't have broader context about the project's preferred testing framework or style guide, I will preserve the conflict as is to avoid making an assumption. If the project predominantly uses AssertJ, HEAD might be preferred; if it sticks to JUnit conventions, the other branch might be better. Without this information, I will return the snippet unchanged with the conflict markers.
+
+Here is the original snippet with the conflict preserved:
+
+```java
+    ConnectionIterator<FacebookType> it = connection.iterator();
+    it.next(); // first page
+    it.next(); // second page
+    it.next(); // third and last page
+
+<<<<<<< HEAD
+    assertThat(it.hasNext()).isFalse();
+    it.next();
+    failBecauseExceptionWasNotThrown(NoSuchElementException.class);
+=======
+    assertFalse(it.hasNext());
+    it.next();
+    fail(NoSuchElementException.class.getName());
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  @Test
+  public void checkIterator_withCursor() {
+    Connection<FacebookType> connection = createCursorConnection();
+```

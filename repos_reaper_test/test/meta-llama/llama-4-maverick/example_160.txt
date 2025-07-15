@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the context and the changes made on both sides.
+
+The given Java code snippet appears to be part of a Hadoop-related project, possibly Apache Pig, given the class and variable names. The conflict arises in the `Combine` class, which extends `Reducer`. This class seems to be crucial for handling the combination of data in a MapReduce operation.
+
+On the `HEAD` side, we have:
+```java
+private final Log log = LogFactory.getLog(getClass());
+```
+This line initializes a logger for the class, where the logger is associated with the current class (`getClass()`).
+
+On the `f52ad1d45dda2f7312098d8b51fa287f11cc1944` side, we have:
+```java
+private static final Log log = LogFactory.getLog(Combine.class);
+
+//HADOOP-3226 Combiners can be called multiple times in both map and reduce
+private static boolean firstTime = true;
+```
+Here, the logger is specifically associated with `Combine.class`, and there's an additional static boolean variable `firstTime` to track whether it's the first time the combiner is called, referencing HADOOP-3226, an issue regarding combiners being called multiple times.
+
+Let's analyze the intent:
+- The `HEAD` side is using an instance logger (`private final Log log`), which is not static and is tied to the instance of the class.
+- The other side (`f52ad1d45dda2f7312098d8b51fa287f11cc1944`) introduces a static logger (`private static final Log log`) and a static boolean flag (`firstTime`) to track the first invocation, addressing a specific Hadoop issue.
+
+Both changes seem to serve different purposes:
+1. The logger change could be related to logging practices or requirements.
+2. The introduction of `firstTime` is directly related to handling a known issue with Hadoop combiners.
+
+To resolve the conflict, we need to consider whether both changes are necessary and can coexist. 
+
+The logger change from instance to static is a common practice for loggers since they are typically thread-safe and having them as static final reduces the overhead. The specific class reference (`Combine.class`) is more explicit and clear compared to `getClass()`, which could refer to a subclass if the class is extended.
+
+The introduction of `firstTime` addresses a specific issue and seems unrelated to the logger change.
+
+Therefore, a semantically correct resolution that preserves the intent of both sides would be to include both changes.
+
+Here is the resolved snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+    public static JobContext sJobContext = null;
+
+    public static class Combine
+            extends Reducer<PigNullableWritable, NullableTuple, PigNullableWritable, Writable> {
+
+        private static final Log log = LogFactory.getLog(Combine.class);
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+        private byte keyType;
+
+        //The reduce plan
+        private PhysicalPlan cp;
+```

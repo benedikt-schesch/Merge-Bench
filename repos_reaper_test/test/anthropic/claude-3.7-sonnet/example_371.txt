@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+After analyzing the merge conflict, I can see that both sides are dealing with how to handle the `contentOffset` parameter in the URL. The changes differ in how they approach this:
+
+- The HEAD version conditionally adds the `contentOffset` parameter only if `contentOffset != -1`
+- The incoming version (2b9e9a2c) unconditionally adds the `contentOffset` parameter
+
+The conditional check in the HEAD version appears to be an intentional guard against adding invalid offsets, so I'll resolve in favor of the HEAD version, which has the safety check:
+
+```java
+    if (metadata != null) {
+      content = new MultipartContent().setContentParts(Arrays.asList(metadata, mediaContent));
+      initiationRequestUrl.put("uploadType", "multipart");
+    } else {
+      initiationRequestUrl.put("uploadType", "media");
+      if (contentOffset != -1) {
+        initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
+      }
+    }
+    HttpRequest request =
+        requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
+    request.getHeaders().putAll(initiationHeaders);
+    // We do not have to do anything special here if media content length is unspecified because
+```

@@ -1,0 +1,40 @@
+<think>
+Okay, let me take a look at this merge conflict. The conflict is in the Java imports section. The HEAD branch has imports for WorldLoadEvent and WorldUnloadEvent, while the other branch (5463b8f) adds an import for ConfigurationException and also includes SpoutRuntimeException.
+
+First, I need to understand what each side is doing. The conflict markers show that the two branches are adding different imports. The HEAD side is importing event classes related to world loading and unloading, which are probably used for handling world events. The other branch is importing ConfigurationException, which might be related to handling configuration errors, and they both include SpoutRuntimeException.
+
+Since these are imports, and Java doesn't allow duplicate imports, but in this case, the two branches are adding different classes from different packages. The SpoutRuntimeException is already present in both branches, so that's not conflicting. The ConfigurationException is new in one branch, and the World events in the other.
+
+The correct resolution would be to include all necessary imports. Since the two sets of imports don't overlap and are from different classes, they can coexist. Therefore, the conflict can be resolved by keeping both sets of imports. The order might not matter, but it's common to group related imports. However, the user instructed to preserve spacing as is. Looking at the original code, the HEAD has the World events after PermissionGetAllWithNodeEvent, and the other branch adds ConfigurationException after that same line.
+
+So the merged code should include both WorldLoadEvent, WorldUnloadEvent, and ConfigurationException. The correct merged block would list all three imports in the order they appear, perhaps maintaining the order from both branches. Since the HEAD's imports come first in the conflict, then the other branch's imports. But since the conflict is between the two sections, the correct way is to place the ConfigurationException import after the PermissionGetAllWithNodeEvent, followed by the World events. Wait, looking again: in the original code, the HEAD adds the World events after PermissionGetAllWithNodeEvent, while the other branch replaces those with ConfigurationException. But actually, the conflict is between the two sets of lines. So the correct merge is to include both sets. Since the lines are adjacent in the import statements, we can list both. But Java imports can be in any order, as long as they are all present.
+
+Therefore, the resolved imports should include all three: WorldLoadEvent, WorldUnloadEvent, and ConfigurationException. The SpoutRuntimeException is already present in both, so no conflict there. So the merged code would have:
+
+import org.spout.api.command.CommandSource;
+import org.spout.api.command.annotated.AnnotatedCommandExecutorFactory;
+import org.spout.api.event.EventManager;
+import org.spout.api.event.SimpleEventManager;
+import org.spout.api.event.server.permissions.PermissionGetAllWithNodeEvent;
+import org.spout.api.event.world.WorldLoadEvent;
+import org.spout.api.event.world.WorldUnloadEvent;
+import org.spout.api.exception.ConfigurationException;
+import org.spout.api.exception.SpoutRuntimeException;
+...
+
+That way, both additions from each branch are included. Since there's no overlap in the actual classes being imported, this should resolve the conflict without issues.</think>
+```java
+import org.spout.api.command.CommandSource;
+import org.spout.api.command.annotated.AnnotatedCommandExecutorFactory;
+import org.spout.api.event.EventManager;
+import org.spout.api.event.SimpleEventManager;
+import org.spout.api.event.server.permissions.PermissionGetAllWithNodeEvent;
+import org.spout.api.event.world.WorldLoadEvent;
+import org.spout.api.event.world.WorldUnloadEvent;
+import org.spout.api.exception.ConfigurationException;
+import org.spout.api.exception.SpoutRuntimeException;
+import org.spout.api.geo.World;
+import org.spout.api.geo.cuboid.Region;
+import org.spout.api.geo.discrete.Point;
+import org.spout.api.inventory.recipe.RecipeManager;
+```

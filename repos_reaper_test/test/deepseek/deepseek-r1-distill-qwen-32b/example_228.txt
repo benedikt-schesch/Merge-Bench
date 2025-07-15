@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+The conflict involves different ways of initializing `PigServer`. The `ExecType.MAPREDUCE` is more explicit. Let's resolve it by using the explicit version.
+
+```java
+    private PigServer pig;
+    
+    @Before
+    @Override
+    protected void setUp() throws Exception {
+        pig = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+    }
+
+    @Test
+    public void testBigGroupAll() throws Throwable {
+```

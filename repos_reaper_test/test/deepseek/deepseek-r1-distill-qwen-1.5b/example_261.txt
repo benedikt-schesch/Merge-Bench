@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the potential hash code collision when the key is null and maintain consistency with null object hash conventions:
+
+```java
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        if (pkgr.getKeyTuple()) {
+            hash = hash * 31 + pkgr.getKeyAsTuple().hashCode();
+        } else {
+            hash = 0;
+        }
+        return hash;
+    }
+```

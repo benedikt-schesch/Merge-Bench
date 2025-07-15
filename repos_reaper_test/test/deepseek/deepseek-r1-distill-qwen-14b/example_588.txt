@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict addresses how to safely retrieve the "error" object and "fbtrace_id" while handling nulls. Both sides aim to return the Facebook API error trace ID. The right side uses opt methods for safer null handling.
+
+```java
+   * find log data for debugging.
+   *
+   * @return the Facebook API error {@code fbtrace_id}
+   */
+  public String getFbtraceId() {
+<<<<<<< HEAD
+    if (getRawErrorJson() != null && getRawErrorJson().get("error").isObject()) {
+      JsonObject errorJson = getRawErrorJson().get("error").asObject();
+      return errorJson.getString("fbtrace_id", "");
+=======
+    if (getRawErrorJson() != null && getRawErrorJson().optJsonObject("error") != null) {
+      JsonObject errorJson = getRawErrorJson().optJsonObject("error");
+      return errorJson.optString("fbtrace_id");
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    }
+
+    return "";
+  }
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I see that both sides are modifying the parameters of the `updateGameSettings` method but in different ways:
+- The HEAD version adds a `newMaxBlanks` parameter
+- The 4584f06 version adds a `newMaxSpectators` parameter
+
+I notice that the code after the conflict uses `this.maxSpectators`, which indicates we need to keep the `newMaxSpectators` parameter. Let me resolve this by combining both changes:
+
+```java
+  public String getPassword() {
+    return password;
+  }
+
+  public void updateGameSettings(final int newScoreGoal, final int newMaxPlayers,
+      final int newMaxSpectators,
+      final Set<CardSet> newCardSets, final int newMaxBlanks, final String newPassword,
+      final boolean newUseTimer) {
+    this.scoreGoal = newScoreGoal;
+    this.maxPlayers = newMaxPlayers;
+    this.maxSpectators = newMaxSpectators;
+    synchronized (this.cardSets) {
+      this.cardSets.clear();
+```

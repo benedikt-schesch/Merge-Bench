@@ -1,0 +1,26 @@
+<think>
+Okay, let's take a look at this merge conflict. The user provided a Java import section with a conflict. The HEAD side has some specific imports for MotionEvent, SurfaceHolder, and SurfaceView, while the other branch (7b3abc7) doesn't have those. 
+
+First, I need to figure out what the intent was here. The HEAD branch added those three imports explicitly, but the other branch removed them. Wait, actually, looking at the code, the conflict is between adding those imports in HEAD and removing them in the other branch. But why would that happen?
+
+In Java, you don't need to import classes that are in the same package or already imported by another statement. Let me check the existing imports. The HEAD has imports from android.view.*, which is a wildcard import. That should include all classes in the android.view package, including MotionEvent, SurfaceHolder, and SurfaceView. So explicitly importing them again after the wildcard is redundant because the wildcard already covers them. 
+
+The other branch (7b3abc7) probably removed those redundant imports to clean up the code. So the conflict arises because one side added explicit imports (maybe by an IDE or by mistake) and the other side removed them as unnecessary. 
+
+The correct resolution here would be to remove the redundant imports since the wildcard import android.view.* already includes them. Therefore, the merged code should keep the wildcard and not have the explicit imports. That means accepting the changes from the 7b3abc7 branch and discarding the explicit imports from HEAD. 
+
+So the resolved import block would not include the lines from HEAD. I need to make sure that the final code doesn't have those three explicit imports. Let me double-check: the wildcard import android.view.* covers all classes in that package, including those three. Therefore, those explicit lines are unnecessary and can be safely removed to resolve the conflict without any issues.</think>
+```java
+import android.graphics.Point;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.*;
+import android.view.GestureDetector.OnGestureListener;
+import android.widget.Scroller;
+import com.sigseg.android.view.InputStreamScene;
+
+import java.io.IOException;
+import java.io.InputStream;
+```
+
+Rationale: Both branches agree on the core view-related imports through the wildcard `import android.view.*;` which already includes `MotionEvent`, `SurfaceHolder`, and `SurfaceView`. The explicit imports in HEAD are redundant given the wildcard import, while the other branch's removal aligns with proper Java import conventions. The merged version maintains the wildcard while removing redundant explicit declarations.

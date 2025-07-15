@@ -1,0 +1,24 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the import statements for java.util.Properties. The HEAD version has "import java.util.Properties ;" with a space before the semicolon, and the other side has "import java.util.Properties;" without the space.
+
+So the difference here is just a whitespace before the semicolon. In Java, the semicolon placement doesn't affect the code functionality. It's a style issue. One side added an extra space, the other didn't. 
+
+Since both changes are trying to import the same class, there's no semantic conflict. The intent of both branches is to include the Properties class. The only difference is formatting. 
+
+The correct resolution would be to pick the version without the space, as it's more conventional in Java to not have a space before the semicolon. But since the user asked to resolve the conflict by considering the intent and semantics, and both are the same, either would work. However, looking at the surrounding imports, like "import java.util.HashMap;" and others, they don't have spaces before semicolons. So the version from the other branch (1488b22) aligns with the existing code style. Therefore, the correct merge is to use the version without the space.</think>
+```java
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.pig.backend.datastorage.ContainerDescriptor;
+import org.apache.pig.backend.datastorage.DataStorage;
+
+``` 
+
+Rationale: Both sides are trying to import `java.util.Properties` - the only difference is whitespace formatting before the semicolon. We preserve the cleaner formatting from the incoming change (no space before semicolon) while maintaining the semantic intent. The surrounding imports also follow this style consistently.

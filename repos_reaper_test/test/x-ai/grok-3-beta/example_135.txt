@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and explain my thought process. The conflict appears to be between two branches where one side (HEAD) has no additional changes or content in the conflicted area, while the other side (commit `57eb1bac...`) also has no content but perhaps includes whitespace or formatting differences. The intent on both sides seems to be the same since there are no functional differences introduced in the conflict area—just empty space.
+
+Since there are no semantic differences or additional code between the `<<<<<<< HEAD` and `=======` markers or between `=======` and `>>>>>>> 57eb1bac...`, the conflict appears to be purely due to whitespace or a merge tool artifact. The surrounding context involves running a Pig script with specific arguments and asserting its success, which is unchanged on both sides. Therefore, I will resolve the conflict by simply removing the conflict markers and leaving the code as is, without introducing any changes.
+
+Here is the resolved snippet with the full context preserved exactly as provided:
+
+```java
+        fw1.close();
+
+        try {
+           String[] args = { "-x", "local", "-c", PIG_FILE };
+           PigStats stats = PigRunner.run(args, null);
+
+           assertTrue(stats.isSuccessful());
+           assertEquals( 0, stats.getReturnCode() );
+        } finally {
+            new File(PIG_FILE).delete();
+            Util.deleteFile(cluster, OUTPUT_FILE);
+```

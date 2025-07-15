@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that both sides are checking for invalid arguments, but the right side (c92375...) has braces around the `throw` statement while the left side (HEAD) doesn't. After that, the right side has an additional `ratio = 1 / ratio;` line which is also present in the common code after the conflict.
+
+Here's the resolved snippet:
+
+```java
+        super(context, attrs);
+        setAspectRatio(4.0 / 3.0);
+    }
+
+    public void setAspectRatio(double ratio) {
+        if (ratio <= 0.0) {
+            throw new IllegalArgumentException();
+        }
+
+        ratio = 1 / ratio;
+
+        if (mAspectRatio != ratio) {
+            mAspectRatio = ratio;
+```
+
+I chose the right side's braced syntax for the conditional, as it follows better coding practices. I kept only one instance of the `ratio = 1 / ratio;` line since duplicating it would be incorrect.

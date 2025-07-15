@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+    public WriteResult execute() {
+        DBObject dbObject = marshall();
+
+        WriteResult writeResult = collection.save(dbObject, determineWriteConcern());
+
+        Object generatedId = dbObject.get(MONGO_DOCUMENT_ID_NAME);
+        setDocumentGeneratedId(generatedId);
+
+        String id = generatedId.toString();
+        unmarshaller.setDocumentGeneratedId(document, id);
+
+        return writeResult;
+    }
+
+    private DBObject marshall() {
+
+```

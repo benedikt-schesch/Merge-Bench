@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see two key differences:
+
+1. How the JSON data is accessed: `.get("data").toString()` vs `.getJsonObject("data").toString()`
+2. The target class for deserialization: `ProfilePictureSource.class` vs `User.Picture.class`
+
+Based on the method name context and patterns, I believe the newer version (from a17acec) is likely intended, as it uses a more type-specific getter method and appears to use a nested class structure which may better match the codebase's architecture.
+
+Here's the resolved snippet:
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+    String picJson = rawPicture.getJsonObject("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+  }
+
+  /**
+   * The user's hometown name.
+   * 
+```

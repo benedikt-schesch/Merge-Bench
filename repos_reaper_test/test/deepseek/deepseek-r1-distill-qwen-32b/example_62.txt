@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Both sides of this conflict are actually identical in terms of functionality - they just format the log statement differently (with or without newlines). Since the intent and semantic meaning is exactly the same, and there's no conflict in terms of functionality or behavior, I'll present both options but note that they can be resolved by choosing either formatting style.
+
+```java
+
+    synchronized (playedCards) {
+      if (state == GameState.PLAYING || playersToRemove.size() == 0) {
+        // not sure how much of this check is actually required
+        if (players.size() < 3 || playedCards.size() < 2) {
+<<<<<<< HEAD
+          logger.info(String.format(
+              "Resetting game %d due to insufficient players after removing %d idle players.",
+              id, playersToRemove.size()));
+=======
+          logger.info(String.format("Resetting game %d due to insufficient players after removing %d idle players.", id, playersToRemove.size()));
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+          resetState(true);
+        } else {
+          judgingState();
+        }
+      }
+
+```
+
+Note: You can resolve this by choosing either the multi-line or single-line logger.info format - both achieve the same result.

@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+There is a conflict in the ordering of providers and the positioning of the "All of these delays..." comment between the two branches:
+
+```java
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+  private final Metrics metrics;
+  private final Provider<Boolean> showGameLinkProvider;
+  private final Provider<String> gamePermalinkFormatProvider;
+  private final Provider<Boolean> showRoundLinkProvider;
+<<<<<<< HEAD
+  private final Provider<String> roundPermalinkFormatProvider;
+
+  // All of these delays could be moved to pyx.properties.
+=======
+  // All of these delays could be moved to pyx.properties.
+  private final Provider<String> roundPermalinkFormatProvider;
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+  private final Provider<Boolean> allowBlankCardsProvider;
+  private final long created = System.currentTimeMillis();
+  /**
+   * Lock object to prevent judging during idle judge detection and vice-versa.
+   */
+```
+
+The comment about moving "delays to pyx.properties" is in conflict with the provider ordering, and the intent is ambiguous:
+1. One branch added `roundPermalinkFormatProvider` first and then moved the comment below it
+2. The other branch placed the comment first and then added the provider after it
+
+This creates a conflict in both field ordering and comment placement that would need to be resolved manually based on design rationale or configuration grouping needs.

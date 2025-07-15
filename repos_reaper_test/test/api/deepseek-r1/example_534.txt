@@ -1,0 +1,48 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the ReliefFilter class, specifically around some variable declarations. The two sides are differing in the spacing after the declarations of mBitmapWidth and mBitmapHeight. 
+
+In the HEAD version, there's a line with "=======" and then the line "mBitmapWidth = mBitmap.getWidth();" follows. In the other branch (02da86c8...), the spacing after the declarations might be slightly different. Wait, looking closer, the conflict markers show that both sides have the same code except for maybe whitespace.
+
+The lines in conflict are between the declarations of mBitmapWidth and mBitmapHeight and the assignments. The HEAD version has an extra space or a tab after the declarations, while the other branch might have a different number of spaces or tabs. But when I look at the code, the lines after the declarations are the same in both branches: mBitmapWidth and mBitmapHeight are assigned using getWidth() and getHeight(). 
+
+Since the only difference is whitespace, which doesn't affect the code's functionality, the correct resolution is to remove the conflict markers and keep one of the versions. But the user said to preserve spacing as is. Wait, but in the conflict, both sides have the same code except for maybe indentation. Let me check again.
+
+Wait, the conflict is between the lines:
+
+<<<<<<< HEAD
+		       
+=======
+		        
+>>>>>>> 02da86c8cf719b79f992ce365c542e3f1ad0a46b
+
+Looking at those lines, it's just an extra space in one of the versions. The HEAD has four spaces (assuming the indentation is tabs or spaces), and the other branch has five? Or maybe it's a line with just some whitespace. Since both branches are adding a line with whitespace, but the amount differs slightly. However, in Java, extra whitespace doesn't matter. So the resolution would be to pick either one, or perhaps remove the line if it's just empty. Wait, but the original code after the declarations has those lines. Let me look again.
+
+Original code snippet:
+
+The declarations are:
+
+int mBitmapWidth = 0;
+int mBitmapHeight = 0;
+<<<<<<< HEAD
+		       
+=======
+		        
+>>>>>>> 02da86c8cf719b79f992ce365c542e3f1ad0a46b
+mBitmapWidth = mBitmap.getWidth();
+mBitmapHeight = mBitmap.getHeight();
+
+So between the declarations and the assignments, there's a line that's just whitespace. The conflict is whether that line has a certain number of spaces or tabs. Since both branches added a line with whitespace, but the exact number differs. However, in Java, that line is effectively a blank line (since it's just spaces/tabs), so the conflict is trivial. The resolution is to take either version, but since the user says to preserve spacing as is if unsure. But since the intent is the same (adding a blank line), we can safely resolve by keeping one of them. However, the user says if unsure, leave the conflict. But in this case, the conflict is purely whitespace, so it's safe to resolve. But perhaps both sides have a blank line, so just remove the conflict markers and keep the line. So the resolved code would have the line with the whitespace from one of the branches. Since the difference is just a single space (maybe), but both are whitespace lines, so either is fine. The correct approach is to pick one, perhaps the HEAD version. But maybe both lines are the same. Let me check again.
+
+In the HEAD, the line is "		       " (maybe 7 spaces?), and in the other branch, it's "		        " (8 spaces?). But since it's just a line with whitespace, the actual number doesn't matter. So the merge conflict can be resolved by taking either line. Therefore, the resolved code would have that line without the conflict markers.</think>
+```java
+public class ReliefFilter {
+	// 浮雕效果函数
+	public static Bitmap changeToRelief(Bitmap mBitmap) {        
+		 int mBitmapWidth = 0;
+		 int mBitmapHeight = 0;
+		        
+		 mBitmapWidth = mBitmap.getWidth();
+		 mBitmapHeight = mBitmap.getHeight();
+		 
+		 Bitmap bmpReturn = Bitmap.createBitmap(mBitmapWidth, mBitmapHeight, Bitmap.Config.ARGB_8888); 
+```

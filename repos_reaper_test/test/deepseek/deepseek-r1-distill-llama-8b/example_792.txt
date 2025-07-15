@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict arises because one version removes the else statement, leading to the cleanup() function being called in both cases. The original code's else is necessary to prevent cleanup from being called unnecessarily when the channel is closed, so we should merge the version that retains this else condition.
+
+```java
+               + " ignore this if we're shutting down", e);
+    } else {
+      LOG.error("Unexpected exception from downstream on " + c, e);
+    }
+    if (c.isOpen()) {
+<<<<<<< HEAD
+      Channels.close(c);
+=======
+      Channels.close(c);  // Will trigger channelClosed(), which will cleanup()
+    } else {              // else: presumably a connection timeout.
+      cleanup(c);         // => need to cleanup() from here directly.
+=======
+      cleanup(c);
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    }
+  }
+
+  // ------------------------------- //
+  // Low-level encoding and decoding //
+
+```

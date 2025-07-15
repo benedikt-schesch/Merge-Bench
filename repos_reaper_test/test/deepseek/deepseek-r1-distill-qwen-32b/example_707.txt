@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict appears to be between an empty method implementation and a new implementation that adds the playlist retrieval functionality. Since the new implementation (`=======
+...`) provides a complete solution, I will adopt that as it seems to be the intended change.
+
+Here is the resolved code:
+
+```java
+		}
+	}
+
+	@Override
+	public PlaylistRemote[] getUserPlaylist(String user) throws JSONException, WSError {
+		try {
+			user = URLEncoder.encode(user, "UTF-8");
+			String jsonString = doGet("id+name+url+duration/playlist/json/playlist_user/?order=starred_desc&user_idstr="+user);
+			return PlaylistFunctions.getPlaylists(new JSONArray(jsonString));
+		} catch (UnsupportedEncodingException e) {
+```

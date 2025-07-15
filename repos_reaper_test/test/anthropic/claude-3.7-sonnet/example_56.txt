@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I see that the only difference is the formatting. One version has the query split across multiple lines, and the other has it on a single line. Since this is purely a style difference and doesn't affect functionality, I'll choose the multi-line version as it's generally more readable.
+
+```java
+    synchronized (options.cardSetIds) {
+      try {
+        final List<CardSet> cardSets = new ArrayList<>();
+
+        if (!options.getPyxCardSetIds().isEmpty()) {
+          @SuppressWarnings("unchecked") final List<CardSet> pyxCardSets = session
+              .createQuery("from PyxCardSet where id in (:ids)")
+              .setParameterList("ids", options.getPyxCardSetIds()).list();
+          cardSets.addAll(pyxCardSets);
+        }
+
+        // Not injecting the service itself because we might need to assisted inject it later
+        // with card id stuff.
+```

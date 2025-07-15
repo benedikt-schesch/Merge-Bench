@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with the merge conflict addressed:
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(),
+					token.getSecret());
+		}
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+```
+
+The changes:
+1. Kept the conditional check `if (token.isAccessToken())` from the other branch to ensure only access tokens are stored
+2. Used `token.getResourceId()` instead of `token.getProviderId()` from the other branch
+3. Removed the extraneous `throws IOException` as it wasn't present in either parent branch
+4. Maintained the original spacing and structure

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Choosing one specific service over the other implies a decision about the project's direction or current state regarding custom card/deck functionality.
+- `HEAD` suggests the use of `CustomCardsService`. This could be a more generic service, an internally developed one, or a newer replacement.
+- The branch `5adedd24812861bedaf540555ec046744b42b42a` suggests the use of `CardcastService`. "Cardcast" was a specific online service for user-created decks for games like Cards Against Humanity.
+
+If `HEAD` represents the main line of development (e.g., `main` or `develop` branch), it's common that infrastructural or service choices made on this line reflect the current architectural standard for the project. If `CustomCardsService` is present in `HEAD`, it's likely the intended service to use. The conflicting change from the other branch might be based on an older version of the codebase (before `CustomCardsService` was introduced or `CardcastService` was phased out) or represent an alternative approach that is not aligned with the current direction in `HEAD`.
+
+Assuming `CustomCardsService` is the intended evolution (e.g., a more generic replacement for a specific integration like Cardcast, or Cardcast itself was renamed/refactored to this more generic term), the version from `HEAD` would be the preferred resolution. This is a common pattern where specific third-party integrations are either generalized or replaced over time.
+
+Therefore, the resolution will keep `CustomCardsService`.
+
+```java
+  /**
+   * Lock to prevent missing timer updates.
+   */
+  private final Object roundTimerLock = new Object();
+  private final ScheduledThreadPoolExecutor globalTimer;
+  private final Provider<CustomCardsService> customDecksServiceProvider;
+  private final Provider<String> uniqueIdProvider;
+  private Player host;
+  private BlackDeck blackDeck;
+  private BlackCard blackCard;
+  private WhiteDeck whiteDeck;
+
+```

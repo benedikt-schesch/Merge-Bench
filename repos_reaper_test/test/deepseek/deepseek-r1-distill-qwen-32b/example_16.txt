@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The merge conflict is in the imports section. The current branch (HEAD) adds imports for `Component` and `CameraComponent`, while the other branch removes these imports.
+
+If both branches need the import statements, the resolve would be to include both imports. If the second branch is removing these imports because they are no longer used or because they're available through other means, then the second branch's version should be kept.
+
+However, since `Component` is a fundamental interface in the entity-component system, it's likely important. Here's how I would resolve it:
+
+```java
+ */
+package org.spout.engine.entity;
+
+import org.spout.api.Client;
+import org.spout.api.Engine;
+import org.spout.api.geo.discrete.Transform;
+import org.spout.engine.gui.SpoutScreenStack;
+import org.spout.engine.protocol.SpoutSession;
+import org.spout.api.component.Component;
+import org.spout.api.component.entity_CameraComponent;
+
+<<<<<<< HEAD
+import org.spout.api.component.Component;
+import org.spout.api.component.entity.CameraComponent;
+=======
+>>>>>>> 67bcb76a96f358fc131320b0611ffaa3bf3678c2
+
+/**
+
+```
+
+If you're not sure about the intent, it's better to keep the imports to ensure the code remains functional.

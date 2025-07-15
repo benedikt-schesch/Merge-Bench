@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it seems like both sides are trying to set up different aspects of the animation or appearance. HEAD adds padding to the widget container, while the other branch is initializing the `mRootAnimator` property. Since these are different operations that don't conflict semantically, I'll combine them.
+
+```java
+            setAlpha(0.0f);
+            setScaleX(WIDGET_FADE_SCALE);
+            setScaleY(WIDGET_FADE_SCALE);
+            setVisibility(View.VISIBLE);
+
+            // Set padding
+            int pad = getResources().getDimensionPixelSize(R.dimen.widget_container_padding);
+            this.setPadding(pad, pad, pad, pad);
+            
+            mRootAnimator = mRootView.animate();
+
+            if (mRootAnimator != null) {
+                mRootAnimator.setListener(new AnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(Animator arg0) {
+
+```

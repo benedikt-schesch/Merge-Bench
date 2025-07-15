@@ -1,0 +1,31 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the imports section of a Java file. The HEAD version is importing org.jbake.model.DocumentTypes and org.jbake.util.DataFileUtil, while the other branch (1b5691ad2a7d734321d0382e71743a85835556b3) is importing org.jbake.model.DocumentModel and org.jbake.model.ModelAttributes.
+
+First, I need to figure out if these imports are conflicting or if they can coexist. Since both sides are adding different classes from possibly the same or different packages, I should check if these classes are used in the code and if they serve different purposes.
+
+DocumentTypes and DocumentModel might be related but different classes. Similarly, DataFileUtil and ModelAttributes could be separate utilities. If the code after the merge uses all of these classes, then both imports are needed. However, if there's a rename or replacement, one might supersede the other.
+
+But without more context on how these classes are used elsewhere in the file, it's hard to tell. The user hasn't provided the rest of the code, so I can't check for usages. In such cases, the safest approach is to include both sets of imports, assuming they are all necessary. Alternatively, if there's a possible overlap or if one set replaces the other, that would require removing the obsolete imports.
+
+But since the user instructed to resolve the conflict by considering the intent and semantics of both sides, and if unsure, leave the conflict. However, if both imports are valid and used for different purposes, merging them would be correct.
+
+Wait, in Java, you can't have duplicate imports, but these are different classes. So maybe both branches added different imports. The conflict arises because both modified the same area. The correct resolution is to keep all necessary imports. So combining both sets would be the right approach here.
+
+So the resolved code would include all four imports: DocumentTypes, DataFileUtil, DocumentModel, and ModelAttributes. Therefore, the merged imports should include all of them, removing the conflict markers.</think>
+```java
+package org.jbake.app;
+
+import org.apache.commons.io.FilenameUtils;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.jbake.model.DocumentTypes;
+import org.jbake.model.DocumentModel;
+import org.jbake.model.ModelAttributes;
+import org.jbake.util.DataFileUtil;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+
+```

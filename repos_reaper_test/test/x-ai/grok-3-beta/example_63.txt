@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict resolved based on the intent and semantics of both sides. I will also explain my reasoning for the resolution.
+
+```java
+
+  /**
+   * @return A HashMap to use for events dispatched from this game, with the game id already set.
+   */
+  public HashMap<ReturnableData, Object> getEventMap() {
+    final HashMap<ReturnableData, Object> data = new HashMap<>();
+    data.put(LongPollResponse.GAME_ID, id);
+    return data;
+  }
+
+  /**
+
+```
+
+**Reasoning for Resolution:**
+- **Intent and Semantics:** Both sides of the merge conflict are functionally identical in terms of behavior. The difference lies in the syntax used for initializing the `HashMap`.
+  - The `HEAD` version uses the older, explicit type declaration: `new HashMap<ReturnableData, Object>()`.
+  - The `5adedd24812861bedaf540555ec046744b42b42a` version uses the newer, diamond operator syntax: `new HashMap<>()`, which infers the generic types from the variable declaration.
+- **Resolution Choice:** I chose the `5adedd24812861bedaf540555ec046744b42b42a` version (`new HashMap<>()`) because it aligns with modern Java best practices (introduced in Java 7) for cleaner, more concise code by avoiding redundant type specifications. Since there is no functional difference between the two, choosing the more modern syntax improves readability and consistency with current coding standards.
+- **Conflict Context:** Both sides aim to create a new `HashMap` instance to store event data with the game ID set. There is no ambiguity in intent, as the purpose and behavior remain the same.
+
+If there were any ambiguity in intent or additional context affecting the decision (e.g., project-specific coding style guidelines), I would have retained the conflict markers. However, in this case, the resolution is straightforward based on syntactic modernization without altering functionality.

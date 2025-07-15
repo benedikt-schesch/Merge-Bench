@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The code snippet includes a merge conflict in a logging statement where two different changes are being attempted. Both sides aim to improve the clarity and emphasis of a warning message about ambiguous names during data deployment.
+
+The changes include:
+1. A more specific wording about "grants" instead of "resource access permissions."
+2. Adding an exclamation mark for emphasis.
+3. Using a stream to sort and join the ambiguous principals.
+
+Since the changes on the right side (from commit 83418db) enhance the message's clarity and utilize modern Java features, they are preferable. These changes are more consistent with best practices and improve the message's effectiveness.
+
+```java
+					+ "Consider clearing up such ambiguities in the database.";
+
+			logger.info("\n###############################################################################\n"
+					+ "\tWarning: " + title + "!\n"
+					+ "\tFor the following names, there are multiple candidates (User/Group) for grants or node ownership during data deployment.\n"
+					+ "\tBecause of this ambiguity, node access rights could not be restored as defined in the export you just imported!\n\n"
+					+ "\t" + ambiguousPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+					+ "\n\n\tConsider clearing up such ambiguities in the database.\n"
+					+ "###############################################################################"
+			);
+			publishWarningMessage(title, text);
+		}
+```

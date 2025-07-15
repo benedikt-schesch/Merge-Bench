@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a plugin for an Android application, likely using the Cordova framework given the presence of `pluginInitialize()` and `sendPluginResult()`. The snippet involves Bluetooth Low Energy (BLE) operations, specifically scanning and advertising, which are managed through callbacks.
+
+The conflict arises in the declaration of callback variables. Let's analyze the changes:
+
+1. **Left side (HEAD):** The left side of the conflict declares two callback variables: `scanCallback` and `advertiseCallback`, both of which are commented as being for "API 21+ Scan and Advertise Callbacks." API 21 corresponds to Android 5.0 (Lollipop), indicating these callbacks are for BLE operations on Lollipop and later versions.
+
+2. **Right side (e9e8024f1f82edc97fc8bdec6af75e81ea5b0bfa):** The right side only declares `scanCallback` and comments it as "Scan Callback." It removes the declaration of `advertiseCallback`.
+
+To resolve this conflict, we need to understand the intent behind the changes on both sides. The left side (HEAD) is maintaining or adding both scan and advertise callbacks, suggesting that both scanning and advertising functionalities are being used or are intended to be used in the code for API 21+. The right side (e9e8024f1f82edc97fc8bdec6af75e81ea5b0bfa) seems to be focusing on or simplifying to just the scan callback, removing the advertise callback.
+
+Given the context, if the intent is to keep both scanning and advertising functionalities for API 21+, the left side's changes should be considered. However, if the focus is solely on scanning and the advertising functionality is either not needed or is being handled elsewhere, the right side's change might be appropriate.
+
+Since the removal of `advertiseCallback` on the right side could be a deliberate simplification or refactoring, and without more context on whether advertising is required, we should be cautious. 
+
+However, looking closely, the `pluginInitialize()` method checks for the Android version and returns if it's less than Lollipop (API 21), which aligns with the comment about the callbacks being for API 21+. This suggests that both scan and advertise callbacks are relevant for the functionality intended for API 21+.
+
+Thus, considering the intent and the context provided, the most straightforward resolution that preserves functionality related to both scanning and advertising (as it seems to be the more comprehensive approach) would be to keep the declarations as in the left side (HEAD). However, we need to be sure that `advertiseCallback` is indeed necessary.
+
+Here is the resolved snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+        scanCallbackContext.sendPluginResult(pluginResult);
+      }
+    }
+  };
+
+  //API 21+ Scan and Advertise Callbacks
+  private ScanCallback scanCallback = null;
+  private AdvertiseCallback advertiseCallback = null;
+
+  //TODO Is there a cleaner way to prevent this from running on KitKat
+  protected void pluginInitialize() {
+    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
+      return;
+```

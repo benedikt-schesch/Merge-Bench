@@ -1,0 +1,36 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is between the HEAD version and the commit 2125666c. The conflicting lines are the instantiation of GruntParser.
+
+In HEAD, the line is:
+GruntParser parser = new GruntParser(new StringReader(script));
+
+In the other branch, it's:
+GruntParser parser = new GruntParser(new StringReader(script), myPig);
+
+So, the difference is the second argument 'myPig' in the constructor. I need to figure out if these changes can be merged without conflicts. The key is to understand the semantics of both changes.
+
+Maybe the HEAD version is using a constructor with only the StringReader, while the other branch is adding an additional parameter, perhaps a Pig instance. If the GruntParser constructor in the other branch was modified to require both parameters, then the HEAD version would be missing that argument. Alternatively, maybe the other branch introduced a new overloaded constructor that takes both parameters, but the original one-parameter constructor still exists.
+
+But if the other branch's code is correct and the constructor now requires two arguments, then the HEAD version is outdated and needs to be updated. However, without more context on the GruntParser class's constructors, it's hard to be certain. But since the user is asking to resolve based on intent and semantics, I need to determine if both changes are trying to achieve different things that can be combined.
+
+Wait, maybe the correct approach is to include both parameters. The HEAD might have removed the second parameter, while the other branch added it. But that's conflicting. However, looking at the surrounding code, the variable 'myPig' is probably declared somewhere else. If the other branch's code is adding a necessary dependency (myPig) to the GruntParser, then the correct line should include both arguments. The HEAD version might be an older version that didn't require the myPig parameter, but the other branch updated it to include it.
+
+Therefore, the correct resolution is to take the version from the branch, which includes the myPig parameter. Because if the constructor now requires that parameter, the HEAD version would cause a compilation error. The intent of the other branch is likely to pass the Pig instance to the parser, which is necessary for its operation. The HEAD change might have been a mistake or an older version that didn't account for this new parameter.
+
+So the resolved line should be:
+GruntParser parser = new GruntParser(new StringReader(script), myPig);
+
+Thus, the merge conflict is resolved by choosing the version from the other branch because it adds a necessary argument that the HEAD version is missing, which is likely required for the code to function correctly.</think>
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "illustrate b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

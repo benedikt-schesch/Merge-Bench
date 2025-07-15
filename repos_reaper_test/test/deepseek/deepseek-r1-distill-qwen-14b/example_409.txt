@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The intention in both branches is to configure the AsciiDoctor attributes and parse the AsciiDoc file. However, there are two differences in implementation: the method of setting the property and the type of the map variable. Without further context on which approach is correct, the conflict remains.
+
+```java
+
+    @Test
+    public void parseAsciidocFileWithPrettifyAttribute() {
+
+<<<<<<< HEAD
+        config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES,"source-highlighter=prettify");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+=======
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify");
+        Map<String, Object> map = parser.processFile(asciidocWithSource);
+>>>>>>> d68ddea7554653e7928d220f68a3af13bfb30cdb
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("class=\"paragraph\"")
+
+```

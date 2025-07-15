@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to combine the changes from both branches. The `serialVersionUID` from the HEAD branch should be preserved for serialization, and the instance block configuring the servlet's behavior should be added.
+
+```java
+        return new DefaultResourceLoader();
+    }
+
+    private ResourceServlet concreteResourceServlet(final String location) {
+        return new ResourceServlet() {
+            private static final long serialVersionUID = 4602656496188884537L;
+            {
+                setApplyLastModified(true);
+                setContentType("image/png");
+            }
+```

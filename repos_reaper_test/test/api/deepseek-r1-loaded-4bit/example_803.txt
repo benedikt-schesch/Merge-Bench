@@ -1,0 +1,31 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. So, looking at the code snippet, there's a conflict between the HEAD version and the other branch. The HEAD version doesn't have the code that's added in the other branch.
+
+The conflicting code is in the serialize method. The other branch adds a check for server_version being >= 0.95, which throws an exception if true. The HEAD version doesn't have this check. 
+
+Hmm, the intent here seems to be that in the other branch, they want to prevent using row locks with HBase versions 0.95 or above. So, if the server version is too new, they throw an error. The HEAD version might be from a branch that doesn't include this check, perhaps because it's targeting older versions or hasn't implemented this restriction yet.
+
+To resolve this, I need to determine if these two changes can coexist or if they're conflicting in intent. The code from the other branch adds a precondition check that might be important for compatibility. The HEAD version is missing this check. Since the other branch's code is adding a necessary validation, it's probably correct to include it. Unless the HEAD version has a reason to remove this check, which doesn't seem to be the case here, we should keep the added code.
+
+So the correct resolution would be to include the if statement that checks the server version and throws the exception. Therefore, the merged code should have that block added before creating the ChannelBuffer. The surrounding context doesn't seem to be modified otherwise. The code after the conflict markers is the same in both branches, so we can keep the code from the other branch's addition and the rest from HEAD.
+
+Wait, but the HEAD version doesn't have the if statement. So in the merge, the code from the other branch (the one adding the exception) should be included. So the resolved code would include the check, then create the buffer. The context before and after the conflict seems okay. There's no overlap except for the added lines. So merging the two would mean adding the exception check from the other branch into the current code.
+
+Therefore, the resolved code should have the if statement from the other branch, followed by the creation of the ChannelBuffer as in HEAD. That way, both changes are incorporated: the check is added, and the rest of the code remains as is.</think>
+```java
+    return size;
+  }
+
+  /** Serializes this request.  */
+  ChannelBuffer serialize(final byte server_version) {
+    if (server_version >= RegionClient.SERVER_VERSION_095_OR_ABOVE) {
+      throw new UnsupportedOperationException("Row locks are not supported with"
+                                              + " this version of HBase ("
+                                              + server_version + ").");
+    }
+    final ChannelBuffer buf = newBuffer(server_version,
+                                        predictSerializedSize());
+    buf.writeInt(2);  // Number of parameters.
+
+    writeHBaseByteArray(buf, region.name());
+```

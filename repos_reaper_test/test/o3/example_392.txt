@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+	private DefaultInfinitestCore core;
+	private ChangeDetector changeDetector;
+	private TestDetector testDetector;
+
+	@BeforeEach
+	void inContext() {
+		updatedFiles = newArrayList();
+		core = new DefaultInfinitestCore(mock(TestRunner.class), new ControlledEventQueue());
+		
+		changeDetector = mock(ChangeDetector.class);
+		when(changeDetector.findChangedFiles()).thenReturn(updatedFiles);
+		core.setChangeDetector(changeDetector);
+```

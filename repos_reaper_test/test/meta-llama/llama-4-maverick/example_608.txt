@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, we first need to understand the context and the changes made on both sides of the merge.
+
+The code snippet is a part of a Java class, specifically a nested static class `VoipInfo` that extends `AbstractFacebookType`. The conflict arises in the declaration of the `serialVersionUID` field.
+
+### Understanding the Conflict
+
+The conflict is between two versions of the code:
+1. The local version (`HEAD`): It includes the declaration of `serialVersionUID` with a value of `1L`.
+2. The version from the branch being merged (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`): It does not include the `serialVersionUID` declaration.
+
+### Resolving the Conflict
+
+To resolve this conflict, we need to understand the intent behind the changes on both sides. 
+
+1. The `serialVersionUID` is used in Java for serialization purposes. It's a good practice to define it explicitly for classes that implement `Serializable` (or extend a class that does, like `AbstractFacebookType` here) to ensure version compatibility during serialization and deserialization.
+
+2. The change in `HEAD` explicitly defines `serialVersionUID`, which could be considered a good practice or a necessity if the class is being serialized.
+
+3. The change from the other branch removes or does not include this line, possibly because it was not considered necessary or was overlooked.
+
+Given these points, we need to decide whether the `serialVersionUID` is necessary. Since `AbstractFacebookType` likely implements `Serializable` (given the context of having a `serialVersionUID`), and explicitly defining `serialVersionUID` is a good practice for controlling serialization versioning, the version with `serialVersionUID` declared is likely the more intentional or safer choice.
+
+### Solution
+
+However, the task here is not to decide which change is "better" but to preserve the context and resolve based on semantic intent if clear. The conflict is straightforward and doesn't involve complex logic or intent that can't be resolved without understanding the broader context of the class's usage.
+
+Since the removal of `serialVersionUID` could be seen as either an oversight or an intentional decision, and without further context on why it was removed or not included in the other branch, the safest resolution leaning towards preserving explicit serialization control would be to keep the `serialVersionUID` declaration.
+
+Here is the resolved snippet in markdown code syntax as requested:
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class VoipInfo extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook("has_permission")
+    private Boolean hasPermission;
+
+```

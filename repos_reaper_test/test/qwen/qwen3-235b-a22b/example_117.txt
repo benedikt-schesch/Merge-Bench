@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The snippet includes a merge conflict between two semantic approaches to assign the `branch` property of `RepoInfo`. The `HEAD` version uses `selectedBranch.getName()` (likely aiming to use the branch name), while the other branch uses `selectedBranch.getCommit().getSha()` (likely aiming to use the commit SHA). Both have valid use cases depending on the intended behavior of `BranchCommitsActivity`:
+
+- If the activity expects the **branch name** to fetch and display the commit history for that branch, `getName()` makes sense.
+- If the activity expects a **specific commit SHA** (e.g. to show a commit or its history), then `getSha()` is appropriate.
+
+Without additional context about how `BranchCommitsActivity` utilizes `repoInfo.branch`, **intent ambiguity exists**. Therefore, **the merge conflict is preserved as requested**.
+
+```java
+  private void openCommits() {
+    if (selectedBranch != null) {
+      RepoInfo repoInfo = new RepoInfo();
+      repoInfo.owner = repo.getOwner().getLogin();
+      repoInfo.name = repo.name;
+<<<<<<< HEAD
+      repoInfo.branch = selectedBranch.getName();
+=======
+      repoInfo.branch = selectedBranch.getCommit().getSha();
+>>>>>>> 42bfc423b52bed1c5d64d35cc1100a32b48968d6
+      Intent intent = BranchCommitsActivity.createLauncherIntent(this, repoInfo);
+      startActivity(intent);
+    }
+  }
+```

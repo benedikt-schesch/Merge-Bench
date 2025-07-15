@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+The merge conflict here is about how the `ServerSocket` is initialized and managed. The key difference is that one side uses a try-with-resources statement while the other does not.
+
+- **HEAD version**:
+```java
+ServerSocket serverSocket = new ServerSocket(0);
+try {
+```
+
+- **Other branch version**:
+```java
+try (ServerSocket serverSocket = new ServerSocket(0)) {
+```
+
+The intent of both sides appears to be:
+1. Create a ServerSocket on an ephemeral port (port 0)
+2. Use it in a try block
+3. Potentially close the ServerSocket properly
+
+The difference is in how the ServerSocket is being managed:
+- The HEAD version manually creates the ServerSocket and would need to manually close it in a finally block
+- The other branch uses try-with-resources which automatically handles closing the ServerSocket
+
+Given that try-with-resources is the more modern and idiomatic way to handle resources in Java (introduced in Java 7), and it ensures the socket will be closed properly even if an exception occurs, the version with try-with-resources is preferable.
+
+```java
+	private List<TestEvent> sendMessageWithServerSocket(String input) throws UnknownHostException, IOException, ClassNotFoundException {
+		return sendMessageWithServerSocket(new String[] { input });
+	}
+
+	private List<TestEvent> sendMessageWithServerSocket(String... messages) throws UnknownHostException, IOException, ClassNotFoundException {
+		try (ServerSocket serverSocket = new ServerSocket(0)) {
+			RuntimeEnvironment fakeEnvironment = fakeEnvironment();
+			File file = fakeEnvironment.createClasspathArgumentFile();
+			
+			ClasspathArgumentBuilder classpathArgumentBuilder = new FileClasspathArgumentBuilder(file);
+			factory.startProcess(serverSocket.getLocalPort(), fakeEnvironment, classpathArgumentBuilder);
+```

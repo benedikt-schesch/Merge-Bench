@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to determine which package structure is correct for the application. This appears to be a package name refactoring where the application was moved from `fr.xplod.focal` to `org.cyanogenmod.focal`.
+
+The HEAD version is importing only `fr.xplod.focal.R`, while the incoming change (d28bc96) is importing `org.cyanogenmod.focal.R` and also adding an import for `org.cyanogenmod.focal.Util`.
+
+Since the code is already importing `org.cyanogenmod.focal.widgets.WidgetBase` from the new package structure, the package refactoring seems to be the intended change. I'll resolve by keeping the new package imports.
+
+```java
+import android.util.Log;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
+
+import org.cyanogenmod.focal.R;
+import org.cyanogenmod.focal.Util;
+import org.cyanogenmod.focal.widgets.WidgetBase;
+
+import java.util.ArrayList;
+import java.util.List;
+
+```

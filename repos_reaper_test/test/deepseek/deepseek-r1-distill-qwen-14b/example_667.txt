@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The snippet shows a merge conflict in a Java file where two sets of code changes are competing. The original code binds `IMaven.class` and `BuildPathManager.class`, while the new code replaces these with `RemoveNonRuntimeProjectsConfigurer.class`.
+
+The conflict is marked with `<<<<<<< HEAD` indicating the original code and `=======
+` for the new code. The surrounding code includes other bindings and a provides method.
+
+Since it's unclear which binding is correct or if they should coexist, the conflict should be preserved to allow further context evaluation.
+
+```java
+    @Override
+    protected void configure() {
+        bind(IMavenConfiguration.class).toInstance(MavenPlugin.getMavenConfiguration());
+        bind(PersistNonRuntimeClasspathConfigurer.class);
+        bind(AddNonRuntimeClasspathContainerConfigurer.class);
+<<<<<<< HEAD
+        bind(IMaven.class).toInstance(MavenPlugin.getMaven());
+        bind(BuildPathManager.class);
+=======
+        bind(RemoveNonRuntimeProjectsConfigurer.class);
+>>>>>>> 4b0f0ad0ce6afc98a1fc78b9fe46584c41f478e8
+    }
+
+    @Provides
+    List<RawClasspathConfigurer> provideRawClasspathConfigurers(PersistNonRuntimeClasspathConfigurer persistConfigurer,
+<<<<<<< HEAD
+
+```

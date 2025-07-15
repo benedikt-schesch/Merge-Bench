@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Here's the resolved merge conflict:
+
+```java
+    for (final Player player : playersCopy) {
+      playerNames.add(player.getUser().getNickname());
+    }
+    info.put(GameInfo.PLAYERS, playerNames);
+
+    final User[] spectatorsCopy = spectators.toArray(new User[0]);
+    final List<String> spectatorNames = new ArrayList<>(spectatorsCopy.length);
+    for (final User spectator : spectatorsCopy) {
+      spectatorNames.add(spectator.getNickname());
+    }
+    info.put(GameInfo.SPECTATORS, spectatorNames);
+
+```
+
+I chose the newer version because:
+1. Using `new User[0]` instead of `new User[spectators.size()]` is a more modern and efficient idiom in Java
+2. Using the diamond operator `<>` instead of explicitly repeating the generic type `<String>` is cleaner and aligned with modern Java practices
+
+Both changes are stylistic improvements while maintaining the same functionality.

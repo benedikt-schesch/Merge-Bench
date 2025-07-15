@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+I'll resolve the conflict by taking the more precise terminology and improved formatting from the commit while preserving the core warning message. Here's the merged code:
+
+```java
+			logger.info("\n###############################################################################\n"
+					+ "\tWarning: " + title + "!\n"
+					+ "\tFor the following names, there are multiple candidates (User/Group) for grants or node ownership during data deployment.\n"
+					+ "\tBecause of this ambiguity, node access rights could not be restored as defined in the export you just imported!\n\n"
+					+ "\t" + ambiguousPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+					+ "\n\n\tConsider clearing up such ambiguities in the database.\n"
+					+ "###############################################################################"
+			);
+			publishWarningMessage(title, text);
+		}
+```

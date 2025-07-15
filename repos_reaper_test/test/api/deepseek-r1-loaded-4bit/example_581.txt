@@ -1,0 +1,57 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in the method signature of `jsonMappingCompleted`. The HEAD version has a parameter `JsonMapper jsonMapper`, while the other branch (a17acec) doesn't have any parameters. 
+
+First, I need to understand what each side is doing. The HEAD version includes a JsonMapper parameter, which suggests that the method might be using that object to perform some operations. The other branch's version removes that parameter, maybe because it's no longer needed or the method was refactored to not require it.
+
+I should check if there's any code inside the method that uses `jsonMapper`. Looking at the code after the conflict, the method sets `picture = null;` and checks `rawPicture`. If there's no usage of `jsonMapper` in the method body, then the parameter might have been removed for a reason—perhaps it's obsolete. Alternatively, maybe the parameter was added in HEAD for some new functionality.
+
+Wait, the user provided the code snippet. Let me look again. The method after the conflict has:
+
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+So, in the current code, there's no reference to `jsonMapper`. If the HEAD version added the parameter but isn't using it here, that's a problem. Or maybe the parameter is part of an override or an interface method. 
+
+Wait, the method is annotated with `@JsonMappingCompleted`, which might be a lifecycle or callback annotation. Perhaps in some framework, this method is expected to have a certain signature. If the HEAD branch added the parameter to adhere to a new framework requirement, but the other branch removed it because it's unnecessary, we need to reconcile this.
+
+Alternatively, maybe the parameter was added in HEAD for some processing that's missing in the provided snippet. But in the given code, there's no usage. If the method in HEAD uses `jsonMapper` elsewhere in the code (not shown here), then keeping the parameter is necessary. However, since the provided code doesn't show that, maybe the parameter was mistakenly added, or the other branch correctly removed it.
+
+Another angle: perhaps the method is overriding a superclass method. If the superclass in HEAD expects the parameter, then the HEAD version is correct. If the other branch's version is correct because the superclass method doesn't have the parameter, then we should take that.
+
+Without more context, it's hard to tell. But since the user is asking to resolve based on intent and semantics, we have to determine if the parameter is needed. If the method body doesn't use `jsonMapper`, then the a17acec version (without the parameter) is correct. However, if the parameter is part of a method signature that's required (like an overridden method), then HEAD is correct.
+
+But in the code provided, the method is `protected void jsonMappingCompleted(...)`, which doesn't immediately indicate an override. Unless the annotation `@JsonMappingCompleted` requires a specific signature. Maybe the framework changed, and the method no longer needs the parameter, so the correct version is the one without it.
+
+Alternatively, maybe the parameter was added for some new feature in HEAD, but the other branch's change is removing it. If both changes are valid, we need to see which one to keep. But without more context, perhaps the safest approach is to keep the parameter if it's used, otherwise remove it.
+
+Since in the given code snippet, the method doesn't use `jsonMapper`, maybe the a17acec version is correct. Therefore, the resolved method should have no parameters. But wait, maybe the HEAD added the parameter for a reason not shown here. For example, maybe in the rest of the method (beyond the provided snippet) there's code that uses `jsonMapper`. But the user hasn't provided that.
+
+In semantic merge, we have to look at the intent. If both changes are modifying the method signature, we need to see which one is compatible. If the method in HEAD is adding a parameter that's not present in the other branch, and the other branch is removing it (or vice versa), we have to decide which change to take.
+
+But in this case, the conflict is between adding a parameter (HEAD) and removing it (a17acec). If the method in the base version had the parameter, and one branch removes it while the other modifies it, but here it's possible that the base had the parameter, and a17acec removed it, while HEAD modified something else but kept the parameter. Or the base didn't have the parameter, and HEAD added it, while a17acec made another change.
+
+Alternatively, perhaps both branches are modifying the method signature. The key is to determine which change is necessary.
+
+If the method's intent in HEAD is to use the JsonMapper, but the code doesn't show it, maybe the parameter is unnecessary. Or perhaps the code was added elsewhere. Since the user's instruction is to resolve based on intent and semantics, and if we can't determine, leave the conflict. But the user wants us to resolve if possible.
+
+Another approach: check if the method is part of an overridden method. If the parent class has a method `jsonMappingCompleted(JsonMapper)` then HEAD is correct. If the parent class has a method without parameters, then a17acec is correct. Since we don't have that info, maybe it's safer to assume that the parameter was added for a reason and keep it. But without usage, maybe it's a mistake.
+
+Alternatively, maybe the parameter was added in HEAD for a new feature, and the other branch removed it because they refactored. In that case, the conflict needs to be resolved by choosing the correct one.
+
+But without knowing the broader context, the safest way is to look at the method body. Since the method body in the given code doesn't use the parameter, it's possible that the a17acec version is correct, removing the parameter. Therefore, the resolved method should have no parameters. Hence, we should take the version from a17acec.</think>
+```java
+    Date dateStart = toDateFromLongFormat(rawStartTime);
+    startTime = dateStart == null ? toDateFromShortFormat(rawStartTime) : dateStart;
+  }
+
+  @JsonMappingCompleted
+  protected void jsonMappingCompleted() {
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the merge conflict as is since the intent and semantics need careful consideration. The conflict involves a variable name difference (`myKey` vs `keyWritable`), and without additional context about which name is the current or intended reference (or if they refer to the same object), it’s ambiguous to resolve without potentially introducing errors. Preserving the original conflict allows for further investigation by the developer.
+
+```java
+    public Result getNext() throws ExecException {
+        if (bags == null) {
+            return new Result(POStatus.STATUS_EOP, null);
+        }
+
+<<<<<<< HEAD
+        byte origIndex = myKey.getIndex();
+=======
+        byte origIndex = keyWritable.getIndex();
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+
+        int index = (int)origIndex;
+        index &= idxPart;
+
+        if (index >= packagers.size() || index < 0) {
+```

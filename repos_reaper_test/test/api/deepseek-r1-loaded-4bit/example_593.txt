@@ -1,0 +1,43 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code, the conflict is between the HEAD version using jsonObject.add with a ParseException and the other branch using jsonObject.put with a JsonException.
+
+First, I need to figure out what the intent of both changes is. The methods add and put might be doing similar things here, but they belong to different classes or libraries. The exceptions also differ: ParseException vs JsonException. 
+
+Wait, maybe the original code was using a JSON library that uses add and throws ParseException. Then, the other branch switched to a different library or updated the method to put, which throws JsonException. For example, if they switched from org.json to Gson or another library, the method names and exceptions can change.
+
+So, the key is to determine which method is correct in the current context. If the surrounding code uses a JSON library that has add, then HEAD is correct. But if the project migrated to a library where put is the correct method and JsonException is the right exception, then the a17acec change is correct.
+
+Since the user hasn't provided more context, I have to make an educated guess. Let me check the method names. The trimToEmpty function is probably a utility that trims a string and returns empty if null. Both add and put might be adding key-value pairs, but for different JSON objects.
+
+Wait, in org.json's JSONObject, the method is put, and it throws JSONException. But maybe in some other library, add is used, and ParseException is thrown. Alternatively, maybe the original code had a typo or was using a deprecated method.
+
+Alternatively, perhaps the correct exception is JsonException, which is a more specific or updated exception type. If the code was updated to handle a newer version of the library where put is used and exceptions are JsonException, then the a17acec version is correct.
+
+Since the conflict is between add and put, and different exceptions, the correct resolution depends on which library is in use. Without more context, it's ambiguous. But the user wants a semantic resolution. Maybe both changes are trying to add the entry to the JSON object but using different method names due to library differences. If both changes are valid but from different contexts, perhaps one is correct.
+
+Alternatively, maybe the method was renamed in the codebase. For example, if the project switched from using add to put for JSON objects, then the a17acec version is the correct one. But how to know?
+
+Another angle: ParseException is part of java.text, but JsonException is likely a custom exception. If the library in use throws JsonException when there's an error adding to the JSON object, then the second catch is correct. The original code might have incorrectly caught ParseException, which isn't thrown by the put method.
+
+So, if the correct method is put and the exception is JsonException, then the resolved code should use put and catch JsonException. Therefore, the merge should take the a17acec version. The HEAD version might be outdated.
+
+Therefore, the conflict can be resolved by choosing the put method and JsonException. So the resolved code would be:
+
+jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+} catch (JsonException e) {
+
+And remove the conflict markers. The comment about "Shouldn't happen..." and the throw statement can stay as they are common to both.</think>
+```java
+        throw new IllegalArgumentException(
+          "Provided queries must have non-blank keys and values. You provided: " + queries);
+      }
+
+      try {
+        jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (JsonException e) {
+        // Shouldn't happen unless bizarre input is provided
+        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
+      }
+    }
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see two different implementations for handling a profile picture. Here's the resolution:
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+    JsonObject picData = rawPicture.getJsonObject("data");
+    if (picData != null) {
+      picture = picData.getString("url");
+    }
+  }
+}
+```
+
+I resolved the conflict by choosing the second implementation (from a17acec0) because:
+1. It uses `getJsonObject("data")` which appears to be a direct method for retrieving the data object
+2. It seems to extract just the URL string from the data rather than converting the entire object
+3. The implementation is simpler and more direct for what appears to be the goal of extracting a picture URL

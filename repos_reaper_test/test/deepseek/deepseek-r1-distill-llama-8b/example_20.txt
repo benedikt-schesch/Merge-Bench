@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Here's the full context with a clear indication of the merge conflict and the chosen resolution:
+
+```java
+					// u - velocity
+					// t - timestep
+					// a - acceleration
+
+					final Vector3 movement = prevVelocity.multiply(dt).add(acceleration.multiply(dt * dt).divide(2));
+<<<<<<< HEAD
+					//final Point position = scene.getTransformLive().getPosition();
+					Point newPosition = scene.getTransformLive().getPosition().add(movement);
+					final BoundingBox volume = scene.getVolume();
+					//final BoundingBox oldVolume = volume.clone().offset(position);
+=======
+					Point newPosition = scene.getTransformLive().getPosition().add(movement);
+					final BoundingBox volume = scene.getVolume();
+<<<<<<<
+					BoundingBox worldVolume = volume.clone().offset(newPosition);
+=======
+					BoundingBox worldVolume = volume.clone().offset(newPosition);
+					final int bx = newPosition.getBlockX();
+					final int by = newPosition.getBlockY();
+					final int bz = newPosition.getBlockZ();
+					final int rangeX = (int) Math.ceil(volume.getMax().getX() - volume.getMin().getX());
+>>>>>>> 67bcb76a96f358fc131320b0611ffaa3bf3678c2
+```
+
+Here is the resolution applied:
+
+The merge resolution keeps the later version of the code which:
+1. Adds x, y, z coordinate extraction after computing newPosition
+2. Adds the rangeX calculation
+3. commentinged out the redundant position variable definition since newPosition is used
+
+The code after the merge will include both the rangeX calculation and extract the position into individual integer variables (bx, by, bz).

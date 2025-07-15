@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I need to ensure both tests correctly test the content type of the BinaryAttachment. The first test already correctly uses a stream and checks the content type. The second test should set the attachment from the string and assert the content type.
+
+Here is the resolved code:
+
+```java
+  @Test
+  public void checkContentTypeStream() {
+    InputStream stream = getClass().getResourceAsStream("/binary/fruits.png");
+    BinaryAttachment att = BinaryAttachment.with("example.png", stream);
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment với ("data.png", attachmentData.getBytes(StandardCharsets.UTF_8));
+    assertEquals("image/png", att.getContentType());
+  }
+```

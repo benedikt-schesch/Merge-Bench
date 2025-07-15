@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict in the given code snippet, we need to address the method name discrepancy and fix a typo. The test's intent is to verify that the status bar changes to red with yellow text when tests fail. The longer method name is more descriptive, and the typo in the color setting method needs correction.
+
+Here is the resolved code:
+
+```java
+	.verify(statusBar).setBackgroundColor(COLOR_DARK_GREEN);
+	.verify(statusBar).setTextColor(COLOR_WHITE);
+}
+
+@Test
+public void shouldChangeToFailingBackgroundColorWhenTestsFail() {
+	ColorSettings.setFailingBackgroundColor(COLOR_DARK_RED);
+	ColorSettings.setFailingTextColor(COLOR_YELLOW);
+
+	presenter.coreStatusChanged(PASSING, FAILING);
+
+	.verify(statusBar).setBackgroundColor(COLOR_DARK_RED);
+	.verify(statusBar).setTextColor(COLOR_YELLOW);
+}
+```

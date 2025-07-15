@@ -1,0 +1,63 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the code snippet carefully.
+
+The conflict is between the HEAD commit and the branch commit b782a4b. In the HEAD version, there's a declaration of `buildService` after the `registry` injection. The other side adds a `projectConfigurationManager` field injected with `@Inject`, and then the `buildService` line. 
+
+Wait, no, looking again: the HEAD has the `buildService` declaration, while the other branch adds `projectConfigurationManager` before `buildService`. So the conflict is that in HEAD, the order is `registry` then `buildService`, but in the other branch, it's `registry`, then `projectConfigurationManager`, then `buildService`. 
+
+The merge conflict markers show that the two changes are on adjacent lines. The correct resolution would be to include both fields. Since both are private fields with @Inject annotations (assuming that `projectConfigurationManager` is also @Inject, but looking at the code, the other branch's code adds `private IProjectConfigurationManager projectConfigurationManager;` without an @Inject. Wait, the HEAD has `@Inject` above `registry`, and the other branch adds `projectConfigurationManager` without an @Inject. Wait, no: the code shows:
+
+In the conflict:
+
+<<<<<<< HEAD
+=======
+	private IProjectConfigurationManager projectConfigurationManager;
+
+>>>>>>> b782a4bb6b4349d23790909d1e67891adbaa126c
+	@Override
+	...
+
+So the other branch added the line `private IProjectConfigurationManager projectConfigurationManager;` between the registry and buildService. In the HEAD, after registry, it's directly buildService. So the conflict is because both branches modified the same area: one added a new field, the other added a different field or perhaps modified the existing one.
+
+Wait, no. The HEAD version has:
+
+@Inject
+private BuildListenerRegistry registry;
+
+protected AndroidBuildService buildService;
+
+And the other branch has:
+
+@Inject
+private BuildListenerRegistry registry;
+
+private IProjectConfigurationManager projectConfigurationManager;
+
+protected AndroidBuildService buildService;
+
+So the conflict is because the two branches added different fields in the same spot. The HEAD added `buildService` after `registry`, while the other branch added `projectConfigurationManager` after `registry`, then `buildService`. Therefore, the correct resolution is to include both fields, maintaining the order. Since the HEAD's code has `buildService` after `registry`, and the other branch adds `projectConfigurationManager` in between, the merged code should have both fields. 
+
+But wait, the way the conflict is presented is that in the HEAD, the line after registry is buildService, and in the other branch, between registry and buildService, they added projectConfigurationManager. So the correct resolution is to include both fields. So the merged code would have:
+
+@Inject
+private BuildListenerRegistry registry;
+
+private IProjectConfigurationManager projectConfigurationManager;
+
+protected AndroidBuildService buildService;
+
+That way, both additions are included. The order might matter if there's some dependency, but since they are just field declarations, order typically doesn't matter in Java. So the conflict can be resolved by keeping both fields. There's no ambiguity here because both changes are additive and don't modify the same line. The merge conflict occurred because the two branches added different lines in the same vicinity. Therefore, the correct resolution is to include both fields in the merged code.</think>
+```java
+	@Inject
+	private BuildListenerRegistry registry;
+
+	@Inject
+	private IProjectConfigurationManager projectConfigurationManager;
+
+	protected AndroidBuildService buildService;
+
+	@Override
+	@SuppressWarnings("restriction")
+    protected void setUp() throws Exception {
+	    super.setUp();
+```

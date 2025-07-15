@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are binding different services in the configure method. Side HEAD is binding `IMaven.class` and `BuildPathManager.class`, while side 4b0f0ad is binding `RemoveNonRuntimeProjectsConfigurer.class`. Since these appear to be independent bindings that don't conflict with each other, I'll combine both changes.
+
+```java
+    @Override
+    protected void configure() {
+        bind(IMavenConfiguration.class).toInstance(MavenPlugin.getMavenConfiguration());
+        bind(PersistNonRuntimeClasspathConfigurer.class);
+        bind(AddNonRuntimeClasspathContainerConfigurer.class);
+        bind(IMaven.class).toInstance(MavenPlugin.getMaven());
+        bind(BuildPathManager.class);
+        bind(RemoveNonRuntimeProjectsConfigurer.class);
+    }
+
+    @Provides
+    List<RawClasspathConfigurer> provideRawClasspathConfigurers(PersistNonRuntimeClasspathConfigurer persistConfigurer,
+<<<<<<< HEAD
+
+```
+
+Note: The second merge conflict is incomplete in the provided snippet, so I've left it as is.

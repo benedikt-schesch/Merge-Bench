@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that both sides have the same code but with different formatting. The only difference is that the incoming change (bottom half) splits the calculation of `x` across two lines, while the current version (top half) keeps it on a single line.
+
+Here's the resolved code:
+
+```java
+
+            final float radAngle = (float) ((i * (180.0f / 4.0f) + 90.0f) * Math.PI / 180.0f);
+
+            final float y = (float) (height + ringRadius * Math.cos(radAngle) - mButtonSize);
+            // We remove the button edge
+            final float x = (float) (width / 2 - button.mNormalBitmap.getWidth() / 2
+                    - ringRadius * Math.sin(radAngle));
+
+            canvas.save();
+            canvas.translate(x + button.mNormalBitmap.getWidth() / 2,
+                    y + button.mNormalBitmap.getWidth() / 2);
+            canvas.rotate(mCurrentOrientation);
+
+```

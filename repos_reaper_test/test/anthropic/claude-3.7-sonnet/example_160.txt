@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see two different ways of initializing the `log` variable, with the incoming change also adding a `firstTime` variable.
+
+The HEAD version has:
+- A non-static, final Log field initialized with the instance's class
+- No `firstTime` variable
+
+The incoming version has:
+- A static, final Log field initialized with `Combine.class` explicitly
+- Adds a static `firstTime` boolean with a comment about Hadoop combiners
+
+Since this appears to be a combiner in a Hadoop context, the static approach with the `firstTime` flag seems more appropriate, as it accounts for the fact that combiners can be called multiple times.
+
+Here's the resolved snippet:
+
+```java
+    public static JobContext sJobContext = null;
+
+    public static class Combine
+            extends Reducer<PigNullableWritable, NullableTuple, PigNullableWritable, Writable> {
+
+        private static final Log log = LogFactory.getLog(Combine.class);
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+        private byte keyType;
+
+        //The reduce plan
+        private PhysicalPlan cp;
+
+```

@@ -1,0 +1,22 @@
+<think>
+Okay, let's look at this merge conflict. The code in question is a Java method where there's a conflict around the mShowcaseView.notifyOrientationChanged call. The HEAD version has the call in a single line without braces, while the other branch has it with braces for the if statement. 
+
+First, I need to understand the intent of both changes. Both sides are trying to call notifyOrientationChanged on mShowcaseView if it's not null. The difference is just code style—braces versus no braces. In Java, it's common to use braces even for single-line if statements to avoid potential errors if someone adds another line later without noticing the missing braces. 
+
+Since the functionality is the same, the conflict is purely stylistic. The best resolution would be to adopt the version with braces because it's more readable and less error-prone. So, I'll keep the block from the second branch, replacing the HEAD version. I need to make sure the rest of the context remains unchanged, preserving spacing and other method calls.</think>
+```java
+        mWidgetRenderer.notifyOrientationChanged(mOrientationCompensation);
+        mSwitchRingPad.notifyOrientationChanged(mOrientationCompensation);
+        mSavePinger.notifyOrientationChanged(mOrientationCompensation);
+        mReviewDrawer.notifyOrientationChanged(mOrientationCompensation);
+
+        if (mShowcaseView != null) {
+            mShowcaseView.notifyOrientationChanged(mOrientationCompensation);
+        }
+    }
+
+    public void updateCapabilities() {
+        // Populate the sidebar buttons a little later (so we have camera parameters)
+        mHandler.post(new Runnable() {
+
+```

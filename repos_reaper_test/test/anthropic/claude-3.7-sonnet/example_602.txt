@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+I'll resolve the merge conflict by analyzing the intent of both changes:
+
+```java
+    return labels.remove(label);
+  }
+
+  @JsonMappingCompleted
+  protected void convertLabels(JsonMapper jsonMapper) {
+    if (rawLabels != null && rawLabels.isObject() && rawLabels.get("data") != null) {
+      String innerLabelsString = rawLabels.get("data").toString();
+      labels = jsonMapper.toJavaList(innerLabelsString, PageLabel.class);
+    }
+  }
+
+```
+
+The resolution combines both conditions because:
+1. HEAD checks if `rawLabels` is an Object
+2. The other branch checks if `rawLabels.get("data")` exists
+3. Both conditions should be satisfied for the subsequent code to work correctly - we need rawLabels to be an object and we need data to exist within it

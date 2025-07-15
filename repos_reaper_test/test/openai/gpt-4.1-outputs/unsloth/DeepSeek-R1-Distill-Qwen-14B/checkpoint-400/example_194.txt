@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```java
+            throw new RuntimeException(sb.toString(), e);
+        }
+        return ret;
+    }
+    
+    public static Object instantiateFuncFromSpec(String funcSpec)  {
+        // Support both string-based and FuncSpec-based instantiation for compatibility
+        if (funcSpec == null) return null;
+        try {
+            return instantiateFuncFromSpec(new FuncSpec(funcSpec));
+        } catch (Exception e) {
+            // Fall back to string-based split if instantiation with FuncSpec fails
+            return instantiateFunc(getClassNameFromSpec(funcSpec), getArgStringFromSpec(funcSpec));
+        }
+    }
+    
+    
+    public Class getClassForAlias(String alias) throws IOException{
+```

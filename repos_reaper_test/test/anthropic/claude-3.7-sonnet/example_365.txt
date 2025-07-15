@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the conflict is in the implementation of the `buildGetRequest` method. The original version returns a `new MockLowLevelHttpRequest()` without any parameters, while the new version passes the `url` parameter to the constructor: `new MockLowLevelHttpRequest(url)`.
+
+Based on the context, it seems the newer implementation is trying to include the URL in the mock request, which is likely a more complete implementation. Here's the resolved code:
+
+```java
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+  }
+
+  @Override
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+    return new MockLowLevelHttpRequest(url);
+  }
+
+  @Override
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
+    if (!supportsHead()) {
+```

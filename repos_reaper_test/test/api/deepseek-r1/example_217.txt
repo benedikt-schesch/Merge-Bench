@@ -1,0 +1,23 @@
+<think>
+Okay, let me look at this merge conflict. The code snippet is from a Java test class. The conflict is in the test method testStringLte. The HEAD version doesn't have the line initializing PigServer, while the other branch (1488b22ce...) adds that line.
+
+So, the question is whether initializing PigServer is necessary here. Looking at the surrounding code, the test might require a PigServer instance to run. If the other test methods in the class initialize PigServer in a similar way, then the added line is probably correct. But if the HEAD version removed it for some reason, maybe it's no longer needed.
+
+Wait, the context shows that the test method is creating a temporary file and writing to it. Maybe PigServer is part of the test setup. If the PigServer initialization is part of the test setup, perhaps it's better to have it in a @Before method. But if each test initializes its own PigServer, then adding it here makes sense.
+
+Since the conflict is between adding the PigServer line and not having it, I need to determine if both changes can coexist. If the test requires PigServer to function, then the line from the other branch should be kept. However, if the HEAD version removed it because it's now initialized elsewhere, then maybe it's redundant.
+
+But without more context on how PigServer is used in other tests, it's hard to tell. The safest approach, if unsure, is to leave the conflict as is. But the user asked to resolve it if intent is clear. Let me check the code again. The line initializes PigServer with initString, which might be a variable from the test class. If other tests in the class have similar setups, then including it is correct. The HEAD version might have accidentally removed it, or perhaps it's a refactor. Since the conflicting line is adding the PigServer initialization, and the test might need it, the correct resolution is to include both changes. Wait, but in a merge conflict, you can't have both. So the correct resolution is to keep the PigServer initialization from the incoming branch (1488b22ce...) because the HEAD version removed it. So the resolved code should include the PigServer line. Therefore, the conflict markers should be removed, and the PigServer line retained.</think>
+```java
+        assertEquals(expectedCount, count);
+    }
+
+    @Test
+    public void testStringLte() throws Throwable {
+        PigServer pig = new PigServer(initString);
+        File tmpFile = File.createTempFile("test", "txt");
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpFile));
+        int expectedCount = 0;
+        for(int i = 0; i < LOOP_COUNT; i++) {
+            if(i % 5 == 0) {
+```

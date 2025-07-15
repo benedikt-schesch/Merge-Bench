@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```java
+        zk = null;
+      }
+    }
+
+    /** Schedule a timer to retry {@link #getRootRegion} after some time.  */
+    private void retryGetRootRegionLater() {
+      newTimeout(new TimerTask() {
+          public void run(final Timeout timeout) {
+            if (!getRootRegion()) {  // Try to read the znodes
+              connectZK();  // unless we need to connect first.
+            }
+```

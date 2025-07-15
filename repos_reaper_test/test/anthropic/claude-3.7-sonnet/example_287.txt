@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Based on the snippet, I can see a merge conflict where one branch is not adding any code, and the other branch (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`) is adding a line to store the input key `k` in a field called `keyWritable`. 
+
+Looking at the context, this method is attaching input to the object and already stores the processed key in `key`, but it seems reasonable to also store the original key object in `keyWritable` for later reference. Since the change doesn't conflict with existing code and appears to be adding new functionality, I'll resolve by keeping the added line.
+
+```java
+     */
+    public void attachInput(PigNullableWritable k, Iterator<NullableTuple> inp) {
+        try {
+            tupIter = inp;
+            key = pkgr.getKey(k);
+            keyWritable = k;
+            inputAttached = true;
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Error attaching input for key " + k +
+                    " in " + name() + " at location " + getOriginalLocations(), e);
+
+```

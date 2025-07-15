@@ -1,0 +1,71 @@
+<think>
+Okay, let's look at this merge conflict. The HEAD version adds imports for ReentrantLock, AbstractOptionHandler, and InstanceStream. The other side, from commit 87ea390, removes those and adds imports for ContentEvent and EntranceProcessor. Wait, but in the context, both sides have the org.slf4j imports and the com.yahoo.labs.samoa imports.
+
+Hmm, maybe the conflict is because one branch added some imports and the other removed some or added different ones. Let me check the exact lines. The HEAD has the java.util.concurrent.locks.ReentrantLock import and the two com.yahoo.labs.samoa.moa imports. The other branch doesn't have those but has com.yahoo.labs.samoa.core imports instead.
+
+So the conflict is between adding MOA-related imports and adding core SAMOA imports. But looking at the surrounding context after the conflict, both versions include the org.slf4j.Logger imports and then com.yahoo.labs.samoa.core.ContentEvent etc. So perhaps the correct resolution is to include all necessary imports from both branches. Because Java imports can coexist as long as they're used.
+
+Wait, but maybe the AbstractOptionHandler and InstanceStream from MOA are in the HEAD, and the other branch adds ContentEvent and EntranceProcessor from core. So maybe both sets of imports are needed. Therefore, the conflict can be resolved by keeping all the imports from both sides, ensuring there are no duplicates and that they are properly ordered or grouped.
+
+So the merged code should include the ReentrantLock import, the MOA options and streams imports from HEAD, and the core SAMOA imports from the other branch. Also, the org.slf4j imports are common to both, so they stay.
+
+Therefore, the resolved code would have all the necessary imports from both sides without conflict. Let me check the order. The HEAD has the java.util import first, then the MOA options, then InstanceStream. The other branch has the core imports after the slf4j. So perhaps in the merged code, we arrange the imports appropriately, grouping similar ones. But the user said to preserve the spacing as is, so maybe we just combine both sets.
+
+Wait, but the conflict markers are between the license comment and the org.slf4j imports. So in the HEAD, after the license, they have the java.util.concurrent import and the MOA options. In the other branch, after the license, they go straight to the org.slf4j imports. Then after that, both have the org.slf4j imports and the com.yahoo.core imports.
+
+Wait, the exact code is:
+
+<<<<<<< HEAD
+import java.util.concurrent.locks.ReentrantLock;
+
+import com.yahoo.labs.samoa.moa.options.AbstractOptionHandler;
+import com.yahoo.labs.samoa.moa.streams.InstanceStream;
+
+=======
+
+>>>>>>> 87ea390f...
+
+Then the common part is:
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.yahoo.labs.samoa.core.ContentEvent;
+import com.yahoo.labs.samoa.core.EntranceProcessor;
+
+So the HEAD adds three imports before the org.slf4j ones, and the other branch doesn't have those. So merging them would require including those three imports from HEAD and then the org.slf4j and com.yahoo.core imports from both. Wait, no—the other branch doesn't have the three imports from HEAD. So the conflict is that one side adds those imports, and the other side doesn't. But the other side adds different imports after the slf4j.
+
+Wait, the code after resolving should have the imports from HEAD (ReentrantLock, AbstractOptionHandler, InstanceStream) followed by the org.slf4j imports, and then the com.yahoo.core imports. Because in the HEAD, after the three imports, there's a line, then the org.slf4j imports. In the other branch, the org.slf4j imports come right after the license block. So merging these would require taking the three imports from HEAD, then the org.slf4j, then the com.yahoo.core imports from both.
+
+Wait, but the com.yahoo.core imports in the other branch are added after the slf4j. So the merged code would be:
+
+import java.util.concurrent.locks.ReentrantLock;
+
+import com.yahoo.labs.samoa.moa.options.AbstractOptionHandler;
+import com.yahoo.labs.samoa.moa.streams.InstanceStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.yahoo.labs.samoa.core.ContentEvent;
+import com.yahoo.labs.samoa.core.EntranceProcessor;
+
+This way, all the necessary imports are included. The conflict arises because one branch added some imports at the top, and the other added some after the slf4j. Since there's no overlap in the actual lines, they can be merged without conflict. So the resolution is to keep both sets of imports in their respective positions. Therefore, the correct merged code includes all the imports from both sides in the order they appear, without conflict markers.</think>
+```java
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.util.concurrent.locks.ReentrantLock;
+
+import com.yahoo.labs.samoa.moa.options.AbstractOptionHandler;
+import com.yahoo.labs.samoa.moa.streams.InstanceStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.yahoo.labs.samoa.core.ContentEvent;
+import com.yahoo.labs.samoa.core.EntranceProcessor;
+
+```

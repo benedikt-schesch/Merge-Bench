@@ -1,0 +1,56 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict, preserved exactly as given, including all spacing and context. I will then analyze the semantics and intent of both sides of the merge conflict and propose a resolution if clear.
+
+```java
+					out.append(" data-structr-success-notifications-custom-dialog-element=\"").append(generateDataAttributesForIdList(renderContext, triggeredAction, ActionMapping.successNotificationElements)).append("\"");
+					break;
+
+				case "fire-event":
+					out.append(" data-structr-success-notifications-event=\"").append(triggeredAction.getProperty(ActionMapping.successNotificationsEventProperty)).append("\"");
+<<<<<<< HEAD
+					break;
+
+				case "inline-text-message":
+					final Integer delay = triggeredAction.getProperty(StructrApp.key(ActionMapping.class, "successNotificationsDelay"));
+					out.append(" data-structr-success-notifications-delay=\"").append(delay.toString()).append("\"");
+=======
+>>>>>>> d72e83e2638205c5015a1f9cb06ac4df592921c5
+					break;
+
+				default:
+					break;
+```
+
+### Analysis of Merge Conflict and Intent
+
+- **HEAD (left side of the conflict):** This side includes additional logic for handling the `"inline-text-message"` case. It retrieves a delay value from the `triggeredAction` object and appends it as a data attribute (`data-structr-success-notifications-delay`) to the output. The intent here appears to be adding support for a success notification delay feature specific to inline text messages.
+- **Other side (right side of the conflict, `d72e83e2638205c5015a1f9cb06ac4df592921c5`):** This side is empty, meaning it does not include the `"inline-text-message"` case or any associated logic. The intent could be to either omit this feature (if it was intentionally removed) or it might simply represent a state before this feature was added.
+
+### Semantic Resolution
+
+Since the HEAD side introduces new functionality (handling `"inline-text-message"` with a delay attribute) and the other side does not provide any conflicting or alternative logic (it is empty), the intent of the HEAD side seems to be adding a new feature without opposition from the other branch. There is no clear evidence in the provided snippet that the other side intended to remove or alter this behavior—it's more likely that the other side predates the addition of this logic or does not concern itself with this specific case.
+
+Therefore, the resolution should preserve the HEAD changes, as they add meaningful functionality without apparent conflict in intent.
+
+### Resolved Code Snippet
+
+```java
+					out.append(" data-structr-success-notifications-custom-dialog-element=\"").append(generateDataAttributesForIdList(renderContext, triggeredAction, ActionMapping.successNotificationElements)).append("\"");
+					break;
+
+				case "fire-event":
+					out.append(" data-structr-success-notifications-event=\"").append(triggeredAction.getProperty(ActionMapping.successNotificationsEventProperty)).append("\"");
+					break;
+
+				case "inline-text-message":
+					final Integer delay = triggeredAction.getProperty(StructrApp.key(ActionMapping.class, "successNotificationsDelay"));
+					out.append(" data-structr-success-notifications-delay=\"").append(delay.toString()).append("\"");
+					break;
+
+				default:
+					break;
+```
+
+### Explanation of Resolution
+I resolved the conflict by adopting the HEAD changes because they provide additional functionality (support for `"inline-text-message"` with a delay attribute) that does not conflict with any explicit intent on the other side. The empty right side of the merge conflict suggests either an earlier state of the codebase or a branch that did not touch this logic, so there is no semantic opposition to including the new feature. If there is additional context outside this snippet indicating that the `"inline-text-message"` case should be excluded, this resolution can be revisited.

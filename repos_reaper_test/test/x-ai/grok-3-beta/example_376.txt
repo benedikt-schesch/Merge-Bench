@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict preserved, as the intent behind the conflicting changes is ambiguous. I have included the full context as given, maintaining the original spacing and formatting. Following the code snippet, I will explain my reasoning for not resolving the conflict.
+
+```java
+   * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS
+   * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+   * @param keyManagerFactory key manager factory (for example {@link
+   *     #getDefaultKeyManagerFactory()})
+   */
+<<<<<<< HEAD
+  @Beta
+=======
+>>>>>>> 51762f221ec8ab38da03149c8012e63aec0433dc
+  public static SSLContext initSslContext(
+      SSLContext sslContext,
+      KeyStore trustStore,
+      TrustManagerFactory trustManagerFactory,
+      KeyStore mtlsKeyStore,
+```
+
+### Reasoning:
+The merge conflict involves the presence of the `@Beta` annotation on the `HEAD` side and its absence on the other side (commit `51762f221ec8ab38da03149c8012e63aec0433dc`). Semantically, the `@Beta` annotation likely indicates that the method or API is in a beta state, meaning it is still under development, experimental, or subject to change. Its presence or absence could significantly impact how users of this code perceive and interact with the method `initSslContext`.
+
+- **Intent on HEAD**: The developer may have added `@Beta` to explicitly mark this method as not fully stable or production-ready, potentially to warn users or to align with a specific versioning or release strategy.
+- **Intent on the other branch**: The absence of `@Beta` could imply that the method is considered stable or that the annotation was intentionally removed after the method was deemed ready for general use. Alternatively, it could simply be an older version of the code before the annotation was added.
+
+Given the lack of additional context or commit messages to clarify the intent behind adding or removing `@Beta`, I cannot determine with certainty which change should take precedence. Resolving this conflict without understanding the broader project context, release policies, or the development timeline risks misrepresenting the method's intended status.
+
+Therefore, I have preserved the conflict markers in the snippet above. If further context (e.g., commit messages, project documentation, or discussions) becomes available, I can revisit this to propose a resolution. A potential resolution could involve keeping `@Beta` if the method is indeed experimental, or removing it if the method has been finalized, but this decision should be made by the development team or with additional information.

@@ -1,0 +1,31 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code snippet, the conflict is between the HEAD and the other branch (57eb1bac...). The conflicting lines are around the declaration of sJobConfInternal. 
+
+In HEAD, the line is:
+public static ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();
+
+In the other branch, it's:
+public static final ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();
+
+The difference here is the addition of the 'final' keyword in the other branch. Now, I need to figure out the intent of both changes. 
+
+The HEAD version doesn't have 'final', which means the variable can be reassigned. The other branch adds 'final', making the variable a constant reference. Since ThreadLocal variables are typically initialized once and not changed, adding 'final' makes sense here to enforce that the reference doesn't change, which is a good practice for thread-local variables. 
+
+But why would someone remove the 'final'? Maybe in HEAD, there was a reason to allow reassignment, but without more context, it's hard to tell. However, in general, making static ThreadLocal variables final is common to prevent accidental reassignment. 
+
+Since the other branch's change adds 'final', which is a more restrictive modifier, and assuming that the intention was to improve the code by making it immutable, merging by taking the 'final' version seems correct. There's no obvious reason here to keep it non-final unless there's specific code elsewhere that modifies sJobConfInternal, which isn't shown here. 
+
+Therefore, resolving the conflict by keeping the 'final' keyword from the other branch would be appropriate. The rest of the context should remain unchanged as per the problem's instructions.</think>
+```java
+     * <pre>UdfContext.getUdfContext().getJobConf()</pre>
+     */
+    @Deprecated
+    public static Configuration sJobConf = null;
+
+    public static final ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();
+
+    public static class Map extends PigMapBase {
+
+        @Override
+        public void collect(Context oc, Tuple tuple)
+```

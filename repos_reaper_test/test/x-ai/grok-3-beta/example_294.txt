@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'm returning the provided snippet with the merge conflict unresolved, as the intent and semantics behind the changes are ambiguous without additional context about the desired behavior for serialization in different scenarios.
+
+```java
+    static class Decimal128Serializer extends JsonSerializer<Decimal128> {
+
+        public void serialize(Decimal128 decimal, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            if (jsonGenerator instanceof MongoBsonGenerator) {
+                ((MongoBsonGenerator) jsonGenerator).writeDecima128(decimal);
+<<<<<<< HEAD
+            } else if (jsonGenerator instanceof TokenBuffer) {
+=======
+            } else {
+>>>>>>> bdcc9aaa22f9470ce4d424736aabbc49c4857931
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeFieldName("$numberDecimal");
+                jsonGenerator.writeString(decimal.bigDecimalValue().toString());
+                jsonGenerator.writeEndObject();
+<<<<<<< HEAD
+
+```
+
+**Explanation of ambiguity**:  
+- The `HEAD` side introduces a specific condition to handle `TokenBuffer` explicitly, while the other side (`bdcc9aaa22f9470ce4d424736aabbc49c4857931`) uses a generic `else` clause without additional conditions.  
+- It is unclear whether the intent is to handle only `TokenBuffer` with the specific serialization logic (as in `HEAD`) or to apply this logic to all other cases (as in the other branch).  
+- Without further context about the expected behavior for different `JsonGenerator` implementations or the purpose of the `TokenBuffer` check, resolving the conflict could introduce unintended behavior.  
+
+If additional context or clarification on the desired behavior is provided, I can assist in resolving the conflict. For now, I have preserved the original snippet with the conflict markers intact.

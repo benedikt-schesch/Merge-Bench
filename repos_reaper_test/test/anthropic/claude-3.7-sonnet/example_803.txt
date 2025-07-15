@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at the code snippet, I can see a merge conflict involving a server version check. The RIGHT side adds a check that throws an `UnsupportedOperationException` for server versions greater than or equal to `RegionClient.SERVER_VERSION_095_OR_ABOVE`, while the LEFT side doesn't have this check.
+
+The intent of the RIGHT side is clearly to prevent row locks from being used with newer HBase versions. Since this is a meaningful validation that adds safety to the code, I'll keep the right side's change.
+
+```java
+    return size;
+  }
+
+  /** Serializes this request.  */
+  ChannelBuffer serialize(final byte server_version) {
+    if (server_version >= RegionClient.SERVER_VERSION_095_OR_ABOVE) {
+      throw new UnsupportedOperationException("Row locks are not supported with"
+                                              + " this version of HBase ("
+                                              + server_version + ").");
+    }
+    final ChannelBuffer buf = newBuffer(server_version,
+                                        predictSerializedSize());
+    buf.writeInt(2);  // Number of parameters.
+
+    writeHBaseByteArray(buf, region.name());
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Based on the merge conflict, I need to determine which change to adopt for the `qualifiers` field. Looking at the surrounding context, this is part of a method that sets a qualifier in what appears to be a scanning operation.
+
+The conflict shows:
+- HEAD version: `this.qualifiers = new byte[][] { qualifier };` (2D array)
+- Remote version: `this.qualifiers = new byte[][][] { { qualifier } };` (3D array)
+
+Without more context about how `qualifiers` is used elsewhere in the codebase, this is difficult to confidently resolve. The difference in dimensionality of the arrays suggests a significant change in the underlying data structure. Since the intent is ambiguous without more information, I'll return the snippet with the conflict intact:
+
+```java
+   * @throws IllegalStateException if scanning already started.
+   */
+  public void setQualifier(final byte[] qualifier) {
+    KeyValue.checkQualifier(qualifier);
+    checkScanningNotStarted();
+<<<<<<< HEAD
+    this.qualifiers = new byte[][] { qualifier };
+=======
+    this.qualifiers = new byte[][][] { { qualifier } };
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+  }
+
+  /** Specifies a particular column qualifier to scan.  */
+  public void setQualifier(final String qualifier) {
+    setQualifier(qualifier.getBytes());
+```

@@ -1,0 +1,23 @@
+<think>
+Okay, let's tackle this merge conflict. The test method is checking that when the user uses the -t option without --init, the program exits with a specific error. The conflict is between the exit status codes.
+
+In HEAD, they're using SystemExit.CONFIGURATION_ERROR.getStatus(), which is probably an enum or constant that represents the error code. On the other branch, it's the literal 1. I need to figure out which one is correct.
+
+If SystemExit.CONFIGURATION_ERROR is the proper way to get the exit code, then that's more maintainable because it uses a named constant. The other side uses a magic number 1, which might be equivalent but less clear.
+
+Looking at the surrounding code, the test verifies the error message about missing --init. The intent is to ensure the correct exit code and message. If both branches are trying to assert the same exit condition but with different representations, maybe they're both correct, but the constant is preferable.
+
+So, the resolution would be to keep the HEAD version because using constants makes the code more readable and maintainable. The literal 1 might be correct if that's what the constant evaluates to, but without more context, trusting the HEAD's approach seems better.</think>
+```java
+    @Test
+    void shouldTellUserThatTemplateOptionRequiresInitOption() throws Exception {
+
+        String[] args = {"-t", "groovy-mte"};
+
+        assertExitWithStatus(SystemExit.CONFIGURATION_ERROR.getStatus(), ()->Main.main(args));
+
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
+
+        LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+        assertThat(loggingEvent.getMessage()).isEqualTo("Error: Missing required argument(s): --init");
+```

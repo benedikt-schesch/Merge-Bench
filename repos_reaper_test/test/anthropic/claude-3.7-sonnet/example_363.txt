@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears that the only difference is the use of `DataUtil.mapOf(parameters)` in the current version versus `Data.mapOf(parameters)` in the incoming change. This suggests a class name change from `Data` to `DataUtil` or vice versa.
+
+Here's the resolved snippet:
+
+```java
+  public static GoogleUrl create(String encodedServerUrl, String pathTemplate, Object parameters)
+      throws IllegalArgumentException {
+    GoogleUrl url = new GoogleUrl(encodedServerUrl);
+
+    HashMap<String, Object> requestMap = new HashMap<String, Object>();
+    for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
+      Object value = entry.getValue();
+      if (value != null) {
+        requestMap.put(entry.getKey(), value);
+      }
+    }
+```
+
+I've chosen the `DataUtil.mapOf()` version because it appears to be the newer naming convention (in the HEAD), suggesting the class was renamed from `Data` to the more descriptive `DataUtil`.

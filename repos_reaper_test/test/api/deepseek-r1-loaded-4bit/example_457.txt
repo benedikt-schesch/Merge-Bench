@@ -1,0 +1,46 @@
+<think>
+Okay, let's look at this merge conflict. The code has a conflict in the imports between HEAD and the other branch. The HEAD version includes an import for DigestUtils from org.apache.commons.codec.digest, while the other branch removes that import. 
+
+I need to determine if keeping or removing DigestUtils is the right choice here. But wait, the surrounding context might give clues. The class is a utility class with methods that don't have another home. If both branches are modifying imports but in different ways, maybe they're adding different features or cleaning up.
+
+Wait, the conflict is only about the import line. The rest of the context is the same. So, perhaps one branch added DigestUtils and the other didn't. If the code in the rest of the file uses DigestUtils, then we need to keep the import. If not, maybe it's a leftover import that can be removed.
+
+But since the user hasn't provided the entire file, I can't check if DigestUtils is actually used. The conflict is just in the imports. If both changes are independent, maybe both imports should stay. But since it's a merge conflict, one is adding and the other is removing.
+
+Alternatively, maybe the other branch (31d7966) removed the DigestUtils import because it's no longer needed, while the HEAD added it. But without knowing the usage, it's hard to tell. If there's no semantic reason to remove it, maybe the correct resolution is to keep both imports. But that's not possible here because it's a conflict between adding and removing.
+
+Wait, in the code snippet provided, after the conflict, there's an import for FileUtils. So the HEAD adds DigestUtils and the other branch doesn't. If the other branch's change is removing the DigestUtils import, perhaps because it's unused, but the HEAD adds it because it's needed. But without seeing the rest of the code, it's ambiguous.
+
+Since the user says to resolve based on intent and semantics, but if unsure, leave the conflict. Since I can't see if DigestUtils is used elsewhere in the file, I might have to assume that both changes are valid. However, maybe the import was added in HEAD for a reason, and the other branch's deletion is conflicting. If there's no other context, perhaps the correct resolution is to keep the DigestUtils import. But maybe the other branch correctly removed an unused import. 
+
+Alternatively, maybe the two branches are making different changes, and the correct resolution is to include both imports. Wait, no—the conflict is between adding and removing the same line. So the options are to keep the line or remove it. 
+
+If I can't determine the intent, I should leave the conflict as is. But the user wants me to resolve it if possible. Let me check again. The class is a utility class. If in HEAD, they added DigestUtils for some hashing utility, and the other branch didn't touch that part, maybe the import is necessary. But if the other branch removed it, maybe it's because it's not used. 
+
+Since the user hasn't provided the entire file, I can't see if DigestUtils is actually used. Therefore, this is ambiguous. According to the instructions, if unsure or intent is ambiguous, return the same snippet with the conflict. But wait, the user says to resolve if possible. Hmm.
+
+Alternatively, maybe the other branch's commit is removing an unused import, and the HEAD is adding it. If both are part of different features, maybe the import is needed. But without knowing, it's risky. 
+
+Since the conflict is just about the import line, maybe the correct resolution is to keep the import from HEAD if it's used in the code. But since the code isn't shown beyond the imports, I can't verify. Therefore, the safest approach, given the ambiguity, is to retain the conflict. But the user wants a resolved version if possible.
+
+Wait, maybe the conflict is in the imports, and the correct resolution is to keep both imports. But that's not possible because they are on the same line. Wait, no—the conflict is between the import of DigestUtils in HEAD and nothing in the other branch. So the conflict is whether to include that line. If the other branch deleted it and HEAD added it, the merge would conflict. 
+
+If we assume that the other branch correctly removed an unused import, and HEAD incorrectly added it, then we should remove it. But without knowing, perhaps the best approach is to keep the DigestUtils import. Alternatively, maybe the other branch's commit is a cleanup, and HEAD's addition is necessary. 
+
+Since I can't determine the intent here, the answer would be to leave the conflict as is. But the user says to resolve if possible. Hmm. The user's instruction says: "If you are not sure on how to resolve the conflict or if the intent is ambiguous, please return the same snippet with the conflict." So in this case, since the intent is ambiguous (we don't know why the import is added or removed), the correct action is to leave the conflict markers.</think>
+```java
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+<<<<<<< HEAD
+import org.apache.commons.codec.digest.DigestUtils;
+=======
+>>>>>>> 31d7966e3896819a99b31f10e83e864e3805bcbd
+import org.apache.commons.io.FileUtils;
+
+/**
+ * Various utility methods that don't have more proper home.
+ *
+```

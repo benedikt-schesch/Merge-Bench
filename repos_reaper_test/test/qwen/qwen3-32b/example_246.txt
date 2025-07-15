@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict is between two formatting conventions for the method `mergeSplitSpecificConf`. Both versions represent the same method signature and behavior semantically. Since the intent is likely to maintain a consistent code style within the file, we will preserve the multi-line formatting with the `throws` clause on its own line as it appears in the `1cb2531c...` branch.
+
+```java
+     * is based and merge it with the Conf supplied
+     *
+     * package level access so that this is not publicly used elsewhere
+     * @throws IOException
+     */
+    static void mergeSplitSpecificConf(LoadFunc loadFunc, PigSplit pigSplit, Configuration originalConf) 
+            throws IOException {
+        // set up conf with entries from input specific conf
+        Job job = new Job(originalConf);
+        loadFunc.setLocation(getLoadLocation(pigSplit.getInputIndex(),
+                originalConf), job);
+        // The above setLocation call could write to the conf within
+```

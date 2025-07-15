@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'll provide the snippet with the conflict as is, since the intent behind the changes in the merge conflict is ambiguous without additional context about the expected data structure and usage of `qualifiers`. Below is the original snippet reproduced in markdown code syntax with full context, spacing preserved, and no modifications.
+
+```java
+   * @throws IllegalStateException if scanning already started.
+   */
+  public void setQualifier(final byte[] qualifier) {
+    KeyValue.checkQualifier(qualifier);
+    checkScanningNotStarted();
+<<<<<<< HEAD
+    this.qualifiers = new byte[][] { qualifier };
+=======
+    this.qualifiers = new byte[][][] { { qualifier } };
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+  }
+
+  /** Specifies a particular column qualifier to scan.  */
+  public void setQualifier(final String qualifier) {
+    setQualifier(qualifier.getBytes());
+```
+
+**Explanation of Ambiguity**:  
+The conflict arises from a difference in the data structure assigned to `this.qualifiers`. On the `HEAD` side, `qualifiers` is assigned as a 2D byte array (`byte[][]`), while on the other side (`d543609...`), it is assigned as a 3D byte array (`byte[][][]`). Without additional context about the intended structure of `qualifiers` (e.g., whether it should store multiple qualifiers, nested structures, or something else), the semantic intent cannot be confidently resolved. If `qualifiers` is meant to hold a single qualifier, the `HEAD` version might be correct. If it's meant to support a more nested structure, the other side might be correct. Further information about the class design or usage is needed to resolve this conflict.

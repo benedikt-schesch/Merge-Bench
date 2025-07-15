@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict is in the else block where the `contentOffset` is conditionally added in one branch but unconditionally added in the other. The correct resolution should preserve the conditional addition since `contentOffset` likely shouldn't be set to -1.
+
+```java
+    if (metadata != null) {
+      content = new MultipartContent().setContentParts(Arrays.asList(metadata, mediaContent));
+      initiationRequestUrl.put("uploadType", "multipart");
+    } else {
+      initiationRequestUrl.put("uploadType", "media");
+      if (contentOffset != -1) {
+        initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
+      }
+=======
+      if (contentOffset != -1) {
+        initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
+      }
+>>>>>>> 2b9e9a2c04fcb8b3b93d3207f547f6f95bf681e9
+    }
+    HttpRequest request =
+        requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
+    request.getHeaders().putAll(initiationHeaders);
+    // We do not have to do anything special here if media content length is unspecified because
+```

@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict between two versions of a file. The conflict involves changes to the imports section of a Java file. The left side (HEAD) has these imports:
+
+```java
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.math.Vector3;
+import org.spout.api.model.Model;
+import org.spout.api.model.animation.Animation;
+import org.spout.api.model.animation.Skeleton;
+```
+
+The right side (67bcb76a96f358fc131320b0611ffaa3bf3678c2) adds an additional import:
+
+```java
+import org.spout.api.plugin.PluginManager;
+```
+
+However, the right side also includes the same `PluginManager` import again after the conflict marker, which would result in duplication.
+
+When resolving this conflict, the key considerations are:
+1. Both sides agree on the core Spout API imports
+2. The intent appears to be importing the `PluginManager` class
+3. The duplication in the right side's imports needs to be resolved
+
+Here is the resolved version:
+
+```java
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.math.Vector3;
+import org.spout.api.model.Model;
+import org.spout.api.model.animation.Animation;
+import org.spout.api.model.animation.Skeleton;
+import org.spout.api.plugin.PluginManager;
+import org.spout.api.plugin.Plugin;
+import org.spout.api.protocol.ServerNetworkSynchronizer;
+import org.spout.api.protocol.Session;
+```

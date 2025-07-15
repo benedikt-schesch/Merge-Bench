@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict involves different methods to refresh subcategories and adapters. Both approaches aim to update the UI but use different mechanisms that could be suitable depending on the situation.
+
+```java
+                        if (getActivity() == null) return;
+
+                        Toast.makeText(getActivity(), getString(R.string.update_complete),
+                                Toast.LENGTH_SHORT).show();
+
+<<<<<<< HEAD
+                        refreshSubCategories();
+
+                        mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
+=======
+                        rebuildSubCategories();
+
+                        reloadAdapters();
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+
+                        updateRecommendations();
+                    }
+
+                    @Override
+```
+
+To resolve this, you'll need to decide whether to refresh the data or rebuild it, and whether to notify the adapter or reload it entirely.

@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs because the two versions of the code have different parameters being passed to the `AccountProviderParameters` constructor. To resolve this, I will analyze the context and intent of both versions.
+
+In the left version (HEAD), the code includes:
+```java
+return new AccountProviderParameters(provider, rs.getString("displayName"), encryptor.decrypt(rs.getString("apiKey")), encryptor.decrypt(rs.getString("secret")), rs.getLong("appId"), rs.getString("requestTokenUrl"), rs.getString("authorizeUrl"), rs.getString("callbackUrl"), rs.getString("accessTokenUrl"));
+```
+
+In the right version, the code includes:
+```java
+return new AccountProviderParameters(provider, encryptor.decrypt(rs.getString("apiKey")), encryptor.decrypt(rs.getString("secret")), rs.getLong("appId"), rs.getString("requestTokenUrl"), rs.getString("authorizeUrl"), rs.getString("accessTokenUrl"));
+```
+
+The key differences are:
+1. The left version includes `rs.getString("displayName")` as the second parameter
+2. The left version includes `rs.getString("callbackUrl")` as the eighth parameter
+3. The right version has fewer parameters overall
+
+Given the context, the左 version seems to include additional fields that are likely required for the `AccountProviderParameters` object. The right version appears to be missing these fields, which could lead to compilation errors or incomplete data.
+
+To resolve the conflict while preserving the intent of both versions, I will merge the changes by including all parameters:
+
+```java
+	}
+	
+	private AccountProviderParameters getParameters(final String provider) {
+		return jdbcTemplate.queryForObject(SELECT_ACCOUNT_PROVIDER_BY_NAME, new RowMapper<AccountProviderParameters>() {
+			public AccountProviderParameters mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccountProviderParameters(provider, rs.getString("displayName"), encryptor.decrypt(rs
+						.getString("apiKey")), encryptor.decrypt(rs.getString("secret")), rs.getLong("appId"), rs
+						.getString("requestTokenUrl"), rs.getString("authorizeUrl"), rs.getString("callbackUrl"), rs
+						.getString("accessTokenUrl"));
+			}
+		}, provider);
+	}
+
+	
+```

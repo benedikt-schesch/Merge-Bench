@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The provided code shows a merge conflict in variable handling. On the left, it fetches multiple `AccessToken` objects, while the right side fetches an `OAuthConsumerToken`. Since Oauth consumer tokens might be a different implementation, the right side is likely more correct. The variable name `accessToken` is reused, causing a conflict. 
+
+To resolve, I'll choose the right side's token type and variable `OAuthConsumerToken` to avoid conflict.
+
+```java
+		Account account = (Account) principal;
+		List<OAuthConsumerToken> accessTokens = jdbcTemplate.query(SELECT_TOKEN_SQL, new RowMapper<OAuthConsumerToken>() {
+			public OAuthConsumerToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new OAuthConsumerToken(rs.getString("accessToken"), rs.getString("secret"), rs.getString("provider"));
+			}
+<<<<<<< HEAD
+				}, account.getId(), resourceId);
+		AccessToken accessToken = null;
+=======
+		}, account.getId(), resourceId);
+		OAuthConsumerToken accessToken = null;
+>>>>>>> bda853cf6428e46f64ba08f12c613c2b7039e6a5
+		if (accessTokens.size() > 0) {
+			accessToken = accessTokens.get(0);
+		}
+		return accessToken;
+	}
+```

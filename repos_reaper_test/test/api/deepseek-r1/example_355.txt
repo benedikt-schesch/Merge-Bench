@@ -1,0 +1,22 @@
+<think>
+Okay, let's look at this merge conflict. The two versions are changing the same part of the code. In HEAD, they're using PROPERTY_IMAGE_CODE_KEY and PROPERTY_IMAGE_CODE_VALUE_RUNTIME, which are probably constants. The other side uses the actual string values "org.graalvm.nativeimage.imagecode" and "runtime". 
+
+The intent here seems to be checking if the application is running as a native image. Both sides are trying to get the image code property and check its value. The main difference is whether they use string literals or constants.
+
+Maybe the constants in HEAD are defined elsewhere, and the other branch is using the raw strings. To resolve this, we should use the constants if they're available because that's better practice for maintainability. However, if the constants aren't defined in both branches, using the strings directly might be necessary. But since the user provided the snippet, we can't check other parts. 
+
+Assuming that the constants in HEAD are correct and the other side just used the raw strings, merging them by replacing the strings with the constants would make sense. So the correct code would use the constants for the property key and value. That way, both the key and value are consistent and using the constants from HEAD. The condition check should use the constants instead of the hard-coded strings.</think>
+```java
+    }
+
+    public String toString() {
+      // When running the application as a native image, append `-graalvm` to the
+      // version.
+      String imageCode = System.getProperty(PROPERTY_IMAGE_CODE_KEY);
+      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)) {
+        String[] tokens = versionString.split(" ");
+        if (tokens.length > 0 && tokens[0].startsWith("gl-java")) {
+          tokens[0] += "-graalvm";
+          return Joiner.on(" ").join(tokens);
+        }
+```

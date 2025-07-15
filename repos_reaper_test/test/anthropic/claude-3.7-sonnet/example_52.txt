@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, the difference is minimal:
+
+- The left side (`HEAD`) uses `new HashMap<GamePlayerInfo, Object>()` with explicit type parameters.
+- The right side (from commit 5adedd24) uses `new HashMap<>()` with the diamond operator syntax, which was introduced in Java 7 and allows type inference.
+
+Since the diamond operator `<>` is the more modern and preferred Java syntax (reducing verbosity while maintaining type safety), I'll resolve this by choosing the right side's version.
+
+```java
+   *
+   * @param player The player for whom to get status.
+   * @return Information for {@code player}: Name, score, status.
+   */
+  public Map<GamePlayerInfo, Object> getPlayerInfo(final Player player) {
+    final Map<GamePlayerInfo, Object> playerInfo = new HashMap<>();
+    // TODO make sure this can't happen in the first place
+    if (player == null) {
+      return playerInfo;
+    }
+    playerInfo.put(GamePlayerInfo.NAME, player.getUser().getNickname());
+```

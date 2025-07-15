@@ -1,0 +1,42 @@
+<think>
+Okay, let's take a look at this merge conflict. The code is in Java, and there's a conflict between the HEAD branch and the branch d72e83e. 
+
+First, I'll examine the changes. In the HEAD version, there's a case for "inline-text-message" that adds some code related to success notifications delay. The other branch (d72e83e) has removed that block entirely.
+
+So the conflict arises because one branch added the "inline-text-message" case, and the other branch might have either removed it or perhaps made changes around it. But looking at the context, the conflict markers show that the HEAD added the case, and the other branch deleted it. 
+
+Now, I need to determine the intent of both sides. The HEAD branch is introducing a new case to handle a success notifications delay. The other branch might have been working on a different part of the code, perhaps removing something else, but in this conflict, it's just removing the new case. 
+
+Wait, maybe the other branch didn't intentionally remove it. It could be that the two branches made changes in the same area. For example, if the other branch added a different case or modified surrounding code, leading to a conflict when merging. But in this case, the conflict is straightforward: the HEAD added the "inline-text-message" case, and the other branch's version doesn't have it. 
+
+But why would the other branch remove it? Maybe it's a case of conflicting modifications. If the other branch was, say, adding a different case or modifying the same lines, but here, it's just the removal. Alternatively, perhaps the other branch is older and doesn't have the "inline-text-message" case that the HEAD added. 
+
+Since the user is asking to resolve the conflict by considering the semantics and intent, we need to check if both changes can coexist. The HEAD adds a case for "inline-text-message", and the other branch's change (as shown) is just removing that same block. If the other branch's change is simply deleting that code, then merging would require deciding whether to keep the addition or not. 
+
+But maybe the other branch didn't actually intend to remove that code. It's possible that the code in the other branch was based on a version before the "inline-text-message" case was added, leading to a conflict when merging. In that case, the correct resolution would be to keep the HEAD's addition because the other branch's version doesn't have that code. 
+
+Alternatively, if the other branch intentionally removed that case (maybe considering it obsolete), then we need to know why. But without additional context, it's hard to tell. 
+
+However, since the user says to resolve based on intent and semantics, and if both changes are valid, we should include both. But in this case, the conflict is between adding a case (HEAD) and removing it (other branch). If the other branch's change is simply removing that code, then merging would result in keeping the HEAD's version if we decide that the addition is correct. 
+
+But wait, looking at the code around the conflict: the HEAD adds the case for "inline-text-message" with some code, and the other branch's code doesn't have that. The conflict is in the same spot. So the correct resolution would be to keep the HEAD's addition unless there's a reason to remove it. 
+
+Assuming that the "inline-text-message" case is a valid and intended addition in the HEAD branch, and the other branch's change (perhaps from an older version) doesn't include it, the resolution should be to keep the case. Therefore, the merge conflict should be resolved by accepting the HEAD's changes and including the "inline-text-message" case. 
+
+So the resolved code would have both the "fire-event" case and the "inline-text-message" case, followed by the breaks. The conflict markers would be removed, keeping the code from HEAD.</think>
+```java
+					out.append(" data-structr-success-notifications-custom-dialog-element=\"").append(generateDataAttributesForIdList(renderContext, triggeredAction, ActionMapping.successNotificationElements)).append("\"");
+					break;
+
+				case "fire-event":
+					out.append(" data-structr-success-notifications-event=\"").append(triggeredAction.getProperty(ActionMapping.successNotificationsEventProperty)).append("\"");
+					break;
+
+				case "inline-text-message":
+					final Integer delay = triggeredAction.getProperty(StructrApp.key(ActionMapping.class, "successNotificationsDelay"));
+					out.append(" data-structr-success-notifications-delay=\"").append(delay.toString()).append("\"");
+					break;
+
+				default:
+					break;
+```

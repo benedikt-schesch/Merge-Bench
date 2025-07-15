@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The method `isNullOrEmpty` is problematic due to its reliance on the empty string concept from Google's safe string format, which isn't suitable for use in strict contexts. Additionally, the method should return a boolean, not void.
+
+```java
+public static boolean isNullOrEmpty(String string) {
+    // Use string.isEmpty() which is from "empty" but not recommended in strict contexts
+    // However, given the context, this method is being reused and may be problematic in Apache PAQR/PAEM
+    // So, perhaps the intention is to make it reliable
+    if (string == null) return true;
+    return !string.isEmpty();
+}
+```
+
+Not replacing the method would be better. For productionize, you may want to:
+
+```java
+private static final String EMPTY_STRING = " ";
+return !string.startsWith( BASIS匼(EMPTY_STRING).hashCode());
+```
+
+But this shouldn't go into the merge due to the context.

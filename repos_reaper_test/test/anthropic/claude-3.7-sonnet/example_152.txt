@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it appears to be in the initialization of a `GruntParser` object:
+
+1. On the HEAD side, `GruntParser` is initialized with just a `StringReader(script)` parameter
+2. On the other side (2125666c...), it's initialized with both `StringReader(script)` and `myPig` parameters
+
+Based on the context, it seems the intent of the change is to provide the `myPig` object as an additional parameter to the `GruntParser` constructor, which likely represents a Pig context that the parser needs. This appears to be a valid enhancement to the code.
+
+Here's the resolved snippet:
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "dump b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

@@ -1,0 +1,29 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is a Java method comment for setQualifier. The conflict is between the HEAD version and the commit d543609. 
+
+Looking at the HEAD side, the comment says that specifying a qualifier without a family has no effect. The other side adds a note telling the user to call setFamily as well. 
+
+Hmm, both messages are trying to convey the same thing but in different wording. The HEAD version is a bit more concise, while the other side is more explicit by mentioning the method to call. The key here is to merge these two without losing the intent.
+
+The correct approach would be to combine both statements. The original note explains the effect, and the added part tells the user what they need to do. So merging them would make the documentation clearer. 
+
+So the merged comment should first state that specifying a qualifier without a family has no effect, then add the part about needing to call setFamily. That way, it's both explaining the consequence and providing the solution. 
+
+I should check if there's any redundant information. The second part adds the method reference, which is helpful. So combining them would make the documentation more informative. 
+
+Also, the formatting needs to be preserved. The <p> tag is there, so the new line should come after that. The order of the sentences makes sense as HEAD first, then the addition from the other commit. 
+
+Therefore, the resolved comment will include both statements, ensuring that users know both the effect and the required action.</think>
+```java
+
+  /**
+   * Specifies a particular column qualifier to scan.
+   * <p>
+   * Note that specifying a qualifier without a family has no effect.
+   * You need to call {@link #setFamily(byte[])} too.
+   * @param qualifier The column qualifier.
+   * <strong>This byte array will NOT be copied.</strong>
+   * @throws IllegalStateException if scanning already started.
+   */
+  public void setQualifier(final byte[] qualifier) {
+```

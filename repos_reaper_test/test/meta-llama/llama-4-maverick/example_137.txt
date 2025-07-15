@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first analyze the context and the changes introduced by both sides of the merge.
+
+The method in question is `buildPp(PigServer pigServer, String query)`, which is responsible for building a physical plan (`PhysicalPlan`) from a given Pig query. The method first constructs a logical plan (`LogicalPlan`) using the `buildLp` method.
+
+The conflict arises from two different changes made to the method:
+
+1. The change from the `HEAD` (the local branch being merged) casts the execution engine to `HExecutionEngine` and directly compiles the logical plan (`lp`) without any optimization.
+   
+2. The change from the branch being merged (`d95d3beb3c320c98d0af2ce3bcd2f3b656bdc98d`) optimizes the logical plan before compiling it into a physical plan and casts the execution engine to `MRExecutionEngine`.
+
+Let's examine the intent behind these changes:
+
+- The `HEAD` change focuses on compiling the logical plan directly into a physical plan using `HExecutionEngine`.
+- The other change optimizes the logical plan before compilation and uses `MRExecutionEngine` for the compilation.
+
+To resolve this conflict, we should consider the intent and potential impact of both changes. Optimizing the logical plan is generally a beneficial step as it can improve the performance of the query execution. The difference in the execution engine (`HExecutionEngine` vs `MRExecutionEngine`) could imply different execution environments or capabilities.
+
+Since both changes modify different aspects of the method (optimization of the logical plan and the type of execution engine used), a potential resolution could involve combining these aspects. However, simply taking one side or the other might not be correct without understanding the implications of using `HExecutionEngine` versus `MRExecutionEngine` and whether both can be used interchangeably or if they serve different purposes.
+
+Let's consider the possibility that `HExecutionEngine` and `MRExecutionEngine` might be related or one might be a subclass of the other, or they might be used in different contexts. If `MRExecutionEngine` is a more specific or updated version of `HExecutionEngine`, or vice versa, choosing the more appropriate or updated one would be sensible.
+
+Without additional context about these execution engines, a conservative approach would be to preserve the optimization step, as it is generally beneficial, and decide on the execution engine based on the context or further information.
+
+Here's the resolution with the entire snippet preserved in markdown code syntax:
+
+```java
+    }
+
+    public static PhysicalPlan buildPp(PigServer pigServer, String query)
+    throws Exception {
+        LogicalPlan lp = buildLp( pigServer, query );
+        lp.optimize(pigServer.getPigContext());
+        return ((MRExecutionEngine)pigServer.getPigContext().getExecutionEngine()).compile(lp,
+                pigServer.getPigContext().getProperties());
+    }
+
+    public static LogicalPlan parse(String query, PigContext pc) throws FrontendException {
+        Map<String, String> fileNameMap = new HashMap<String, String>();
+```

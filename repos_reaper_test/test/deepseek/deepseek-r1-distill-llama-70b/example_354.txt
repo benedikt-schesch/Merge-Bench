@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+I see this merge conflict involves a test case for GoogleJsonResponseException. Let me analyze the changes:
+
+1. The original code (HEAD) has two assertions:
+   - `assertNull(responseException.getDetails())`
+   - `assertEquals(expectedMessage, responseException.getMessage())`
+
+2. The other branch changes this to:
+   - `assertNull(ge.getDetails())`
+   - `assertTrue(ge.getMessage().startsWith("403"))`
+
+The intent seems to be:
+- Both versions want to verify that there are no details in the exception
+- Both want to verify the exception message starts with "403"
+
+However, there's ambiguity:
+1. Why was the variable changed from `responseException` to `ge`?
+2. Was this a typo or intentional change?
+
+Given the context, it seems more likely that `ge` might be a typo since `responseException` is a more descriptive name and `ge` isn't declared in the provided context. The intent appears to be to make the message verification more flexible by using `startsWith()` rather than an exact match.
+
+Since the variable name change introduces ambiguity, I'll preserve the original variable name but adopt the more flexible assertion:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    assertTrue(responseException.getMessage().startsWith("403"));
+>>>>>>> 47d00185e2cd4548663cc0e8c6cdf6d59640a613
+  }
+
+  public void testFrom_detailsErrorObject() throws Exception {
+    HttpTransport transport = new ErrorTransport("{\"error\": {\"message\": \"invalid_token\"}, \"error_description\": \"Invalid value\"}", Json.MEDIA_TYPE);
+    HttpRequest request =
+```

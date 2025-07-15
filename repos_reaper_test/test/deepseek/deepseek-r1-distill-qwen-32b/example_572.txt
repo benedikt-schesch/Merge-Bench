@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we analyze the two approaches:
+
+1. **HEAD Side (`jsonObject.get(facebookFieldName) == null`):**
+   - Checks if the field exists by attempting to retrieve its value. If the result is `null`, it assumes the field doesn't exist.
+
+2. **Branch Side (`!jsonObject.has(facebookFieldName)`):**
+   - Directly checks if the field exists using the `has()` method, which is more precise.
+
+The `has()` method is preferable as it accurately determines the field's presence without conflating null values. Therefore, we adopt the branch side's approach.
+
+Here is the resolved code:
+
+```java
+      // For each Facebook-annotated field on the current Java object, pull data
+      // out of the JSON object and put it in the Java object
+      for (FieldWithAnnotation<Facebook> fieldWithAnnotation : fieldsWithAnnotation) {
+        String facebookFieldName = getFacebookFieldName(fieldWithAnnotation);
+
+        if (!jsonObject.has(facebookFieldName)) {
+          if (MAPPER_LOGGER.isTraceEnabled()) {
+            MAPPER_LOGGER
+              .trace(format("No JSON value present for '%s', skipping. JSON is '%s'.", facebookFieldName, json));
+          }
+        }
+      }
+```

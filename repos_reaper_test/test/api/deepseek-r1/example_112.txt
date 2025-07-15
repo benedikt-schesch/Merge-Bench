@@ -1,0 +1,37 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the author list. In the HEAD version, there are two authors added: Nicolas François with a space and Mikhail Mazursky. In the other branch, it's Nicolas François without the space and then the line ends. So the problem is that one side added Mikhail and the other maybe fixed a typo in Nicolas's name.
+
+The goal is to merge both changes. The correct approach is to take both authors. Since the conflict is between HEAD adding Mikhail and the other branch possibly correcting Nicolas's line. Wait, looking at the two versions:
+
+HEAD has:
+ * @author Nicolas François 
+ * @author Mikhail Mazursky
+
+The other branch has:
+ * @author Nicolas François
+
+So the other branch might have removed the trailing space in Nicolas's line and not added Mikhail. So the correct resolution is to keep both authors. Because the HEAD added Mikhail, and the other branch might have a typo fix (like removing the trailing space in Nicolas's line). So in the merged version, we should have Nicolas François without the space and include Mikhail Mazursky. So combine both changes: take the corrected Nicolas line from the other branch and add Mikhail from HEAD. That way, both contributions are included. So the resolved block would list all authors, including both Nicolas and Mikhail. So the merged author lines should be:
+
+ * @author Yvonne Wang
+ * @author Alex Ruiz
+ * @author Mathieu Baechler
+ * @author Joel Costigliola
+ * @author Maciej Jaskowski
+ * @author Nicolas François
+ * @author Mikhail Mazursky
+
+That way, the trailing space in Nicolas's line is removed (from the other branch's change) and Mikhail is added from HEAD. There's no ambiguity here because both changes can coexist. So the conflict markers should be removed, and both lines included.</think>
+```java
+ * @author Yvonne Wang
+ * @author Alex Ruiz
+ * @author Mathieu Baechler
+ * @author Joel Costigliola
+ * @author Maciej Jaskowski
+ * @author Nicolas François
+ * @author Mikhail Mazursky
+ */
+public abstract class AbstractIterableAssert<S extends AbstractIterableAssert<S, A>, A extends Iterable<?>> extends
+    AbstractAssert<S, A> implements ObjectEnumerableAssert<S> {
+
+  @VisibleForTesting Iterables iterables = Iterables.instance();
+```

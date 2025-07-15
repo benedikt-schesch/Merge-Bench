@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict involves two approaches to retrieve the "data" field from `rawPicture`. The original code uses `get("data")`, which is more generic, while the alternative uses `getJsonObject("data")`, assuming it's a JsonObject. Both produce a String, so functionality isn't affected. Without knowing if "data" is always an object, it's safer to keep the original code for flexibility.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    String picJson = rawPicture.get("data").toString();
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+  }
+
+  @JsonMappingCompleted
+  protected void graphApi26LikesFallback() {
+
+```

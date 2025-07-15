@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The merge conflict involves initializing an ArrayList with the size from textParts. Both approaches are functionally similar, but JSONArray typically uses length(). However, since both are valid, the conflict is resolved by choosing textParts.size() for consistency with typical List usage.
+
+```java
+    return StringEscapeUtils.escapeXml11(text);
+  }
+
+  public static String formatWhiteCard(final JSONArray textParts) {
+    // The white cards should only ever have one element in text, but let's be safe.
+    final List<String> strs = new ArrayList<>(textParts.size());
+    for (final Object o : textParts) {
+      final String cardCastString = (String) o;
+      if (cardCastString.isEmpty()) {
+        // skip blank segments
+        continue;
+```

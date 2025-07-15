@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to reconcile the differences in how the property is set and the type of the `map` variable. The correct approach is to use the appropriate method to set the property and maintain the correct type for `map` to ensure the subsequent method calls work as intended.
+
+Here is the resolved code snippet:
+
+```java
+    }
+
+    @Test
+    public void parseAsciidocFileWithCustomAttribute() {
+
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify,testattribute=I Love Jbake");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("I Love Jbake")
+```

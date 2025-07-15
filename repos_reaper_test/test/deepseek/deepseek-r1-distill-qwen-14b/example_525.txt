@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The provided code snippet shows a merge conflict where both sides attempt to handle similar conditions with slight variations in their implementation. The left side (HEAD) and the right side each have an `if` statement checking for maximum URI length, but they differ in their messages and structure.
+
+The right side (new change) simplifies the condition by removing the redundant `else if` and adjusts the message to be more consistent. Therefore, the right side should be chosen as it improves code clarity and removes redundancy.
+
+```java
+                        if (maxUriLength > 0 && uriString.length() > maxUriLength) {
+                            if (verbose){
+                                System.err.println("[WARNING] File " + newUrl + " creates a data URI larger than " + maxUriLength + " bytes. Skipping.");
+                            }      
+                            builder.append(url);
+                        } else if (maxUriLength > 0 && uriString.length() > maxUriLength){
+                            if (verbose) {
+                                System.err.println("[INFO] File " + newUrl + " creates a data URI longer than " + maxUriLength + " characters. Skipping.");
+                            }
+=======
+                        if (maxUriLength > 0 && uriString.length() > maxUriLength) {
+                            if (verbose) {
+                                System.err.println("[INFO] File " + newUrl + " creates a data URI longer than " + maxUriLength + " characters. Skipping.");
+                            }
+                            builder.append(url);
+                        } else {
+
+                            /*
+                             * Determine what to do. Eventually, you should be able to
+```

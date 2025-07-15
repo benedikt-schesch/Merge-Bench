@@ -1,0 +1,21 @@
+<think>
+Okay, let's look at this merge conflict. The code has a conflict in the JavaDoc comments for the getData() method. 
+
+On the HEAD side, there's a comment block that describes the comments and the return value. The other side (a17acec) adds a JavaDoc @see tag referencing Object#hashCode(), followed by an empty comment block before the existing one.
+
+Hmm, the user probably intended to add the @see annotation but maybe messed up the comment structure. The empty /** */ after the @see line seems like a mistake. The correct approach would be to merge the @see into the main JavaDoc block.
+
+So the resolved comment should include both the @see and the original description. The duplicate /** */ should be removed. Let me combine them into a single JavaDoc block with the @see tag and the original comments. That way, both contributions are preserved without redundant blocks.</think>
+```java
+  private List<Comment> data = new ArrayList<Comment>();
+
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * @see java.lang.Object#hashCode()
+   * The comments.
+   *
+   * @return The comments.
+   */
+  public List<Comment> getData() {
+```

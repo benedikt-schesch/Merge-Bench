@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The merge conflict involves the visibility of `snapshotManager` and additional variable declarations. The right side declares `snapshotManager` as `private` and adds more variables. Since these new variables are part of the same class, `snapshotManager` can remain `private`. Therefore, the right side's changes are integrated.
+
+```java
+	private final PluginManager pluginManager = new PluginManager(this, securityManager, 0.0);
+	private final ConsoleManager consoleManager;
+	private final EventManager eventManager = new SimpleEventManager();
+	private final RecipeManager recipeManager = new SimpleRecipeManager();
+	private final ServiceManager serviceManager = new ServiceManager();
+	private final SnapshotManager snapshotManager = new SnapshotManager();
+	protected final SnapshotableLinkedHashMap<String, SpoutPlayer> players = new SnapshotableLinkedHashMap<String, SpoutPlayer>(snapshotManager);
+	private final WorldGenerator defaultGenerator = new EmptyWorldGenerator();
+	protected final SpoutSessionRegistry sessions = new SpoutSessionRegistry();
+	protected final SpoutScheduler scheduler = new SpoutScheduler(this);
+	protected final SpoutParallelTaskManager parallelTaskManager = new SpoutParallelTaskManager(this);
+	private final AtomicBoolean setupComplete = new AtomicBoolean(false);
+	private final SpoutConfiguration config = new SpoutConfiguration();
+	private final SpoutInputConfiguration inputConfig = new SpoutInputConfiguration();
+```

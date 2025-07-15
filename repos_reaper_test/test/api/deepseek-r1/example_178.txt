@@ -1,0 +1,92 @@
+<think>
+Okay, let's look at this merge conflict. The user provided a Java import section with a conflict between the HEAD and another branch. The task is to resolve this conflict by understanding the intent of both sides and merging the imports correctly without modifying the surrounding context.
+
+First, I'll examine the differences. The HEAD version adds imports for OutputStream, PrintStream, and Map. The other branch (1488b22) adds an import for Collection and also includes Map. Both sides have Map, so that's common. The conflict arises because each side added different imports.
+
+Looking at the HEAD imports: java.io.OutputStream and java.io.PrintStream are related to I/O operations. The other branch adds java.util.Collection, which is part of the Java Collections Framework. Since these are separate packages (java.io vs java.util), they don't directly conflict. However, the Map import is present in both, but in Java, imports are specific, so having both branches include Map is okay, but in the merged code, we should list each import once.
+
+Wait, the original code has a conflict between the two import blocks. The HEAD adds OutputStream, PrintStream, and Map, while the other branch adds Map (which is already in HEAD) and Collection. But in the conflict markers, the HEAD section includes Map, and the other branch also includes Map. So when merging, we need to ensure that all necessary imports are included without duplication.
+
+So the correct merged imports should include all unique imports from both sides. Let's list them:
+
+From HEAD:
+- java.io.OutputStream
+- java.io.PrintStream
+- java.util.Map
+
+From the other branch:
+- java.util.Collection
+- java.util.Map (already in HEAD, so no need to duplicate)
+
+But wait, looking at the code, the HEAD has "import java.util.Map;" and the other branch also has "import java.util.Map;". So in the merged code, we should include all the imports from both sides, but avoid duplicates. So the merged imports would be:
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Map;
+import java.util.Collection;
+
+But wait, the original order might matter. Let me check the original code again. The HEAD has:
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Map;
+
+And the other branch has:
+
+import java.util.Map;
+import java.util.Collection;
+
+So when merging, we can combine them, ensuring that all imports are present. Also, the order of imports might follow some convention, but the user hasn't specified any, so we can list them alphabetically or in the order they appear. However, in Java, the convention is to group related imports and sort them, but since the user hasn't specified, we can just combine them, making sure there are no duplicates.
+
+So the merged imports should include OutputStream, PrintStream from java.io, and Map, Collection from java.util. Also, the existing imports before the conflict (like Serializable, ArrayList, HashMap, Iterator, List, etc.) should remain as they are.
+
+Putting it all together, the resolved import block would have:
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Collection;
+import java.util.Map;
+
+But wait, the original conflict is within the same import block. The existing code before the conflict has:
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+Then the conflict starts. The HEAD adds:
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Map;
+
+The other branch adds:
+
+import java.util.Map;
+import java.util.Collection;
+
+So the merged imports should include all the java.io imports first, then java.util imports. Since java.util.Map is included in both, but only needs to be once. So the correct merged part would be:
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Collection;
+import java.util.Map;
+
+But also, the order in the original code may matter. In the HEAD, the java.io imports are added first, followed by java.util.Map. In the other branch, java.util.Map and Collection are added. So merging them would place the java.io imports first, then the java.util imports (Map and Collection). That way, all necessary imports are included without duplication.
+
+Therefore, the resolved code snippet would combine the imports from both branches, ensuring that OutputStream, PrintStream, Map, and Collection are all present, each listed once.</think>
+```java
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Map;
+import java.util.Collection;
+
+import org.apache.pig.impl.plan.OperatorPlan;
+import org.apache.pig.impl.plan.VisitorException;
+import org.apache.pig.impl.plan.PlanException;
+```

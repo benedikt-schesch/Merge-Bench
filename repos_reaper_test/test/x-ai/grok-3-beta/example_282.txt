@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and provide the snippet with the conflict resolved based on the semantic intent of both sides.
+
+**Analysis of the Conflict:**
+
+- **HEAD (Left Side):** Uses `myKey` as the variable name for the `PigNullableWritable` object.
+- **Incoming Change (Right Side - 88ae4a5):** Uses `keyWritable` as the variable name for the same `PigNullableWritable` object.
+- **Intent:** Both sides are attempting to handle the unwrapping of a key when certain conditions (`!sameMapKeyType`, `!inCombiner`, `isKeyWrapped.get(index)`) are met. The only difference is the variable name used to refer to the key object. The logic for unwrapping and subsequent operations (casting to `Tuple` and setting `curKey`) remains identical.
+- **Resolution:** The intent is the same on both sides—only the variable name differs. Since `keyWritable` (from the incoming change) might provide better clarity or consistency with the surrounding code (based on naming conventions), I'll resolve in favor of the incoming change. However, to preserve context and ensure correctness, the rest of the logic remains untouched.
+
+**Resolved Snippet:**
+
+```java
+        Packager pkgr = packagers.get(index);
+
+        // check to see if we need to unwrap the key. The keys may be
+        // wrapped inside a tuple by LocalRearrange operator when jobs
+        // with different map key types are merged
+        PigNullableWritable curKey = keyWritable;
+        if (!sameMapKeyType && !inCombiner && isKeyWrapped.get(index)) {
+            Tuple tup = (Tuple) keyWritable.getValueAsPigType();
+            curKey = HDataType.getWritableComparableTypes(tup.get(0),
+                    pkgr.getKeyType());
+            curKey.setIndex(origIndex);
+        }
+```
+
+This resolution adopts the variable name `keyWritable` from the incoming change to maintain consistency with potential updates or naming conventions in the broader codebase while preserving the identical logic from both sides of the conflict. If the context or surrounding code suggests `myKey` is more appropriate, this can be revisited, but based on the snippet provided, `keyWritable` seems to be the intended name from the latest changes.

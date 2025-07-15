@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve the semantic conflict, I'll merge the patterns by appending the additional characters and flags from the left side into the right side's pattern. This ensures that the updated pattern includes all necessary characters and case insensitivity.
+
+```java
+  /* Begin public constants */
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(?i )" + "(?:\\b|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "])(?:(#|\\uFF03)" + 
+                                 HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+=======
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+  public static final Pattern SCREEN_NAME_MATCH_END = Pattern.compile("^(?:[" + AT_SIGNS_CHARS + LATIN_ACCENTS_CHARS + "]|://)");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(?i )" + "(?:\\b|[" + HASHTAG_ALPHA_NUMERIC_CHARS + "])(?:(?<=#)|\\uFF03|" + 
+                                 HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", 
+                                 Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
+>>>>>>> mergeResolved
+```

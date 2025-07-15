@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are creating a menu item with the same ID (`OPTIONS_MENU_ID_DM`) and position (0), but they're using different string resources for the text. One uses `R.string.page_title_direct_messages` and the other uses `R.string.cmenu_direct_message`.
+
+Here's the resolved code snippet:
+
+```java
+  }
+
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuItem item = menu.add(0, OPTIONS_MENU_ID_DM, 0, R.string.cmenu_direct_message);
+    item.setIcon(android.R.drawable.ic_menu_send);
+
+    item = menu.add(0, OPTIONS_MENU_ID_FOLLOW, 0, R.string.user_label_follow);
+    item.setIcon(android.R.drawable.ic_menu_add);
+
+```
+
+I chose `R.string.cmenu_direct_message` from the incoming change, as it appears to be more consistent with a menu item naming convention (prefix "cmenu_") and likely represents a more recent update to the string resources.

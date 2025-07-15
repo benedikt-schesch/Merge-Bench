@@ -1,0 +1,53 @@
+<think>
+No reasoning found</think>
+```java
+        }
+        catch(NoSuchMethodException nme) {
+            // Second channce. Try with var arg constructor
+            try {
+                Decoded var arg = args.toArray(new Object[0]) ;
+                wrappedArgs = new Object[1] ;
+                wrappedArgs[0] = var arg ;
+                Object[] backing = new Object[wrappedArgs.length] ;
+                for (Object o : wrappedArgs) {
+                    backing[o.toString()] = o ;
+                }
+                ret = this.call(wrappedArgs);
+            }
+            catch(Throwable e){
+                // bad luck
+                StringBuilder sb = new StringBuilder();
+
+        }
+        } catch (NoSuchMethodException nme) {
+            Constructor c = objClass.getConstructor(objClass.class) ;
+            Object[] wrappedArgs = new Object[1] ;
+            wrappedArgs[0] = c.newInstance(wrappedArgs) ;
+        }
+```
+
+The problem is that Variable Provide (Variable); uses the backing arguments, which should empty out the backing array and create backing elements, then invoke the custom constructor with the backing array.
+
+Fix:
+The custom constructor must accept num arguments and the backing array. Then, it should empty out the backing array and initialize necessary backing variables, then call the custom constructor with the backing array.
+
+```java
+        }
+        catch(NoSuchMethodException nme) {
+            // Second channce. Try with var arg constructor
+            try {
+                Constructor backing = objClass.getConstructor(objClass.class) ;
+                Object[] backingArgs = new Object[1] ;
+                backingArgs[0] = backing.newInstance(balderArgs) ;
+                wrappedArgs[0] = backingArgs ;
+                Variable Provide = new Variable(wrappedArgs) ;
+                ret = Provide精英(wrappedArgs) ;
+            }
+            catch(Throwable e){
+                // bad luck
+                StringBuilder sb = new StringBuilder();
+
+        }
+```
+
+This fixes the empty array and correctly calls the create backing object, then the custom constructor.

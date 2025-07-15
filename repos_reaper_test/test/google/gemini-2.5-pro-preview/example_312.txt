@@ -1,0 +1,57 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I'll analyze the intent of both branches:
+
+*   **`HEAD` branch intent:**
+    1.  It appears to replace or repurpose the primary API instance `mApi` to be of type `Weibo`, indicated by `public static Weibo mApi; // new API`.
+    2.  It adds a static `Context` reference: `public static Context mContext;`.
+
+*   **`de460f053e7948460b81e71a410d665d956db90a` branch (let's call it "feature branch") intent:**
+    1.  It preserves (or re-introduces) `public static TwitterApi mApi;`.
+    2.  It adds a new API instance for Weibo, named `nApi`: `public static Weibo nApi; // new API`.
+    3.  It adds a new database helper: `public static DatabaseHelper mDb2;`.
+
+**Semantic Resolution:**
+
+The application's name `TwitterApplication` and the existing `TwitterDbAdapter mDb` suggest that Twitter functionality is likely being retained.
+Both branches intend to introduce a `Weibo` API.
+
+1.  **API Instances (`mApi`, `nApi`):**
+    *   The feature branch's approach of keeping `TwitterApi mApi` and adding a distinct `Weibo nApi` allows the application to support both Twitter and Weibo services simultaneously.
+    *   HEAD's change of `mApi` to `Weibo mApi` might break existing code expecting `mApi` to be a `TwitterApi`.
+    *   Therefore, it's semantically safer and more additive to preserve `TwitterApi mApi` for Twitter and use `Weibo nApi` for the new Weibo API. This incorporates the intent of both branches to have Weibo support, while explicitly keeping Twitter support via `mApi`.
+
+2.  **Context (`mContext`):**
+    *   HEAD adds `public static Context mContext;`. This is a common and generally useful addition for an Android `Application` class and does not conflict with other changes.
+
+3.  **New Database Helper (`mDb2`):**
+    *   The feature branch adds `public static DatabaseHelper mDb2;`. This is a new component and can be added alongside other changes.
+
+**Combined Resolution:**
+
+The most sensible merge is to combine all unique additions, ensuring that the application can support both existing (Twitter) and new (Weibo) functionalities:
+
+*   Keep `public static TwitterApi mApi;` (from the feature branch, preserving Twitter API access).
+*   Add `public static Weibo nApi; // new API` (from the feature branch, providing the Weibo API access, which also fulfills HEAD's intent for a Weibo API).
+*   Add `public static Context mContext;` (from HEAD).
+*   Add `public static DatabaseHelper mDb2;` (from the feature branch).
+
+This resolution integrates the features from both branches in a non-destructive way.
+
+```java
+  
+  public static final String TAG = "TwitterApplication";
+  
+  public static ImageManager mImageManager;
+  public static TwitterDbAdapter mDb; 
+  public static TwitterApi mApi;
+  public static Weibo nApi; // new API
+  public static Context mContext;
+  public static DatabaseHelper mDb2; 
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+
+
+```

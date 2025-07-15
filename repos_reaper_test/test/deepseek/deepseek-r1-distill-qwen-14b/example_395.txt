@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The code contains a merge conflict where one side adds the `public` modifier to a test method and corrects a typo in a method name. Both changes seem intentional and necessary: adding `public` might be to make the method accessible elsewhere, and correcting the typo fixes a mistake. 
+
+Here is the resolved code:
+
+```java
+		when(coreRegistry.getCore(projectAUri)).thenReturn(core);
+		return core;
+	}
+
+	@Test
+	public void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 0);
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(noTestsRun());
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to ensure that both changes are incorporated while maintaining the intended functionality. The left side (HEAD) has a concrete `start()` method, while the right side introduces an abstract `start()` method and adds a new `start(boolean)` method. The conflict arises because both sides modify the same method differently.
+
+Here is the resolved code:
+
+```java
+@Override
+public String getAPIVersion() {
+    return SpoutEngine.class.getPackage().getImplementationVersion();
+}
+
+public abstract void start();
+
+public void start(boolean checkWorlds) {
+    Spout.info("Spout is starting in {0}-only mode.", getPlatform().name().toLowerCase());
+    Spout.info("Current version is {0} (Implementing SpoutAPI {1}).", getVersion(), getAPIVersion());
+    Spout.info("This software is currently in alpha status so components may");
+    Spout.info("have bugs or not work at all. Please report any issues to");
+    Spout.info("http://issues.spout.org");
+```
+
+The resolution combines both changes by making `start()` abstract and adding the new `start(boolean checkWorlds)` method, thus preserving the intended refactoring and additional functionality.

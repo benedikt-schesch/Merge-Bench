@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the context and the changes made on both sides.
+
+The given code snippet is in Java and appears to be part of a class that manages game settings or configurations. The method `updateGameSettings` updates the game options and notifies about the change. The conflict arises in the declaration of a method that returns a set of IDs related to decks of cards.
+
+On the left side of the conflict (HEAD), the method is declared as `getCustomDeckIds` and returns a `Set<Integer>`. This suggests that `customDecksIds` is a collection of integer identifiers for custom decks.
+
+On the right side of the conflict (5adedd24812861bedaf540555ec046744b42b42a), the method is declared as `getCardcastDeckIds` and returns a `Set<String>`. This indicates that `cardcastDeckIds` is a collection of string identifiers for Cardcast decks.
+
+The intents behind both changes seem different:
+- The left side is focused on "custom deck IDs" as integers.
+- The right side is focused on "Cardcast deck IDs" as strings.
+
+Given the differences in both the return type (`Set<Integer>` vs `Set<String>`) and the method name (`getCustomDeckIds` vs `getCardcastDeckIds`), along with the variable being returned (`customDecksIds` vs `cardcastDeckIds`), it's reasonable to infer that these represent distinct functionalities or data.
+
+To resolve the conflict, we should consider whether both functionalities are needed. Since they appear to serve different purposes (one related to custom decks and the other to Cardcast decks), it's plausible that both methods should coexist.
+
+However, directly resolving the conflict by accepting both changes isn't straightforward due to the conflicting lines. The correct resolution involves understanding that both changes should be preserved but they cannot be preserved on the same line.
+
+Here's the step to resolve:
+We need to include both methods in the class as they seem to be serving different purposes.
+
+The resolved code snippet in markdown code syntax, preserving the original context and spacing, is as follows:
+
+```java
+  public void updateGameSettings(final GameOptions newOptions) {
+    this.options.update(newOptions);
+    notifyGameOptionsChanged();
+  }
+
+  public Set<Integer> getCustomDeckIds() {
+    return customDecksIds;
+  }
+
+  public Set<String> getCardcastDeckIds() {
+    return cardcastDeckIds;
+  }
+
+  /**
+   * Get information about this game, without the game's password.
+   * <br/>
+```

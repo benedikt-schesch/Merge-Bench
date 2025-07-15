@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The left side's intent is to escape the file path using `Util.encodeEscape()`, while the right side aims to generate a proper URI using `Util.generateURI()`. Since Pig Latin's LOAD statement expects a URI, the right side's approach is more appropriate.
+
+Here's the resolved snippet:
+
+```java
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpFile));
+        for(int i = 0; i < 10; i++) {
+            ps.println(i+"\t"+i);
+        }
+        ps.close();
+
+        //Load, Execute and Store query
+        String query = "foreach (load '"+Util.generateURI(tmpFile.toString())+"') generate $0,$1;";
+        System.out.println(query);
+        pig.registerQuery("asdf_id = " + query);
+        try {
+            pig.deleteFile("frog");
+        } catch(Exception e) {}
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I need to ensure the code structure is correct and that all else if conditions are properly nested. The confusion arises from potential incorrect indentation or syntax. The correct approach is to have each else if clearly follow the previous one without overlapping.
+
+```java
+            subPlans = ((POForEach)node).getInputPlans();
+        } else if (node instanceof PODemux) {
+            subPlans = ((PODemux)node).getPlans();
+        } else if (node instanceof POPackage){
+            childNode = createPONode(node);
+            Packager pkgr = ((POPackage) node).getPkgr();
+            Node pkgrNode = createPackagerNode(pkgr);
+            childNode.appendChild(pkgrNode);
+        } else if(node instanceof POFRJoin){
+            childNode = createPONode(node);
+            POFRJoin frj = (POFRJoin)node;
+            List<List<PhysicalPlan>> joinPlans = frj.getJoinPlans();
+            if(joinPlans!=null) {
+```

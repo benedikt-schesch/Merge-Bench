@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+The code snippet includes a merge conflict between two branches. The top branch (`>>>>>>`) uses `@BeforeEach` with `updatedFiles` as an `ArrayList`, while the bottom (`<<<<<<< HEAD`) uses `@Before`, `HashSet`, and adds `public` and `IOException`. The conflict involves annotations, collection types, and method signature changes.
+
+To resolve:
+- Choose `@BeforeEach` for per-test setup.
+- Use `HashSet` for unique file tracking.
+- Keep method private unless necessary.
+
+Here's the resolved code:
+
+```java
+private DefaultInfinitestCore core;
+private ChangeDetector changeDetector;
+private TestDetector testDetector;
+
+@BeforeEach
+void inContext() throws IOException {
+    updatedFiles = new HashSet<>();
+    core = new DefaultInfinitestCore(mock(TestRunner.class), new ControlledEventQueue());
+    changeDetector = mock(ChangeDetector.class);
+    when(changeDetector.findChangedFiles()).thenReturn(updatedFiles);
+    core.setChangeDetector(changeDetector);
+}
+```
+
+Or, if `@Before` is intended for class-level setup:
+
+```java
+private DefaultInfinitestCore core;
+private ChangeDetector changeDetector;
+private TestDetector testDetector;
+
+@Before
+public void inContext() throws IOException {
+    updatedFiles = new HashSet<>();
+    core = new DefaultInfinitestCore(mock(TestRunner.class), new ControlledEventQueue());
+    changeDetector = mock(ChangeDetector.class);
+    when(changeDetector.findChangedFiles()).thenReturn(updatedFiles);
+    core.setChangeDetector(changeDetector);
+}
+```
+
+Choose based on the desired setup timing.

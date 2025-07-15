@@ -1,0 +1,108 @@
+<think>
+Okay, let's take a look at this merge conflict. The user provided a Java code snippet with a conflict between the HEAD and another branch (1488b22ce313803d012c8ace36c3b12f930ee309). The conflicting part is around some whitespace between the method registerStreamingCommand and the method locateJarFromResources.
+
+In the HEAD version, there's a line with "    " followed by a line with "=======", and then in the other branch, there's just a line with ">>>>>>>...". The actual code changes seem to be about whitespace differences—maybe a line with some spaces or a blank line with a tab or space.
+
+The task is to resolve this conflict by understanding the intent of both sides. Since the conflict markers are around whitespace, it's possible that one side added a line with some spaces and the other side removed it, or maybe it's just a formatting difference.
+
+Looking at the code, the method registerStreamingCommand ends, and then there's the method locateJarFromResources. The conflict is in the spacing between these two methods. In the HEAD, there's a line with "    " (four spaces) and a blank line, while in the other branch, there's just a line with nothing except maybe the closing conflict marker.
+
+But wait, the way the conflict is presented is:
+
+<<<<<<< HEAD
+    
+=======
+
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+So the HEAD has a line with four spaces (or maybe a blank line with some whitespace), and the other branch has a line with nothing (or maybe a blank line without any whitespace). The conflict is about whether there's a line with whitespace or not between the two methods.
+
+In Java, whitespace between methods doesn't affect functionality, so this is purely a formatting issue. The resolution would depend on which formatting is desired. However, since the user wants to preserve intent and semantics, if both changes are just whitespace, the correct approach is to pick one. But since the conflict is between a line with some spaces (from HEAD) and a line with nothing (from the other branch), maybe the other branch is removing an empty line with whitespace, while HEAD added it. Alternatively, maybe both are just different line breaks.
+
+Wait, looking at the exact code:
+
+In the HEAD section, after the method, there's a line with "    " (four spaces) which might be an empty line with indentation, which is not standard. Then in the other branch, it's just a line with nothing—so maybe the other branch is correctly removing an unnecessary indented blank line.
+
+Java code typically doesn't have indented blank lines between methods. So the correct resolution would be to remove that line with four spaces. Therefore, the conflict can be resolved by taking the version from the other branch, which doesn't have the indented blank line, thus making the code cleaner.
+
+Therefore, the merged code should not have the line with four spaces between the two methods. So the resolved code would have no blank line there, or a regular blank line without indentation. Wait, looking at the code again: the line in HEAD is "    " (four spaces) and then the other side has a line with nothing. But in the code as presented, after the closing } of registerStreamingCommand, in HEAD there's a line with four spaces, then the conflict markers. In the other branch, after the method, there's a line with nothing (just the conflict marker). So when merged, the correct code would have no extra indented line between the methods. Therefore, the resolved code should remove the line with four spaces, keeping the methods separated by a regular blank line or not.
+
+Wait, looking at the code structure:
+
+After the method registerStreamingCommand, the HEAD has:
+
+    }
+
+<<<<<<< HEAD
+    
+=======
+
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    private URL locateJarFromResources(...) {
+
+So in HEAD, between the closing brace of registerStreamingCommand and the start of locateJarFromResources, there's a line with four spaces. In the other branch, between those two methods, there's a line with nothing (maybe a blank line without the four spaces). Or perhaps the line in the other branch is a single blank line. Wait, the code in the other branch is represented as:
+
+    }
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    private URL locateJarFromResources(...) {
+
+So when the conflict is resolved, the correct code should have the two methods separated by a single blank line without any leading spaces. Because in the HEAD, there's a line with four spaces (which would be an indented blank line, which is not standard), and in the other branch, there's a line with no spaces (a normal blank line). Therefore, the correct resolution is to take the other branch's version, which removes the indented blank line, leading to proper formatting.
+
+Hence, the merged code will not have the line with four spaces between the two methods. So the conflict is resolved by keeping the code from the other branch, which results in the methods being separated by a standard blank line (or no blank line if that's the case). But looking at the exact code, the other branch's section is just a line with "=======" and then the closing conflict marker. Wait, maybe the actual code after merging is:
+
+The method ends with }, then in HEAD there's a line with four spaces, and in the other branch there's nothing (so maybe a blank line without the four spaces). Therefore, resolving this by removing the four-space line would be correct.
+
+So the final merged code between the two methods would have no line with four spaces. Therefore, the resolved code would have the two methods adjacent, or with a normal blank line if that's present in either side.
+
+Wait, perhaps the conflict is about a blank line with vs without indentation. Java typically doesn't indent blank lines between methods. So the correct resolution is to use the version without the four spaces. So the merged code would not include the line with four spaces. Therefore, the conflict markers are removed, and the line from the other branch is kept, which is a normal blank line (assuming that in the other branch, there is a blank line without the four spaces). However, looking at the code as presented:
+
+In the original code, the HEAD has:
+
+    public void registerStreamingCommand(...) {
+        pigContext.registerStreamCmd(commandAlias, command);
+    }
+<<<<<<< HEAD
+    
+=======
+
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    private URL locateJarFromResources(...) {
+
+So the HEAD's part between the methods is a line with "    " (four spaces) and then the conflict markers. The other branch's part is a line with nothing (or a blank line with no spaces). So the conflict is whether there's an indented blank line or not. The correct resolution is to remove the indented blank line, taking the other branch's version, which likely has a normal blank line or no blank line.
+
+But looking at the code after the conflict, the correct code would have a single blank line without indentation between the two methods, which is standard Java formatting. Therefore, the resolved code should have no line with four spaces. Therefore, the conflict is resolved by removing the line with four spaces from HEAD and keeping the other branch's line, which is either a normal blank line or nothing.
+
+In the code provided, the other branch's code after the method is:
+
+    }
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    private URL locateJarFromResources(...) {
+
+So if the other branch's code between the two methods is a line with nothing (i.e., a blank line), then the merged code would have that. But in the code as presented, after resolving, the two methods would be separated by a single blank line without any leading spaces. Therefore, the correct resolution is to delete the line with four spaces from HEAD and keep the other branch's version, which likely has a proper blank line.
+
+So the resolved code snippet would be:
+
+    public void registerStreamingCommand(String commandAlias, StreamingCommand command) {
+        pigContext.registerStreamCmd(commandAlias, command);
+    }
+
+    private URL locateJarFromResources(String jarName) throws IOException {
+        Enumeration<URL> urls = ClassLoader.getSystemResources(jarName);
+        URL resourceLocation = null;
+        
+        if (urls.hasMoreElements()) {
+
+Thus, removing the line with four spaces from HEAD and keeping the other branch's blank line (or no line, but in Java, it's common to have a blank line between methods for readability). The conflict is about whitespace, so the resolution is to take the version that has the correct formatting. Since the other branch's code likely removes an unnecessary indented blank line, the merged code should not have that line. Hence, the conflict is resolved by removing the line with four spaces, resulting in the two methods separated by a single blank line without leading spaces.</think>
+```java
+     * @param command - streaming command to be executed
+     */
+    public void registerStreamingCommand(String commandAlias, StreamingCommand command) {
+        pigContext.registerStreamCmd(commandAlias, command);
+    }
+
+    private URL locateJarFromResources(String jarName) throws IOException {
+        Enumeration<URL> urls = ClassLoader.getSystemResources(jarName);
+        URL resourceLocation = null;
+        
+        if (urls.hasMoreElements()) {
+```

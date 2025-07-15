@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The code snippet with the resolved merge conflict is as follows. The intent is to retrieve the "aggregate.warning" property, and using `conf.get()` aligns with the more standard approach.
+
+```java
+        if (dtzStr != null && dtzStr.length() > 0) {
+            // ensure that the internal timezone is uniformly in UTC offset style
+            DateTimeZone.setDefault(DateTimeZone.forOffsetMillis(DateTimeZone.forID(dtzStr).getOffset(null)));
+        }
+
+        boolean aggregateWarning = "true".equalsIgnoreCase(conf.get("aggregate.warning"));
+        PigStatusReporter pigStatusReporter = PigStatusReporter.getInstance();
+        pigStatusReporter.setContext(new TaskContext<FetchContext>(new FetchContext()));
+        PigHadoopLogger pigHadoopLogger = PigHadoopLogger.getInstance();
+        pigHadoopLogger.setReporter(pigStatusReporter);
+        pigHadoopLogger.setAggregate(aggregateWarning);
+```

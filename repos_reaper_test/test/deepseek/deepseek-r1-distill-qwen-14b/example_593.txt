@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Here is the original snippet with the full context, preserved exactly as provided:
+
+```java
+        throw new IllegalArgumentException(
+          "Provided queries must have non-blank keys and values. You provided: " + queries);
+      }
+
+      try {
+<<<<<<< HEAD
+        jsonObject.add(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+=======
+        jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+      } catch (ParseException e) {
+        // Shouldn't happen unless bizarre input is provided
+        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
+      }
+    }
+```
+
+### Analysis of the Conflict:
+1. **Intent on both sides**:
+   - Both changes aim to handle adding a key-value pair to a JSON object.
+   - The difference lies in the method used (`add()` vs `put()`) and the exception caught (`ParseException` vs `JsonException`).
+
+2. **Semantic differences**:
+   - `jsonObject.add()` vs `jsonObject.put()` likely depend on the specific JSON library being used.
+   - `ParseException` vs `JsonException` reflect different exception handling approaches.
+
+3. **Recommendation**:
+   - Choose the version that matches your JSON library's API.
+   - If using a library where `put()` is the correct method and `JsonException` is thrown, use the right side.
+   - Otherwise, keep the left side with `add()` and `ParseException`.
+
+The conflict isn't resolvable without knowing the exact JSON library in use, so I've preserved the original context for you to decide based on your project's requirements.

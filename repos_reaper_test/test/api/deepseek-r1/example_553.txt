@@ -1,0 +1,26 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Javadoc comment for the nullToEmpty method. Both versions are trying to document the return value, but they have slightly different formatting.
+
+In the HEAD version, the @return line is written as:
+* @return {@code string} itself if it is non-null; {@code ""} if it is null
+
+In the other branch (1d97bfa), it's:
+* @return {@code string} itself if it is non-null; {@code ""} if it is
+*         null.
+
+The main difference here is that the second version splits the line after "if it is" and adds a period at the end. The content is the same semantically; it's just formatting. Since Javadoc typically ends descriptions with a period, adding the period makes it more consistent. The line break might be to adhere to line length conventions, making the comment cleaner.
+
+So the resolution would be to take the version with the period and the line break. That way, we maintain proper Javadoc formatting without changing the meaning. The conflict markers can be removed, keeping the corrected @return line from the second branch. The actual code hasn't changed, so no modifications are needed there. The surrounding context should remain untouched as per the instructions. So the merged Javadoc comment should have the return statement split into two lines with the period at the end.</think>
+```java
+    /**
+     * Returns the given string if it is non-null; the empty string otherwise.
+     * 
+     * @param string
+     *            the string to test and possibly return
+     * @return {@code string} itself if it is non-null; {@code ""} if it is
+     *         null.
+     */
+    public static String nullToEmpty(String string) {
+        return (string == null) ? "" : string;
+    }
+```

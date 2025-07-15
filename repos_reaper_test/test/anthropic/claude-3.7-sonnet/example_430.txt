@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at the conflict, I can see that there's a change in the type of adapter being used from `SortedArrayObjectAdapter` to `SortedObjectAdapter`. The conflict appears in two places - when accessing the row's adapter and when creating a new adapter.
+
+Here's the resolved code:
+
+```java
+                    ListRow row = findListRow(category);
+
+                    // if found add this video
+                    // if not, create a new row and add it
+                    if (row != null) {
+                        ((SortedObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedObjectAdapter listRowAdapter = new SortedObjectAdapter(
+                                videoNameComparator, mCardPresenter);
+                        listRowAdapter.add(video);
+
+                        HeaderItem header = new HeaderItem(0, category, null);
+                        mAdapter.add(0, new ListRow(header, listRowAdapter));
+
+```
+
+I resolved the conflict by selecting the newer version that uses `SortedObjectAdapter`, as it appears to be a deliberate refactoring to use this class instead of `SortedArrayObjectAdapter`.

@@ -1,0 +1,30 @@
+<think>
+Okay, let me look at this merge conflict. The code snippet has a conflict in the line where MapRedUtil.setupUDFContext(jConf); is called. The HEAD version has it with normal indentation, while the other branch (57eb1bac) has it indented with a tab or more spaces.
+
+First, I need to check the surrounding code's indentation style. The lines before and after use four spaces for indentation. For example, the line "roots = rp.getRoots().toArray(new PhysicalOperator[1]);" is indented with four spaces. The line after the conflict, "} catch (IOException ioe) {" is also using four spaces.
+
+The conflict is about the indentation of that specific line. The HEAD version uses four spaces, which matches the surrounding code. The other branch uses a tab or maybe more spaces, but looking at the code, it's probably an extra tab or inconsistent spacing. Since the project's style seems to be four spaces, resolving it to the HEAD version makes sense to maintain consistency.
+
+So the correct resolution is to keep the line from HEAD, ensuring the indentation matches the rest of the code. The other side's indentation is likely a mistake or inconsistency. Therefore, the conflict should be resolved by selecting the HEAD version without the extra tab.</think>
+```java
+                    roots = rp.getRoots().toArray(new PhysicalOperator[1]);
+                    leaf = rp.getLeaves().get(0);
+                }
+
+                // Get the UDF specific context
+                MapRedUtil.setupUDFContext(jConf);
+
+            } catch (IOException ioe) {
+                String msg = "Problem while configuring reduce plan.";
+                throw new RuntimeException(msg, ioe);
+            }
+```
+
+The conflict was purely about whitespace indentation. Both versions:  
+1. Perform identical semantic action (`MapRedUtil.setupUDFContext(jConf)`)  
+2. Are properly aligned with the surrounding code's 4-space indentation pattern  
+
+The resolution keeps the HEAD version's indentation since:  
+1. It matches the project's established style (4 spaces)  
+2. The other version's indentation (appearing as a tab character or misaligned spaces) would introduce inconsistency  
+3. No functional difference exists between the versions

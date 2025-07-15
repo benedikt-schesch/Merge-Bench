@@ -1,0 +1,19 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the Java imports. The HEAD branch has some imports, and the other branch (3538cd...) is adding an import for java.util.regex.Pattern.
+
+So the conflict markers show that HEAD doesn't have the Pattern import, and the other branch does. To resolve this, I need to check if both changes can be combined. Since they're adding different imports, the correct resolution would be to include both sets of imports. The HEAD has the imports up to Logger, and the other branch adds the Pattern import after that. But looking at the code, the conflict is between the two import blocks. The right way is to keep both imports. So the resolved code should have the Logger import, then the Pattern import, followed by the rest. Wait, the original conflict shows that after the Logger import, HEAD doesn't have the Pattern import, while the other branch adds it. So merging them would mean adding the Pattern import line from the other branch into the HEAD's context. Therefore, the resolved code should include the import for Pattern. The rest of the imports from both branches are the same. So the correct merged code would have both the existing imports from HEAD and the new import from the other branch. Therefore, I should remove the conflict markers and include the Pattern import line.</think>
+```java
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import org.kohsuke.args4j.spi.BooleanOptionHandler;
+import org.kohsuke.args4j.spi.ByteOptionHandler;
+import org.kohsuke.args4j.spi.CharOptionHandler;
+import org.kohsuke.args4j.spi.DoubleOptionHandler;
+import org.kohsuke.args4j.spi.EnumOptionHandler;
+```
+
+**Explanation:** The conflict is about adding `java.util.regex.Pattern` import. Since this is a new import that doesn't conflict with any other changes (HEAD had no modifications to imports except spacing), we safely accept both changes by keeping the Pattern import while preserving all other context. The rest of the imports from both branches are identical and merged naturally.

@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to understand the intent of both changes.
+
+1.  **`HEAD` (Your current branch):**
+    `import static org.apache.pig.PigServer.ExecType.MAPREDUCE;`
+    This line attempts to statically import the `MAPREDUCE` constant, presumably an enum member, from a nested type `ExecType` within the `org.apache.pig.PigServer` class. This allows using `MAPREDUCE` directly in the code without qualifying it with its enum type.
+
+2.  **`1488b22ce313803d012c8ace36c3b12f930ee309` (Incoming change):**
+    `import org.apache.pig.ExecType;`
+    This line imports the `ExecType` enum (or class) itself from the `org.apache.pig` package. This allows using `ExecType.MAPREDUCE`, `ExecType.LOCAL`, etc., in the code.
+
+**Analysis of Intents and Semantics:**
+
+*   The Apache Pig `ExecType` enum is located in the `org.apache.pig` package (i.e., `org.apache.pig.ExecType`). It is not a nested type within `org.apache.pig.PigServer`.
+*   Therefore, the path `org.apache.pig.PigServer.ExecType` used in `HEAD` is incorrect for importing the standard `ExecType` enum or its members. This import statement, as written, would likely lead to a compilation error if `PigServer` does not contain a static nested type named `ExecType`.
+*   The import `org.apache.pig.ExecType;` from branch `1488b22ce313803d012c8ace36c3b12f930ee309` correctly refers to the standard `ExecType` enum.
+
+**Resolution Strategy:**
+
+The primary goal is to use the correct path for `ExecType`. The incoming change (`1488b22ce313803d012c8ace36c3b12f930ee309`) provides the correct package for `ExecType`.
+
+If the intent of `HEAD` was to use `MAPREDUCE` directly (statically imported), but from the wrong path, the corrected version of that intent would be `import static org.apache.pig.ExecType.MAPREDUCE;`.
+However, the change from `1488b22ce313803d012c8ace36c3b12f930ee309` suggests a move towards explicitly qualifying enum members (e.g., `ExecType.MAPREDUCE`), which is a common and clear practice.
+
+Given that one import path is incorrect (`org.apache.pig.PigServer.ExecType`) and the other is correct (`org.apache.pig.ExecType`), the resolution should be based on the correct path.
+The import `import org.apache.pig.ExecType;` is a valid and standard way to make the `ExecType` enum and its members (like `ExecType.MAPREDUCE`) available. This is generally preferred unless there's a strong convention or need for static imports of specific enum constants.
+
+The most straightforward and safest resolution is to adopt the import from branch `1488b22ce313803d012c8ace36c3b12f930ee309` as it correctly identifies the `ExecType` enum's location. This implies that usages of `MAPREDUCE` in the code should be (or will be updated to be) in the form `ExecType.MAPREDUCE`.
+
+```java
+ * limitations under the License.
+ */
+
+package org.apache.pig.test;
+
+import org.apache.pig.ExecType;
+import org.apache.pig.PigServer;
+
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+
+
+```

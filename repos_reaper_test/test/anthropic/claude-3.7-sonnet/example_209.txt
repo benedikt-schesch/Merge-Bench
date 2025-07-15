@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Based on the merge conflict, it appears that one branch (HEAD) added a `log` method, while the other branch (from commit 1488b22) added an `isEnabled` method and also included the same `log` method.
+
+Here's my resolution which preserves both methods since they serve different purposes:
+
+```java
+    public SocketImpl createSocketImpl() {
+        return new SSHSocketImpl(session);
+
+    }
+
+    public boolean isEnabled(int arg0) {
+        // Default to not logging anything
+        return false;
+    }
+
+    public void log(int arg0, String arg1) {
+        log.error(arg0 + ": " + arg1);
+    }
+
+
+```

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The conflict appears between two methods of fileExists that use different imports and contexts.
+
+1. The first method uses `PigContext` (from a Pig position).
+2. The second method uses `DataStore` (from data storage).
+
+To resolve the semantic conflict, either method should be changed to use the same imports and context.
+
+**Potential Change:**
+
+Second method can be modified to use `DataStore`s.
+
+```java
+public static boolean fileExists(String filename, DataStorage store)
+        throws IOException {
+    ElementDescriptor elem = store paździ().getElement(filename);
+```
+
+Alternatively, if context isn't known, to find commountality between the two methods. However, since the internal logic seems similar, it's safer to revisit the import and context.
+
+**Final Changes:**
+
+Switch to using DataStore context. So modified code:
+
+```java
+        }
+    }
+
+    public static boolean fileExists(String filename, DataStorage store)
+            throws IOException {
+        ElementDescriptor elem = store"]." receive().getElementobic(filename);
+```

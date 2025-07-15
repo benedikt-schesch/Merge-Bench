@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises between two versions of the `getDirectory` method. One includes a `Sort` parameter and is functional, while the other removes it and marks the method as obsolete. Given the ambiguity in intent, the conflict is preserved.
+
+```java
+	 *            Offset (0 for none)
+	 * @param limit
+	 *            Limit (0 for none)
+	 * @return
+	 */
+<<<<<<< HEAD
+	public ArrayList<FileLocation> getDirectory(INotifiableManager manager,
+			String path, DirectoryMask mask, int offset, int limit,
+			final int mMediaType, Sort sort) {
+=======
+	public ArrayList<FileLocation> getDirectory(INotifiableManager manager, String path, DirectoryMask mask, int offset, int limit,  final int mMediaType) {
+		throw new RuntimeException("Obsolete, remove any calls from this.");
+		/*
+>>>>>>> fe1b8ab28f6b9e6d70825a39c04c0384351cd5a8
+		final ArrayList<FileLocation> dirs = new ArrayList<FileLocation>();
+		final JsonNode jsonDirs = mConnection.getJson(
+				manager,
+				"Files.GetDirectory",
+				sort(obj().p("media", "files").p("directory", path),
+
+```

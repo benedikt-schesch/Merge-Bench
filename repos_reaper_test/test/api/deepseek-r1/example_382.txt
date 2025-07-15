@@ -1,0 +1,58 @@
+<think>
+Okay, let's take a look at this merge conflict. The method enable has two different changes in the two branches. In HEAD, they added a null check for the options parameter, throwing an exception if it's null. The other branch, from commit 6252198, added a call to checkPermission(context) instead. 
+
+So, the goal here is to merge these two changes without losing the intent of either. The HEAD change ensures that options isn't null, which is important to prevent NullPointerExceptions later. The other branch adds a permission check, which is probably a security or validation step that's necessary before proceeding.
+
+Since both checks are important, the correct resolution would be to include both. The order might matter. Typically, you'd check permissions first before validating arguments, but sometimes argument checks come first. However, in this case, if checkPermission could throw an exception or has side effects, we need to see which should come first. 
+
+Looking at the code, the original HEAD had the null check first. The other branch added checkPermission before setting sOptions and init. To resolve, we should place both checks. The permission check should probably happen first, but maybe the null check is a precondition. Wait, in the HEAD version, the null check is added, and in the other branch, checkPermission is added. So merging both would mean adding both lines. 
+
+Wait, the conflict is between the two blocks. The HEAD adds the null check, and the other branch adds checkPermission. So the correct resolution is to include both. So the code should first check permission, then check if options is null. Or the other way around? Which is more logical? 
+
+In Java, it's common to check method parameters first for validity before proceeding with other checks. So checking if options is null (a parameter) would come before checking permissions. But maybe the permission check is a prerequisite. Without knowing what checkPermission does, it's hard to say. But since the two changes are additive and not overlapping, except for their position in the code, we can combine them. 
+
+So the merged code should have both the null check and the checkPermission call. The order could be either, but since the original HEAD had the null check first and the other branch added checkPermission in place of that, perhaps the intended order is to first check permission and then check the options. But that's not clear. Alternatively, maybe both checks are needed, and the order should be permission first, then null check. 
+
+Alternatively, maybe the checkPermission is a new requirement that was added in one branch, and the null check in another. Since both are necessary, the correct approach is to include both. So the code would have:
+
+checkPermission(context);
+if (options == null) {
+    throw new IllegalArgumentException("GalgoOptions must not be null");
+}
+
+But wait, in the conflict, the HEAD version has the null check, and the other branch has checkPermission. So the code between <<<<<<< HEAD and ======= is the null check, and the code between ======= and >>>>>>> is checkPermission. To resolve, we need to keep both, but the order depends on which should come first. 
+
+If the checkPermission is a security check, it might be better to perform that first. For example, if the permission is required to even attempt the operation, then check that first. However, if the parameter is invalid (null), throwing an IllegalArgumentException might be more appropriate before checking permissions, to fail fast on invalid input. 
+
+But without knowing the specifics of checkPermission, it's a bit ambiguous. However, since both changes are additive, the correct resolution is to include both, in the order that makes sense. The user probably intended both checks to be present. Therefore, the resolved code should have both lines. 
+
+So the merged method would first call checkPermission(context), then check if options is null, then set sOptions and init. 
+
+Therefore, the resolved code would be:
+
+public static void enable(Context context, GalgoOptions options) {
+    checkPermission(context);
+    if (options == null) {
+        throw new IllegalArgumentException("GalgoOptions must not be null");
+    }
+    sOptions = options;
+    init(context);
+}
+
+This way, both changes are incorporated. The key is that both checks are necessary and don't conflict semantically. The order might be debatable, but since the original conflict is between adding one before the other, combining them in this way resolves the conflict without losing either check.</think>
+```java
+     * * Starts a new Galgo with custom {@link com.inaka.galgo.GalgoOptions}
+     * @param context Context
+     * @param options Custom {@link com.inaka.galgo.GalgoOptions}
+     */
+    public static void enable(Context context, GalgoOptions options) {
+        checkPermission(context);
+        if (options == null) {
+            throw new IllegalArgumentException("GalgoOptions must not be null");
+        }
+        sOptions = options;
+        init(context);
+    }
+
+    /**
+```

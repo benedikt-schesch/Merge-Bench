@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to adding the demux to the PhysicalPlan. The left side directly adds it, while the right uses a try-catch block for exception handling. Since the intent is unclear and both approaches may be valid, it's best to preserve both.
+
+```java
+    private PhysicalPlan createDemuxPlan(boolean sameKeyType, boolean isCombiner)
+        throws VisitorException {
+        PODemux demux = getDemux(isCombiner);
+        POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);
+<<<<<<< HEAD
+
+=======
+        
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+        PhysicalPlan pl = new PhysicalPlan();
+        pl.add(pkg);
+        try {
+            pl.addAsLeaf(demux);
+        } catch (PlanException e) {
+
+```

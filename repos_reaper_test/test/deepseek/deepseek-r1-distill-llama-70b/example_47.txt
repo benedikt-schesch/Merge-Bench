@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict is about the array initialization style. The modern approach uses `new Player[0]` for brevity and clarity, while the legacy style explicitly specifies the array size. Both achieve the same functionality, so we'll use the modern approach for consistency with current Java conventions.
+
+```java
+    info.put(GameInfo.HOST, host.getUser().getNickname());
+    info.put(GameInfo.STATE, state.toString());
+    info.put(GameInfo.GAME_OPTIONS, options.serialize(includePassword));
+    info.put(GameInfo.HAS_PASSWORD, options.password != null && !options.password.equals(""));
+
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    final List<String> playerNames = new ArrayList<>(playersCopy.length);
+    for (final Player player : playersCopy) {
+      playerNames.add(player.getUser().getNickname());
+    }
+    info.put(GameInfo.PLAYERS, playerNames);
+```

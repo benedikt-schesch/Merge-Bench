@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict is resolved by selecting the assertions from the HEAD branch, which includes checking both the `details` and the exact `message`, ensuring the message contains the correct URL. This provides a more precise test.
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+<<<<<<< HEAD
+    assertNull(responseException.getDetails());
+    String expectedMessage = "200\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+=======
+    assertNull(responseException.getDetails());
+    String expectedMessage = "200\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+>>>>>>> 47d00185e2cd4548663cc0e8c6cdf6d59640a613
+  }
+
+  public void testFrom_withDetails() throws Exception {
+    HttpTransport transport = new ErrorTransport();
+    HttpRequest request =
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the changes on both sides are considered. The left side's code is simplified by removing the `config` parameter from the `LazyLoadingModel`, and the exception handling is made more concise by combining the exceptions into a single catch clause. Both changes improve the code's clarity and functionality without impact on the intended behavior.
+
+The final resolved code incorporates the parameter simplification and improved exception handling from the right side, ensuring the method remains efficient and readable.
+
+```java
+    @Override
+    public void renderDocument(final TemplateModel model, final String templateName, final Writer writer) throws RenderingException {
+        try {
+            Template template = templateCfg.getTemplate(templateName);
+            template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db), writer);
+        } catch (IOException | TemplateException e) {
+            throw new RenderingException(e);
+        }
+    }
+
+    /**
+```

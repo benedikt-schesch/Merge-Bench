@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to stem from differing variable names and assertion approaches. The HEAD version correctly uses `responseException`, while the other side incorrectly uses `ge`. The test's intent is to validate the exception's message starts with "200". 
+
+Since `ge` isn't defined, the HEAD's assertions are correct. Thus, we'll resolve the conflict by keeping the HEAD changes.
+
+Here is the resolved code:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    assertTrue(responseException.getMessage().startsWith("200"));
+  }
+
+  public void testFrom_withDetails() throws Exception {
+    HttpTransport transport = new ErrorTransport();
+    HttpRequest request =
+
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict involves adding an optimization step before printing a message. The right side (commit `d95d3beb...`) optimizes the logical plan and includes the print statement, which is more complete. I'll resolve by taking the right side.
+
+```java
+    }
+
+    private PhysicalPlan checkPhysicalPlan(LogicalPlan lp, int expectedRoots,
+            int expectedLeaves, int expectedSize) throws IOException {
+
+        lp.optimize(myPig.getPigContext());
+        System.out.println("===== check physical plan =====");        
+
+        PhysicalPlan pp = ((MRExecutionEngine)myPig.getPigContext().getExecutionEngine()).compile(
+                lp, null);
+
+        Assert.assertEquals(expectedRoots, pp.getRoots().size());
+
+```

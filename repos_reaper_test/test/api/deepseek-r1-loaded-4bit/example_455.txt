@@ -1,0 +1,23 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code snippet. Let me look at what's going on here. The conflict is in the Javadoc comment for the 'mode' parameter. 
+
+In the HEAD version, there's a @required annotation added, while the other branch (40fa077) doesn't have that. The question is whether the @required parameter is necessary here. 
+
+The original code had a @parameter default-value="TXT". The HEAD added @required, which might mean that the parameter must be provided by the user. But wait, if there's a default value, then the parameter isn't actually required because it can fall back to "TXT". So adding @required here could be conflicting because the default value already ensures it's not null.
+
+Maybe the person who added @required didn't realize that a default value makes it unnecessary. Or perhaps they intended to enforce that the user must explicitly set the mode, but the default value contradicts that. That's a semantic conflict. 
+
+Since the default value is present, the @required annotation is redundant and possibly incorrect. The correct resolution would be to remove the @required line to maintain consistency with the default value. So the merged code should keep the default-value but not include @required. Therefore, the conflict markers should be removed, keeping the version without @required.</think>
+```java
+public class Args4jUsageMojo extends AbstractMojo {
+
+    /**
+     * Mode. 'TXT' 'XML' or 'HTML'
+     * @parameter default-value="TXT"
+     */
+    private String mode;
+
+    /**
+     * Location of the source files.
+
+```

@@ -1,0 +1,21 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is within a synchronized block, iterating over roundPlayers. The conflict is about how to initialize a HashMap. In the HEAD version, they explicitly specify the generic types <ReturnableData, Object>, while the other branch uses the diamond operator <>.
+
+Hmm, the diamond operator was introduced in Java 7 to reduce redundancy by inferring the type arguments from the context. So if the project is using Java 7 or higher, using <> is cleaner and preferred. But maybe the HEAD version is from an older codebase that doesn't use the diamond operator, perhaps for compatibility with Java 6 or earlier.
+
+Wait, but both versions are initializing the same type of map. The intent here is to create a new HashMap for the data. The difference is purely syntactic. The functionality remains the same. Since the diamond operator is just a shorthand, merging them by using the diamond operator should be safe unless there's a specific reason the explicit types are needed, which doesn't seem to be the case here.
+
+So the correct resolution would be to keep the diamond operator from the branch version because it's more concise and modern. The surrounding context doesn't show any other differences, so replacing the explicit type parameters with <> should resolve the conflict without issues.</think>
+```java
+
+      synchronized (roundPlayers) {
+        for (final Player player : roundPlayers) {
+          final List<WhiteCard> cards = playedCards.getCards(player);
+          if (cards == null || cards.size() < blackCard.getPick()) {
+            final Map<ReturnableData, Object> data = new HashMap<>();
+            data.put(LongPollResponse.EVENT, LongPollEvent.HURRY_UP.toString());
+            data.put(LongPollResponse.GAME_ID, this.id);
+            final QueuedMessage q = new QueuedMessage(MessageType.GAME_EVENT, data);
+            player.getUser().enqueueMessage(q);
+          }
+```

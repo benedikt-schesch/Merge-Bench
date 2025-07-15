@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict between two lines that retrieve the same property value using different default constants. 
+
+- The first side uses `JoinPackager.DEFAULT_CHUNK_SIZE`.
+- The second side uses `POJoinPackage.DEFAULT_CHUNK_SIZE`.
+
+To resolve this, both should use the same default constant. Since `POJoinPackage` is a more specific and correct class, replacing `JoinPackager` with `POJoinPackage` aligns the code and uses the appropriate default.
+
+```java
+        //display the warning message(s) from the MRCompiler
+        comp.getMessageCollector().logMessages(MessageType.Warning, aggregateWarning, log);
+
+        String lastInputChunkSize =
+            pc.getProperties().getProperty(
+                "last.input.chunksize", POJoinPackage.DEFAULT_CHUNK_SIZE);
+        
+        String prop = pc.getProperties().getProperty(PigConfiguration.PROP_NO_COMBINER);
+        if (!pc.inIllustrator && !("true".equals(prop)))  {
+            boolean doMapAgg =
+                    Boolean.valueOf(pc.getProperties().getProperty(PigConfiguration.PROP_EXEC_MAP_PARTAGG,"false"));
+```

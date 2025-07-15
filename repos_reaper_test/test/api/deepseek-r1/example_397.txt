@@ -1,0 +1,30 @@
+<think>
+Okay, let's take a look at this merge conflict. The code is in Java, and there's a test method with conflicting changes. On the HEAD side, the test method is called shouldChangeToFailingBackgroundColorWhenTestsFail, and it sets both a failing background color and a failing text color using ColorSettings. The other side, from commit 12331f9, has a test named shouldChangeToRedWhenTestsFail without the ColorSettings setup lines.
+
+First, I need to understand the intent of both changes. The HEAD version seems to be more detailed, specifying both background and text colors, and it's using setFailingBackgroundColor and setFailngTextColor (wait, there's a typo there—"failng" instead of "failing"). The other side is perhaps an older or alternative approach where the test name is simpler and maybe only the background color was considered, but in the verify section, both setBackgroundColor and setTextColor are present.
+
+The conflict is in the method name and the setup lines. The HEAD version has the setup for both colors, while the other branch doesn't. But both tests end up verifying the same statusBar changes: dark red background and yellow text. So the setup in HEAD is necessary for the test to pass, because without setting those colors, the presenter might not behave as expected.
+
+However, the other branch's test method name is different. The HEAD name is more descriptive about changing to failing background color, while the other is about changing to red. Since the test verifies both background and text, the HEAD name might be more accurate if the test covers both aspects. Alternatively, maybe the other branch's name is outdated.
+
+Also, there's a typo in setFailngTextColor—missing an 'i' in 'failing'. That's probably a mistake. So the correct line should be setFailingTextColor.
+
+To resolve the conflict, we need to merge both changes. Keep the method name from HEAD because it's more descriptive, and include the setup lines, fixing the typo. The other branch's method name is less specific, so adopting the more detailed name makes sense. Also, the setup lines are necessary for the test to correctly set both colors, which are then verified.
+
+So the resolved method should have the HEAD's method name, the corrected setup lines, and the verify section from both, which are actually the same in both branches. Therefore, the merged code would include the setup with the corrected typo and the more descriptive test name.</think>
+```java
+		verify(statusBar).setBackgroundColor(COLOR_DARK_GREEN);
+		verify(statusBar).setTextColor(COLOR_WHITE);
+	}
+
+	@Test
+	public void shouldChangeToFailingBackgroundColorWhenTestsFail() {
+		ColorSettings.setFailingBackgroundColor(COLOR_DARK_RED);
+		ColorSettings.setFailingTextColor(COLOR_YELLOW);
+
+		presenter.coreStatusChanged(PASSING, FAILING);
+
+		verify(statusBar).setBackgroundColor(COLOR_DARK_RED);
+		verify(statusBar).setTextColor(COLOR_YELLOW);
+	}
+```

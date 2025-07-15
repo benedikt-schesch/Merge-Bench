@@ -1,0 +1,92 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code, the conflict is in the catch block when handling a server connection exception. Both branches are trying to handle the case where connecting to a target server fails, and the user is retried or moved to the default server.
+
+In the HEAD version (probably the current branch), when retry is true and the server isn't the default, it calls connect with the default server name and the def server object, and passes 'false' for retry. The message here is that after a failed attempt, it's retrying the connection without further retries.
+
+On the other branch (cae7155), when the same condition is met, it sends a message to the user saying they've been moved to the default server, then connects to def without specifying the server name. The retry parameter is also set to false here.
+
+The key differences are the addition of a user message in the other branch and the parameters passed to the connect method. The HEAD uses BungeeCord.instance.config.defaultServerName as the server name parameter, while the other branch just uses def. Also, the message informs the user why they're being moved.
+
+To resolve this, we need to preserve both the user message and the correct parameters for the connect method. The message is important for user feedback, so including that makes sense. The server name parameter in the HEAD might be necessary if the connect method requires the name, whereas the other branch's def might be the server object. Checking the method signature for connect would help, but since it's not provided, we can assume that both parameters are needed. Wait, looking at the method calls:
+
+HEAD: connect(user, BungeeCord.instance.config.defaultServerName, def, handshake, false);
+Other: connect(user, def, handshake, false);
+
+So the method in HEAD has an extra parameter for the server name. Maybe the method was changed to require the server name as a string in addition to the server object. But in the other branch, perhaps the method was refactored to take the server object directly. This is a possible source of conflict.
+
+Alternatively, maybe the method's parameters changed between the two branches. If in one branch the connect method expects a server name and a server object, and in the other it just expects the server object, then merging these would require adjusting the parameters.
+
+But without knowing the exact method signatures, it's tricky. However, the semantic intent here is that when retrying fails, the user should be informed and connected to the default server. The HEAD version might be trying to pass both the name and the server object, while the other branch adds the message and uses the server object.
+
+The correct resolution would be to include both the user message from the other branch and adjust the connect call to use the parameters correctly. So, take the user.sendMessage from the other branch and the connect parameters from the HEAD, but wait—the HEAD version has four parameters, and the other has three. Let me count:
+
+HEAD: connect(user, BungeeCord..., def, handshake, false) → that's 5 parameters.
+Other: connect(user, def, handshake, false) → 4 parameters.
+
+Hmm, so maybe the method in the HEAD branch has an extra parameter. That suggests that the method signature changed between the two branches. If the HEAD has a different connect method that requires the server name as a string and the server object, while the other branch's connect method only needs the server object, then merging these would require adjusting which parameters are passed.
+
+But since we can't modify the context outside the conflict, we need to figure out which parameters are correct. If the current code (HEAD) expects the server name and the server object, and the other branch's code uses the server object but not the name, perhaps the correct approach is to use the server object (def) as the second parameter, but that depends on the method's parameters.
+
+Alternatively, maybe the method in the other branch was updated to take the server object directly, making the server name parameter redundant. In that case, the correct call would be as in the other branch, but adding the message.
+
+Wait, but the HEAD version is passing the defaultServerName as the server name. Maybe the method in HEAD requires both the name and the server info, while in the other branch, it's been refactored to only need the server info.
+
+So, if both changes are valid, the resolution would include both the message and the correct parameters. But how?
+
+Let me look at the code again. The user.sendMessage is added in the other branch, which is a good user experience improvement. So we should include that. Then, for the connect call, the HEAD uses BungeeCord.instance.config.defaultServerName as the second argument and def as the third. The other branch uses def as the second argument.
+
+If the method's signature in the current codebase expects the server name (String) followed by the server info (ServerInfo), then the HEAD version is correct. But if the method now takes ServerInfo as the second parameter, then the other branch is correct.
+
+Since the two branches have different method calls, this is a conflict that might require knowing which version of the method is correct. Since we can't check that, but as a semantic merge, perhaps the intent is that after sending the message, the user is connected to the default server (def), using the method that takes the ServerInfo directly. Therefore, using the other branch's connect call but adding the message, while also ensuring that the parameters match the current method signature.
+
+Alternatively, if the method in the HEAD requires the server name as a String and the ServerInfo, then combining both the message and the parameters from HEAD would be needed.
+
+But this is ambiguous without knowing the method signature. However, since the HEAD version is passing the default server name from the config, which might be the same as def.getName(), perhaps. So maybe the method requires the server name as a String, and the ServerInfo object. Then, the correct parameters would be the name and def.
+
+But the other branch's connect call uses def as the second parameter. If the method was changed to accept ServerInfo as the second parameter, then that's correct.
+
+Given that this is a merge conflict, the best approach is to take both changes: send the message and call connect with the correct parameters. However, the parameters differ between the two branches. To resolve this, perhaps the correct parameters are those from the HEAD, but including the message from the other branch.
+
+Wait, but the other branch's connect call has fewer parameters. If the HEAD's connect has more parameters, then merging would require including those. Alternatively, maybe the other branch's connect is using an overloaded method.
+
+Alternatively, maybe in the other branch, the connect method's parameters were reordered or modified. This is a common source of conflicts.
+
+Given that the user is being moved to the default server, sending a message is a good addition. So, the message from the other branch should be included. Then, for the connect parameters, we need to use whichever is correct based on the current method signature.
+
+But since we can't know that, perhaps the correct approach is to include both the message and the parameters from the HEAD, assuming that the method still requires the server name and the server info. So the resolved code would be:
+
+user.sendMessage(...);
+return connect(user, BungeeCord.instance.config.defaultServerName, def, handshake, false);
+
+But wait, in the other branch's code, the connect call is 'connect(user, def, handshake, false)'. So the HEAD has 5 parameters, the other has 4. That suggests that the method signature changed between branches. This is a problem.
+
+Alternatively, maybe the method in HEAD has an extra parameter. For example, perhaps the method was modified to take the server name and server info. But in the other branch, the method was changed to take the server info directly, without the name.
+
+This is a conflict that can't be resolved without knowing which method signature is correct. However, since both changes are semantic (adding a message and changing the connect parameters), perhaps the correct resolution is to include the message and adjust the connect parameters to match the current method.
+
+Alternatively, if the method in the current code (HEAD) expects the server name and the server info, then keeping those parameters and adding the message would be correct.
+
+But since the user is in the HEAD branch, and the other branch is a feature branch, perhaps the connect method in HEAD has those parameters. Therefore, including the message from the other branch and keeping the parameters from HEAD would be the correct resolution.
+
+So the resolved code would be:
+
+user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+return connect(user, BungeeCord.instance.config.defaultServerName, def, handshake, false);
+
+This combines the message from the other branch and the parameters from HEAD. However, this assumes that the connect method in the current codebase accepts those parameters. If the other branch's connect method has a different signature, this might not work. But since we have to make a best-effort merge, this seems plausible.
+
+Therefore, the final merged code should include both the user message and the correct connect call with parameters from HEAD.</think>
+```java
+        } catch (Exception ex)
+        {
+            ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+                user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+                return connect(user, BungeeCord.instance.config.defaultServerName, def, handshake, false);
+            } else
+            {
+                throw new RuntimeException("Could not connect to target server " + Util.exception(ex));
+            }
+        }
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict involves changing the data type of `nsre_low_watermark` and `nsre_high_watermark` from `int` to `short` and adding a new configuration option for `increment_buffer_durable`. Without clear validation of the type change's impact, it's safer to present the conflict as is.
+
+```java
+    rpc_timeout = config.getInt("hbase.rpc.timeout");
+    timer = newTimer(config, "HBaseClient");
+    rpc_timeout_timer = newTimer(config, "RPC Timeout Timer");
+    flush_interval = config.getShort("hbase.rpcs.buffered_flush_interval");
+    increment_buffer_size = config.getInt("hbase.increments.buffer_size");
+<<<<<<< HEAD
+    nsre_low_watermark = config.getInt("hbase.nsre.low_watermark");
+    nsre_high_watermark = config.getInt("hbase.nsre.high_watermark");
+=======
+    nsre_low_watermark = config.getShort("hbase.nsre.low_watermark");
+    nsre_high_watermark = config.getShort("hbase.nsre.high_watermark");
+    if (config.properties.containsKey("hbase.increments.durable")) {
+      increment_buffer_durable = config.getBoolean("hbase.increments.durable");
+    }
+>>>>>>> 003c60654636b9b3dc2f3a0844f1fb06
+  }
+  
+  /**
+   * Constructor accepting a configuration object with at least the 
+   * "hbase.zookeeper.quorum" specified in the format {@code "host1,host2,host3"}.
+```

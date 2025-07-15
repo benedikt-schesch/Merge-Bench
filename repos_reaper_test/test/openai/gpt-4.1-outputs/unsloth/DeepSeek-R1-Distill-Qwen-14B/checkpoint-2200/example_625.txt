@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+
+  @Test
+  public void postImageToPagePhotosWithMessage() {
+    byte[] imageAsBytes = fetchBytesFromImage();
+    DefaultFacebookClient client =
+        new DefaultFacebookClient(getTestSettings().getPageAccessToken(), Version.VERSION_2_5);
+    JsonObject obj = client.publish(getTestSettings().getPageId() + "/photos", JsonObject.class,
+      BinaryAttachment.with("test.png", imageAsBytes, "image/png"), Parameter.with("message", "TestImage"),
+      Parameter.with("no_story", "true"));
+    assertNotNull(obj);
+  }
+
+```

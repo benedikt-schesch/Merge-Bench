@@ -1,0 +1,51 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the renderDocument method of a Java class. Both versions are trying to process a template with a LazyLoadingModel, but there are differences in the constructor arguments and the exception handling.
+
+First, looking at the LazyLoadingModel instantiation. The HEAD version has three parameters: templateCfg.getObjectWrapper(), model, db, and config. The other branch (1b5691a) has the same first three parameters but omits the config. So the question is whether the config parameter is necessary here. If the config was added in one branch and removed in another, we need to check if both changes are compatible or if one is a correction.
+
+Next, the exception handling. The HEAD version catches IOException and TemplateException separately, while the other branch uses a multi-catch block (IOException | TemplateException). Java 7+ allows combining exceptions in a single catch, so that's a style difference. The important part is that both exceptions are being caught and wrapped in a RenderingException. So combining them is safe and cleaner.
+
+Now, back to the LazyLoadingModel parameters. If the config parameter is necessary for one feature but was mistakenly removed in the other branch, that's a problem. But if, for example, the config was added in one branch as an enhancement and the other branch simplified the model by removing an unnecessary parameter, we need to reconcile that. However, without more context on why config was added or removed, it's tricky. Maybe the config is part of the model's dependencies now, so including it would be correct. Alternatively, perhaps the other branch refactored to remove the dependency on config.
+
+Assuming that both branches made valid changes: one added the config parameter to the model, and the other branch might have a different reason for changing the parameters. But since they conflict, we have to decide which one to keep. If the config is indeed required, we should include it. If the other branch removed it because it's no longer needed, maybe that's a mistake. Alternatively, maybe the config parameter was moved elsewhere.
+
+Wait, looking at the parameters: the HEAD has (objectWrapper, model, db, config), and the other has (objectWrapper, model, db). If the LazyLoadingModel's constructor in HEAD expects four arguments, but the other branch's code uses three, then merging them would require knowing which constructor is correct. If both changes are valid but conflicting, perhaps the config was added in one branch and another change in the other branch removed it. But without knowing the history, it's hard to say.
+
+Alternatively, maybe the config variable is part of the db object now, so it's no longer needed as a separate parameter. Or perhaps the other branch's change was a refactor that removed the need for config. If we can't determine, it's safer to include both changes, but that's impossible. Alternatively, maybe the config was a recent addition that's necessary, so we should keep it. However, if the other branch's code is more up-to-date and removed config, we should follow that.
+
+But since the user hasn't provided more context, perhaps the correct approach is to retain the config parameter in the constructor (from HEAD) because it's an additional dependency, and combine the exception handling as in the other branch. That way, we take both changes: the added config and the improved exception handling.
+
+Wait, but the two changes conflict on the parameters. So how can we merge them? The HEAD version adds config, and the other branch doesn't have it. So if the config is necessary, the resolved code should include it. If the other branch removed it, that's a conflict. But maybe the other branch is older, and the HEAD is adding a new parameter. So the correct resolution is to keep the config parameter and use the combined exception handling.
+
+So the resolved code would have:
+
+template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db, config), writer);
+and the catch block would be catch (IOException | TemplateException e) {
+
+That way, we incorporate both changes: the added config parameter from HEAD and the multi-catch from the other branch.
+
+Therefore, the merged code would look like:
+
+try {
+    Template template = templateCfg.getTemplate(templateName);
+    template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db, config), writer);
+} catch (IOException | TemplateException e) {
+    throw new RenderingException(e);
+}
+
+This combines the parameters from HEAD and the exception handling from the other branch. Since the multi-catch is a better practice and doesn't affect functionality, and the config parameter is likely an important addition, this should resolve the conflict.</think>
+```java
+
+    @Override
+    public void renderDocument(final TemplateModel model, final String templateName, final Writer writer) throws RenderingException {
+        try {
+            Template template = templateCfg.getTemplate(templateName);
+            template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db, config), writer);
+        } catch (IOException | TemplateException e) {
+            throw new RenderingException(e);
+        }
+    }
+
+    /**
+
+```

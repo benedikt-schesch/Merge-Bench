@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+        pigServer.registerQuery("c1 = order c by value;");
+
+        // order in lexicographic, so 12 comes before 2
+        Iterator<Tuple> iter = pigServer.openIterator("b1");
+        assertTrue("b1 has an element", iter.hasNext());
+        assertEquals("first item in b1", "12", iter.next().get(0));
+        assertTrue("b1 has an element", iter.hasNext());
+        assertEquals("second item in b1", "2", iter.next().get(0));
+        assertFalse("b1 is over", iter.hasNext());
+
+        iter = pigServer.openIterator("c1");
+        assertTrue("c1 has an element", iter.hasNext());
+        assertEquals("first item in c1", 2L, ((Number) iter.next().get(0)).longValue());
+        assertTrue("c1 has an element", iter.hasNext());
+        assertEquals("second item in c1", 12L, ((Number) iter.next().get(0)).longValue());
+        assertFalse("c1 is over", iter.hasNext());
+```

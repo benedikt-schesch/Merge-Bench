@@ -1,0 +1,33 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the Java imports. The HEAD version has an import for com.restfb.JsonMapper, while the other side (a17acec) doesn't include that line. The surrounding lines are the same except for that.
+
+First, I need to figure out why there's a conflict. Maybe one branch added the JsonMapper import, and the other didn't. Or perhaps one removed it. But looking at the surrounding code, after the conflict markers, there's an import of JsonMapper.JsonMappingCompleted. That import is present in both versions because it's outside the conflict markers.
+
+Wait, the JsonMappingCompleted is a static inner class of JsonMapper. So importing JsonMapper.JsonMappingCompleted requires that the JsonMapper class is accessible. If the HEAD version has the import for JsonMapper, that's redundant because the other import already includes it. Or maybe it's necessary if the code uses JsonMapper directly elsewhere.
+
+But in the given snippet, the only use of JsonMapper might be in the JsonMappingCompleted import. So perhaps the import of JsonMapper in HEAD is unnecessary if the other import already covers it. Alternatively, if the code in the file uses JsonMapper directly, then the import is needed.
+
+Since the user provided only this snippet, I don't know if there are other uses of JsonMapper. But the conflict is between having the import and not. The other side (a17acec) removed it, while HEAD added it. So maybe one branch added it for a reason, and the other didn't. But without more context, it's hard to tell.
+
+However, looking at the import statements: the line in HEAD is importing com.restfb.JsonMapper, which is a class. The line after the conflict is importing JsonMapper.JsonMappingCompleted, which is a static inner class. So if the code uses both JsonMapper and its inner class, then both imports are needed. But if the code only uses the inner class, then maybe the outer class import is not necessary.
+
+Wait, in Java, to import a static nested class, you don't need to import the outer class. For example, if you have com.restfb.JsonMapper.JsonMappingCompleted, you can import that directly without importing JsonMapper. So the import of com.restfb.JsonMapper in HEAD might be redundant if it's only used for the static inner class. However, if the code elsewhere uses JsonMapper directly (like declaring a variable of type JsonMapper), then the import is necessary.
+
+But in the given code snippet, the only related import is the JsonMappingCompleted. So perhaps the import of JsonMapper in HEAD is unnecessary, and the a17acec version correctly removed it. Therefore, resolving the conflict by removing the JsonMapper import would be correct.
+
+So the resolution would be to take the version from a17acec, which doesn't include the JsonMapper import, because the necessary import for JsonMappingCompleted is already present, and the JsonMapper might not be used directly here. But I need to check if the code in the rest of the file uses JsonMapper. Since the user hasn't provided that, but the conflict is only in this import block, perhaps the correct resolution is to remove the JsonMapper import, assuming it's not needed elsewhere.
+
+Therefore, the merged code should not include the line 'import com.restfb.JsonMapper;' from HEAD, and instead keep the a17acec version which removes it. So the resolved code would have the imports without that line.</think>
+```java
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import static com.restfb.util.DateUtils.toDateFromShortFormat;
+import static java.util.Collections.unmodifiableList;
+
+import com.restfb.Facebook;
+import com.restfb.JsonMapper.JsonMappingCompleted;
+import com.restfb.json.JsonObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that both sides are trying to start the camera when the activity resumes, but the right side includes a null check before doing so. The safer approach is to include the null check to prevent potential NullPointerException.
+
+Here's the resolved code with the conflict fixed:
+
+```java
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+
+    if (qrCodeReaderView != null) {
+      qrCodeReaderView.startCamera();
+    }
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+
+```

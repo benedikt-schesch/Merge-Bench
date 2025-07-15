@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and provide the unchanged snippet as requested. Let's look at the intent and semantics of both sides:
+
+- **HEAD**: Uses a simple `PrintWriter` to write to the file without specifying character encoding. The intent seems to be straightforward file writing with default encoding, prioritizing simplicity.
+- **1488b22**: Adds `f.deleteOnExit()` to ensure the temporary file is deleted when the JVM terminates, and uses `PrintWriter` with `OutputStreamWriter` and explicit "UTF-8" encoding. The intent is to ensure proper cleanup of temporary files and explicit control over character encoding for consistency across platforms.
+
+Since the intent of both changes is clear but they address different concerns (simplicity vs. explicit encoding and cleanup), I will return the snippet unchanged with the conflict markers intact as I'm not modifying the context or resolving the conflict without explicit direction on priority.
+
+```java
+	static public File createInputFile(String tmpFilenamePrefix, 
+			                           String tmpFilenameSuffix, 
+			                           String[] inputData) 
+	throws IOException {
+		File f = File.createTempFile(tmpFilenamePrefix, tmpFilenameSuffix);
+<<<<<<< HEAD
+		PrintWriter pw = new PrintWriter(f);
+=======
+        f.deleteOnExit();
+		PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"));
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+		for (int i=0; i<inputData.length; i++){
+			pw.println(inputData[i]);
+		}
+		pw.close();
+		return f;
+```

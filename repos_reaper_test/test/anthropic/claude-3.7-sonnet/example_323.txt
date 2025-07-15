@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, both sides are making a notification call with a few differences:
+
+1. Side HEAD uses `R.drawable.notify_mentions` while side f977f63c uses `R.drawable.notify_mention` (singular vs plural)
+2. Side HEAD passes `latestTweet.text` directly, while side f977f63c processes it through `Utils.getSimpleTweetText(latestTweet.text)`
+
+Since the f977f63c change seems to be processing the tweet text with a utility method to simplify it (likely removing formatting or unnecessary elements), this appears to be an intentional improvement. The notification icon change (to singular) is also likely intentional.
+
+```java
+		}
+
+		PendingIntent intent = PendingIntent.getActivity(this, 0,
+				MentionActivity.createIntent(this), 0);
+
+		notify(intent, MENTION_NOTIFICATION_ID, R.drawable.notify_mention,
+				Utils.getSimpleTweetText(latestTweet.text), title, text);
+	}
+
+	private static int TWEET_NOTIFICATION_ID = 0;
+	private static int DM_NOTIFICATION_ID = 1;
+	private static int MENTION_NOTIFICATION_ID = 2;
+
+```

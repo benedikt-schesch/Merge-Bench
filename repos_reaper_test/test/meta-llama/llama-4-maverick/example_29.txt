@@ -1,0 +1,48 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the given code snippet:
+
+```java
+ * the MIT license.
+ */
+package org.spout.api.collision;
+
+import org.spout.api.math.ReactConverter;
+<<<<<<< HEAD
+import org.spout.math.vector.Vector3;
+=======
+import org.spout.api.math.Vector3;
+
+>>>>>>> cc0703054530b4eeda07a2b1b619ed34e1e7d201
+import org.spout.physics.collision.ContactInfo;
+
+public class SpoutContactInfo {
+	private final ContactInfo wrapped;
+```
+
+The conflict arises from the difference in the import statement for `Vector3`. The two versions are `org.spout.math.vector.Vector3` and `org.spout.api.math.Vector3`. To resolve this, we need to understand the intent behind the change.
+
+1. **Understanding the Change**: The change involves replacing `org.spout.math.vector.Vector3` with `org.spout.api.math.Vector3`. This could indicate a refactoring where the `Vector3` class has been moved from `org.spout.math.vector` to `org.spout.api.math`.
+
+2. **Analyzing the Context**: Looking at the surrounding context, the package of the current class is `org.spout.api.collision`, and it imports `org.spout.api.math.ReactConverter`. The import of `ReactConverter` from `org.spout.api.math` suggests that other math-related classes might also be in `org.spout.api.math`.
+
+3. **Resolving the Conflict**: Given that `org.spout.api.math.Vector3` is likely the newer or refactored location for `Vector3`, and considering that other imports are from `org.spout.api.math`, the resolution leans towards using `org.spout.api.math.Vector3`.
+
+4. **Checking for Usage**: Although the usage of `Vector3` is not shown in the snippet, typically, resolving such conflicts involves checking how `Vector3` is used. If it's used in a way that's compatible with both versions, the newer import (`org.spout.api.math.Vector3`) is likely the correct choice.
+
+5. **Resolution**: The conflict can be resolved by choosing `org.spout.api.math.Vector3` as it seems to be the more updated or correct import based on the context.
+
+Here is the resolved snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+ * the MIT license.
+ */
+package org.spout.api.collision;
+
+import org.spout.api.math.ReactConverter;
+import org.spout.api.math.Vector3;
+import org.spout.physics.collision.ContactInfo;
+
+public class SpoutContactInfo {
+	private final ContactInfo wrapped;
+```

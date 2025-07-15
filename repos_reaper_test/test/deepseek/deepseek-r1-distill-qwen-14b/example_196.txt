@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict is resolved by choosing the version where `funcSpec` directly provides the class name when available, and using the static method for the alias when `funcSpec` is null. This approach is efficient and clear.
+
+```java
+        if (definedFunctions != null) {
+            funcSpec = definedFunctions.get(alias);
+        }
+        if (funcSpec != null) {
+            className = funcSpec.getClassName();
+        }else{
+            className = FuncSpec.getClassNameFromSpec(alias);
+        }
+        return resolveClassName(className);
+    }
+  
+    public Object instantiateFuncFromAlias(String alias) throws IOException {
+
+```

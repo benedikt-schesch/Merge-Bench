@@ -1,0 +1,27 @@
+<think>
+Okay, let's look at this merge conflict. The code in question is creating a GruntParser object. The HEAD version uses a constructor with a StringReader, while the other branch uses a constructor that also includes myPig as a second argument.
+
+First, I need to figure out what each side is doing. The HEAD version might be an older version of the code, and the other branch is adding a new parameter to the constructor. Maybe the GruntParser class was updated to require a Pig instance as well. Or perhaps the second parameter is optional in some contexts.
+
+I should check if the myPig variable is declared and initialized in the surrounding code. If it's present, then the correct resolution is to include both arguments. If not, maybe there's a mistake. But since the user provided the code snippet, I can assume that myPig exists in that context.
+
+The intent here is likely that the second branch updated the constructor to include a necessary parameter, so merging both by using the two-argument constructor makes sense. The HEAD version might be missing that parameter, leading to potential errors. Therefore, resolving the conflict by choosing the version with myPig is correct.</think>
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "describe b;"
+                          + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+``` 
+
+Rationale: The conflict appears to be about different constructor signatures for GruntParser. The semantic intent from both branches is to create a GruntParser with appropriate configuration:
+- HEAD branch shows basic initialization with script reader
+- Other branch adds a myPig parameter which likely provides important Pig context
+
+The resolution keeps the myPig parameter since it appears to be a necessary dependency injection that was added in a later commit (as indicated by the commit message pattern), while maintaining the existing script reader parameter. The comma placement and closing parenthesis are adjusted to maintain valid Java syntax.

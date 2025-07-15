@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Here is the resolved merge conflict with combined intent and preserved context:
+
+```java
+  /* Begin public constants */
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+  public static final Pattern SCREEN_NAME_MATCH_END = Pattern.compile("^(?:[" + AT_SIGNS_CHARS + LATIN_ACCENTS_CHARS + "]|://)");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "])(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+
+  public static final int AUTO_LINK_HASHTAGS_GROUP_BEFORE = 1;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_HASH = 2;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_TAG = 3;
+  public static final Pattern HASHTAG_MATCH_END = Pattern.compile("^(?:[#＃]|://)");
+```
+
+The resolution:
+
+1. Preserved the new `SCREEN_NAME_MATCH_END` pattern from the merge branch as a logical precursor
+2. Combined both branches' changes to `AUTO_LINK_HASHTAGS` by:
+   - Integrating the corrected character class with proper accented characters
+   - Merging the case sensitivity flags with `|` (bitwise OR)
+3. Retained all original constants and whitespace unchanged
+4. Preserved the structural intent of improved Unicode handling while maintaining case insensitivity
+
+The key semantic intent of Unicode support was added from the merge branch, while the original case insensitivity was maintained, creating a more comprehensive case handling solution.

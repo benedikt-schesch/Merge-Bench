@@ -1,0 +1,73 @@
+<think>
+No reasoning found</think>
+```java
+/**
+ * SSH-related resources.
+ */
+class SSHSocketImpl extends SocketImpl {
+    
+    private Session session;
+    
+    ChannelDirectTCPIP channel;
+
+    /**
+     * Log information about SSH connections.
+     * @since 3.0
+     */ 
+     private static final Log log = LogFactory.getLog(SSHSocketImpl.class);
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+```
+
+Change the comment to /**Starting with comments more aligned with EE.** 
+Change the last two lines of the class declaration that include private static final to private.
+Place </any> into the class declaration comment as it is part of the class declaration now.
+
+The other line that uses * is kept as is shuing.
+
+```java
+ * things to SSH.
+ */
+class SSHSocketImpl extends SocketImpl {
+    
+    private Session session;
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+ChannelDirectTCPIP channel;
+=======
+/**
+ * SSH-related resources.
+ */
+class SSHSocketImpl extends SocketImpl {
+    
+    private Session session;
+    
+    ChannelDirectTCPIP channel;
+
+    /**
+     * Log information about SSH connections.
+     * @since 3.0
+     */ 
+    private static final Log log = LogFactory.getLog(SSHSocketImpl.class);
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+    Session session;
+>>>>>>> 14902462ec1bf8
+```
+
+I kept the comment as is because it may not directly impact the code but if you want, it could be changed to something like:
+
+```java
+/**
+ * Important points about SSH connections.
+ */
+```
+
+However, this would be entirely optional and indicates that the comment is meant to provide more information.
+
+The merge occurs because these are part of different areas of the object declaration. The session for end-users is explicitly declared, while the class is declarations for end-points. When the merge happens, these are swapped to align with EE conventions.
+
+The comment is a part of the class declaration but may not directly affect the merge.
+
+The session is optional for eventading, but being a private static final is more EE style.
+
+These changes should resolve the semantic merge conflict by following EE best practices.

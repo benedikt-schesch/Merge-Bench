@@ -1,0 +1,24 @@
+<think>
+Okay, let's look at this merge conflict. The test method checkV1_0 has conflicting assertions between the HEAD and the a17acec branch.
+
+In HEAD, they're using assertThat with isNull, isNotNull, and isTrue. The other side uses assertEquals, assertNotNull, and assertTrue directly. Both are trying to test the same conditions but with different syntax—probably different testing frameworks or styles.
+
+The intent is the same: verify that totalCount is null, nextPageUrl is not null, and hasNext is true. Since the assertions are semantically equivalent, the conflict can be resolved by choosing one style. The HEAD uses more fluent assertions with assertThat, which might be from a library like AssertJ. The other side uses JUnit's traditional methods.
+
+The surrounding code in checkV2_0 isn't shown, but if the project consistently uses one style, we should follow that. If unsure, maybe prefer the fluent style as it's more readable. Alternatively, if the rest of the project uses JUnit's traditional asserts, then go with that. But without more context, both are correct. However, since the user wants a resolution, I'll pick one. Let's go with the HEAD version since it's more descriptive. So replace the conflict with the HEAD's assertions.</think>
+```java
+
+  @Test
+  public void checkV1_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+      jsonFromClasspath("v1_0/connection-user-friends"), User.class);
+    assertThat(con.getTotalCount()).isNull();
+    assertThat(con.getNextPageUrl()).isNotNull();
+    assertThat(con.hasNext()).isTrue();
+  }
+
+  @Test
+  public void checkV2_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+
+```

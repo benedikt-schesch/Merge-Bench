@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+The conflict arises from one side (`HEAD`) adding or keeping an `@Beta` annotation, while the other side (`51762f221ec8ab38da03149c8012e63aec0433dc`) does not have this annotation for the `initSslContext` method.
+
+*   **Intent of `HEAD`**: To mark the `initSslContext` method with `@Beta`. This annotation signifies that the API is public but might change in incompatible ways in a future release, and it should be used with caution.
+*   **Intent of `51762f221ec8ab38da03149c8012e63aec0433dc`**: This side does not have the `@Beta` annotation. This could mean either the annotation was never added in this line of development, or it was explicitly removed (e.g., if the API was considered stable).
+
+Given the conflict structure:
+```
+<<<<<<< HEAD
+  @Beta
+=======
+>>>>>>> 51762f221ec8ab38da03149c8012e63aec0433dc
+```
+This typically means:
+1.  The common ancestor did not have `@Beta`. `HEAD` added it. The other branch (`51762f221ec8ab38da03149c8012e63aec0433dc`) did not add it (or made some other change in the vicinity causing a hunk conflict).
+    *Resolution*: Keep `@Beta` as it's new, explicit information added by `HEAD`.
+2.  The common ancestor had `@Beta`. `HEAD` kept it. The other branch (`51762f221ec8ab38da03149c8012e63aec0433dc`) removed it.
+    *Resolution*: This is a direct semantic disagreement. `HEAD` says "still Beta," `51762f221ec8ab38da03149c8012e63aec0433dc` says "no longer Beta." Without knowing *why* the other branch removed it (e.g., a deliberate stabilization effort vs. an accidental removal during refactoring), it's hard to be certain. However, retaining a `@Beta` annotation is generally a safer, more conservative choice, as it warns users of potential instability. Removing it implies confirmed stability.
+
+In most common scenarios, especially if `HEAD` represents the main or more current line of development, adding an annotation like `@Beta` is a deliberate semantic act. Unless the other branch explicitly and correctly intends to declare the API stable (by removing `@Beta`), it's generally preferable to keep the annotation. This preserves the explicit information about the API's current status.
+
+Therefore, the resolution is to accept the change from `HEAD` and keep the `@Beta` annotation.
+
+```java
+   * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS
+   * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+   * @param keyManagerFactory key manager factory (for example {@link
+   *     #getDefaultKeyManagerFactory()})
+   */
+  @Beta
+  public static SSLContext initSslContext(
+      SSLContext sslContext,
+      KeyStore trustStore,
+      TrustManagerFactory trustManagerFactory,
+      KeyStore mtlsKeyStore,
+
+```

@@ -1,0 +1,49 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at the code snippet. The conflict is between the HEAD version and the other branch's commit 88ae4a5. The conflict markers are around adding some lines between the declarations of pkg and the PhysicalPlan pl.
+
+In the HEAD version, there's an empty line after the pkg declaration, and then the code proceeds to create a new PhysicalPlan. In the other branch, there's a line with some whitespace—maybe a tab or spaces—after the pkg line. 
+
+The key here is to determine if the difference is just whitespace or if there's a semantic change. Looking closely, the only difference is that the other branch has a line with "        " (some spaces or a tab) between the two lines, while HEAD has an empty line. Wait, no—actually, in the conflict, the HEAD has an empty line after pkg, and the other branch has a line with whitespace (indicated by "        "). 
+
+Wait, in the code:
+
+<<<<<<< HEAD
+
+=======
+        
+>>>>>>> 88ae4a5...
+
+So HEAD has an empty line, and the other branch has a line that's just whitespace (maybe a line with some spaces or a tab, making it an empty line but with trailing whitespace). But in terms of code semantics, both are effectively adding an empty line there. However, having a line with trailing whitespace might be considered unnecessary, but maybe the other branch intended something else.
+
+Wait, maybe the other branch has a line that's not empty but has some indentation. Let me check the code again. The line in the other branch is "        " which is 8 spaces. So in the merged code, after the pkg declaration, there's a line with 8 spaces. But that's just a line with whitespace, which doesn't affect the code. However, in Java, that's irrelevant. So maybe this is a case where one side added an empty line, and the other added a line with whitespace. Or perhaps it's a mistake, like someone added a line with trailing spaces accidentally.
+
+But since the user said to think about the intent and semantics, both sides are probably trying to have some spacing between the declarations. The HEAD has an empty line, the other branch has a line with spaces (which would look like an empty line in the editor but with trailing whitespace). But trailing whitespace is generally considered bad practice. However, maybe in this case, it's a mistake.
+
+Alternatively, maybe the other branch's line is part of some code that was meant to be there but was incorrectly resolved. Wait, looking at the surrounding code:
+
+PODemux demux = getDemux(isCombiner);
+POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);
+<<<<<<< HEAD
+
+=======
+        
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+PhysicalPlan pl = new PhysicalPlan();
+
+So after the pkg line, there's a conflict between an empty line and a line with spaces. The PhysicalPlan is created next. So the difference is whether there's an empty line or a line with spaces. But in Java, empty lines and lines with whitespace don't affect the code's functionality. However, in terms of code style, maybe one side prefers an empty line, the other has a line with trailing spaces. But trailing spaces are usually not desired.
+
+So the correct resolution would be to take the HEAD version (empty line) and discard the other branch's line with trailing spaces, because trailing spaces are unnecessary. Alternatively, if the other branch's line is actually part of some code change, but in this case, it's just whitespace. So the conflict is trivial, and the resolution is to have an empty line without trailing spaces. Therefore, the merged code should have the empty line from HEAD.
+
+But wait, maybe the other branch had some code that was intended to be there, but in the conflict, it's only showing that line as whitespace. But looking at the code, the lines between the conflict markers are only the empty line vs. the line with spaces. So the correct resolution is to remove the line with spaces and keep the empty line. Hence, the resolved code would have the empty line, as in HEAD.</think>
+```java
+    private PhysicalPlan createDemuxPlan(boolean sameKeyType, boolean isCombiner)
+        throws VisitorException {
+        PODemux demux = getDemux(isCombiner);
+        POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);
+
+        PhysicalPlan pl = new PhysicalPlan();
+        pl.add(pkg);
+        try {
+            pl.addAsLeaf(demux);
+        } catch (PlanException e) {
+```

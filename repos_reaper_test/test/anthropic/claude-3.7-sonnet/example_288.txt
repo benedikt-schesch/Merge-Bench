@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and resolve it based on the intent and semantics of both sides.
+
+Looking at the conflict:
+- The HEAD version initializes an array `readOnce` with `numInputs` elements and sets them all to false
+- The other version (commit 88ae4a5) removes this initialization
+
+Since the HEAD version is adding functionality (initializing a tracking array) and the other side is removing it, I need to understand the intent. Without more context, it appears that the HEAD version is adding important functionality to track which inputs have been read. The removal in the other branch might be intentional if this functionality was moved elsewhere, but without that evidence, I'll preserve the initialization.
+
+Here's the resolved snippet:
+
+```java
+    }
+
+    public void setNumInps(int numInps) {
+        this.numInputs = numInps;
+        pkgr.setNumInputs(numInps);
+        readOnce = new boolean[numInputs];
+        for (int i = 0; i < numInputs; i++)
+            readOnce[i] = false;
+    }
+
+    /**
+     * From the inputs, constructs the output tuple for this co-group in the
+     * required format which is (key, {bag of tuples from input 1}, {bag of
+```

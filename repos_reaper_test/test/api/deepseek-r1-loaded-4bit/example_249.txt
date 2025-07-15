@@ -1,0 +1,33 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in a Java method where there's a difference between the HEAD and the other branch (1cb2531). The code in question is the assignment to inpSignatureLists.
+
+In the HEAD version, the line is:
+List<String> inpSignatureLists = (ArrayList<String>)ObjectSerializer.deserialize(conf.get("pig.inpSignatures"));
+
+In the other branch, the same line is written with an extra indentation:
+List<String> inpSignatureLists = 
+        (ArrayList<String>)ObjectSerializer.deserialize(
+                conf.get("pig.inpSignatures"));
+
+So the main difference here is formatting—specifically, line breaks and indentation. The HEAD version is a single line, while the other branch splits it into multiple lines with more indentation. The actual code logic is the same; it's just stylistic differences.
+
+Since both changes are about code formatting and not the functionality, the semantic intent is identical. The correct resolution would be to choose one of the formatting styles. But since merge conflicts often require preserving both changes' intentions, perhaps the best approach is to adopt the more readable or the one that fits the project's coding standards. However, in this case, since the conflict is purely about formatting, either version works. But the user wants us to resolve based on semantics and intent. Both versions achieve the same thing, so we can pick either. Alternatively, maybe the second version with line breaks is preferred for readability. But the user didn't specify project guidelines. 
+
+Alternatively, maybe the second branch's version splits the line into multiple lines for better readability, which is a common practice. So resolving by taking the version from the other branch (1cb2531) would be acceptable. But the user says if unsure, leave the conflict. However, the key here is that both versions are semantically the same. Therefore, the conflict can be resolved by choosing either, as there's no functional difference.
+
+Wait, but the user says to resolve if possible by considering intent. The intent here is to assign the deserialized value to inpSignatureLists. Both versions do that. The only difference is code style. So, perhaps the correct resolution is to accept the version with the line breaks and indentation for better readability, which is the second option. Therefore, the resolved code would use the version from the 1cb2531 branch.</think>
+```java
+     * @throws IOException on failure
+     */
+    @SuppressWarnings("unchecked")
+    static void passLoadSignature(LoadFunc loadFunc, int inputIndex,
+            Configuration conf) throws IOException {
+        List<String> inpSignatureLists = 
+                (ArrayList<String>)ObjectSerializer.deserialize(
+                        conf.get("pig.inpSignatures"));
+        // signature can be null for intermediate jobs where it will not
+        // be required to be passed down
+        if(inpSignatureLists.get(inputIndex) != null) {
+            loadFunc.setUDFContextSignature(inpSignatureLists.get(inputIndex));
+            conf.set("pig.loader.signature", inpSignatureLists.get(inputIndex));
+```

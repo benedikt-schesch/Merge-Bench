@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it seems to involve two different changes to a method that's generating JavaScript configuration. One side adds an `insecureIdAllowed` variable, while the other side adds a line that outputs a `gameChatEnabled` configuration variable.
+
+There's also a conflict at the beginning where a variable declaration appears to be only on the remote side. Since this appears to be incomplete context (given the hanging `getInstance` call at the top), I'll resolve this as best I can with the available information:
+
+```java
+        .getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+    builder.append(String.format("cah.COOKIE_DOMAIN = '%s';\n", cookieDomain));
+    boolean globalChatEnabled = injector.getInstance(Key.get(Boolean.class, GlobalChatEnabled.class));
+    builder.append(String.format("cah.GLOBAL_CHAT_ENABLED = %b;\n", globalChatEnabled));
+    boolean insecureIdAllowed = injector.getInstance(Key.get(Boolean.class, InsecureIdAllowed.class));
+    boolean gameChatEnabled = injector.getInstance(Key.get(Boolean.class, GameChatEnabled.class)); // Assumed based on usage
+    builder.append(String.format("cah.GAME_CHAT_ENABLED = %b;\n", gameChatEnabled));
+    builder.append(String.format("cah.INSECURE_ID_ALLOWED = %b;\n", insecureIdAllowed));
+    boolean broadcastingUsers = injector.getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+    builder.append(String.format("cah.BROADCASTING_USERS = %b;\n", broadcastingUsers));
+
+```

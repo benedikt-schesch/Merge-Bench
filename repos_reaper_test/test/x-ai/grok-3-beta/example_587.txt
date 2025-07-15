@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in the provided Java code snippet and return it with the original context preserved. After reviewing the two sides of the conflict, I can see that both are defining a method signature for creating a `FacebookException`, but with different parameter lists. Let's look at the intent behind each change:
+
+- **HEAD**: This version uses a single `ExceptionInformation` object as a parameter, likely a structured container for all relevant exception data. The intent seems to be encapsulating various pieces of information into one object for simplicity and maintainability.
+- **Branch (a17acec)**: This version explicitly lists out individual parameters for different pieces of error information (error codes, message, type, etc.) along with a `JsonObject` for raw error data. The intent here appears to be providing fine-grained control and explicitness over the data used to construct the exception.
+
+Since the intent and approach differ significantly (structured object vs. explicit parameters), and without additional context on the codebase's design decisions or which approach aligns with the current architecture, I will not attempt to resolve the conflict. Merging these without understanding the broader context (e.g., whether `ExceptionInformation` encapsulates the same fields as the explicit parameters) risks breaking the code or misaligning with project goals. Therefore, I am returning the snippet unchanged with the conflict markers intact.
+
+```java
+   * 
+   * @param container
+   *          container for all data needed to create the associated {@see FacebookException}
+   * @return An appropriate {@code FacebookException} subclass.
+   */
+<<<<<<< HEAD
+  FacebookException exceptionForTypeAndMessage(ExceptionInformation container);
+=======
+  FacebookException exceptionForTypeAndMessage(Integer errorCode, Integer errorSubcode, Integer httpStatusCode,
+      String type, String message, String userTitle, String userMessage, Boolean isTransient, JsonObject rawError);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+}
+```

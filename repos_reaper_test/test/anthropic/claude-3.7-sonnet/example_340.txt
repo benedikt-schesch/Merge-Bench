@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the two sides have different implementations of the `animRotate` method:
+
+1. HEAD version simply calls `setRefreshAnimation(true)`
+2. The other version includes a commented explanation saying that rotating buttons cause performance issues, and contains conditional code that's effectively disabled with `if (false && null != v)`
+
+Since the method is already deprecated (as shown in the Javadoc) and points users to `WithHeaderActivity#setRefreshAnimation(boolean)`, and the HEAD version directly calls this recommended method, I'll resolve in favor of the HEAD version while preserving the performance insight from the other version.
+
+```java
+	/**
+	 * @param v
+	 * @deprecated use {@link WithHeaderActivity#setRefreshAnimation(boolean)}
+	 */
+	protected void animRotate(View v) {
+	    // TODO: 经过几天的测试发现, 旋转按钮才是真正的性能瓶颈, 它增加了N倍的GC压力, 使得所有其他操作都变得缓慢.
+	    setRefreshAnimation(true);
+	}
+	
+    /**
+     * Start/Stop Top Refresh Button's Animation
+     * 
+```

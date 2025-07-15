@@ -1,0 +1,43 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at the conflict markers. The HEAD version has the @Beta annotation, while the other side (51762f2) doesn't. So the conflict is about whether to include that annotation or not.
+
+What's the intent here? The @Beta annotation in Java usually marks a feature as beta, meaning it might change in the future. If one branch added it and the other removed it, I need to figure out which change is correct.
+
+Maybe the HEAD branch added @Beta to indicate that createMtlsKeyStore is a beta feature. The other branch might have removed it because the feature is now stable, or perhaps they didn't want it to be marked as beta anymore.
+
+If I don't have more context, it's hard to know which is correct. But since the user asked to resolve based on semantics and intent, I should consider if both changes can coexist. But they conflict directly—either the annotation is there or not.
+
+If there's ambiguity, the instruction says to leave the conflict. But if I can determine that one side's intent is to add the annotation and the other to remove it, perhaps the correct resolution is to keep the @Beta if it's still intended to be beta. Alternatively, if the other branch's commit removed it for a reason, like stabilizing the API, then removing @Beta would be correct.
+
+Without knowing the project's current state, maybe the safest approach is to keep both? Wait, no—they are conflicting. So the user has to choose. But since the user is asking me to resolve it, I have to decide.
+
+Alternatively, maybe the @Beta was added in one branch and the other branch didn't have it because it's an older version. If the HEAD is the current branch and the other is a feature branch, perhaps the @Beta should stay. But without knowing which branch is more recent or which change is intended, it's ambiguous.
+
+The user's instructions say if unsure, leave the conflict. But maybe in this case, the @Beta is being added in HEAD and removed in the other. Since the conflict is between adding and removing, and without further info, it's ambiguous. Therefore, the correct resolution is to keep the @Beta annotation, assuming that the HEAD is the newer change. But wait, the other side's commit might have removed it intentionally. Hmm.
+
+Alternatively, perhaps the two changes are compatible. Wait, no—they are directly conflicting. One adds the annotation, the other removes it. So the resolution is to pick one or the other. If I can't determine intent, then according to the instructions, I should leave the conflict. But maybe the user expects me to make a decision here.
+
+Wait, the original question says: if unsure, return the same snippet with the conflict. So if I'm not certain, I leave it as is. But in this case, maybe the intent is that both sides are trying to modify the method's annotations. The HEAD adds @Beta, the other side doesn't have it. Maybe the correct resolution is to keep the @Beta because that's the addition, or perhaps the other branch is removing it. Without knowing which is correct, it's ambiguous.
+
+Therefore, the answer should be to leave the conflict markers because the intent is unclear. But wait, the user wants the resolved code if possible. Alternatively, maybe the @Beta was added in a development branch and the other branch is from a release where it's not present. But I can't know that.
+
+Alternatively, maybe the @Beta is redundant or was mistakenly added. But again, without context, I can't tell. So according to the instructions, if unsure, return the conflict. But the user might expect an expert to resolve it. Maybe the @Beta is intended to be there, and the other branch just didn't include it because it's an older version. In that case, keeping @Beta would be correct. Alternatively, if the other branch's commit is removing @Beta because the feature is now stable, then removing it is correct.
+
+Hmm. Since the user is asking to think in terms of intent and semantics, maybe both changes are valid but conflicting. Since there's no way to determine which intent is correct, the conflict remains. Therefore, the answer should be the original code with conflict markers. But wait, the user wants the resolved code if possible. But if it's ambiguous, leave it as a conflict.
+
+So, in this case, the correct answer is to leave the conflict because the intent is ambiguous. Therefore, the output should be the same as the input with the conflict markers.</think>
+```java
+   * @param certAndKey Certificate and private key input stream. The stream should contain one
+   *     certificate and one unencrypted private key. If there are multiple certificates, only the
+   *     first certificate will be used.
+   * @return keystore for mutual TLS.
+   */
+<<<<<<< HEAD
+  @Beta
+=======
+>>>>>>> 51762f221ec8ab38da03149c8012e63aec0433dc
+  public static KeyStore createMtlsKeyStore(InputStream certAndKey)
+      throws GeneralSecurityException, IOException {
+    KeyStore keystore = KeyStore.getInstance("JKS");
+    keystore.load(null);
+```

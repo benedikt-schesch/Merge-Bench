@@ -1,0 +1,21 @@
+<think>
+Okay, let me look at this merge conflict. The conflict is in Java code between two branches. The HEAD version has a line that sets hbase_client.server_version to server_version, while the other branch (d543609...) doesn't have that line. The surrounding code is about handling different server versions during a handshake.
+
+First, I need to understand why the line is present in HEAD but not in the other branch. The comment above says they tried a pre-0.92 handshake but the server is 0.92 or above. So setting the server_version makes sense here to remember the version for future communication.
+
+The line hbase_client.server_version = server_version; is likely important to update the client's knowledge of the server version. If the other branch removed it, maybe it was an oversight or intentional. But since the comment mentions they have to handshake differently, setting the server version would be necessary for subsequent operations.
+
+Therefore, the correct resolution is to keep the line from HEAD. The other branch's removal might have been accidental, or perhaps the line was added in HEAD to fix an issue. Without more context, but based on the comment, preserving that line ensures the client knows the server version after the handshake.</think>
+```java
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+          // If we get here, it's because we tried to handshake with a server
+          // running HBase 0.92 or above, but using a pre-0.92 handshake.  So
+          // we know we have to handshake differently.
+          server_version = SERVER_VERSION_092_OR_ABOVE;
+          hbase_client.server_version = server_version;
+          helloRpc(chan, header092());
+        } else {
+          // We get here if the server refused our 0.92-style handshake.  This
+          // must be a future version of HBase that broke compatibility again,
+          // and we don't know how to talk to it, so give up here.
+```

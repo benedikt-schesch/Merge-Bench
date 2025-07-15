@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's examine the intent and semantics of both sides of the merge.
+
+The conflict is within the constructor `public Resource(InputStream in, String href)` and involves the lines:
+```java
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b
+```
+
+Both sides of the merge are calling the same overloaded constructor `this(null, byte[], String, MediaType)` with the same parameters except for the second one, where the difference lies in the utility class used to convert the `InputStream` to a byte array.
+
+- The left-hand side (HEAD) uses `IOUtil.toByteArray(in)`.
+- The right-hand side (b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b) uses `IOUtils.toByteArray(in)`.
+
+The difference is in the utility class name: `IOUtil` vs `IOUtils`. The intent on both sides seems to be to achieve the same functionality, which is to read the contents of the `InputStream` into a byte array.
+
+To resolve the conflict, we need to understand which utility class (`IOUtil` or `IOUtils`) is the correct or preferred one to use in this context. 
+
+Upon closer inspection, it appears that `IOUtils` is a more standard class name for such utility functions, as seen in libraries like Apache Commons IO. `IOUtil` could be a custom or differently named class for similar purposes.
+
+Without additional context on whether `IOUtil` is a valid and intended utility class within the project's scope, it's safer to assume that the difference might stem from different library imports or coding standards being merged.
+
+However, since the functionality is the same (converting an `InputStream` to a byte array), and assuming that one of these classes (`IOUtils` or `IOUtil`) is correctly imported and used consistently elsewhere in the project, the resolution should favor the version that aligns with the project's standards or conventions.
+
+Given the information and focusing on common practices, if `IOUtils` (likely from Apache Commons IO) is used elsewhere or is the project's standard, it would be reasonable to resolve the conflict by choosing the right-hand side's version. Conversely, if `IOUtil` is a project's specific utility class, the left-hand side should be chosen.
+
+Since we lack the specific context about which utility class is preferred or defined within the project's codebase, and to avoid making assumptions, the safest approach is to return the snippet as is, with the conflict marked.
+
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+```

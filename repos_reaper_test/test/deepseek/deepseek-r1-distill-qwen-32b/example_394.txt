@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict revolves around two changes:
+
+1. The test method `shouldUpdateCoreOnAutoBuild()` in the HEAD branch is missing the `public` access modifier, while the merged branch adds it. Since JUnit test methods should be public to be executable, we should include the public modifier.
+
+2. The method name has a typo ("preparateCore") which is fixed in the merged branch to "prepareCore". Fixing the typo is essential for the test to run without errors.
+
+Here is the merged code incorporating both fixes:
+
+```java
+assertEquals(1, updates);
+verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+}
+
+@Test
+public void shouldUpdateCoreOnAutoBuild() throws CoreException {
+    InfinitestCore core = prepareCore(projectAUri(), 10);
+    
+    workspace.updateProjects(Collections.singleton(resource));
+
+    assertStatusIs(findingTests(0, projects.size(), 0));
+    verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+}
+```

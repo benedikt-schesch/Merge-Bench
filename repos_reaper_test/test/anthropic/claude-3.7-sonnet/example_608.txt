@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Based on the merge conflict, I can see that one side (HEAD) includes a `serialVersionUID` declaration while the other side (a17acec0655b8058aaf4d336ba2a1352aa49e2fe) removes it.
+
+Since `serialVersionUID` is important for serialization compatibility in Java classes that implement Serializable (which the parent class `AbstractFacebookType` likely does), I'll resolve the conflict by keeping the `serialVersionUID` declaration.
+
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class VoipInfo extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook("has_permission")
+    private Boolean hasPermission;
+
+
+```

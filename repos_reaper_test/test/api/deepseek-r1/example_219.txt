@@ -1,0 +1,71 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code snippet, the conflict is in the imports section. The HEAD version is importing `MAPREDUCE` statically from `PigServer.ExecType`, while the other side (commit 1488b22) is importing `ExecType` from `org.apache.pig` and then using `PigServer` without the static import.
+
+First, I need to understand what each side is trying to do. The HEAD side uses a static import for `MAPREDUCE`, which suggests that in their code, they might be referencing `MAPREDUCE` directly without qualifying it with `ExecType`. On the other hand, the other side imports `ExecType` as a class and might be using `ExecType.MAPREDUCE` in the code, requiring the class import.
+
+The goal here is to merge these two changes without breaking the code. If both imports are necessary, we can include both. However, sometimes static imports can cause conflicts if the same name is used elsewhere. But in this case, `ExecType` is an enum, and `MAPREDUCE` is one of its constants. 
+
+Wait, maybe the HEAD version is using a static import to avoid writing `ExecType.MAPREDUCE` every time. The other branch is importing `ExecType` so that they can refer to it directly, perhaps when creating a PigServer instance with `ExecType.MAPREDUCE`.
+
+Looking at the PigServer class, if `ExecType` is an inner enum of PigServer, then the static import in HEAD makes sense. But if `ExecType` is a top-level class in org.apache.pig, then the other branch's approach is correct. 
+
+Wait, the HEAD version has `import static org.apache.pig.PigServer.ExecType.MAPREDUCE;` which implies that ExecType is an inner enum of PigServer. The other branch has `import org.apache.pig.ExecType;` which suggests that ExecType is a separate class in that package. 
+
+This is a problem because the two branches are importing different things. If the code in the project was refactored so that ExecType was moved from being an inner class of PigServer to a top-level class, then the two branches are conflicting because one is using the old structure and the other the new.
+
+So, to resolve this, I need to know which version of the code is correct. If the correct version is that ExecType is now a top-level class, then the import from org.apache.pig.ExecType is correct, and the static import should be removed. However, if the code in HEAD is correct (ExecType is an inner enum of PigServer), then the static import is okay.
+
+But since the conflict is between two branches, perhaps one branch updated the code to move ExecType to a top-level class, and the other branch is still using the old static import. In that case, the correct resolution would be to use the top-level ExecType import and adjust the code accordingly.
+
+However, without more context, it's hard to tell. But given that the other branch is importing ExecType as a top-level class, and the HEAD is using a static import from PigServer.ExecType, the conflict arises because they're referencing different locations for ExecType.
+
+The correct resolution would depend on which version of the code is the intended one. If the project moved ExecType to be a top-level class, then the other branch's import is correct, and the static import in HEAD is obsolete. Therefore, we should keep the import of ExecType and remove the static import. Alternatively, if both are needed, but that's unlikely.
+
+Wait, looking at the code after the conflict, the HEAD has the static import, and the other branch imports ExecType. So, merging them would require both imports. But if ExecType is now a top-level class, then the static import from PigServer.ExecType.MAPREDUCE is invalid, because ExecType is no longer an inner class of PigServer. Therefore, the correct resolution is to use the top-level ExecType import and adjust any references to MAPREDUCE accordingly.
+
+In that case, the conflict should be resolved by taking the other branch's import of ExecType and removing the static import from HEAD. Because the static import would no longer be valid if ExecType is a top-level class.
+
+So the resolved code would have:
+
+import org.apache.pig.ExecType;
+import org.apache.pig.PigServer;
+
+But wait, the other branch's code is:
+
+import org.apache.pig.ExecType;
+import org.apache.pig.PigServer;
+
+While the HEAD has:
+
+import static org.apache.pig.PigServer.ExecType.MAPREDUCE;
+import org.apache.pig.PigServer;
+
+So merging these would require keeping both imports. But if ExecType is a top-level class, then the static import is incorrect. Therefore, the correct merge is to take the other branch's import of ExecType and remove the static import from HEAD.
+
+Therefore, the resolved code should have the import of ExecType and the PigServer import, and remove the static import. So the merged code would be:
+
+package org.apache.pig.test;
+
+import org.apache.pig.ExecType;
+import org.apache.pig.PigServer;
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+
+But wait, the original code after the conflict markers has the HEAD's static import and the other branch's ExecType import. So merging both would result in both imports. But if that's not possible because the static import is no longer valid, then we need to pick the correct one.
+
+Assuming that the other branch's change is correct (ExecType is now a top-level class), then the static import from PigServer.ExecType is invalid. Therefore, the correct resolution is to keep the import of ExecType and remove the static import.
+
+Hence, the resolved code should include the import from the other branch and remove the static import from HEAD.</think>
+```java
+ * limitations under the License.
+ */
+
+package org.apache.pig.test;
+
+import org.apache.pig.ExecType;
+import org.apache.pig.PigServer;
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+
+
+```

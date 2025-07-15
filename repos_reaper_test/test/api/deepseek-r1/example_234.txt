@@ -1,0 +1,102 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at the conflicting parts.
+
+In the HEAD version, there's a declaration of 'long end;' and in the other branch, there's 'long end;' plus a line initializing a TupleFactory. The variables 'end' are the same in both, so no conflict there. The main conflict is the addition of the mTupleFactory variable in the second branch.
+
+Since the two changes are to different variables—one is just the end variable, and the other adds a new variable—they can coexist. The HEAD side doesn't touch the mTupleFactory, and the other branch adds it. So the correct resolution is to keep both lines. The order might matter, but in Java, field declarations can be in any order. However, looking at the original code, the HEAD has 'long end;' with more spaces, while the other branch has 'long end;' with less spacing. But the code style for whitespace might not be crucial here. However, the conflict markers are around these lines. So combining both declarations: keep the 'long end;' from either (they are the same except for spacing) and add the mTupleFactory line. Wait, looking again, the HEAD version has 'long end;' with more spaces, and the other branch has 'long end;' with less. But since the content is the same, maybe we can take one of them. However, the conflict is between the two versions. Since both are adding 'end' and the other adds an extra line, the correct merge is to have both lines. So the merged code should include both 'long end;' and the mTupleFactory line. Wait, but in the conflict, the HEAD has 'long end;' and the other branch has 'long end;' plus the mTupleFactory. So the conflict is that both sides modified the same region. So the correct resolution is to take both changes. Therefore, in the merged code, we should have both 'long end;' and the mTupleFactory line. But looking at the code, the HEAD has 'long end;' with more spaces (maybe aligned with the previous line), but the other branch has it without the spaces. However, the actual variable declaration is the same. The mTupleFactory is a new addition. So the conflict is because both branches added lines in the same area. The solution is to keep both lines. So the merged code should have:
+
+long end;
+private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+But in the code, the HEAD version has 'long end;' with more spaces (maybe aligned with the previous 'long end;' line?), but the other branch has it without. Wait, looking at the original code:
+
+In HEAD:
+<<<<<<< HEAD
+    long                end;
+=======
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+So the HEAD has 'long end;' with more spaces between 'long' and 'end', while the other branch has 'long end;' with a single space, and then the new line. The conflict arises because both modified the same line (the 'end' declaration) and added another line. But actually, maybe the 'end' declaration in both branches is the same except for formatting. If the only difference is whitespace, then we can choose one. However, in merge conflicts, if both sides modify the same line, it's a conflict. But in this case, the other branch adds a new line after modifying the 'end' line. Wait, the HEAD has 'long end;' with more spaces, and the other branch changes that line to 'long end;' (single space) and adds the mTupleFactory line. So the conflict is that both branches changed the same line (the end declaration) and one added a new line. To resolve, we need to accept both changes. However, since the line in question is the same except for whitespace, perhaps we can take one version of the line and include the new line from the other. For example, take the HEAD's 'long end;' with more spaces and add the mTupleFactory line from the other branch. Alternatively, since the other branch's change to the end line is just whitespace, maybe the correct resolution is to take the other branch's version (with the single space) and include the mTupleFactory. But how do we know which whitespace is correct? If the original code in the base had a certain style, but since we don't have that context, perhaps the best approach is to accept both changes. Wait, but in a merge conflict, when both sides modify the same line, you have to choose. However, in this case, the HEAD's line is 'long end;' with more spaces, and the other branch's line is 'long end;' with single space. The conflict is on that line. So the user has to decide which spacing to use. But since the user is asking for semantic resolution, if the only difference is whitespace, then we can choose either. However, the other branch's line also adds the mTupleFactory. So the correct resolution is to take the 'end' line from either side and add the mTupleFactory line. For example, perhaps take the HEAD's 'long end;' line and then add the mTupleFactory line from the other branch. Alternatively, take the other branch's 'end' line. But the conflict is that the two versions changed the same line. So in the merged code, we need to have both the 'end' declaration and the mTupleFactory. But how?
+
+Wait, looking at the code again. The HEAD version has:
+
+    long                end;
+
+And the other branch has:
+
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+So the conflict is between these two blocks. To resolve, we can keep both lines. So the merged code would have:
+
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+But why did the HEAD have 'long end;' with more spaces? Maybe it's aligning with another variable. Looking at the surrounding code:
+
+In the original code before the conflict, there's:
+
+    BufferedPositionedInputStream in;
+    final private static Charset utf8 = Charset.forName("UTF8");
+<<<<<<< HEAD
+    long                end;
+=======
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+So in the HEAD, 'end' is declared with more spaces, perhaps to align with other variables. For example, maybe 'in' and 'utf8' are declared with some alignment. Let's check:
+
+Original lines before conflict:
+
+public class TextLoader implements LoadFunc{
+    BufferedPositionedInputStream in;
+    final private static Charset utf8 = Charset.forName("UTF8");
+<<<<<<< HEAD
+    long                end;
+=======
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+
+So 'in' is declared as 'BufferedPositionedInputStream in;' — the type is long, so the variable name 'in' is aligned with 'end' in HEAD. The 'utf8' declaration has 'final private static' modifiers, so it's longer. The HEAD's 'end' declaration is 'long end;' with spaces to perhaps align with the type of 'in'? For example, 'BufferedPositionedInputStream' is a long type name, and 'long' is a shorter type, but maybe the user used extra spaces to align the variable names. However, in the other branch, they have 'long end;' without the extra spaces and added the mTupleFactory line.
+
+But semantically, the addition of the mTupleFactory is a separate change. The conflict arises because both branches modified the same area. The correct resolution is to take both changes: the 'end' declaration and the new mTupleFactory line. But the problem is that the 'end' line is modified in both branches (whitespace change). So in the merged code, we need to decide which version of the 'end' line to take.
+
+If the only difference is whitespace, perhaps it's safe to take the version from one branch. Since the other branch adds a new line, maybe the intended change is to add the mTupleFactory, and the 'end' line's whitespace is incidental. Alternatively, maybe the HEAD's whitespace is part of a code style, and the other branch's change to 'end' is just a formatting adjustment. But without knowing the project's code style, it's hard to say. However, since the user is asking for a semantic merge, focusing on intent rather than formatting, perhaps the whitespace difference can be ignored, and both lines can be included. Wait, but the conflict is on the same line. How can we include both? The conflict markers show that the two versions are modifying the same lines. So the correct approach is to choose one version of the 'end' line and include the mTupleFactory line. For example, take the 'end' line from HEAD and add the mTupleFactory line from the other branch. But the other branch's 'end' line is different in spacing. Alternatively, take the 'end' line from the other branch (since it's part of the same change that adds the mTupleFactory) and include that line along with the new variable. But in the conflict, the two versions are:
+
+HEAD:
+    long                end;
+
+Other branch:
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+So the conflict is between these two blocks. To resolve, we need to have both 'end' and 'mTupleFactory' declarations. Therefore, the merged code should have both lines. So the correct resolution is to take the 'end' line from either side and add the mTupleFactory line. However, since the other branch's version includes the 'end' line with the mTupleFactory, and the HEAD's version only has 'end', the correct merge is to take both lines. Therefore, the merged code would be:
+
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+But in the HEAD's version, the 'end' line has more spaces. However, if the other branch's 'end' line is a formatting change (reducing spaces), then the merged code would take that formatting and include the new line. Alternatively, if the HEAD's formatting is important, but that's unclear. Since the user wants a semantic merge, focusing on intent, the actual variable declarations are the same, so the spacing is a formatting issue. Therefore, the semantic intent of both branches is to declare 'end' and add 'mTupleFactory'. Thus, merging both changes by including both lines. So the conflict resolution would be to take the 'end' line from either side (preferably the one that's correctly formatted according to the project's style, but since we don't know, we can choose the one from the other branch as it's part of the same commit that adds mTupleFactory) and add the mTupleFactory line. So the merged code would have:
+
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+Thus, the resolved code combines both changes. Therefore, the final answer should replace the conflict markers with those two lines.</think>
+```java
+ * contains the line of text.
+ */
+public class TextLoader implements LoadFunc{
+    BufferedPositionedInputStream in;
+    final private static Charset utf8 = Charset.forName("UTF8");
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+    public void bindTo(String fileName, BufferedPositionedInputStream in, long offset, long end) throws IOException {
+        this.in = in;
+        this.end = end;
+        // Since we are not block aligned we throw away the first
+
+```

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+        } catch (Exception ex)
+        {
+            ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+                user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+                return connect(user, def, handshake, false);
+            } else
+            {
+                throw new RuntimeException("Could not connect to target server " + Util.exception(ex));
+            }
+        }
+```

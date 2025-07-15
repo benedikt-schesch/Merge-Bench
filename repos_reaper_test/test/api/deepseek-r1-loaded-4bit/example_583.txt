@@ -1,0 +1,36 @@
+<think>
+Okay, let's see what the problem is here. The user provided a Java code snippet with a merge conflict. My task is to resolve the conflict by understanding the intent of both changes and merging them correctly without altering the surrounding context.
+
+Looking at the code, the conflict is between the HEAD version and the a17acec commit. The HEAD version has a list item about executing operations in batch, while the a17acec commit adds a new list item about executing FQL queries. The conflict markers show that the two changes are in the same part of the list.
+
+So, the goal is to combine both changes. The HEAD side doesn't have the FQL items, and the other side adds them. Since they're both list items under the same <ul>, they should be merged by including both. The order might matter. Looking at the surrounding context, the existing items are about fetching objects, fetching connections, then executing batch operations, publishing, and deleting. The FQL execute methods are another type of operation, so they should probably be added before the batch operations to maintain a logical flow, but I need to check the original order.
+
+Wait, in the original conflict, the HEAD side (before the conflict) has the batch execute right after fetching connections. The a17acec commit adds the FQL execute items between fetching connections and batch execute. So the correct merge would be to insert the FQL items after the fetch connection and before the batch execute. That way, both the new FQL methods and the existing batch methods are included in the list in a logical order.
+
+So the resolved list should have:
+- Fetch object
+- Fetch connection
+- Execute FQL query
+- Execute batch
+- Publish
+- Delete
+
+Therefore, the merge conflict can be resolved by keeping both the FQL items from the a17acec commit and the batch items from HEAD, placing them in sequence without conflict. The conflict markers should be removed, and both list items should be included in the correct order.
+
+Now, checking the code syntax. The original code has the FQL items added between the fetch connection and batch execute. The conflict markers are around where the FQL items were added. So removing the conflict markers and ensuring both changes are present in the correct order should resolve it.
+
+The final merged code should include all list items from both versions, ordered as fetch object, fetch connection, execute FQL, execute batch, publish, delete. That way, both contributions are preserved, and the intent is maintained without ambiguity.</think>
+```java
+ * 
+ * <ul>
+ * <li>Fetch an object: use {@link #fetchObject(String, Class, Parameter...)} or
+ * {@link #fetchObjects(List, Class, Parameter...)}</li>
+ * <li>Fetch a connection: use {@link #fetchConnection(String, Class, Parameter...)}</li>
+ * <li>Execute an FQL query: use {@link #executeFqlQuery(String, Class, Parameter...)} or
+ * {@link #executeFqlMultiquery(Map, Class, Parameter...)}</li>
+ * <li>Execute operations in batch: use {@link #executeBatch(BatchRequest...)} or {@link #executeBatch(List, List)}</li>
+ * <li>Publish data: use {@link #publish(String, Class, Parameter...)} or
+ * {@link #publish(String, Class, BinaryAttachment, Parameter...)}</li>
+ * <li>Delete an object: use {@link #deleteObject(String, Parameter...)}</li>
+ * </ul>
+```

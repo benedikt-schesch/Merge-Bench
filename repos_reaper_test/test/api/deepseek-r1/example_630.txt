@@ -1,0 +1,36 @@
+<think>
+Okay, let's take a look at this merge conflict. The code is in Java, and there's a conflict between the HEAD and the a17acec0655b8058aaf4d336ba2a1352aa49e2fe branch. 
+
+The conflict is within an if-else block. The HEAD version has an if statement checking if compatFields is not null and fields is null. Then it initializes fields by converting compatFields strings into SubscriptionField objects. The other branch adds an else if clause that checks if compatFields is null and fields is not null. In that case, it initializes compatFields by converting the SubscriptionField objects in fields into their names as strings.
+
+So, the problem here is that the two branches are adding complementary logic. The first part (HEAD) handles the case where compatFields exists but fields doesn't, creating fields from compatFields. The second part (from the other branch) handles the reverse: when fields exists but compatFields doesn't, creating compatFields from fields. 
+
+These two cases don't overlap; they are mutually exclusive. The else if condition in the other branch logically follows the first if. Therefore, merging them by placing the else if after the first if's closing brace should resolve the conflict without any issues. There's no semantic overlap here—both conditions can't be true at the same time, so combining them into an if-else if structure makes sense.
+
+I should check if the syntax is correct. The HEAD's code ends the if block with the closing brace, and the other branch's else if is properly structured. Merging them would look like:
+
+if (condition1) {
+  // code from HEAD
+} else if (condition2) {
+  // code from other branch
+}
+
+Which is valid Java syntax. Since the intent of both branches is to handle bidirectional conversion between compatFields and fields depending on which is present, combining both cases is the correct resolution. There's no ambiguity here, so the conflict can be resolved by keeping both blocks in an if-else if structure.</think>
+```java
+    if (compatFields != null && fields == null) {
+      fields = new ArrayList<SubscriptionField>();
+      for (String field : compatFields) {
+        fields.add(new SubscriptionField(field));
+      }
+    } else if (compatFields == null && fields != null) {
+      compatFields = new ArrayList<String>();
+      for (SubscriptionField subscriptionField : fields) {
+        compatFields.add(subscriptionField.getName());
+      }
+    }
+  }
+
+  public static class SubscriptionField extends AbstractFacebookType {
+
+
+```

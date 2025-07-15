@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'll preserve the conflict since the intent between showing a ProgressDialog during service binding versus immediately setting `registered = true` and showing the home button is ambiguous. Here is the original snippet with the conflict:
+
+```java
+
+            // bind to service
+            mServiceConnection = new OpenPgpServiceConnection(
+                    PgpHandler.this, providerPackageName, this);
+            mServiceConnection.bindToService();
+<<<<<<< HEAD
+
+            bindingDialog = new ProgressDialog(this);
+            bindingDialog.setMessage(this.getResources().getString(R.string.okc_progress_text));
+            bindingDialog.setCancelable(false);
+            bindingDialog.show();
+
+=======
+            registered = true;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+>>>>>>> cff7c7e6063492e6b52eb7e74b4ea628e8e7ecbc
+        }
+    }
+```

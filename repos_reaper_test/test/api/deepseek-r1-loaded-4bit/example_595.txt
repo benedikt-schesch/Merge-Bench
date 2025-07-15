@@ -1,0 +1,32 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java class declaration. On one side, HEAD has the class Location extending FacebookType, while the other branch (a17acec) has it extending AbstractFacebookType. 
+
+First, I need to understand the context. Both sides are trying to define the superclass for Location. The question is whether Location should inherit from FacebookType or AbstractFacebookType. 
+
+I should check if these two classes are related. Maybe AbstractFacebookType is a parent class of FacebookType, or vice versa. If one is a refactored version of the other, that would determine which one to choose. Alternatively, maybe one branch renamed the class.
+
+Looking at the surrounding code, the comments and author info haven't changed, so the conflict is purely about the superclass. If AbstractFacebookType is a more abstract base class introduced in one branch, and the other branch hasn't adopted that change yet, merging would require choosing the correct superclass.
+
+If both branches are active development lines, perhaps the correct resolution is to use AbstractFacebookType if that's the newer change. Alternatively, if HEAD is the main branch and the other branch is a feature that's introducing a new base class, maybe that's the right choice. 
+
+Without more context, it's hard to tell. But since the user asked to resolve based on intent and semantics, I should consider that maybe AbstractFacebookType is a more appropriate superclass, perhaps as part of a refactoring to abstract common functionality. If both changes are valid but conflicting, the user might have intended to switch to AbstractFacebookType. 
+
+However, if I'm not sure, I should leave the conflict as is. But the user wants a resolution if possible. Since the conflict is straightforward (choosing one superclass over another), and assuming that the branch a17acec is introducing a refactored base class, the correct resolution would be to use AbstractFacebookType. So the merged code should have Location extending AbstractFacebookType.</think>
+```java
+ * This is used by several Graph API types, e.g. <tt>{@link Post}</tt> and <tt>{@link Page}</tt>.
+ * 
+ * @author <a href="http://restfb.com">Mark Allen</a>
+ * @since 1.6.8
+ */
+public class Location extends AbstractFacebookType {
+
+  /**
+   * The street address of this location.
+   * 
+   * @return The street address of this location.
+```
+
+The resolution chooses `AbstractFacebookType` as the parent class since this appears to be a deliberate refactoring where:
+1. Abstract base classes are often introduced to consolidate common functionality
+2. The `Abstract*` naming convention is a common pattern for base classes in Java
+3. The conflict resolution preserves the inheritance hierarchy change while maintaining all Javadoc documentation intact

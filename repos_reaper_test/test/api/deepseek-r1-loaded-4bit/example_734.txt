@@ -1,0 +1,20 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is between two versions of an if statement condition. The HEAD version has the condition on a single line, while the other branch splits it into two lines. The rest of the code is the same.
+
+First, I need to understand what both sides are trying to do. Both conditions check if the x-coordinate of the touch event (e1.getRawX()) is less than the screen width divided by a threshold factor. The difference is just formatting—whether the method call to Util.getScreenSize() is split into two lines for readability.
+
+Since the semantic intent is identical, the conflict arises from code style. The best resolution is to keep the more readable version, which is the two-line split from the second branch. This maintains code consistency and readability without altering functionality. The rest of the code remains unchanged. So, I'll merge the two by using the split line version and remove the conflict markers.</think>
+```java
+                return false;
+            }
+
+            // Detect drag of the side bar or review drawer
+            if (Math.abs(e1.getY() - e2.getY()) < SWIPE_MAX_OFF_PATH) {
+                if (e1.getRawX() < Util.getScreenSize(CameraActivity.this)
+                        .x / SIDEBAR_THRESHOLD_FACTOR) {
+                    if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE ||
+                            e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
+                        mSideBar.slide(-distanceX);
+                        mWidgetRenderer.notifySidebarSlideStatus(-distanceX);
+                        mCancelSwipe = true;
+```

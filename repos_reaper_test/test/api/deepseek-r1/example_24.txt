@@ -1,0 +1,23 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict. The task is to resolve the conflict by understanding the intent of both changes and preserving the context without modifying anything else.
+
+Looking at the conflict, the HEAD version adds two imports from org.spout.engine, specifically SpoutServer and SpoutServerWorld. The other side, from commit 67bcb76, removes those imports. So the conflict is whether to keep or remove those imports.
+
+Now, I need to figure out why those imports are there. In the current code snippet, the class WorldFiles has a static final byte WORLD_VERSION. The imports in conflict are related to SpoutServer and its world. If those imports are not used in the surrounding code, maybe they were added by mistake in one branch and removed in another. Alternatively, maybe one branch deleted them because they're unnecessary, while the other added them for a new feature.
+
+But looking at the provided code, the WorldFiles class doesn't seem to directly reference SpoutServer or SpoutServerWorld. The existing imports are for NBT-related classes. So perhaps the imports from SpoutServer are not needed here. The conflict arises because one side added them, and the other didn't. But since the code in the snippet doesn't use them, maybe they were added in HEAD but are actually unnecessary, and the other branch correctly removed them. Or maybe the other branch removed them because they're moved elsewhere.
+
+But without more context, it's hard to tell. However, the user said to resolve based on intent and semantics. If the WorldFiles class doesn't use those SpoutServer classes, then keeping the imports would be unnecessary. Therefore, resolving the conflict by removing the imports (taking the version from commit 67bcb76) would be correct. That way, the code doesn't have unused imports.
+
+So the resolved code should not include the SpoutServer imports. Therefore, the merge conflict is resolved by accepting the changes from the incoming branch (67bcb76), removing the conflicting lines.</think>
+```java
+import org.spout.nbt.StringTag;
+import org.spout.nbt.stream.NBTInputStream;
+import org.spout.nbt.stream.NBTOutputStream;
+import org.spout.nbt.util.NBTMapper;
+
+public class WorldFiles {
+
+	public static final byte WORLD_VERSION = 2;
+	
+```

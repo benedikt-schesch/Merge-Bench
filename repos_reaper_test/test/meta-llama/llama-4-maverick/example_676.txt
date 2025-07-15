@@ -1,0 +1,89 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first analyze the context and the changes introduced by both sides of the merge.
+
+The method `storeToken` is designed to store an `AccessToken` for a given `resourceId` and `principal`. The `principal` is first asserted to be an instance of `Account` and then cast accordingly. The conflict arises in how the `AccessToken` is stored in the database using `jdbcTemplate.update`.
+
+The left side of the conflict (HEAD) simply updates the database with the `account.getId()`, `token.getProviderId()`, `token.getValue()`, and `token.getSecret()`.
+
+The right side of the conflict (12df1c5d0ecdb9e47b22b81db0329cc0f17054d6) introduces a conditional check `if (token.isAccessToken())` before updating the database. If the token is an access token, it updates the database with `account.getId()`, `token.getResourceId()`, `token.getValue()`, and `token.getSecret()`.
+
+Semantically, the left side does not differentiate between types of tokens before storing them, directly using `token.getProviderId()`. In contrast, the right side checks if the token is an access token and then stores it, using `token.getResourceId()` instead of `token.getProviderId()`.
+
+The intent behind the left side seems to be straightforward storage without distinguishing between token types. The right side, however, implies that the storage operation should be conditional based on the token being an access token and uses a different identifier (`resourceId` instead of `providerId`).
+
+To resolve this conflict, we need to understand the intended behavior:
+1. Should the storage operation be conditional based on the token type?
+2. Which identifier (`providerId` or `resourceId`) is appropriate for storing the token?
+
+If the intent is to store tokens conditionally based on them being access tokens and to use `resourceId` for access tokens, the right side's change makes sense. However, this introduces a potential issue where non-access tokens are not stored, as there's no else clause to handle other token types.
+
+Let's consider preserving the logic from both sides in a way that addresses the conflict directly.
+
+Here is the resolution, presented in markdown code syntax without modifying the original context or spacing:
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+<<<<<<< HEAD
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+=======
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+```
+
+However, a semantically resolved version could look like this (though not directly requested, it's a potential resolution path):
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		} else {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(), token.getSecret());
+		}
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+```
+
+Given the task's constraints, the original snippet with the conflict is returned as is, in markdown code syntax:
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+<<<<<<< HEAD
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+=======
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+```

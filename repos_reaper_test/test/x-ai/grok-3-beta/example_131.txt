@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict preserved as provided, including the full context, in markdown code syntax. I have not modified the context or spacing. Below the snippet, I will provide an analysis of the intent and semantics of both sides of the merge conflict.
+
+```java
+      String query = "DATA = LOAD 'empty' USING mock.Storage();"
+        + "A = rank DATA;"
+        + "store A into 'empty_result' using mock.Storage();";
+
+      Util.registerMultiLineQuery(pigServer, query);
+<<<<<<< HEAD
+      List<Tuple> expected = Util.getTuplesFromConstantTupleStrings(new String[]{});
+      Util.checkQueryOutputsAfterSort(data.get("empty_result"), expected);
+=======
+
+      Multiset<Tuple> expected = ImmutableMultiset.of();
+      verifyExpected(data.get("empty_result"), expected);
+>>>>>>> b91691ef1d20e616fd9c37d4018eb0db78db8898
+    }
+
+    @Test
+    public void testRankWithSplitInMap() throws Exception {
+        String query = "R1 = LOAD 'testsplit' USING mock.Storage() AS (a:int,b:int);"
+```
+
+### Analysis of Intent and Semantics
+
+- **HEAD Side**:
+  - The intent appears to be checking the output of a query result stored in `data.get("empty_result")` against an empty list of `Tuple` objects. It uses `Util.getTuplesFromConstantTupleStrings(new String[]{})` to create an empty list of expected results and then calls `Util.checkQueryOutputsAfterSort` to compare the sorted results with the expected empty list.
+  - This suggests a focus on ensuring that the result of the query is empty, likely as part of a test for handling empty datasets.
+
+- **Branch Side (b91691ef1d20e616fd9c37d4018eb0db78db8898)**:
+  - The intent here is also to verify the query output against an expected empty result, but it uses a different approach with `Multiset<Tuple>` and `ImmutableMultiset.of()` to represent an empty collection. It calls a method named `verifyExpected` to perform the comparison.
+  - This suggests a possible refactoring or update in the testing framework, where the codebase might be moving toward using `Multiset` for handling collections of results (potentially to handle duplicates or order-insensitive comparisons) and adopting a different verification method.
+
+- **Common Intent**:
+  - Both sides are clearly trying to validate that the result of the query stored in `data.get("empty_result")` is empty. The difference lies in the data structure (`List<Tuple>` vs. `Multiset<Tuple>`) and the verification method (`checkQueryOutputsAfterSort` vs. `verifyExpected`).
+
+- **Resolution Uncertainty**:
+  - Without additional context about the broader codebase (e.g., whether the project has standardized on `Multiset` or if `verifyExpected` is the new preferred method for verification), it’s ambiguous which approach should be adopted.
+  - If the branch side represents a newer or refactored approach (e.g., part of a larger change to use `Multiset` and a unified `verifyExpected` method), it might be preferable. However, if the HEAD side aligns with the current testing conventions elsewhere in the codebase, it might be the safer choice.
+  - Additionally, it’s unclear if `checkQueryOutputsAfterSort` and `verifyExpected` behave identically, especially regarding sorting or how they handle empty results.
+
+Given this ambiguity, I am returning the snippet with the conflict unresolved as per the instructions. If further context is provided (e.g., the purpose of `verifyExpected`, the project's conventions, or the direction of refactoring), I can offer a more definitive resolution.

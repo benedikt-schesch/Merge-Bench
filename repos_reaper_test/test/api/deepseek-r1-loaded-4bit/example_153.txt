@@ -1,0 +1,25 @@
+<think>
+Okay, let's look at this merge conflict. The code has a conflict in how the GruntParser is being initialized. In the HEAD version, it's using a StringReader with the script. In the other branch, they're adding a second argument, myPig, to the constructor. 
+
+I need to figure out the intent here. Both sides are trying to create a GruntParser, but the parameters differ. The HEAD version might be using an older constructor that only takes the StringReader. The other branch is passing an additional parameter, myPig, which could be a Pig instance needed for some context.
+
+To resolve this, I should check if the GruntParser constructor actually has two parameters: StringReader and Pig. If that's the case, then the correct version is the one from the second branch. But if the HEAD version's constructor is valid without the Pig instance, maybe there's a different approach. However, since the other branch explicitly adds myPig, it's likely that this is a necessary change, perhaps to provide the Pig context to the parser.
+
+Assuming that the correct constructor requires both arguments, the merge should take the version from the second branch. So combining both changes by including both parameters would resolve the conflict. The surrounding code doesn't show where myPig comes from, but since it's present in the second branch, it's probably declared earlier. Therefore, the resolved line should be:
+
+GruntParser parser = new GruntParser(new StringReader(script), myPig);
+
+This way, both the StringReader and the Pig instance are provided, satisfying both changes' intents.</think>
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "explain b;"
+                          + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

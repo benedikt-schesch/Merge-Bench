@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+     */
+    private KryoTranscoder getTranscoder( final ClassLoader classLoader ) {
+        if ( _transcoder == null ) {
+            final int initialBufferSize = getSysPropValue( PROP_INIT_BUFFER_SIZE, KryoTranscoder.DEFAULT_INITIAL_BUFFER_SIZE );
+            final int maxBufferSize = getSysPropValue( PROP_ENV_MAX_BUFFER_SIZE, KryoTranscoder.DEFAULT_MAX_BUFFER_SIZE );
+<<<<<<< HEAD
+            final String defaultSerializerFactory = getSysPropValue( PROP_ENV_DEFAULT_FACTORY, KryoTranscoder.DEFAULT_SERIALIZER_FACTORY_CLASS );
+            _transcoder = new KryoTranscoder( manager.getContainer().getLoader().getClassLoader(),
+                    _customConverterClassNames, _copyCollectionsForSerialization, initialBufferSize, maxBufferSize,
+                    defaultSerializerFactory );
+=======
+            _transcoder = new KryoTranscoder( classLoader,
+                    _customConverterClassNames, _copyCollectionsForSerialization, initialBufferSize, maxBufferSize );
+>>>>>>> 83d928931e4c9e249f1eabe699979ca6159afc1d
+        }
+        return _transcoder;
+    }
+
+    private int getSysPropValue( final String propName, final int defaultValue ) {
+
+```

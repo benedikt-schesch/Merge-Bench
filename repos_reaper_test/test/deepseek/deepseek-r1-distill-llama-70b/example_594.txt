@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to consider the intent and semantics of both sides. The original code has a test method `emptyFacebookMap()` while the merged branch has a test method `emptyObject()`. Both methods are testing the same functionality but with different method names. The new method name seems more generic and descriptive.
+
+Here is the resolved code:
+
+```java
+    ListObject obj = new ListObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+
+  /**
+   * Can we handle the empty object?
+   */
+  @Test
+  public void emptyObject() {
+    MapObject obj = new MapObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+```

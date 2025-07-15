@@ -1,0 +1,468 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java comment headers. The HEAD version has a block that starts with "distributed under the License..." and then there's a conflict with the other branch, which adds an Apache Software License comment.
+
+First, I need to understand what both sides are trying to do. The HEAD part seems to be part of a standard Apache License notice, mentioning distribution under the License. The other side, from commit 1488b22, is adding another Apache Software License header with a copyright notice from 2001. 
+
+Wait, but maybe these are two different license headers. The first part in HEAD is the typical Apache License 2.0 text, while the other part is from Apache License 1.1. That's a problem because they're different licenses. But maybe the user intended to have both? Or perhaps it's a mistake where the headers are conflicting.
+
+Looking at the context, the conflict occurs between the end of one comment block and the start of another. The HEAD version has a line with "limitations under the License." followed by the conflict markers. The other branch adds a new Apache Software License 1.1 header with a copyright line.
+
+But including both licenses doesn't make sense. It's more likely that these are two different versions of the license header, and the merge conflict arises because both branches modified the same part. The user probably needs to choose which license header to keep. However, since the task is to resolve the conflict semantically, I need to see if both can coexist or if one should be retained over the other.
+
+Wait, the original HEAD's comment is part of the Apache 2.0 license, while the other branch's code is from Apache 1.1. But the copyright years and the license versions are different. It's possible that the correct approach is to keep both copyright notices but under the same license. Or maybe the user intended to update the license from 1.1 to 2.0, leading to a conflict.
+
+Alternatively, the conflict could be due to both branches adding license headers in the same place. The correct resolution might be to combine both copyright lines under the same license block. For example, having the copyright lines from both commits and the Apache 2.0 license text.
+
+Looking at the code:
+
+HEAD has:
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+So the conflict is between the end of the Apache 2.0 header (in HEAD) and the addition of an older Apache 1.1 header in the other branch. This is problematic because you can't have both licenses unless the project is dual-licensed, which is uncommon. More likely, this is a merge conflict where both branches modified the license header, and we need to choose the correct one.
+
+But the user might have intended to update the license from 1.1 to 2.0. In that case, the HEAD version (2.0) should be kept, and the 1.1 part from the other branch is outdated and should be removed. Alternatively, if the other branch is adding an older copyright line that's still relevant, maybe the copyright lines should be merged into the existing license block.
+
+Wait, the HEAD's license block ends with "limitations under the License." and then the other branch adds a new license block for 1.1. That's conflicting because they're both in the same area. The correct resolution might be to remove the older 1.1 license and keep the 2.0 one, but also preserve any copyright lines.
+
+Looking at the other branch's code, it adds:
+
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+But the HEAD's code ends with the 2.0 license. So the conflict is between the end of the 2.0 license and the start of the 1.1 license. This likely indicates that one branch updated the license to 2.0 while the other still has 1.1. The correct resolution would be to keep the 2.0 license and integrate any necessary parts from the 1.1 branch, such as the copyright line.
+
+So, combining the copyright from both. For example, the HEAD's license block is correct (Apache 2.0), and the other branch's copyright line from 2001 should be added to the existing license block. However, in the given code, the HEAD's license block is already present, and the other branch is adding a separate license block. That would be incorrect, as you can't have both licenses unless the project is dual-licensed.
+
+But in the code provided, the conflict is between the end of the 2.0 license and the start of the 1.1 license. The correct resolution is probably to keep the 2.0 license and remove the 1.1 license, but check if the copyright line from 2001 is missing in HEAD. If the HEAD's license block includes the correct copyright, then the other branch's addition is redundant. Otherwise, the copyright line from the other branch should be added to the existing license block.
+
+Looking at the HEAD code, after the conflict markers, there's a line with "distributed under the License..." which is part of the 2.0 license. The other branch adds the 1.1 license. So perhaps the user intended to replace the 1.1 license with 2.0, leading to a conflict. In that case, the resolution is to keep the 2.0 license from HEAD and discard the 1.1 block from the other branch. However, the copyright line from 2001 might still be relevant and should be included in the 2.0 license block.
+
+In the HEAD's code, the copyright might be missing. Let me check the original code:
+
+HEAD's code before the conflict is:
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+So the HEAD's license block doesn't have a copyright line, while the other branch's code adds a copyright line for 2001. That's a problem. The correct license header for Apache 2.0 should include the copyright notice. So perhaps the HEAD version is missing the copyright line, and the other branch is adding it but with an older license version.
+
+Therefore, the resolution should be to include the copyright line from the other branch into the HEAD's license block, while keeping the Apache 2.0 license text.
+
+So, combining them:
+
+The HEAD's license block (Apache 2.0) should have the copyright line from the other branch. The other branch's code has:
+
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+So the resolved code would be:
+
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But wait, the order matters. Typically, the copyright comes first, then the license text. So the correct structure would be:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But in the original conflict, the HEAD's code does not have the copyright line, and the other branch adds it with the older license. So the correct merge is to take the copyright from the other branch and combine it with the license text from HEAD.
+
+Therefore, the resolved code would be:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But in the original code, the conflict markers are between the end of the HEAD's license and the start of the other branch's license. So merging them would involve inserting the copyright line from the other branch into the HEAD's license block.
+
+Wait, the original HEAD code ends with "limitations under the License." and then the conflict starts. The other branch's code adds the Apache 1.1 license. So perhaps the correct resolution is to have the copyright line from the other branch before the license text.
+
+But I'm a bit confused. Let's look again:
+
+Original code from HEAD:
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+Wait, the HEAD code ends with the */ closing the comment block. Then the conflict markers are present. The other branch's code starts a new comment block with the Apache 1.1 license.
+
+So the conflict is between the end of the HEAD's license block (Apache 2.0) and the addition of a new Apache 1.1 license block in the other branch. This is a problem because having two different license blocks is conflicting.
+
+The correct resolution would be to determine which license is the correct one. If the project has updated from Apache 1.1 to 2.0, then the HEAD's version (2.0) should remain, and the other branch's 1.1 license should be removed. However, if the other branch's copyright line is missing in the HEAD's license, then that line should be added.
+
+Looking at the HEAD's code, there's no copyright line before the license text. The other branch's code has a copyright line but under the 1.1 license. The correct Apache 2.0 header should include the copyright line, so perhaps the HEAD's code is incomplete, and the other branch's code adds the copyright but with the wrong license.
+
+Therefore, the correct merge would be to take the copyright line from the other branch and include it in the HEAD's license block. Then, remove the conflicting 1.1 license block.
+
+So the resolved code would have:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+This way, the copyright is included in the Apache 2.0 license block. Therefore, the merge conflict is resolved by incorporating the copyright from the other branch into the existing license header from HEAD, and removing the conflicting 1.1 license block.
+
+But in the original code, the conflict markers are placed such that the other branch is adding a new block after the HEAD's license. So the conflict is between the end of the HEAD's license and the start of the other branch's license. To resolve, we need to decide whether to keep both, which is unlikely, or to reconcile them.
+
+Since the two licenses are different versions, they shouldn't both be present unless dual-licensed. Assuming that's not the case, the correct approach is to keep the Apache 2.0 license from HEAD and include any necessary parts (like the copyright) from the other branch.
+
+Therefore, the resolved code will have the copyright line added to the HEAD's license block, and the other branch's license block removed.
+
+So the final code should look like:
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+Wait, no. Because the HEAD's license block already ends with */, and the other branch's code starts a new block. To include the copyright in the HEAD's block, we need to move it inside.
+
+But looking at the structure, the HEAD's license block is:
+
+ * distributed under the License... (part of the comment)
+ * ... limitations under the License.
+ */
+<<<<<<< HEAD
+
+So the comment block is closed with */, then the conflict starts. The other branch adds a new /* ... */ comment block with the Apache 1.1 license and copyright.
+
+If the correct approach is to have the copyright inside the license block, then the HEAD's block should include the copyright. However, the HEAD's block as given does not have the copyright line. So the merge conflict is because one side adds the copyright with an old license, and the other has the new license without copyright.
+
+The proper resolution would be to take the copyright line from the other branch and place it at the beginning of the HEAD's license block, then keep the rest of the HEAD's license.
+
+So the resolved code would be:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But how does this fit into the original code structure? Let me reconstruct.
+
+Original conflict:
+
+HEAD's code:
+
+... end of license ...
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+So, the code after resolving should combine the copyright into the existing license block. However, the HEAD's license block is already closed with */, so perhaps the conflict is because the other branch is adding a new license block after the existing one. That's invalid because you can't have two different licenses. Therefore, the correct resolution is to remove the conflicting Apache 1.1 block and ensure that the copyright is included in the existing Apache 2.0 block.
+
+But the HEAD's code does not have the copyright line. So the resolution is to add the copyright line from the other branch into the HEAD's license block. However, the way the conflict is structured makes this challenging because the HEAD's license block is already closed.
+
+Wait, perhaps the original code in HEAD is missing the copyright line. The other branch adds the copyright but with an older license. The correct approach is to merge the copyright into the existing license block. But since the blocks are separate, maybe the user intended to update the license from 1.1 to 2.0, and the copyright should be retained.
+
+In that case, the merged code would have the copyright line followed by the Apache 2.0 license text.
+
+So the resolved code would be:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But how does this fit into the original code structure? The original HEAD's code ends with the */, and the other branch starts a new comment. So merging would require moving the copyright into the HEAD's block.
+
+However, the original code in HEAD's side doesn't have the copyright line. So this is a case where the two branches are modifying the same area: one adds a new license block, and the other has a different license block. The correct resolution is to choose the correct license and copyright.
+
+Assuming that the project has moved to Apache 2.0, the HEAD's license is correct, but the copyright from the other branch should be included. Therefore, the resolved code would have the copyright line added to the HEAD's license block, which would look like:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But the original code's HEAD block is missing the copyright. So the merge conflict arises because one side has the license without copyright, and the other has copyright with an older license. The correct merge is to take the copyright from the other branch and place it in the HEAD's license block.
+
+Therefore, the resolved code would merge the two, resulting in a single license block with the copyright and Apache 2.0 text.
+
+So the final merged code would be:
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+Wait, no, that would have two comment blocks. That's not correct. The copyright should be part of the same comment block as the license.
+
+Ah, I see. The original HEAD's code ends the comment block with */, and then the other branch starts a new comment block. The conflict is between the end of the HEAD's comment and the start of the other branch's comment. So the correct resolution is to merge the content of the two comments into one, combining the copyright and the license text.
+
+But since the HEAD's comment is closed, the other branch's comment is a separate block. This indicates that the two comments are separate, and merging them would require combining them into a single block. However, that's not possible without modifying the structure.
+
+Alternatively, perhaps the HEAD's license block is missing the copyright, and the other branch's block is adding it but with an older license. The correct resolution is to include the copyright in the HEAD's block, remove the old license block from the other branch.
+
+But how? The HEAD's block is already closed. So maybe the other branch's code is adding a new copyright block that should be placed before the license text. However, the way the conflict is structured makes it difficult.
+
+Alternatively, perhaps the user intended to replace the old license (1.1) with the new one (2.0), and the copyright line is part of the old license block. In that case, the resolution is to keep the new license (HEAD) and discard the old one, but ensure the copyright is included.
+
+But the HEAD's license block doesn't have the copyright. So the correct resolution is to add the copyright line from the other branch into the HEAD's license block, then remove the old license.
+
+To do that, we need to edit the HEAD's license block to include the copyright, and remove the conflicting old license block from the other branch.
+
+In terms of the code:
+
+Original HEAD's block (Apache 2.0 without copyright):
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Other branch's block (Apache 1.1 with copyright):
+
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+The merged block should be:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But this requires modifying the HEAD's block to include the copyright, which wasn't there before.
+
+Since the user's instruction is to resolve the conflict semantically by understanding the intent, the correct approach is to merge the copyright from the other branch into the HEAD's license block, which uses Apache 2.0.
+
+Thus, the resolved code would be:
+
+/*
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But in the original code, the HEAD's license block is already closed. So how to integrate the copyright?
+
+Ah, perhaps the original code in HEAD is missing the copyright, and the conflict is because the other branch is adding it in a separate block. The correct structure should have the copyright as part of the license block.
+
+Therefore, the resolved code should combine the two, ensuring the copyright is part of the same block as the license text.
+
+The original conflict markers are between the end of the HEAD's license block and the start of the other branch's license block. So the merge should take the copyright from the other branch and place it at the beginning of the HEAD's license block, then close it properly.
+
+So the final merged code would be:
+
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+But this requires adjusting the comment block structure. However, the original code's HEAD block may not have the opening /*. Let me check the original code again.
+
+The original code from the user:
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+So the HEAD's code has a comment block that ends with */, then the conflict starts. The other branch's code adds a new comment block starting with /*.
+
+Therefore, the conflict is between the two separate comment blocks. The resolution is to realize that the other branch's copyright line belongs to the HEAD's license block. But since the HEAD's block is already closed, this is not possible without modifying the structure.
+
+This suggests that the HEAD's license block is incomplete (missing the copyright) and the other branch's code adds the copyright in a separate block with an old license. The correct resolution is to move the copyright into the HEAD's block and discard the old license.
+
+But since the blocks are separate, this would require editing the HEAD's block to include the copyright before the license text. However, in the given code snippet, the HEAD's block does not have the opening /*, only the lines starting with * distributed...
+
+Wait, looking back, the user's provided code snippet starts with:
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+
+So the HEAD's block is already a part of a comment. For example, the entire license block in HEAD is a JavaDoc comment or a multi-line comment. The line "distributed under the License..." is part of the comment lines. The comment ends with */, then the conflict markers start.
+
+The other branch adds a new multi-line comment starting with /*, which contains the Apache 1.1 license and copyright.
+
+The problem is that these are two separate comment blocks. The HEAD's block is the Apache 2.0 license without a copyright notice, and the other branch's block is the Apache 1.1 license with a copyright notice.
+
+The semantic intent here is likely that the project is updating the license from 1.1 to 2.0, and the copyright line should be retained but under the new license. Therefore, the correct merge would be to take the copyright line from the other branch and place it into the HEAD's license block, which is Apache 2.0, and then remove the old 1.1 license block.
+
+However, since the HEAD's license block is already closed with */, this requires modifying the structure to include the copyright within the same block.
+
+But the original code's structure doesn't show the opening of the comment block. For example, the HEAD's code starts with:
+
+ * distributed under the License is distributed on an "AS IS" BASIS,
+
+This implies that the comment block was opened earlier, perhaps with a /* at the top. So the entire block is a multi-line comment. The conflict occurs after the end of that comment block.
+
+Therefore, the other branch is adding a new comment block after the existing one. But this is conflicting because the two licenses are different.
+
+The correct resolution is to have the copyright line from the other branch included in the existing license block (Apache 2.0) and remove the old license block. However, since the existing block is closed, this requires editing the existing block to include the copyright.
+
+But given that the user instructed not to modify the context and only resolve the conflict, perhaps the correct approach is to recognize that the two comments are separate and the other branch's addition is redundant or conflicting. If the project has moved to Apache 2.0, the other branch's code (1.1) should be discarded, but the copyright should be kept.
+
+But since the copyright is inside the 1.1 license block, simply keeping that block would include the wrong license. Therefore, the resolution is to extract the copyright line from the other branch's block and place it into the existing Apache 2.0 block.
+
+However, given the structure of the conflict, this isn't straightforward. The conflict markers are placed such that the existing block ends, and the other branch adds a new block.
+
+In this case, the correct resolution is to merge the copyright from the other branch into the existing block, but since the blocks are separate, this would require changing the existing block to include the copyright. But if we can't modify the existing context (as per user instructions to not modify the context and preserve spacing), this may not be possible.
+
+Wait, the user's instructions say: "make sure you do not modify the context at all and preserve the spacing as is."
+
+So, the task is to return the entire snippet with the conflict resolved, but without modifying the context outside the conflict markers. However, the conflict is between the end of the HEAD's comment block and the start of the other branch's comment block. To resolve, we need to merge the content.
+
+Given that, the correct way is to take the copyright line from the other branch and place it into the HEAD's comment block, then close the block, and discard the other branch's license block.
+
+But how? The HEAD's comment block is already closed. Therefore, the conflict cannot be resolved without modifying the context, which is against the user's instructions. Alternatively, perhaps the conflict is in such a way that the other branch's comment block is added after the HEAD's block, leading to two license blocks. But that's incorrect.
+
+Given the ambiguity, if we can't determine the intent, we should leave the conflict. But the user asked to resolve if possible.
+
+Alternatively, perhaps the correct resolution is to keep both blocks, but that's invalid. Therefore, the conflict cannot be resolved automatically and should remain.
+
+But wait, the Apache 2.0 license includes the copyright notice. So the HEAD's block is missing it, and the other branch's block has it but with the wrong license. The semantic resolution is to merge the copyright into the HEAD's block.
+
+However, given the structure of the code, this requires adding the copyright line before the existing license text in the HEAD's block. But since the conflict is after the HEAD's block, this is not possible without modifying the context outside the conflict markers.
+
+Therefore, this merge conflict cannot be resolved without changing the existing structure of the code outside the conflict markers, which is against the user's instructions.
+
+In this case, the correct answer is to return the same snippet with the conflict markers, as the intent is ambiguous and cannot be resolved without further information.
+
+But wait, the user says: "If you are not sure on how to resolve the conflict or if the intent is ambiguous, please return the same snippet with the conflict."
+
+So, if I'm not sure, leave it as is. But earlier analysis suggests that the copyright should be merged into the existing license block. However, due to the structure of the code, it's not possible without modifying the context.
+
+Alternatively, perhaps the user intended that the two comment blocks are separate, and both should be present. But that's unlikely.
+
+Given the uncertainty, the safest approach is to return the same snippet with the conflict.</think>
+```java
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * reserved.
+```

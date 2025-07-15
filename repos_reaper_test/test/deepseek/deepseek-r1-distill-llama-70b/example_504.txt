@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to determine which changes better achieve the intended functionality. The key differences are:
+
+1. `BuildableBitmapTexture` vs `BuildableBitmapTextureAtlas`
+2. `SVGTextureRegionFactory` vs `SVGBitmapTextureAtlasTextureRegionFactory`
+
+The changes in the 91801fdd commit appear to be more specific to texture atlas handling, which is likely the intended functionality. Here's the resolved code:
+
+```java
+		return new Engine(new EngineOptions(true, ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera));
+	}
+
+	@Override
+	public void onLoadResources() {
+		this.mBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		SVGBitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+
+		this.mSVGTestTextureRegions = new BaseTextureRegion[COUNT];
+		int i = 0;
+		this.mSVGTestTextureRegions[i++] = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "chick.svg", 16, 16);
+		this.mSVGTestTextureRegions[i++] = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "chick.svg", 32, 32);
+```

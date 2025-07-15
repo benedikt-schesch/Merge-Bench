@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The code snippet is written in Java and includes a test method `parseUrlCode()` that checks the parsing of a URL string into a `Url` object. The test is part of a larger test suite, likely for a parsing or encoding/decoding library.
+
+The conflict arises in the line where the type of the `scheme` object is being asserted to be an instance of `Url.class`. The difference between the two versions is the spacing around the comma in the `assertThat` statement.
+
+- The version from `HEAD` (local changes) has: `assertThat(scheme,instanceOf(Url.class));`
+- The version from `7d8e78a2b152062a876d6f8f0f8bde7550278ed0` (incoming changes) has: `assertThat(scheme, instanceOf(Url.class));`
+
+The difference is merely in the presence of a space after the comma. Both lines are semantically equivalent; they check if the `scheme` object is an instance of `Url.class`. The inclusion or exclusion of a space does not change the functionality or the intent of the code.
+
+To resolve this conflict, we can choose either version since they are functionally identical. The standard Java coding conventions suggest having a space after a comma for better readability.
+
+Therefore, the conflict can be resolved by choosing the version with the space after the comma, which is considered more readable and follows standard Java formatting conventions.
+
+Here's the resolved snippet in markdown code syntax, preserving the original context and spacing as much as possible:
+
+```java
+
+	@Test
+	public void parseUrlCode() throws Exception {
+		Object scheme = createParser().parse("http://www.github.org/QRCode");
+		assertNotNull(scheme);
+		assertThat(scheme, instanceOf(Url.class));
+		Url urlCode = (Url) scheme;
+		assertEquals("http://www.github.org/QRCode", urlCode.getUrl());
+	}
+
+	@Test(expected = UnsupportedEncodingException.class)
+
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+I'll resolve the conflict by using `getNames()` method since it appears to be encapsulating the extraction of names from the JsonObject, which is a better practice than directly accessing the internal names. Here's the resolved code:
+
+```java
+    }
+
+    try {
+      List<MessageTag> resultList = new ArrayList<MessageTag>();
+      JsonObject rawMessageTagsObject = jsonMapper.toJavaObject(rawTags, JsonObject.class);
+      for (String key : getNames(rawMessageTagsObject)) {
+        String tagArrayString = rawMessageTagsObject.get(key).toString();
+        resultList.addAll(jsonMapper.toJavaList(tagArrayString, MessageTag.class));
+      }
+      return resultList;
+    } catch (FacebookJsonMappingException je) {
+```

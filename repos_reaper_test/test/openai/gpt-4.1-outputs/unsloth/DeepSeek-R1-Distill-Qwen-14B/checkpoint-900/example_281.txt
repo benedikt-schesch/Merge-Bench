@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```java
+    public Result getNext() throws ExecException {
+        if (bags == null) {
+            return new Result(POStatus.STATUS_EOP, null);
+        }
+
+        // Use whichever variable is available for the key index.
+        byte origIndex;
+        if (myKey != null) {
+            origIndex = myKey.getIndex();
+        } else {
+            origIndex = keyWritable.getIndex();
+        }
+
+        int index = (int)origIndex;
+        index &= idxPart;
+
+        if (index >= packagers.size() || index < 0) {
+
+```

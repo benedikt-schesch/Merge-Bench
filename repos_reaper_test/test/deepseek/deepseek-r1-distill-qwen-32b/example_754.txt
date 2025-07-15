@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and think through the resolution.
+
+The conflict is in the `ClassOption` setup where one side specifies `LocalClassifierAdapter.class` and the other side specifies `LocalLearner.class`.
+
+Based on the naming convention:
+- `LocalLearner` seems more general and might be the intended class
+- `LocalClassifierAdapter` could be a specific implementation detail
+
+The intent of both changes appears to be setting up a learner for classification. Since `Learner` is a more appropriate term in machine learning context than `Classifier`, I'll resolve the conflict in favor of `LocalLearner.class`.
+
+Here's the resolved code: (only changed the line with the conflict, preserved all other context as-is)
+
+```java
+	private Stream resultStream;
+
+	private Instances dataset;
+
+	public ClassOption learnerOption = new ClassOption("learner", 'l',
+			"Classifier to train.", LocalLearner.class, SimpleClassifierAdapter.class.getName());
+	
+	private TopologyBuilder builder;
+
+	private int parallelism;
+```

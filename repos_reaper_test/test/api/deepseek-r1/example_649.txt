@@ -1,0 +1,126 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict. The task is to resolve the conflict by understanding the intent of both sides without modifying the surrounding context.
+
+Looking at the conflict, the difference is in the comment block between HEAD and the branch a17acec. The lines in question are:
+
+<<<<<<< HEAD
+   * 
+=======
+   *
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+
+In the HEAD version, there's a line with an asterisk followed by a space. In the other branch, it's an asterisk followed by a space and an extra asterisk? Wait, no, looking again. Wait, no, both lines have an asterisk. Wait, no. Let me check again.
+
+Wait, the original lines are:
+
+HEAD has:
+   * 
+
+And the other branch has:
+   *
+
+Wait, actually, in the code snippet, the difference is that in HEAD, the line is " * " (asterisk followed by a space), and in the other branch, it's " *" (asterisk with no trailing space). Or wait, maybe it's the other way around? Let me check the exact characters.
+
+Looking at the code:
+
+<<<<<<< HEAD
+   * 
+=======
+   *
+>>>>>>> a17acec...
+
+So, in HEAD, the line is "   * " (with a space after the asterisk), and in the other branch, it's "   *" (asterisk with no space). Wait, no. Wait, the line after <<<<<<< HEAD is "   * " (the line ends with a space after the *), and the other side is "   *" (the line ends with the * and no space). Or maybe it's that one has an empty line with just the * and a space, while the other has a * with a space but maybe a line break? Hmm, perhaps it's a matter of line formatting in the Javadoc comment.
+
+Wait, in Javadoc comments, each line typically starts with an asterisk, and sometimes there's a space after it for formatting. But sometimes, especially in empty lines, people might just have the asterisk with no space. However, in many code styles, the convention is to have a space after the asterisk in each line of the Javadoc comment.
+
+So in this conflict, one side has an empty line in the Javadoc with " * " (asterisk and space), and the other has " *" (asterisk and no space). Or maybe it's a line that's just the asterisk with a trailing space versus without. Wait, perhaps the difference is that one side added an extra line with an asterisk but no space, and the other side has it with a space. Or maybe it's a whitespace difference, like trailing space in one branch but not the other.
+
+In this case, the conflict is about a line in the Javadoc comment. The line in question is between the method description and the @param tag. Both versions have a line with just an asterisk. The HEAD version has " * " (with a trailing space), and the other branch has " *" (without the trailing space). Or maybe the other way around. Wait, looking at the code again:
+
+The conflict is:
+
+<<<<<<< HEAD
+   * 
+=======
+   *
+>>>>>>> a17acec...
+
+So in HEAD, the line is " * " (asterisk followed by a space), and in the other branch, it's " *" (asterisk followed by a newline). Wait, no. Wait, maybe the line is empty except for the asterisk. So in HEAD, the line is " * " (asterisk and space), and in the other branch, it's " *" (asterisk and no space, then a line break). Or perhaps the line in HEAD is an empty line with just the asterisk and a space, and the other branch has the same but without the trailing space.
+
+In Javadoc, an empty line between tags or descriptions is allowed. The asterisk with or without a trailing space is a matter of code style. So the conflict is purely whitespace in the comment. Since both lines are effectively the same (an empty line in the Javadoc), but formatted with or without a trailing space after the asterisk.
+
+The correct resolution would be to pick one of them, but since the user asked to resolve the conflict by considering the intent and semantics. Both sides are trying to add an empty line in the Javadoc. The difference is in the formatting of the asterisk line. If the project's code style uses a space after the asterisk, then the HEAD version is correct. If not, then the other branch is. But without knowing the project's style, it's hard to say. However, in many standard Java conventions, the asterisk is followed by a space. For example:
+
+/**
+ * This is a Javadoc comment.
+ * <p>
+ * Another paragraph.
+ */
+
+Here, each line starts with " * " (asterisk and space). So the empty line would be " * " as well.
+
+Therefore, the HEAD version with the trailing space is more likely the correct one. But wait, looking again, maybe the HEAD version has a line with just " * " (asterisk and space) which would create an empty line, while the other branch has " *" (asterisk and no space), which is also an empty line. But in terms of code style, perhaps the trailing space is preferred.
+
+Alternatively, maybe the difference is that in the HEAD version, the line is " * " (with a trailing space), which could be considered as a line with a space, which is allowed. The other branch's line is " *", which is just the asterisk, which is also allowed but might not follow the project's style.
+
+But since the user says to preserve the spacing as is unless we can resolve the conflict. If the intent is to have an empty line in the Javadoc, then both versions achieve that. The conflict is purely about whitespace after the asterisk. In such cases, the correct resolution is to pick one, but since the user says to make sure not to modify the context if the intent is ambiguous.
+
+Wait, the user's instruction says: "If you are not sure on how to resolve the conflict or if the intent is ambiguous, please return the same snippet with the conflict."
+
+So in this case, since the conflict is about a whitespace difference in a comment line, and without knowing the project's code style, the intent is ambiguous. Therefore, the conflict remains unresolved, and the user should handle it.
+
+But wait, looking again, maybe the lines are not just whitespace. Let me check again.
+
+HEAD has:
+
+   * 
+
+Which is " * " (asterisk followed by a space), and the other branch has:
+
+   *
+
+Which is " *" (asterisk followed by no space). So in the code, the line in the comment is either " * " or " *". In Javadoc, the leading asterisks are typically followed by a space. So an empty line in the Javadoc is usually written as " * " (with the space), to maintain consistency. Therefore, perhaps the HEAD version is correct, and the other branch's line is missing the space. Therefore, resolving the conflict by choosing the HEAD version.
+
+Alternatively, maybe the other branch's line is correct. Wait, but why would there be a conflict here? Maybe one side added a line with " * " and the other side removed the space, leading to a conflict.
+
+But perhaps the actual content is the same: both sides have an empty line in the Javadoc, just formatted differently. In that case, the conflict can be resolved by choosing either, but since the user wants us to resolve it if we can determine the intent.
+
+If the intent is to have an empty line in the Javadoc, then either version achieves that. The difference is purely stylistic. Therefore, the conflict is trivial and can be resolved by choosing either version. But if the project's style is to have a space after the asterisk, then the HEAD version is correct. Otherwise, the other branch's version is.
+
+But since we don't have that information, the safest approach is to leave the conflict as is. However, the user instructed that if the intent is ambiguous, return the conflict. But if we can determine that both changes are trying to achieve the same thing (adding an empty line in the Javadoc), then perhaps we can resolve it by picking one.
+
+Alternatively, maybe the conflict is because one side added a line and the other modified it. Wait, looking at the surrounding code:
+
+The method's Javadoc comment is:
+
+  /**
+   * Post-JSON-mapping operation that populates the {@code messageTags} field "by hand".
+<<<<<<< HEAD
+   * 
+=======
+   *
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+   * @param jsonMapper
+   *          The {@code JsonMapper} that was used to map to this type.
+   */
+
+So between the description and the @param tag, there's an empty line. The HEAD version has " * " (asterisk and space) as the empty line, and the other branch has " *" (asterisk without space). In Javadoc, the empty lines are often represented by a line with just " * " to maintain the asterisk alignment. So the HEAD version is more standard. Therefore, resolving the conflict by choosing the HEAD version.
+
+Alternatively, the other branch's line might have a trailing space, but in the code, it's written as " *". So perhaps the conflict is because one branch added a line with " * " and the other with " *", leading to a conflict. Since both are valid but style differences, the resolution would depend on project conventions.
+
+But as an expert, if I have to choose, I'd pick the version with the space after the asterisk, as it's more common. So the resolved line would be " * ".
+
+Therefore, the merged code would remove the conflict markers and keep the line from HEAD.</think>
+```java
+    createdTime = toDateFromLongFormat(rawCreatedTime);
+  }
+
+  /**
+   * Post-JSON-mapping operation that populates the {@code messageTags} field "by hand".
+   * 
+   * @param jsonMapper
+   *          The {@code JsonMapper} that was used to map to this type.
+   */
+  @JsonMappingCompleted
+  protected void jsonMappingCompleted(JsonMapper jsonMapper) {
+```

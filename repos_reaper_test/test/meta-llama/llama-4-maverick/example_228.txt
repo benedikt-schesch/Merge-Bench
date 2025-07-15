@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The given code snippet is in Java and appears to be part of a test class, likely for Apache Pig, a high-level data processing language and framework. The class has a `PigServer` object named `pig` and overrides a `setUp` method annotated with `@Before`, indicating it's a setup method that runs before each test.
+
+The conflict arises in the `setUp` method where `pig` is initialized. The two versions are:
+1. `pig = new PigServer(MAPREDUCE, cluster.getProperties());`
+2. `pig = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());`
+
+The difference between the two is the first argument passed to the `PigServer` constructor. In the first version, it's `MAPREDUCE`, and in the second, it's `ExecType.MAPREDUCE`.
+
+To understand the intent, let's consider what `PigServer` is and its constructor. `PigServer` is a class in Apache Pig that allows you to execute Pig Latin queries from Java. The constructor `PigServer(ExecType execType, Properties properties)` is used to create a `PigServer` instance with a specified execution type and configuration properties.
+
+`ExecType` is an enumeration that specifies the execution mode of Pig, which can be `MAPREDUCE`, `TEZ`, or `LOCAL`. The change from `MAPREDUCE` to `ExecType.MAPREDUCE` suggests that the `PigServer` constructor now requires an explicit `ExecType` qualification for its first argument, likely due to changes in the Pig API.
+
+Given this context, both versions are attempting to initialize `pig` with `MAPREDUCE` as the execution type, but the version on the right (with `ExecType.MAPREDUCE`) is using the updated API where `MAPREDUCE` is an enum value within `ExecType`.
+
+Since `ExecType.MAPREDUCE` is the more explicit and updated way of specifying the execution type, and assuming that the test is intended to run with the `MAPREDUCE` execution type, the correct resolution is to use `ExecType.MAPREDUCE`.
+
+Here's the resolved snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+    private PigServer pig;
+    
+    @Before
+    @Override
+    protected void setUp() throws Exception {
+        pig = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+    }
+
+    @Test
+    public void testBigGroupAll() throws Throwable {
+```

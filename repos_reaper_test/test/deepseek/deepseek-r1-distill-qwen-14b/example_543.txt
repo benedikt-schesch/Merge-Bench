@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict involves the handling of a `ClassNotFoundException` for JAXRS resources. The left side logs the error but continues, while the right side logs and exits. The right side's intent to exit upon failure is more appropriate. However, the log message's formatting and punctuation should be correct.
+
+```java
+        try {
+            for (String c : jaxRsResources) {
+                resources.add(Class.forName(c));
+            }
+        } catch (ClassNotFoundException e) {
+<<<<<<< HEAD
+            LOGGER.log(Level.SEVERE, "Cannot locate the JAXRS resource class.",
+                    e);
+=======
+            LOGGER.log(Level.SEVERE,
+                    "Cannot locate the JAXRS resource class.", e);
+>>>>>>> 1d97bfac1d91e13b3835ca099b3a998c1969478f
+            System.exit(1);
+        }
+        Reference baseRef = endpoint != null ? new Reference(endpoint) : null;
+        return JaxRsIntrospector.getDefinition(jaxrsApplication,
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1d97bfac1d91e13b3835ca099b3a998c1969478f
+);
+```

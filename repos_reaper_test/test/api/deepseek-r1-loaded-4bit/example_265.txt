@@ -1,0 +1,21 @@
+<think>
+Okay, let's look at this merge conflict. The user provided a Java code snippet where there's a conflict between two imports. The HEAD version has an import for NullableTuple, and the other branch adds an import for PigNullableWritable.
+
+First, I need to determine if these imports are necessary or if there's a conflict. The code after the conflict mentions NullableTuple in the comment, which suggests that the HEAD import is used. However, the other branch's import for PigNullableWritable might be needed elsewhere in the code that's not shown here.
+
+Since both imports are from the same package org.apache.pig.impl.io, it's possible that both classes are used in different parts of the code. The conflict arises because both branches added different imports in the same location. The correct resolution would be to include both imports, as they don't directly conflict with each other semantically. 
+
+The user's instruction says to preserve the context and resolve based on intent. If both classes are used, the merge should include both. The order might not matter, but typically, imports are kept in alphabetical order. NullableTuple comes before PigNullableWritable, so they can be listed in that order. Therefore, the merged code should have both import statements without the conflict markers.</think>
+```java
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.InternalCachedBag;
+import org.apache.pig.data.NonSpillableDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.impl.io.NullableTuple;
+import org.apache.pig.impl.io.PigNullableWritable;
+import org.apache.pig.impl.util.Pair;
+/**
+ * The package operator that packages the globally rearranged tuples into
+ * output format after the combiner stage.  It differs from POPackage in that
+ * it does not use the index in the NullableTuple to find the bag to put a
+```

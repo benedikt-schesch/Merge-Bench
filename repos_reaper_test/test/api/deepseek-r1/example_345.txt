@@ -1,0 +1,23 @@
+<think>
+Okay, let's look at this merge conflict. The HEAD version of the method has parameters including a Sort sort at the end, while the other branch (fe1b8ab28f) has the method throwing an exception, indicating it's obsolete and should be removed. 
+
+The HEAD side seems to be adding a new parameter for sorting, but the other branch marks the method as obsolete. The conflict is between adding a parameter versus deprecating the method.
+
+The correct resolution would be to keep the version that marks the method as obsolete because the other branch's change is more significant—it's removing the method's functionality. Even though HEAD added a parameter, if the method is supposed to be obsolete, that takes precedence. So the resolved code should include the exception and remove the HEAD changes, but also check if any parameters from HEAD are needed. However, since the other branch's method doesn't include the Sort sort parameter, but the HEAD does, but the method is throwing an exception, the parameters might not matter anymore. 
+
+Therefore, the correct merge would be to take the fe1b8ab28f version, keeping the exception and removing the Sort parameter. So the conflict markers are removed, and the method is as in the second part, but also ensuring that any necessary parameters from HEAD are considered. However, since the method is obsolete, the parameters might not be relevant anymore. So the final code should be the version that throws the exception, discarding the HEAD changes.</think>
+```java
+	 *            Offset (0 for none)
+	 * @param limit
+	 *            Limit (0 for none)
+	 * @return
+	 */
+	public ArrayList<FileLocation> getDirectory(INotifiableManager manager, String path, DirectoryMask mask, int offset, int limit,  final int mMediaType) {
+		throw new RuntimeException("Obsolete, remove any calls from this.");
+		/*
+		final ArrayList<FileLocation> dirs = new ArrayList<FileLocation>();
+		final JsonNode jsonDirs = mConnection.getJson(
+				manager,
+				"Files.GetDirectory",
+				sort(obj().p("media", "files").p("directory", path),
+```

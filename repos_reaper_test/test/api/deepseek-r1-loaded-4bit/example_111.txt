@@ -1,0 +1,30 @@
+<think>
+Okay, let's look at this merge conflict. The user wants me to resolve it based on the intent and semantics of both sides. The conflict is in the Java imports.
+
+In the HEAD version, the imports are:
+- org.junit.Before
+- org.junit.Rule
+And then after that, the other side (06e8633) adds imports for Failures and Shorts from org.fest.assertions.internal, along with the existing ExpectedException, AbsValueComparator, and ComparatorBasedComparisonStrategy.
+
+So the conflict is between the HEAD not having those two FEST internal classes imported, and the other branch adding them. Since both branches are adding imports, but in different parts, I need to check if these imports are necessary and if they can coexist.
+
+Looking at the code, the HEAD side might have removed those imports, or maybe the other branch added them. But since the conflict is in the same area, the correct resolution would be to include both sets of imports. However, the way the conflict is structured, the HEAD doesn't have the two lines, and the other branch does. So merging them would mean adding the two imports from the other branch while keeping the existing ones from HEAD.
+
+Wait, the conflict markers show that the HEAD doesn't have the Failures and Shorts imports, and the other branch adds them. So the correct resolution is to include those imports. Because in the HEAD, those lines are absent, and in the other branch, they are present. So merging would add them. There's no overlap except in the position where they are inserted.
+
+So the resolved code should include all the imports from both branches. The order might matter, but since they are in the same block, as long as the imports are correctly ordered, it's okay. Java imports are generally ordered, but the user hasn't indicated any specific order, so combining both should be safe.
+
+Therefore, the resolved code will have the two additional imports from the other branch. The conflict markers are removed, and both sets of imports are included. The other context lines remain unchanged.</think>
+```java
+import static org.mockito.Mockito.spy;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.fest.assertions.internal.Failures;
+import org.fest.assertions.internal.Shorts;
+import org.fest.test.ExpectedException;
+import org.fest.assertions.util.AbsValueComparator;
+import org.fest.util.ComparatorBasedComparisonStrategy;
+
+/**
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The two versions of `TRANSCODING_PARAMETERS` differ by the inclusion of `threads=2`.
+
+The HEAD version:
+`vcodec=VP80,vb=1000,vfilter=canvas{width=640,height=360},acodec=vorb,ab=128,channels=2,samplerate=44100,threads=2`
+
+The a4124a4 version:
+`vcodec=VP80,vb=1000,vfilter=canvas{width=640,height=360},acodec=vorb,ab=128,channels=2,samplerate=44100`
+
+Since both sides appear to agree on the other parameters, and the only difference is whether to include `threads=2`, we'll keep the parameter with the additional configuration as it seems to be adding an optimization.
+
+```java
+														// if Google blocks this
+
+	private static final String HEADER_APPLICATION_URL = "Application-URL";
+	private static final String CHROME_CAST_MODEL_NAME = "Eureka Dongle";
+	private static final String TRANSCODING_EXTENSIONS = "wmv,avi,mkv,mpg,mpeg,flv,3gp,ogm";
+	private static final String TRANSCODING_PARAMETERS = "vcodec=VP80,vb=1000,vfilter=canvas{width=640,height=360},acodec=vorb,ab=128,channels=2,samplerate=44100,threads=2";
+	private static final String PROPERTY_TRANSCODING_EXTENSIONS = "transcoding.extensions";
+	private static final String PROPERTY_TRANSCODING_PARAMETERS = "transcoding.parameters";
+	private int port = EmbeddedServer.HTTP_PORT;
+	private List<DialServer> servers = new ArrayList<DialServer>();
+	private JComboBox deviceList;
+```

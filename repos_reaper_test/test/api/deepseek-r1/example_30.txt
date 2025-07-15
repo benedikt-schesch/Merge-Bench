@@ -1,0 +1,64 @@
+<think>
+Okay, let's take a look at this merge conflict. The user is trying to merge two branches, and there's a conflict in the import statements. The HEAD branch is importing org.spout.math.vector.Vector3, while the other branch (cc07030) is importing org.spout.api.Client. The surrounding context includes other imports from org.spout.api, like Platform, Spout, etc.
+
+First, I need to understand the intent of both changes. The HEAD side adds an import for Vector3, which might be related to some math or vector operations. The other side adds an import for Client from the same org.spout.api package. Since both are adding new imports, maybe they're both necessary. 
+
+Looking at the surrounding code, the other imports from org.spout.api are present, so adding Client there makes sense. The Vector3 import is from a different subpackage, math.vector. It's possible that both imports are needed for different parts of the code. 
+
+Since these are separate imports and don't conflict with each other (they're different classes), the correct resolution would be to keep both imports. The conflict arises because they were added in different branches. So, the solution is to include both import statements, placing them in the correct order. 
+
+In Java, the order of imports doesn't matter as long as they're all present. However, it's common to group imports from the same package together. The Client import is part of org.spout.api, so it should be grouped with the other org.spout.api imports. The Vector3 import is from a different subpackage, so it can stay where it is or be placed appropriately. 
+
+Wait, looking at the original code, the HEAD has the Vector3 import between the HashCodeBuilder and the Platform import. The other branch adds Client after the HashCodeBuilder. So merging them would require adding both imports in their respective places. But since they're in the same conflict block, the user has to choose which one comes first. 
+
+But in the conflict snippet, the HEAD has Vector3, and the other branch has Client. The surrounding lines after the conflict show imports from org.spout.api. So the correct approach is to include both imports. So the merged code should have both:
+
+import org.spout.math.vector.Vector3;
+import org.spout.api.Client;
+import org.spout.api.Platform;
+...
+
+So the conflict markers should be removed, and both imports added in the order they appear. Since the HEAD's Vector3 is before the other imports, and the other branch's Client is added before the existing org.spout.api imports, combining them would place Client with the other api imports and Vector3 where it was. 
+
+Wait, the original conflict is between the two import lines. The HEAD has Vector3, and the other branch has Client. The code after the conflict includes Platform, Spout, etc. So the correct merge is to have both imports. So the merged code would have:
+
+import org.spout.math.vector.Vector3;
+import org.spout.api.Client;
+import org.spout.api.Platform;
+...
+
+So in the resolved code, both imports are present. The order might not matter, but typically, you group same-package imports together. Since Client is part of org.spout.api, it should be grouped with the other org.spout.api imports. Therefore, the Vector3 import from a different package can stay where it is, and the Client import is added with the other api imports. 
+
+But looking at the original conflict lines, the HEAD's code has the Vector3 import, and the other branch's code adds Client in the same place. The conflict is because both branches added different imports at the same spot. To resolve, we need to include both. Since they are in the same location in the file (between HashCodeBuilder and Platform), but from different packages, perhaps the correct resolution is to list both, maybe ordering them alphabetically or by package. 
+
+Alternatively, maybe the Client import was added by one branch and Vector3 by another, and both are needed. The user probably needs both imports, so the conflict should be resolved by keeping both lines. Therefore, the merged code would have both import statements. 
+
+So the resolved code snippet would be:
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import org.spout.math.vector.Vector3;
+import org.spout.api.Client;
+import org.spout.api.Platform;
+import org.spout.api.Spout;
+...
+
+This way, both imports are included. The conflict markers are removed, and both necessary imports are present. Since there's no overlap in the actual code (they are separate imports), this should resolve the conflict without issues.</think>
+```java
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import org.spout.math.vector.Vector3;
+import org.spout.api.Client;
+import org.spout.api.Platform;
+import org.spout.api.Spout;
+import org.spout.api.component.BaseComponentOwner;
+import org.spout.api.component.Component;
+import org.spout.api.component.entity.EntityComponent;
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Here's the resolved code with both constructors preserved. Since both sides added distinct constructor overloads, they can be merged by retaining all variations:
+
+```java
+    this.options = options;
+    this.maxUriLength = maxUriLength;
+    this.maxImageSize = maxImageSize;
+}
+
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+    //--------------------------------------------------------------------------
+    // Get/Set verbose flag
+    //--------------------------------------------------------------------------    
+    
+    public boolean getVerbose(){
+```
+
+The merge keeps both the original constructor (with `options`, `maxUriLength`, `maxImageSize` parameters) and the new constructor (with `Reader in`, `options`, `verbose`, `maxUriLength`). These represent valid overload patterns for different construction scenarios.

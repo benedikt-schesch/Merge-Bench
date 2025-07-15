@@ -1,0 +1,54 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at both versions.
+
+The conflict is in the 'text' variable. The HEAD version uses String.join to combine the ambiguousPrincipals list into an HTML list. The other branch uses a stream, sorting them and then joining with Collectors.joining. 
+
+Hmm, the main differences are:
+1. The HEAD message says "resource access permissions or node ownership" while the other branch says "grants or node ownership". Maybe "grants" is a typo for "grants"? Or perhaps it should be "grants" as in permissions. Wait, "grants" might be correct, but the original says "resource access permissions". Maybe the intended meaning is similar, so combining both could be better. Wait, but in a merge conflict, we have to choose one or the other. Which one is more accurate? Or maybe the intended message is to use "grants" instead of "resource access permissions". Alternatively, perhaps the correct phrasing is a combination, but that's not possible here. Since the two branches have different phrases, I need to decide which one to keep. Let me check the surrounding context. The message is about ambiguous principals affecting node access rights during data deployment. "Grants" might refer to access grants, which is similar to "resource access permissions". So maybe "grants" is the newer term and should be kept.
+
+2. The HEAD version uses String.join, which just concatenates the list in its current order. The other branch sorts the list before joining. Sorting would make the list items appear in alphabetical order, which is better for user presentation. So keeping the sorted stream approach is preferable for clarity.
+
+3. The HEAD version ends the sentence with a period, while the other branch uses an exclamation mark. The exclamation might be more emphatic, but it's a matter of style. The rest of the message is the same except for the punctuation here.
+
+4. The text in both cases is part of a warning message. The second part of the message is the same except for the punctuation.
+
+So the goal is to merge these changes without losing intent. The correct approach would be to take the changes from both branches where possible. But since it's a conflict, we have to choose one or the other, or find a way to combine them.
+
+Wait, but the two changes are in the same line. So we can't take both. Let's see:
+
+HEAD version:
+"resource access permissions or node ownership"
+"restored as defined in the export you just imported</b>." (ends with period)
+String.join("</li><li>", ambiguousPrincipals)
+
+Other branch:
+"grants or node ownership"
+"restored as defined in the export you just imported</b>!" (exclamation)
+ambiguousPrincipals.stream().sorted().collect(...)
+
+So, possible resolution: Take "grants" as it might be the updated term, keep the exclamation mark for emphasis, and use the sorted stream to display the principals in order. That way, we incorporate both improvements: sorted list and updated terminology.
+
+Therefore, the resolved code should have the text from the other branch (grants, exclamation, sorted stream), but check if "grants" is correct or if it's a typo. If "grants" is intended, then that's correct. Since both changes are part of different branches, combining them makes sense semantically. The sorted list is an improvement for user readability, and using "grants" might be more concise than "resource access permissions".
+
+So the merged code would be:
+
+final String text = "For the following names, there are multiple candidates (User/Group) for grants or node ownership during <b>data deployment</b>.<br>"
+					+ "Because of this ambiguity, <b>node access rights could not be restored as defined in the export you just imported</b>!"
+					+ "<ul><li>" + ambiguousPrincipals.stream().sorted().collect(Collectors.joining("</li><li>")) + "</li></ul>"
+					+ "Consider clearing up such ambiguities in the database.";
+
+This combines the better wording (if grants is correct), the sorted list, and the exclamation mark. Thus, the conflict is resolved by taking the changes from the other branch, as they seem to improve the message and presentation.</think>
+```java
+		}
+
+		if (!ambiguousPrincipals.isEmpty()) {
+
+			final String title = "Ambiguous Principal(s)";
+			final String text = "For the following names, there are multiple candidates (User/Group) for grants or node ownership during <b>data deployment</b>.<br>"
+					+ "Because of this ambiguity, <b>node access rights could not be restored as defined in the export you just imported</b>!"
+					+ "<ul><li>" + ambiguousPrincipals.stream().sorted().collect(Collectors.joining("</li><li>")) + "</li></ul>"
+					+ "Consider clearing up such ambiguities in the database.";
+
+			logger.info("\n###############################################################################\n"
+					+ "\tWarning: " + title + "!\n"
+```

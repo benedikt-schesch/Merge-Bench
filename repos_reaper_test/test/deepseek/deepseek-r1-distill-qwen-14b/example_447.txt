@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict adds a failure message to the assertion to make it clearer upon test failure. Both intents are valid, but adding the message enhances clarity.
+
+```java
+				"EMAIL:cookiemonster@sesamestreet.com\n" + //
+				"ADR:Sesamestreet 1\n" + //
+				"NOTE:more cookies, please\n" + //
+				"END:VCARD");
+		assertNotNull(scheme);
+<<<<<<< HEAD
+		assertThat(scheme,instanceOf(VCard.class));
+=======
+		assertThat("wrong type", scheme, instanceOf(VCard.class));
+>>>>>>> 7d8e78a2b152062a876d6f8f0f8bde7550278ed0
+		VCard vcard = (VCard) scheme;
+		assertEquals("Cookiemonster", vcard.getName());
+		assertEquals("Sesamestreet 1", vcard.getAddress());
+		assertEquals("CTV", vcard.getCompany());
+		assertEquals("cookiemonster@sesamestreet.com", vcard.getEmail());
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict appears to be purely a formatting difference in the condition statement. The logic is identical between both versions - it checks if the Y movement is more than half the height downward or if the X movement is more than half the width in either direction, while ensuring the listener is not null.
+
+The only difference is that in the HEAD version the condition is written in a single line, while in the c923751 version it is split into two lines for better readability. I will preserve the version with better readability:
+
+```java
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            mDownX = event.getRawX();
+            mDownY = event.getRawY();
+            mListener.onShutterButtonPressed();
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX()
+                    - mDownX) > getWidth() / 2) && mListener != null) {
+                if (!mSlideOpen) {
+                    mListener.onSlideOpen();
+                    mSlideOpen = true;
+                }
+            } else {
+
+```

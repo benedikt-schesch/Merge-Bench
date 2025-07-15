@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+    return new MockLowLevelHttpRequest(url);
+  }
+
+  @Override
+  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+    return new MockLowLevelHttpRequest(url);
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+  }
+
+  @Override
+  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
+    return new MockLowLevelHttpRequest(url);
+  }
+```
+
+Changes made:
+1. Updated both the constructor method for the MockLowLevel HttpRequest and the buildPostRequest and buildPutRequest methods to include the url parameter
+
+The problem was that all three methods were either calling with or without the url parameter and the class was using a static URL ("http://localhost:8000"). This caused issues where all callers used the same url without the provided url parameter. By updating the constructor to map the provided url, all callers get the correct url.
+
+If you notice any other issues or conflicts, let me know.

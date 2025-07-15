@@ -1,0 +1,66 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the changes brought in by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a test class, likely using a framework like JUnit for unit testing. The test is focused on deserialization, specifically using a `GsonDeserialization` object to deserialize a JSON stream into Java objects.
+
+The conflict arises between the lines involving the creation and configuration of a list of `JsonDeserializer` objects and the subsequent usage of a `deserializer` object to deserialize a JSON stream.
+
+1. **Understanding the Changes**:
+   - The `HEAD` side (local changes) introduces a list of `JsonDeserializer` objects, adds a custom `CalendarISO8601Deserializer` to this list, and then presumably uses this list to configure a `DefaultJsonDeserializers` object, which is passed to the `GsonDeserialization` constructor.
+   - The other side (changes from the commit `97d4f628bf2675efd7c06c6636b473b06d0e080b`) does not introduce any deserializers and directly proceeds to test the deserialization process.
+
+2. **Analyzing Intent**:
+   - The intent behind the `HEAD` changes seems to be to customize the deserialization process by adding a specific deserializer (`CalendarISO8601Deserializer`) for handling ISO 8601 formatted calendar dates.
+   - The intent behind the other side's changes is to test the deserialization functionality.
+
+3. **Resolving the Conflict**:
+   - To resolve this conflict, we need to determine if the custom deserializer added in `HEAD` is necessary for the deserialization test being performed.
+   - Assuming the test is verifying the deserialization of an object (in this case, `Dog`) and the custom deserializer is relevant for the object's properties (e.g., if `Dog` has a property that is a date), then including the custom deserializer makes sense.
+
+Given this analysis, the resolution involves keeping the changes from both sides where applicable. The `deserializer` object is used in the test, but its initialization is conflicted. The `HEAD` side initializes it with a custom deserializer, while the other side does not show this initialization.
+
+Since the `deserializer` is used later in the test, and assuming that the custom deserializer is necessary or at least not harmful for the test, we can resolve the conflict by keeping the initialization code from the `HEAD` side.
+
+However, upon closer inspection, the code directly within the conflict markers suggests that the resolution might simply involve deciding whether to include the custom deserialization logic or not. The original snippet with the conflict is:
+```java
+>>>>>>> 97d4f628bf2675efd7c06c6636b473b06d0e080b
+
+		when(provider.parameterNamesFor(bark.getMethod())).thenReturn(new String[] { "dog" });
+		when(provider.parameterNamesFor(bark.getMethod())).thenReturn(new String[] { "dog" });
+
+<<<<<<< HEAD
+		List<JsonDeserializer> deserializers = new ArrayList<JsonDeserializer>();
+		deserializers.add(new br.com.caelum.vraptor.serialization.iso8601.gson.CalendarISO8601Deserializer(new ISO8601Util()));
+
+		deserializer = new GsonDeserialization(provider, new DefaultJsonDeserializers(deserializers), request);
+
+=======
+>>>>>>> 97d4f628bf2675efd7c06c6636b473b06d0e080b
+		Object[] deserialized = deserializer.deserialize(stream, bark);
+
+		assertThat(deserialized.length, is(1));
+		assertThat(deserialized[0], is(instanceOf(Dog.class)));
+		Dog dog = (Dog) deserialized[0];
+```
+
+To resolve this, we should keep the lines that initialize `deserializers` and `deserializer` from the `HEAD` side because they are relevant for configuring the deserialization process, and we assume that `deserializer` is declared somewhere above this snippet.
+
+Thus, the resolved code snippet, preserving the original context and spacing, is:
+```java
+>>>>>>> 97d4f628bf2675efd7c06c6636b473b06d0e080b
+
+		when(provider.parameterNamesFor(bark.getMethod())).thenReturn(new String[] { "dog" });
+		when(provider.parameterNamesFor(bark.getMethod())).thenReturn(new String[] { "dog" });
+
+		List<JsonDeserializer> deserializers = new ArrayList<JsonDeserializer>();
+		deserializers.add(new br.com.caelum.vraptor.serialization.iso8601.gson.CalendarISO8601Deserializer(new ISO8601Util()));
+
+		deserializer = new GsonDeserialization(provider, new DefaultJsonDeserializers(deserializers), request);
+
+		Object[] deserialized = deserializer.deserialize(stream, bark);
+
+		assertThat(deserialized.length, is(1));
+		assertThat(deserialized[0], is(instanceOf(Dog.class)));
+		Dog dog = (Dog) deserialized[0];
+```

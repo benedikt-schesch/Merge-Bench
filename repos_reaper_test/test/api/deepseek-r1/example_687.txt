@@ -1,0 +1,55 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in a Java logger message. Both sides are trying to construct a warning message about ambiguous principals. 
+
+First, I'll compare the two versions. The HEAD version uses String.join("\n\t", ambiguousPrincipals), while the other branch uses a stream with sorted() and Collectors.joining. The messages differ slightly in wording: "resource access permissions or node ownership" vs "grants or node ownership". Also, the other branch adds an exclamation mark after stating the problem.
+
+Hmm. The intent here is to list the ambiguous principals. The stream approach sorts them, which is better for consistency. The wording differences: "grants" might be a shorter way of saying "resource access permissions". But maybe "grants" is less clear. However, both are referring to the same concept. The exclamation mark in one branch adds emphasis, but that's stylistic.
+
+The main conflict is between the two ways of joining the ambiguousPrincipals. The stream with sorted is better because it sorts the list, making the output more readable and deterministic. So we should keep that. 
+
+As for the messages, combining both might be good. Maybe use "grants or node ownership" as it's concise, and include the exclamation for emphasis. Wait, but the original message in HEAD says "Because of this ambiguity, node access rights could not be restored as defined in the export you just imported." The other side adds an exclamation mark. Maybe keep the exclamation for clarity.
+
+So the resolved code would take the sorted stream from the second branch, and use the message parts that are most accurate. Let me check the exact lines.
+
+Original HEAD message:
+"For the following names, there are multiple candidates (User/Group) for resource access permissions or node ownership during data deployment."
+"Because of this ambiguity, node access rights could not be restored as defined in the export you just imported.\n\n"
+
+Other branch:
+"For the following names, there are multiple candidates (User/Group) for grants or node ownership during data deployment."
+"Because of this ambiguity, node access rights could not be restored as defined in the export you just imported!\n\n"
+
+"grants" is a term often used in permissions, so it's acceptable. The exclamation adds emphasis but isn't crucial. However, since the other branch's message ends with an exclamation, maybe that's intentional. The user might have intended to make the warning stronger. 
+
+But the original message in the base code (HEAD) might be more formal. It's a bit of a style choice. Since the conflict is between two different phrasings, we need to choose the one that best conveys the intent. Alternatively, maybe combine them. Wait, can't combine because it's a conflict. So we have to pick one or the other unless they can be merged without conflict.
+
+Wait, looking at the entire message:
+
+HEAD says:
+"\tFor the following names, there are multiple candidates (User/Group) for resource access permissions or node ownership during data deployment.\n"
+"\tBecause of this ambiguity, node access rights could not be restored as defined in the export you just imported.\n\n"
+
+The other branch:
+"\tFor the following names, there are multiple candidates (User/Group) for grants or node ownership during data deployment.\n"
+"\tBecause of this ambiguity, node access rights could not be restored as defined in the export you just imported!\n\n"
+
+So "resource access permissions" vs "grants". "Grants" is shorter and perhaps more technical. It's possible that "grants" is the preferred term here, as it's a common term in access control. So maybe the second branch's wording is better. 
+
+Additionally, the other branch sorts the ambiguousPrincipals, which is a good practice for consistent log messages. So the correct resolution would be to take the changes from both branches where possible. But the conflict is in these lines. So the correct approach is to use the message from the second branch but ensure that the sorted stream is used for the list.
+
+Therefore, the resolved code should take the second branch's changes, keeping the sorted stream and the updated message. The conflict markers are removed, and both changes are accepted. The surrounding context remains the same.</think>
+```java
+					+ "Consider clearing up such ambiguities in the database.";
+
+			logger.info("\n###############################################################################\n"
+					+ "\tWarning: " + title + "!\n"
+					+ "\tFor the following names, there are multiple candidates (User/Group) for grants or node ownership during data deployment.\n"
+					+ "\tBecause of this ambiguity, node access rights could not be restored as defined in the export you just imported!\n\n"
+					+ "\t" + ambiguousPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+					+ "\n\n\tConsider clearing up such ambiguities in the database.\n"
+					+ "###############################################################################"
+			);
+			publishWarningMessage(title, text);
+		}
+
+```

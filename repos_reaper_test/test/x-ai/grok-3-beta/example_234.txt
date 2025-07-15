@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I'm returning the provided code snippet with the merge conflict resolved based on the semantic intent of both sides. My analysis is as follows:
+
+- **HEAD side**: This side only declares the `end` variable as a `long` without any additional fields.
+- **1488b22ce313803d012c8ace36c3b12f930ee309 side**: This side also declares the `end` variable as a `long` but additionally introduces a private field `mTupleFactory` initialized with `TupleFactory.getInstance()`. This suggests an intent to add functionality related to tuple creation, likely needed for processing or returning data in a structured format as part of the `TextLoader` class's purpose (which is to load and process text data).
+- **Semantic Intent**: Since both sides agree on the `end` variable declaration, and the second side adds a new field without conflicting with anything on the HEAD side, the intent seems to be to include the additional functionality provided by `mTupleFactory`. There’s no apparent conflict in the purpose or usage of the class based on the provided context.
+
+Thus, I will resolve the conflict by incorporating both the `end` declaration and the `mTupleFactory` field.
+
+Here is the updated snippet with the conflict resolved, preserving the original context and spacing:
+
+```java
+ * contains the line of text.
+ */
+public class TextLoader implements LoadFunc{
+    BufferedPositionedInputStream in;
+    final private static Charset utf8 = Charset.forName("UTF8");
+    long end;
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+
+    public void bindTo(String fileName, BufferedPositionedInputStream in, long offset, long end) throws IOException {
+        this.in = in;
+        this.end = end;
+        // Since we are not block aligned we throw away the first
+```

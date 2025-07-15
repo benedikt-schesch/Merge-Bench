@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, I need to consider the intent behind each change. The key changes involve setting a configuration property and parsing a file into a map, followed by an assertion on the resulting tags.
+
+1. **Property Setting**: The `config.setProperty` line should use `TAG_SANITIZE.getKey()` to ensure it's using the correct key for the sanitize property.
+2. **Map Type**: Changing `DocumentModel` to `Map<String, Object>` suggests a refactor towards standard interfaces, which should be adopted.
+3. **Assertion**: The test expects sanitized tags, so the assertion should check for "tag-with-space" instead of "tag with space".
+
+Here is the resolved code:
+
+```java
+        assertThat(map.getTags()).isEqualTo(Arrays.asList("jbake", "java", "tag with space").toArray());
+    }
+
+    @Test
+    public void sanitizeTags() {
+        config.setProperty(TAG_SANITIZE.getKey(), true);
+        Map<String, Object> map = parser.processFile(validaAsciidocWithUnsanitizedHeader);
+
+        assertThat(map.getTags()).isEqualTo(Arrays.asList("jbake", "java", "tag-with-space").toArray());
+    }
+```

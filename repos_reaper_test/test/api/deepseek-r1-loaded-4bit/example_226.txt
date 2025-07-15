@@ -1,0 +1,22 @@
+<think>
+Okay, I need to resolve this merge conflict. Let me look at the code snippet provided. The conflict is between two different imports in a Java file. The HEAD side has an import for junit.framework.TestCase, and the other side (commit 1488b22...) adds an import for org.junit.Test. Both are JUnit-related imports, but from different packages.
+
+Wait, junit.framework.TestCase is part of JUnit 3, where test classes extend TestCase. On the other hand, org.junit.Test is from JUnit 4, where tests are annotated with @Test. The user might be migrating from JUnit 3 to 4, or perhaps both imports are needed if some tests use the old style and others the new.
+
+Looking at the surrounding context, the HEAD version imports TestCase, which is a base class for tests in JUnit 3. The other branch adds an import for Test from JUnit 4. These can coexist if the test class uses both styles. However, typically, a project would stick to one version. But without more context, it's hard to tell.
+
+The conflict markers are around the import statements. The correct resolution would be to include both imports if both are needed. Since they are in different packages, there's no naming conflict. The merge should keep both lines. So, the merged code should have both imports: junit.framework.TestCase and org.junit.Test, along with the other existing imports.
+
+So, the resolved code would include both imports without the conflict markers. Let me check the original code again to ensure spacing is preserved. The original had the HEAD import, then the conflict markers, then the other import. Removing the markers and keeping both lines in order should resolve it correctly.</think>
+```java
+import java.util.Properties;
+
+import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.pig.EvalFunc;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.LoadFunc;
+```

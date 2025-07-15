@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict in this snippet is due to a formatting difference in the use of the ternary operator in the `setKeyType` method. Both versions of the code implement the **same logic**: if `fields` is `null` or has more than one element, use `DataType.TUPLE` as the key type. Otherwise, use the provided `keyType`. This is purely a style difference between a single-line and a multi-line representation of the same conditional assignment.
+
+Resolving the conflict by adopting the right-hand side (from commit `88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`) is justified as it maintains consistent formatting with the surrounding codebase and does not alter semantics.
+
+---
+
+Here is the fully resolved snippet with the conflict resolved and context preserved as requested:
+
+```java
+        }
+
+        POPackage pkg = new POPackage(new OperatorKey(scope,
+                nig.getNextNodeId(scope)));
+        LitePackager pkgr = new LitePackager();
+        pkgr.setKeyType((fields == null || fields.length > 1) ? DataType.TUPLE
+                : keyType);
+        pkg.setPkgr(pkgr);
+        pkg.setNumInps(1);
+        mro.reducePlan.add(pkg);
+
+        PhysicalPlan ep = new PhysicalPlan();
+
+```

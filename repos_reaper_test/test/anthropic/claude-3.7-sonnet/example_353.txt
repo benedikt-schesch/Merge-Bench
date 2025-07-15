@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that both sides are asserting things about what appears to be a `GoogleJsonResponseException` object, but they're using different variable names and making slightly different assertions about the message field.
+
+Here's my resolution:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    String expectedMessage = "403\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+  }
+
+  public void testFrom_errorEmptyContentButWithJsonContentType() throws Exception {
+    HttpTransport transport = new ErrorTransport(null, Json.MEDIA_TYPE);
+      HttpRequest request =
+```
+
+I resolved the conflict by keeping the HEAD version because:
+1. It uses the correct variable name `responseException` that was declared earlier, not `ge`
+2. It appears to be a more precise test with an exact expected message, rather than just checking if it starts with "403"
+3. The code flow is more consistent with the variable naming in the surrounding context

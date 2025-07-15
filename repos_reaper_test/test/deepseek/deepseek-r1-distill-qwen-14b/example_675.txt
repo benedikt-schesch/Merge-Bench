@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict where the type of `accessToken` changes from `AccessToken` to `OAuthConsumerToken`. The surrounding code uses `AccessToken`, but the change might be intentional. To preserve the original intent, we'll resolve it by restoring the original type.
+
+```java
+		Account account = (Account) principal;
+		List<AccessToken> accessTokens = jdbcTemplate.query(SELECT_TOKEN_SQL, new RowMapper<AccessToken>() {
+			public AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccessToken(rs.getString("accessToken"), rs.getString("secret"), rs.getString("provider"));
+			}
+		}, account.getId(), resourceId);
+		AccessToken accessToken = null;
+		if (accessTokens.size() > 0) {
+			accessToken = accessTokens.get(0);
+		}
+		return accessToken;
+	}
+```

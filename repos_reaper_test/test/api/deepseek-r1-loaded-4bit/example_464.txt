@@ -1,0 +1,18 @@
+<think>
+Okay, let's look at this merge conflict. The code snippet has a conflict between the HEAD and the other branch. The HEAD adds a static final serialVersionUID, while the other branch doesn't have that line. The rest of the code seems the same.
+
+First, I need to determine if these changes are compatible. The serialVersionUID is important for serialization in Java. If one branch adds it and the other doesn't, merging them would require including the serialVersionUID. Since the other branch's change doesn't touch that line, adding the serialVersionUID from HEAD should be safe. The other changes in the initializer block (setting applyLastModified and contentType) are present in both versions, so they can stay. The conflict is only about the serialVersionUID line.
+
+The intent of the HEAD is to include a specific serial version UID for compatibility. The other branch's intent is to set some properties in the initializer. These don't conflict semantically. So the resolution is to keep the serialVersionUID from HEAD and the rest from both. Therefore, the merged code should include the serialVersionUID line and the initializer block.</think>
+```java
+        return new DefaultResourceLoader();
+    }
+
+    private ResourceServlet concreteResourceServlet(final String location) {
+        return new ResourceServlet() {
+            private static final long serialVersionUID = 4602656496188884537L;
+			{
+                setApplyLastModified(true);
+                setContentType("image/png");
+            }
+```

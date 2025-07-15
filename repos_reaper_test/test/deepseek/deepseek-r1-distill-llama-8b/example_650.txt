@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, it's evident that both branches aim to iterate over the keys of `rawMessageTagsObject`. The right branch uses `getNames()`, likely with added functionality or safety measures not present in the direct method call. Thus, adopting the right branch maintains intended behavior and potentially additional processing.
+
+```java
+      // message tags not in Graph API 2.5 format, ignore this exception and try another way
+    }
+
+    try {
+      JsonObject rawMessageTagsObject = jsonMapper.toJavaObject(rawMessageTags, JsonObject.class);
+<<<<<<< HEAD
+      for (String key : rawMessageTagsObject.names()) {
+=======
+      for (String key : getNames(rawMessageTagsObject)) {
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+        String tagArrayString = rawMessageTagsObject.get(key).toString();
+        messageTags.addAll(jsonMapper.toJavaList(tagArrayString, MessageTag.class));
+      }
+      return;
+    } catch (FacebookJsonMappingException je) {
+```

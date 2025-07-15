@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve the semantic conflict, the test should be unified by renaming `emptyFacebookMap` to `emptyObject` to better reflect its intent and avoid redundancy.
+
+```java
+    ListObject obj = new ListObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+
+  /**
+   * Checks if we can handle an empty object.
+   */
+  @Test
+  public void emptyObject() {
+    MapObject obj = new MapObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+```

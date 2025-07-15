@@ -1,0 +1,68 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's first understand the context and the changes made on both sides.
+
+The given code snippet is in Java and appears to be part of a larger project involving Apache Pig and Hadoop. The conflict arises from the import statements where both sides of the merge have added or modified different imports.
+
+On the left-hand side (`HEAD`), we have:
+```java
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.Main;
+import org.apache.pig.PigServer.ExecType;
+```
+
+On the right-hand side (`1488b22ce313803d012c8ace36c3b12f930ee309`), the corresponding lines are:
+```java
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+```
+
+The changes on the left-hand side include importing `org.apache.hadoop.mapred.JobConf` and using `PigServer.ExecType`.
+
+The changes on the right-hand side include importing `org.apache.pig.FuncSpec` and using `ExecType` directly from the `org.apache.pig` package, suggesting that `ExecType` is being imported directly or used without the `PigServer` qualifier.
+
+To resolve the conflict, we should consider the intent behind both sets of changes. The left-hand side is importing `JobConf` and using `PigServer.ExecType`, indicating its use of older or more specific APIs related to Pig and Hadoop. The right-hand side is importing `FuncSpec` and using `ExecType` directly, indicating a potentially different or updated usage.
+
+Given that both sides are importing `org.apache.pig.Main`, it suggests that the overall context is related to executing or interacting with Pig. 
+
+To resolve the conflict, we should combine the imports in a way that respects both changes. Since `ExecType` is used differently, we need to ensure that the import for `ExecType` is correctly resolved.
+
+Here's the resolution:
+
+```java
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.executionengine.ExecException;
+import org.apache.pig.backend.executionengine.ExecutionEngine;
+```
+
+The reasoning behind this resolution is as follows:
+- Both `org.apache.hadoop.mapred.JobConf` and `org.apache.pig.FuncSpec` are imported as they represent distinct additions from both sides of the merge.
+- `org.apache.pig.ExecType` is used instead of `org.apache.pig.PigServer.ExecType` as it directly imports the `ExecType` which is presumably the updated or preferred way of using `ExecType` based on the change made on the right-hand side.
+
+Here is the final resolved code snippet in markdown code syntax as requested:
+```java
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.executionengine.ExecException;
+import org.apache.pig.backend.executionengine.ExecutionEngine;
+```

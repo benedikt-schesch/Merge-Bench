@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```java
+		Account account = (Account) principal;
+		List<AccessToken> accessTokens = jdbcTemplate.query(SELECT_TOKEN_SQL, new RowMapper<AccessToken>() {
+			public AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccessToken(rs.getString("accessToken"), rs.getString("secret"), rs.getString("provider"));
+			}
+<<<<<<< HEAD
+				}, account.getId(), resourceId);
+		AccessToken accessToken = null;
+=======
+		}, account.getId(), resourceId);
+		OAuthConsumerToken accessToken = null;
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+		if (accessTokens.size() > 0) {
+			accessToken = accessTokens.get(0);
+		}
+		return accessToken;
+	}
+
+```

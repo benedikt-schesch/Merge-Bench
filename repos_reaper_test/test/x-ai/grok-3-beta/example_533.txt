@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict preserved as provided, along with my analysis of the intent and resolution. The context and spacing are unchanged.
+
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> 0d25a18153c4751a6a7e51055c740287d9c1186e
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+```
+
+### Analysis and Resolution:
+After reviewing the merge conflict, the difference lies in the utility class used to convert the `InputStream` to a byte array:
+- **HEAD** uses `IOUtil.toByteArray(in)` with an extra space before `href`.
+- **Incoming branch (0d25a181)** uses `IOUtils.toByteArray(in)` with no extra space before `href`.
+
+**Intent and Semantics:**
+- Both sides aim to achieve the same functionality: converting an `InputStream` to a byte array for the `Resource` constructor.
+- The difference is likely due to a dependency or library update. `IOUtil` and `IOUtils` might refer to different utility classes (possibly from different libraries or packages, e.g., Apache Commons IO for `IOUtils`).
+- The spacing difference before `href` is cosmetic and does not affect functionality.
+
+**Resolution Decision:**
+Since I am not certain about the correct utility class (`IOUtil` vs. `IOUtils`) without additional context about the project's dependencies or coding standards, I will leave the conflict unresolved in the snippet above. However, if I were to resolve it, I would recommend:
+1. Verify the correct utility class by checking the project's imports and dependencies.
+2. If `IOUtils` is the intended or updated library (e.g., Apache Commons IO), adopt the incoming branch's change.
+3. Normalize the spacing for consistency (remove the extra space before `href`).
+
+If you have additional context about the intended library or utility class, I can refine the resolution accordingly. For now, the snippet is returned as is with the conflict markers intact.

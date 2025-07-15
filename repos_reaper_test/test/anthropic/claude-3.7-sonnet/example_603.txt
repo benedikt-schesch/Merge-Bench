@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Based on the code snippet, it looks like there's a merge conflict regarding how to retrieve data from `rawPicture`. Let me analyze the intent and resolve this conflict.
+
+Looking at the two versions:
+1. `rawPicture.get("data").toString()` - accessing data using a simple `get` method
+2. `rawPicture.getJsonObject("data").toString()` - accessing data with `getJsonObject` which suggests a more type-safe approach
+
+The second approach from the incoming change is using a more specific method that seems designed for JSON objects, which is likely more appropriate if `rawPicture` is a JSON structure. This is a common pattern when working with JSON APIs to ensure the right type of value is retrieved.
+
+Here's the resolved code:
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+    String picJson = rawPicture.getJsonObject("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+  }
+
+  @JsonMappingCompleted
+  protected void graphApi26LikesFallback() {
+
+```

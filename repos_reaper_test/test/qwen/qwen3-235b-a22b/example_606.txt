@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The conflict in the code snippet arises from a discrepancy regarding the inclusion of the `serialVersionUID` field. Specifically, one version of the branch (`HEAD`) introduces this line, while the other (`a17acec`) omits it.
+
+Upon semantic inspection:
+- The `private static final long serialVersionUID = 1L;` is a field typically included in classes that implement or extend `Serializable`.
+- Both sides share the same intent of declaring `MailingAddress`, using similar class structure and field configurations (e.g., Lombok's `@Getter`/`@Setter`).
+- However, the absence of the `serialVersionUID` in the second branch could mean either:
+  1. The class is not actually intended to be serialized, or
+  2. The omission was unintentional or based on a differing assumption about class versioning.
+
+Given this ambiguity regarding whether `MailingAddress` is intended to be serializable—and thus whether `serialVersionUID` is semantically necessary or superfluous—it is not possible to resolve the conflict definitively by intent or interpretation of the class's semantic purpose.
+
+Therefore, as per the instructions, the snippet should be returned **with the conflict fully intact**:
+
+```java
+
+  }
+
+  public static class MailingAddress extends AbstractFacebookType {
+
+<<<<<<< HEAD
+    private static final long serialVersionUID = 1L;
+
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    /**
+     * The mailing address ID.
+     */
+    @Getter
+    @Setter
+
+```

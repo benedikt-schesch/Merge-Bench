@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by analyzing the intent and semantics of both sides. Here's the analysis:
+
+- **HEAD**: The `addSpectator` method signature is formatted with the thrown exceptions on a new line, likely for readability or adherence to a specific code style guideline.
+- **Incoming (5adedd248...)**: The `addSpectator` method signature keeps the thrown exceptions on the same line, possibly following a more compact style or a different formatting convention.
+
+**Intent**: Both sides are functionally identical; the difference is purely stylistic in terms of how the method signature is formatted. The core purpose of the method (adding a spectator to a game and throwing exceptions under certain conditions) remains the same. Since there’s no semantic difference, I’ll resolve the conflict by choosing one style for consistency. I’ll opt for the more compact version (from the incoming branch) as it aligns with common Java formatting practices for short method signatures.
+
+Here is the resolved snippet with the full context preserved, including spacing, in markdown code syntax:
+
+```java
+   *
+   * @param user Spectator to add to this game.
+   * @throws TooManySpectatorsException Thrown if this game is at its maximum spectator capacity.
+   * @throws IllegalStateException      Thrown if {@code user} is already in a game.
+   */
+  public void addSpectator(final User user) throws TooManySpectatorsException, IllegalStateException {
+    logger.info(String.format("%s joined game %d as a spectator.", user.toString(), id));
+    synchronized (spectators) {
+      if (spectators.size() >= options.spectatorLimit) {
+        throw new TooManySpectatorsException();
+      }
+```

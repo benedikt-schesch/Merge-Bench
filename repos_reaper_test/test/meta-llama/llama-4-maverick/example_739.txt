@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's first analyze the given code snippet and understand the intent behind the changes made on both sides of the merge.
+
+The code snippet appears to be part of a touch event handling mechanism, likely for a custom camera shutter button. The event handling is based on `MotionEvent.ACTION_DOWN` and `MotionEvent.ACTION_MOVE`. The `ACTION_DOWN` event initializes certain parameters (`mDownX` and `mDownY`), and the `ACTION_MOVE` event checks if the movement satisfies certain conditions related to the view's dimensions, triggering a callback (`onSlideOpen`) if those conditions are met.
+
+The conflict arises in the `ACTION_MOVE` branch, specifically in the condition that checks the movement of the finger relative to the initial touch point (`mDownX` and `mDownY`).
+
+Let's examine both sides of the conflict:
+
+1. **Left side (HEAD):**
+   ```java
+if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX() - mDownX) > getWidth() / 2) && mListener != null) {
+```
+
+2. **Right side (c923751783db11df8cb8dc1909ab59605492344c):**
+   ```java
+if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX()
+                    - mDownX) > getWidth() / 2) && mListener != null) {
+```
+
+The difference between the two versions is purely in formatting. The right side has a line break and indentation in the condition, making it more readable by avoiding a very long line. The logic remains the same.
+
+Since the change is purely cosmetic and doesn't affect the functionality, and both versions are semantically equivalent, we can resolve the conflict by choosing the more readable version, which is typically the one with proper line wrapping and indentation.
+
+To resolve the conflict, we will choose the right side's version for its readability.
+
+Here is the resolved snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            mDownX = event.getRawX();
+            mDownY = event.getRawY();
+            mListener.onShutterButtonPressed();
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX()
+                    - mDownX) > getWidth() / 2) && mListener != null) {
+                if (!mSlideOpen) {
+                    mListener.onSlideOpen();
+                    mSlideOpen = true;
+                }
+            } else {
+```

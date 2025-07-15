@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict where one side uses `DataUtil.mapOf(parameters)` and the other uses `Data.mapOf(parameters)`. The intent of both changes is to convert the `parameters` object into a map, but they're using different utility classes. Without additional context, it's ambiguous which usage is intentional or correct.
+
+I won't modify the conflict as it's unclear which side should be preferred.
+
+```java
+  public static GoogleUrl create(String encodedServerUrl, String pathTemplate, Object parameters)
+      throws IllegalArgumentException {
+    GoogleUrl url = new GoogleUrl(encodedServerUrl);
+
+    HashMap<String, Object> requestMap = new HashMap<String, Object>();
+<<<<<<< HEAD
+    for (Map.Entry<String, Object> entry : DataUtil.mapOf(parameters).entrySet()) {
+=======
+    for (Map.Entry<String, Object> entry : Data.mapOf(parameters).entrySet()) {
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+      Object value = entry.getValue();
+      if (value != null) {
+        requestMap.put(entry.getKey(), value);
+      }
+    }
+```

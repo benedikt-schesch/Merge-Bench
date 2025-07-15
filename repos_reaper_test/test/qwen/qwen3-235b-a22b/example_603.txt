@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict here involves a discrepancy between `rawPicture.getJsonObject("data")` and `rawPicture.get("data")`. Resolving this unambiguously would require knowledge of the type and implementation of `rawPicture`, as the use of `getJsonObject` implies a specific JSON library (e.g., Vert.x, Jackson), while `get` implies a map-like structure or a more general type.
+
+Since the intent behind the modification from one version to another is unclear without knowing the actual runtime type of `rawPicture` and the broader codebase context, **the correct course of action is to preserve the conflict and let it be resolved manually** during merge, as per the instructions.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    String picJson = rawPicture.get("data").toString();
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+  }
+
+  @JsonMappingCompleted
+  protected void graphApi26LikesFallback() {
+
+```

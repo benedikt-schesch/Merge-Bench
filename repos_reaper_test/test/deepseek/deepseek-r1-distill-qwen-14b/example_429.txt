@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict appears to involve the use of `SortedArrayObjectAdapter` vs `SortedObjectAdapter`. The changes in the new version suggest an attempt to update to a newer version of the adapter. Given that both branches seem to be trying to perform similar operations but with different implementations, and without further context about which implementation is correct, I'll assume the changes from the new branch are appropriate.
+
+```java
+            ListRow row = findListRow(getString(R.string.unmatched));
+
+            // if found add this video
+            // if not, create a new row and add it
+            if (row != null) {
+                ((SortedObjectAdapter) row.getAdapter()).add(video);
+            } else {
+                SortedObjectAdapter listRowAdapter = new SortedObjectAdapter(
+                        videoNameComparator, mCardPresenter);
+                listRowAdapter.add(video);
+
+                HeaderItem header = new HeaderItem(0, getString(R.string.unmatched), null);
+                int index = mAdapter.size() > 1 ? mAdapter.size() - 1 : 0;
+```

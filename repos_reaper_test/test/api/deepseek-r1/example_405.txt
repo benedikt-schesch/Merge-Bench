@@ -1,0 +1,42 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java code where two different ways of getting the current player's display name are being used. The HEAD version uses `Games.Players.getCurrentPlayer(...).getDisplayName()`, while the other branch uses `((MainActivity) getActivity()).getGC().getCurrentPlayer().getDisplayName()`. 
+
+First, I need to understand the intent of both changes. Both sides are trying to retrieve the current player's display name from the GamesClient. The difference is in how they access the GamesClient instance. The HEAD version uses a static method from `Games.Players`, passing the GamesClient object from MainActivity. The other branch directly calls `getCurrentPlayer()` on the GamesClient instance obtained via `getGC()`.
+
+I should check if these two approaches are semantically equivalent. The `Games.Players.getCurrentPlayer(gamesClient)` method likely calls `gamesClient.getCurrentPlayer()` internally. If that's the case, both approaches achieve the same result but through different syntax. 
+
+Since the goal is to resolve the conflict without altering the intended functionality, I can combine both into a single line. However, I need to ensure the syntax is correct. The HEAD version is more concise, while the other branch is more explicit. But looking at the structure, the GamesClient's `getCurrentPlayer()` method is probably the same as what the static method is using. 
+
+Wait, actually, the static method `Games.Players.getCurrentPlayer` might be a helper that requires the GamesClient, which is what the other side is doing directly. So both are valid, but perhaps the correct approach depends on the API version or the project's conventions. 
+
+Since the conflict arises from different ways to access the same data, and assuming both are correct, I can choose either. However, the more standard approach might be using the GamesClient's instance method, as seen in the second branch. Alternatively, maybe the static method is deprecated or newer. Without more context on the API, it's a bit tricky. 
+
+But the key is that both branches are trying to get the display name when savedInstanceState is null. The correct resolution is to pick the version that's compatible with the current codebase. If the project uses the instance method elsewhere, then the second approach is better. But if they use the static method, then the first is correct. 
+
+Since I don't have that context, perhaps the safest way is to use the instance method from the GamesClient, as that's more direct. So, the resolved line would be:
+
+account.setSummary(getString(R.string.signed_in, savedInstanceState == null ? ((MainActivity) getActivity()).getGC().getCurrentPlayer().getDisplayName() : savedInstanceState.getString("player")));
+
+But wait, looking at the original code, the HEAD version uses the static method with the GamesClient from MainActivity, while the other branch chains the method calls. The difference is `Games.Players.getCurrentPlayer(gc)` versus `gc.getCurrentPlayer()`. If these are equivalent, then either is fine. 
+
+Assuming they are equivalent, the conflict can be resolved by choosing one. The static method might be from an older API, and the instance method is newer. Alternatively, perhaps the instance method is correct. To resolve, merge the two by using the instance method, which is more straightforward. 
+
+Thus, the correct merged line should use the GamesClient's getCurrentPlayer() directly. So the resolved code would be the version from the second branch, but ensuring correct syntax. The line breaks might need adjustment for code style, but the important part is the method call. 
+
+So, replacing the conflict markers with the second version's code, but checking if the line breaks are properly formatted. The original code in the second branch splits the lines, which is acceptable. The final code after merging should have the instance method call.</think>
+```java
+		// change for example), then the fragment's onCreate is called before
+		// the new GamesClient is setup. In this case, just use the player name
+		// saved in the savedInstanceState bundle
+		if ((savedInstanceState == null && ((MainActivity) getActivity()).getGC().isConnected())
+				|| (savedInstanceState != null && savedInstanceState.containsKey("player"))) {
+			account.setSummary(getString(
+					R.string.signed_in,
+					savedInstanceState == null ? ((MainActivity) getActivity()).getGC()
+							.getCurrentPlayer().getDisplayName() : savedInstanceState
+							.getString("player")));
+		}
+
+		final SharedPreferences prefs = getActivity().getSharedPreferences("pedometer",
+				Context.MODE_MULTI_PROCESS);
+```

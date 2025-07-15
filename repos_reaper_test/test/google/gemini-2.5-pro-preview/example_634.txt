@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to understand the intent of the changes from both `HEAD` and the branch `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`.
+
+*   **`HEAD` branch:** The state in `HEAD` (represented by the content between `<<<<<<< HEAD` and `=======`, which is empty in this conflict) implies that, at the location of the conflict, it expects the Javadoc for "Sport Graph API type" to follow directly after the initial `/**`. It does not include the `Picture` class.
+
+*   **`a17acec0655b8058aaf4d336ba2a1352aa49e2fe` branch:** This branch introduces a new static class `Picture` that extends `ProfilePictureSource`. This class has its own Javadoc, which includes a `@TODO` comment indicating it might be part of a refactoring. After the `Picture` class and its Javadoc, this branch then includes the Javadoc comment for the "Sport Graph API type".
+
+**Semantic Intent & Resolution:**
+
+The branch `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` is clearly adding a new `Picture` class and its associated documentation. The `@TODO` comment ("remove this on type refactoring") suggests this is an intentional, albeit possibly intermediate, step in development. The subsequent Javadoc for the "Sport Graph API type" is preserved and correctly placed after the new `Picture` class.
+
+Assuming the changes from `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` are intended to be incorporated (which is typical when merging a feature or bugfix branch), the resolution should include the new `Picture` class and its Javadoc, followed by the Javadoc for the "Sport Graph API type". This means taking the entirety of the changes introduced by the `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` branch within the conflict markers.
+
+The initial `/**` just before the `<<<<<<< HEAD` marker, which in `HEAD` (and likely the common ancestor) was the beginning of the "Sport Graph API type" Javadoc, becomes the beginning of the `Picture` class Javadoc in the resolved version. The `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` side of the conflict provides the content for the `Picture` Javadoc, the `Picture` class itself, and then re-introduces a `/**` to correctly start the "Sport Graph API type" Javadoc.
+
+```java
+    }
+
+  }
+
+  /**
+   * @TODO remove this on type refactoring
+   */
+  public static class Picture extends ProfilePictureSource {
+    // nothing here
+  }
+
+  /**
+   * Represents the <a href="http://developers.facebook.com/docs/reference/api/user">Sport Graph API type</a>.
+   * 
+   * @author Patrick Alberts
+   * @since 1.6.3
+   */
+
+```

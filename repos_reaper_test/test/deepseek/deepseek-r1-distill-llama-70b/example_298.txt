@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to consider the intent and functionality behind each change. The HEAD branch uses a stream with specific offsets, which is more efficient for large content, while the other branch uses a reader but relies on an undefined `json` variable. Since `json` isn't defined, the HEAD's approach is more robust and self-contained.
+
+```java
+
+    public <T> T unmarshall(DBObject document, Class<T> clazz) throws MarshallingException {
+
+        DocumentStream stream = DocumentStreamFactory.fromDBObject(document);
+        try {
+            return mapper.readValue(stream.getData(), stream.getOffset(), stream.getSize(), clazz);
+        } catch (IOException e) {
+            String message = String.format("Unable to unmarshall result to %s from content %s", clazz, document.toString());
+            throw new MarshallingException(message, e);
+        }
+    }
+
+    public DBObject marshall(Object obj) throws MarshallingException {
+
+```

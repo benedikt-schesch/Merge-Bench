@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll help resolve the semantic merge conflict resolution. Here's how we can approach this:
+
+```java
+picture = null;
+
+try {
+  if (rawPicture == null)
+    return;
+
+  String picJson = rawPicture.getJsonObject("data").toString();
+  picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+
+  String picJson2 = rawPicture.getJsonObject("data").to(String);
+  picture = jsonMapper.toJavaObject(picJson2, String.class);
+} catch (UnsupportedOperationException e) {
+  return;
+}
+```
+
+If you or any other coded team wants to agree that a better merge would be between: 
+- `User.Picture` and `String`
+ bullet result = jsonMapper.toJavaObject(rawPicture.getJsonObject("data").toString(), User.Picture.class);
+ bullet result = jsonMapper.toJavaObject(rawPicture.getJsonObject("data"), String.class);
+
+Please let me know. I can update the merge in the commit field. This would force the class to perform both approaches.

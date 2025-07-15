@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict in the assignment of `this.plugin`. Both sides aim to set `this.plugin` but differ in how they retrieve it from `Spout.getPluginManager()`. The left side directly calls `getMetaPlugin()`, while the right side explicitly casts the result of `getPluginManager()` to `PluginManager` before calling `getMetaPlugin()`. The resolution depends on whether the cast is necessary, which isn't clear without additional context about `Spout.getPluginManager()`'s return type.
+
+The conflict remains unresolved in this case, so the full snippet with the conflict is presented below:
+
+```java
+	private DateFormat dateFormat;
+	private List<Widget> lines = new ArrayList<Widget>();
+	private float scroll = 0;
+
+	public DevConsole(Font font) {
+<<<<<<< HEAD
+		this.plugin = Spout.getPluginManager().getMetaPlugin();
+=======
+		this.plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+>>>>>>> 67bcb76a96f358fc131320b0611ffaa3bf3678c2
+		this.font = font;
+		init();
+	}
+	
+	public void clearConsole() {
+
+```

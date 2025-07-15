@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it appears both sides are trying to set up API references but with different implementations. One side has `mApi` as a `Weibo` instance (labeled "new API"), while the other has both `mApi` as a `TwitterApi` and `nApi` as a `Weibo` (labeled "new API"). The second side also introduces a `mDb2` field.
+
+Here's the resolved code, combining the intent of both sides:
+
+```java
+  
+  public static final String TAG = "TwitterApplication";
+  
+  public static ImageManager mImageManager;
+  public static TwitterDbAdapter mDb; 
+  public static TwitterApi mApi;
+  public static Weibo nApi; // new API
+  public static Context mContext;
+  public static DatabaseHelper mDb2; 
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+
+```
+
+I've preserved both API references from the second branch while keeping the `mContext` from the first branch, as they appear to serve different purposes. This approach maintains the functionality intended by both changes.

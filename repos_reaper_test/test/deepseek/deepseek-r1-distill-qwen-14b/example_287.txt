@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict appears to be about adding two new variables (`keyWritable` and `inputAttached`) after retrieving the key. The left side doesn't include these additions while the right side does. Since both changes appear meaningful (setting the keyWritable and indicating input has been attached), I'll resolve in favor of the right side by including both the key assignment and the added lines.
+
+```java
+     */
+    public void attachInput(PigNullableWritable k, Iterator<NullableTuple> inp) {
+        try {
+            tupIter = inp;
+            key = pkgr.getKey(k);
+            keyWritable = k;
+            inputAttached = true;
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Error attaching input for key " + k +
+                    " in " + name() + " at location " + getOriginalLocations(), e);
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict where two different changes are trying to modify the same file. On the `HEAD` side, there is a change to set padding for a view, while on the `d28bc96faf3c28942720eaef1a486d601352d2d5` side, there are changes related to animation setup.
+
+The changes appear to be orthogonal - one is UI layout related (padding) and the other is animation related. There doesn't seem to be any direct conflict between the two changes, as they modify different parts of the code. Therefore, both changes can be safely merged together.
+
+Here is the merged code:
+
+```java
+            setAlpha(0.0f);
+            setScaleX(WIDGET_FADE_SCALE);
+            setScaleY(WIDGET_FADE_SCALE);
+            setVisibility(View.VISIBLE);
+
+            // Set padding
+            int pad = getResources().getDimensionPixelSize(R.dimen.widget_container_padding);
+            this.setPadding(pad, pad, pad, pad);
+
+            mRootAnimator = mRootView.animate();
+
+            if (mRootAnimator != null) {
+                mRootAnimator.setListener(new AnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(Animator arg0) {
+```

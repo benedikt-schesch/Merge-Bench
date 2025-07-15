@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to understand both sides' intentions. The left checks for a specific message format, while the right checks that the message starts with "200". Since the right side allows for any message starting with "200", it's more flexible.
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+<<<<<<< HEAD
+    assertNull(responseException.getDetails());
+    String expectedMessage = "200\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+=======
+    assertNull(responseException.getDetails());
+    assertTrue(responseException.getMessage().startsWith("200"));
+>>>>>>> 47d00185e2cd4548663cc0e8c6cdf6d59640a613
+  }
+
+  public void testFrom_withDetails() throws Exception {
+    HttpTransport transport = new ErrorTransport();
+    HttpRequest request =
+```

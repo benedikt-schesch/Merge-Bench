@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+The code snippet you've provided is currently in a **merge conflict**, and without further context regarding the intended behavior or requirements of the system—particularly around the use and necessity of `illustratorMarkup`—it's not possible to confidently resolve the conflict in a semantically accurate way.
+
+The **HEAD** version applies a markup function to the result prior to returning it, indicating some post-processing is happening, likely for visualization or debugging. This suggests a potential intent to enrich the result before it is consumed.
+
+The **incoming branch** removes all of this and simply returns the raw value of `pkgr.getNext()`, indicating either:
+
+- The markup is no longer needed, or
+- The caller should handle such markup elsewhere, or
+- Performance/simplification considerations drove the change.
+
+Since both changes modify the same line of execution and are semantically divergent, and because you’ve emphasized semantic correctness and conflict resolution only when intent is clear, the appropriate course of action is to **leave the conflict markers untouched**.
+
+---
+
+**Final Result (Unresolved Merge Conflict Preserved):**
+
+```java
+            // and return it.
+            pkgr.attachInput(key, dbs, readOnce);
+            detachInput();
+        }
+
+<<<<<<< HEAD
+        Result r = pkgr.getNext();
+        Tuple packedTup = (Tuple) r.result;
+        packedTup = illustratorMarkup(null, packedTup, 0);
+        return r;
+=======
+        return pkgr.getNext();
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+    }
+
+    public Packager getPkgr() {
+        return pkgr;
+    }
+```

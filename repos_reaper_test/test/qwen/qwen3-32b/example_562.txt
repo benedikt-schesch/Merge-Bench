@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+  @Test
+  public void checkV1_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+      jsonFromClasspath("v1_0/connection-user-friends"), User.class);
+    assertThat(con.getTotalCount()).isNull();
+    assertThat(con.getNextPageUrl()).isNotNull();
+    assertThat(con.hasNext()).isTrue();
+  }
+
+  @Test
+  public void checkV2_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+```

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that both sides are trying to add different settings retrievals. One adds a `smsReportDelivery` boolean setting, while the other adds a `messageResultsAPIEnable` boolean setting. Since these appear to be two separate settings that both need to be read from the settings object, I'll include both lines in the resolution.
+
+```java
+        enableBlacklist = settings.getBoolean("EnableBlacklist", false);
+        enableWhitelist = settings.getBoolean("EnableWhitelist", false);
+        enableLog = settings.getBoolean("EnableLog", false);
+        batteryLevel = settings.getInt("BatteryLevel", 0);
+        alertPhoneNumber = settings.getString("AlertPhoneNumber", "");
+        smsReportDelivery = settings.getBoolean("SmsReportDelivery", false);
+        messageResultsAPIEnable = settings.getBoolean("MessageResultsAPIEnable", false);
+    }
+
+    /**
+     * Save settings changes.
+     *
+```

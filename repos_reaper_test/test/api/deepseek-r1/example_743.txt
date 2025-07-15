@@ -1,0 +1,24 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in a Java code snippet, specifically in the condition of an if statement. The HEAD version has the condition:
+
+if (isFirst && widget.getY() + widget.getHeight() < tested.getFinalY() - tested.getHeight() / 2)
+
+And the other branch has the same condition but splits the line into two, adding a line break after tested.getFinalY().
+
+So the difference is just formatting, right? The second version breaks the line for better readability, maybe to adhere to a code style guideline about line length. The actual logic of the condition doesn't change. Both versions are checking the same condition, just formatted differently.
+
+Since the conflict is purely about code formatting and not the logic, the correct resolution would be to keep the version with the line break because it's more readable and follows standard Java conventions for breaking long lines. Alternatively, if the project's style guide prefers keeping lines shorter, the second version is better. There's no semantic difference here, just formatting. So merging them by taking the split line version makes sense without introducing any conflicts.</think>
+```java
+                continue;
+            }
+
+            if (widget.getY() < tested.getFinalY() + tested.getMeasuredHeight()) {
+                // Don't try to go before the first if we're already it
+                if (isFirst && widget.getY() + widget.getHeight() < tested.getFinalY()
+                        - tested.getHeight() / 2)
+                    break;
+
+                // Move the widget in our list
+                mOpenWidgets.remove(widget);
+                mOpenWidgets.add(i, widget);
+```

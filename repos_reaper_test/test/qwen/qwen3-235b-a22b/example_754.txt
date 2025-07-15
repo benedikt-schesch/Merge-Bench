@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing class references (`LocalClassifierAdapter.class` vs. `LocalLearner.class`) in the `ClassOption` constructor. Both versions use the same string representation (`SimpleClassifierAdapter.class.getName()`) as the default value, but the semantic intent behind choosing one class over the other (e.g., refactoring, configuration change, or implementation detail) is ambiguous without additional context (e.g., class hierarchy or usage in the rest of the code). Since neither version provides enough evidence for a clear resolution, the conflict is preserved.
+
+```java
+	private Stream resultStream;
+
+	private Instances dataset;
+
+	public ClassOption learnerOption = new ClassOption("learner", 'l',
+<<<<<<< HEAD
+			"Classifier to train.", LocalClassifierAdapter.class, SimpleClassifierAdapter.class.getName());
+
+=======
+			"Classifier to train.", LocalLearner.class, SimpleClassifierAdapter.class.getName());
+	
+>>>>>>> 40d31d67633f703171421ba4d73bb421d89a32db
+	private TopologyBuilder builder;
+
+	private int parallelism;
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+I'll help resolve this merge conflict by analyzing the intent of both sides. The conflict appears to be between a comment in one branch and substantive code in the other branch. The code in the merge seems to implement player reset functionality, while the comment suggests this situation "shouldn't ever happen."
+
+Here's the resolved code that maintains the functional changes while preserving the original comment's intent:
+
+```java
+        return ErrorCode.NOT_JUDGE;
+      } else if (state != GameState.JUDGING) {
+        return ErrorCode.NOT_YOUR_TURN;
+      }
+
+      // Shouldn't ever happen, but just in case...
+      if (null != player) {
+        player.resetSkipCount();
+      }
+
+      cardPlayer = playedCards.getPlayerForId(cardId);
+```

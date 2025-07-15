@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Both sides of the merge are testing the exception message from a 403 error. The base version does an exact match with the URL, while the merged version checks if it starts with "403" and uses an undefined variable.
+
+Here's how to resolve it:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    assertTrue(responseException.getMessage().startsWith("403"));
+    String expectedMessage = "403\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+    request.setTimeOut(60000);
+    String actualBody = request.execute().parseAsString();
+    String expectedBody = transport.requestHdr+"\n"+transport.responseHdr;
+    assertEquals(expectedBody, actualBody);
+    
+    request.setHeaders(null);
+    request.setHeader("HeaderName", "HeaderValue");
+    request.setHeaders(Collections.singletonMap("HeaderName", "HeaderValue"));
+=======
+}
+>>>>>>> 47d00185e2cd4548663cc0e8c6cdf6d59640a613
+```

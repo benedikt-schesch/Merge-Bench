@@ -1,0 +1,20 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is between two comments. The HEAD version has "// Create numInputs bags" and the other side has "//Create numInputs bags". The only difference is the space after the comment slashes.
+
+Hmm, so the intent here is the same for both changes—both are commenting that they're creating numInputs bags. The conflict is purely about formatting: whether there's a space after the comment. 
+
+In Java, it's common style to have a space after the //. So maybe one side added the space for style consistency, and the other might have had it without. Since both are trying to achieve the same semantic purpose, the resolution should be to pick the version with the space because it follows standard coding conventions. 
+
+So the correct merge would be to keep the HEAD version which includes the space. The other side's comment is the same but without the space, which is a trivial difference. Therefore, resolving the conflict by choosing the HEAD version makes sense here without any semantic issues.</think>
+```java
+    public Result getNext() throws ExecException {
+        if (bags == null) {
+            return new Result(POStatus.STATUS_EOP, null);
+        }
+
+        // Create numInputs bags
+        Object[] fields = new Object[mBags.length];
+        for (int i = 0; i < mBags.length; i++) {
+            if (mBags[i]) fields[i] = createDataBag(numBags);
+        }
+```

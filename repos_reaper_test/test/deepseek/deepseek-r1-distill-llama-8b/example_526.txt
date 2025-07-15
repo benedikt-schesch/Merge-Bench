@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The merge conflict is due to two conditions checking `maxUriLength` in an if-else structure, but they should likely compare different aspects (bytes vs. characters). The "[" conflict indicates a merge conflict in the file history.
+
+The code should correctly separate the checks for file size in bytes and characters, and use appropriate messages for each scenario.
+
+```java
+                        if (maxUriLength > 0 && uriString.length() > maxUriLength){
+                            if (verbose){
+                                System.err.println("[WARNING] File " + newUrl + " creates a data URI larger than " + maxUriLength + " bytes. Skipping.");
+                            }      
+                            builder.append(url);
+                        } else if (maxUriLength > 0 && uriString.length() > maxUriLength) {
+                            if (verbose){
+                                System.err.println("[INFO] File " + newUrl + " creates a data URI longer than " + maxUriLength + " characters. Skipping.");
+                            }
+                            builder.append(url);
+                        } else {
+
+                            /*
+                             * Determine what to do. Eventually, you should be able to
+                             * have both a data URI and MHTML in the same file.
+```

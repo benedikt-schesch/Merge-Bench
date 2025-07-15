@@ -1,0 +1,44 @@
+<think>
+Okay, let's tackle this merge conflict. The user wants me to resolve it based on the semantics and intent of both sides. 
+
+First, looking at the conflicting code. The HEAD version has a class `GetPhotoTask` extending `GenericTask`, while the other branch (from commit 3cac0b6) has it extending `AsyncTask` with a comment about a database issue causing images not to display.
+
+Hmm, so the main conflict is the superclass and the comment. Why would one change extend AsyncTask and the other GenericTask? Maybe GenericTask is a subclass of AsyncTask, or perhaps a refactoring happened. The comment in the other branch mentions a fixme regarding a database switch causing image issues. That comment might be important context.
+
+Wait, if HEAD uses GenericTask, maybe that's part of a refactor to a base class. But the other branch is modifying the superclass to AsyncTask, possibly reverting or adjusting for a specific fix. The comment suggests that after changing databases, images aren't showing, so maybe using AsyncTask directly was a fix attempt.
+
+But without more context, it's tricky. Maybe the correct resolution is to keep the comment from the second branch but check if the superclass can be reconciled. If GenericTask is intended to replace AsyncTask, but the fix requires AsyncTask, there's a conflict. Alternatively, perhaps the comment is important regardless of the superclass.
+
+Wait, the method in the HEAD's GenericTask version has `_doInBackground`, which might be a typo or a custom method. AsyncTask's method is `doInBackground`, so if GenericTask expects `_doInBackground`, that's a custom approach. The other branch's code uses `AsyncTask`, which would require overriding `doInBackground`, not `_doInBackground`.
+
+Looking at the method signature in the code: the method is `protected TaskResult _doInBackground(TaskParams...params)`. In the AsyncTask version, the first type parameter is String, so the AsyncTask would be expecting `doInBackground(String...)`, but the method here is using TaskParams... which might not match. That could be a problem.
+
+Wait, the conflicting code in the AsyncTask branch has `AsyncTask<String, Void, TaskResult>`, so the doInBackground should take a String vararg. But the method parameters are TaskParams... That's a mismatch. So maybe the AsyncTask version is incorrect, leading to the FIXME comment. So perhaps the correct resolution is to keep the GenericTask but include the FIXME comment.
+
+Alternatively, maybe the comment is important, but the superclass should be GenericTask. So merge the comment from the second branch into the HEAD's version. That way, the comment about the database issue is preserved, and the class extends GenericTask as in HEAD.
+
+So the resolved code would have the comment from the second branch but the superclass from HEAD. That seems like combining both changes. Since the comment is a FIXME unrelated to the superclass change, perhaps that's the right approach. The user probably intended to add the comment but keep the GenericTask extension.
+
+Therefore, the resolved code should be:
+
+	private class GetPhotoTask extends GenericTask {
+	//FIXME: 换数据库后, 图片无法显示
+
+But wait, the comment in the second branch is on the same line as the class declaration. If I put it above, that's better for readability. So adjust the comment to be above the class declaration, preserving it from the second branch but keeping the HEAD's superclass.
+
+Yes, that makes sense. So the final code would have the comment from the second branch and the superclass from HEAD, ensuring the intent of both branches is captured.</think>
+```java
+	        mPhotoTask.execute(params);
+        }
+    }
+	
+
+	//FIXME: 换数据库后, 图片无法显示
+	private class GetPhotoTask extends GenericTask {
+
+        @Override
+		protected TaskResult _doInBackground(TaskParams...params) {
+        	TaskParams param = params[0];
+            try {
+
+```

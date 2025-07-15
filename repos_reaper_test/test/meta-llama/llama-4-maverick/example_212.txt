@@ -1,0 +1,64 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to analyze the intent behind both versions of the code.
+
+The conflict is in the line where `retPos` and either `oldPos` or `newPos` are being initialized with the value of `zStream.tell()`. 
+
+Let's examine both sides:
+- The left-hand side (HEAD) initializes `retPos` and `oldPos` with `zStream.tell()`. However, `oldPos` is not shown in the given context, so its relevance or declaration is unknown within this snippet. It is possible that `oldPos` is a variable that was previously used or is relevant in the context of the `CBZip2InputStream` class.
+- The right-hand side (1488b22ce313803d012c8ace36c3b12f930ee309) initializes both `retPos` and `newPos` with `zStream.tell()`. Here, `newPos` is clearly shown in the given context and is declared alongside `retPos` at the top of the snippet.
+
+Since `newPos` is declared and used within the provided context, and given that `retPos` and `newPos` are both related to the positioning within the stream (as inferred from the comments), it makes sense that they could both be initialized with the current stream position.
+
+However, without knowing the purpose or declaration of `oldPos`, it's challenging to definitively resolve the conflict based solely on the provided snippet. 
+
+If we consider the semantic intent:
+- Both versions are trying to initialize `retPos`.
+- The left-hand side involves `oldPos`, which is not in the provided context.
+- The right-hand side involves `newPos`, which is in the context and seems relevant.
+
+Given that `newPos` is declared and used in the context, and assuming that the initialization of `retPos` and `newPos` to the same value makes sense semantically (as it relates to positioning), the right-hand side's change seems plausible.
+
+However, the variable `oldPos` is referenced on the left-hand side but not declared in the given snippet. Without further context about `oldPos`, we must be cautious.
+
+To resolve the conflict while preserving the intent, if we assume that `oldPos` is either not relevant or was removed in favor of `newPos`, we could lean towards the right-hand side's version. 
+
+The original snippet with the conflict is:
+```java
+    // and we set retPos to newPos once we have read a character from that block.
+    // see getPos() for more detail
+    private long retPos, newPos = -1;
+
+    public CBZip2InputStream(SeekableInputStream zStream, int blockSize) throws IOException {
+<<<<<<< HEAD
+        retPos = oldPos = zStream.tell();
+=======
+        retPos = newPos = zStream.tell();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    	ll8 = null;
+        tt = null;
+        checkComputedCombinedCRC = blockSize == -1;
+        bsSetStream(zStream);
+        initialize(blockSize);
+```
+
+Since we don't have information about `oldPos` and can't be certain about the intent regarding its use or removal, the safest resolution that doesn't assume additional context is to return the snippet as is, with the conflict markers.
+
+Thus, the response in markdown code syntax, preserving the original spacing and context, is:
+```java
+    // and we set retPos to newPos once we have read a character from that block.
+    // see getPos() for more detail
+    private long retPos, newPos = -1;
+
+    public CBZip2InputStream(SeekableInputStream zStream, int blockSize) throws IOException {
+<<<<<<< HEAD
+        retPos = oldPos = zStream.tell();
+=======
+        retPos = newPos = zStream.tell();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    	ll8 = null;
+        tt = null;
+        checkComputedCombinedCRC = blockSize == -1;
+        bsSetStream(zStream);
+        initialize(blockSize);
+```

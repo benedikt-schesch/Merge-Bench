@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict preserved as is, along with my analysis of the intent and semantics of both sides of the merge. I have not modified the context or spacing and have returned the snippet in markdown code syntax exactly as provided.
+
+```java
+        final int currentIdx = 44 + idLength + 2;
+        final short principalDataLength = (short) decodeNum( data, currentIdx, 2 );
+        if ( principalDataLength > 0 ) {
+            final byte[] principalData = new byte[principalDataLength];
+            System.arraycopy( data, currentIdx + 2, principalData, 0, principalDataLength );
+<<<<<<< HEAD
+            result.setPrincipal( deserializePrincipal( principalData, manager ) );
+=======
+            result.setPrincipalInternal( deserializePrincipal( principalData, realm ) );
+>>>>>>> 6c5fb5474dc66d5ab104a5546f43f05b75a4aaa2
+        }
+
+        final byte[] attributesData = new byte[ data.length - sessionFieldsDataLength ];
+        System.arraycopy( data, sessionFieldsDataLength, attributesData, 0, data.length - sessionFieldsDataLength );
+```
+
+### Analysis of Intent and Semantics
+
+- **HEAD (Baseline branch)**: The code uses `result.setPrincipal( deserializePrincipal( principalData, manager ) );`. The intent here seems to be setting a principal object on the `result` using a deserialization method that takes a `manager` as a parameter. The `manager` likely represents some form of context or service responsible for managing or validating the principal data during deserialization.
+
+- **Incoming Branch (6c5fb5474dc66d5ab104a5546f43f05b75a4aaa2)**: The code uses `result.setPrincipalInternal( deserializePrincipal( principalData, realm ) );`. The intent appears to be similar—setting a principal object on the `result`—but it uses a different method name (`setPrincipalInternal`) and a different parameter (`realm`) for deserialization. The `realm` might indicate a specific domain or scope for the principal, and `setPrincipalInternal` could suggest an internal or protected method for setting the principal, possibly part of a refactoring or access control change.
+
+### Conflict Resolution Consideration
+
+The key semantic difference lies in:
+1. The method name (`setPrincipal` vs. `setPrincipalInternal`), which might reflect a change in API or encapsulation strategy.
+2. The parameter used for deserialization (`manager` vs. `realm`), which suggests a shift in how the principal is contextualized or validated.
+
+Since the intent of both sides is to set a principal object on the `result` after deserialization, but they differ in method naming and contextual parameters, it is unclear without additional context whether:
+- `manager` and `realm` serve equivalent purposes or if one replaces the other.
+- `setPrincipalInternal` is a intentional renaming or refactoring of `setPrincipal`, or if it serves a different purpose.
+
+Given this ambiguity, I am unable to definitively resolve the conflict without further information about the codebase, such as:
+- The relationship between `manager` and `realm`.
+- The reason for the method name change to `setPrincipalInternal`.
+
+Therefore, I have returned the snippet with the conflict markers intact as requested. If additional context or clarification about the roles of `manager`, `realm`, and the method naming convention is provided, I can assist in resolving the conflict. For now, the snippet remains unchanged to preserve the original content and spacing.

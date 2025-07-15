@@ -1,0 +1,20 @@
+<think>
+Okay, let me look at this merge conflict. The code has a conflict between HEAD and the other branch. The HEAD side doesn't have the PigContext method, while the other branch adds a @Private annotated getPigContext() method. The surrounding code is the closing of some blocks, then the conflict, followed by the start() method.
+
+I need to figure out if these changes can coexist. The getPigContext method is a public method with an @Private annotation, which might be a custom annotation indicating visibility. The start() method is present in both versions, so that's not conflicting. Since the two methods are separate and don't interfere with each other, merging them should be safe. The correct resolution is to keep both methods. The order might matter, but in Java, method order doesn't affect functionality unless there's a dependency. Here, getPigContext doesn't depend on start() or vice versa. So the merged code should include the getPigContext method followed by the start() method, preserving the order from both branches. There's no ambiguity here, so the conflict markers can be removed, keeping both additions.</think>
+```java
+                break;
+            }
+        }
+    }
+
+    @Private
+    public PigContext getPigContext() {
+        return pigContext;
+    }
+
+    public void start() {
+        startTime = System.currentTimeMillis();
+        userId = System.getProperty("user.name");
+    }
+```

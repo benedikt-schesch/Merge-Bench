@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The conflict is between two different assertion styles to verify the same condition. Both achieve the same goal of checking the content type, but use different assertion methods:
+
+1. Using Hamcrest's `assertThat` with a matcher (original code)
+2. Using JUnit's `assertEquals` (new code)
+
+Since both assertions verify the same condition and the intent is the same, the conflict can be resolved by choosing either assertion style based on project conventions. Here is the resolved snippet using the original `assertThat` style:
+
+```java
+  @Test
+  public void checkContentTypeBytes_fallback() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.json", attachmentData.getBytes());
+    assertThat(att).hasContentType("application/octet-stream");
+  }
+
+  @Test
+  public void checkContentTypeBytes_manual() {
+    String attachmentData = "this is a short string";
+```
+
+If you prefer the `assertEquals` style, the resolved snippet would be:
+
+```java
+  @Test
+  public void checkContentTypeBytes_fallback() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.json", attachmentData.getBytes());
+    assertEquals("application/octet-stream", att.getContentType());
+  }
+
+  @Test
+  public void checkContentTypeBytes_manual() {
+    String attachmentData = "this is a short string";
+```

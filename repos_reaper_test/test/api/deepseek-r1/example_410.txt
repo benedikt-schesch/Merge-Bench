@@ -1,0 +1,35 @@
+<think>
+Okay, let's look at this merge conflict. The two sides are modifying how the ASCIIDOCTOR_ATTRIBUTES property is set and the type of the map variable.
+
+In HEAD, they're using JBakeProperty.ASCIIDOCTOR_ATTRIBUTES as the key. On the other branch, they're using ASCIIDOCTOR_ATTRIBUTES.getKey(). I need to figure out which is correct. Maybe JBakeProperty has a static field ASCIIDOCTOR_ATTRIBUTES which has a getKey() method. Or perhaps one is a direct access and the other is via a method. If both are valid, but the latter is more dynamic, maybe the correct approach is to use the getKey() method to retrieve the property key properly.
+
+Then, the variable map is declared as DocumentModel in HEAD and Map<String, Object> in the other branch. The assertions later use map.getStatus() and map.getType(), which suggests that DocumentModel has these methods. But if the other branch changed it to a Map, those method calls would fail. Wait, the test assertions are using map.getStatus(), which wouldn't work if it's a Map. That implies that maybe the other branch's code is incorrect, or perhaps there's a mistake in the merge. Alternatively, maybe the Map in the other branch is a typo and should still be DocumentModel. But the conflict shows that in the other branch, it's Map, but the assertions are using method calls. That would cause a compile error. So the correct resolution would be to keep the DocumentModel type. But why would the other branch change it to Map? Maybe that's a mistake. Alternatively, perhaps the processFile method was changed to return a Map in the other branch. But without more context, it's hard to tell. If the test is expecting to call getStatus() and getType(), then the variable must be of a type that has those methods, like DocumentModel. Therefore, the HEAD version is correct for the variable type, and the other branch's change to Map is incorrect. But maybe the other branch's code is correct in some other way. Alternatively, perhaps the other branch's code is using a raw Map but the assertions are wrong. This is a conflict that might require more context. However, since the user is asking to resolve based on intent and semantics, perhaps both changes are valid but need to be merged correctly. Wait, looking at the code: in HEAD, the line is config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES, "...") while the other branch uses ASCIIDOCTOR_ATTRIBUTES.getKey(). If JBakeProperty.ASCIIDOCTOR_ATTRIBUTES is an enum or a constant that has a getKey() method, then the correct approach would be to use the getKey() method to retrieve the actual string key for the property. So perhaps the other branch's change is more accurate, using the getKey() method to get the property name. So the correct line would be config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(), "..."). But wait, in the HEAD, it's JBakeProperty.ASCIIDOCTOR_ATTRIBUTES, which might be the correct way if that's a static constant representing the key. Or maybe the other branch is using a static import of ASCIIDOCTOR_ATTRIBUTES from JBakeProperty, hence the code is using ASCIIDOCTOR_ATTRIBUTES.getKey(). So if the correct way to set the property is by getting the key via the getKey() method, then the second version is correct. So resolving that line by taking the second version.
+
+For the variable declaration: HEAD uses DocumentModel map, the other branch uses Map<String, Object> map. The assertions then use map.getStatus(), which would only work if DocumentModel has those methods. If the other branch changed the return type of processFile to a Map, then the code would be broken because Map doesn't have getStatus() or getType() methods. Therefore, the correct resolution is to keep DocumentModel as the type. Therefore, the conflict in the variable declaration should be resolved by keeping the HEAD version. However, the other branch's change might be part of a larger refactor where DocumentModel was replaced with a Map. But given the test code uses method calls, that would not compile. Therefore, the likely correct resolution is to keep DocumentModel. So combining the two: use the other branch's way of setting the property (using getKey()) but keep the DocumentModel type for the map variable. Therefore, the resolved code would be:
+
+config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES.getKey(), "source-highlighter=prettify,testattribute=I Love Jbake");
+DocumentModel map = parser.processFile(asciidocWithSource);
+
+Wait, but in the conflict, the HEAD uses JBakeProperty.ASCIIDOCTOR_ATTRIBUTES as the first argument, while the other branch uses ASCIIDOCTOR_ATTRIBUTES.getKey(). If JBakeProperty.ASCIIDOCTOR_ATTRIBUTES is an enum instance that has a getKey() method, then perhaps the correct line is combining both: using JBakeProperty.ASCIIDOCTOR_ATTRIBUTES.getKey(). But how is that possible? If in HEAD, the code is using the enum directly as the key, but the other branch correctly uses the getKey() method to retrieve the string key. For example, if the setProperty method expects a String key, and JBakeProperty.ASCIIDOCTOR_ATTRIBUTES is an enum that has a getKey() method returning the string, then the correct code would be to use getKey(). So the correct line is from the other branch: ASCIIDOCTOR_ATTRIBUTES.getKey(). But if the code in HEAD is using a static import of JBakeProperty.ASCIIDOCTOR_ATTRIBUTES, then the other branch's code might be using a static import of ASCIIDOCTOR_ATTRIBUTES from another class, which is not correct. Alternatively, maybe the other branch's code is correct, using the getKey() method. So resolving the first conflict by taking the second option: config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(), ...).
+
+But if JBakeProperty.ASCIIDOCTOR_ATTRIBUTES is a constant that holds the key string, then using it directly is correct. However, if the property is stored in an enum that requires getKey() to get the actual key string, then the other branch's approach is correct.
+
+Without more context, it's hard to be certain, but given that the other branch explicitly calls getKey(), it's possible that this is the correct way to retrieve the property key. Therefore, the first line should be taken from the other branch.
+
+For the variable declaration, since the test uses map.getStatus() and map.getType(), which are methods of DocumentModel, the correct type is DocumentModel. Therefore, the second conflict should be resolved by taking the HEAD version.
+
+Thus, the resolved code would merge both changes correctly.</think>
+```java
+    }
+
+    @Test
+    public void parseAsciidocFileWithCustomAttribute() {
+
+        config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify,testattribute=I Love Jbake");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("I Love Jbake")
+```

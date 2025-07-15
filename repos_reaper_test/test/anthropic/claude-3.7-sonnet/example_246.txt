@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see it's just a difference in line break formatting for the method declaration. The newer version (1cb2531c41db7942eca2b75f500cfe7e4a8cad81) has the `throws IOException` on a new line with proper indentation, while the HEAD version has it on the same line as the method declaration.
+
+Here's the resolved snippet:
+
+```java
+     * is based and merge it with the Conf supplied
+     *
+     * package level access so that this is not publicly used elsewhere
+     * @throws IOException
+     */
+    static void mergeSplitSpecificConf(LoadFunc loadFunc, PigSplit pigSplit, Configuration originalConf) 
+            throws IOException {
+        // set up conf with entries from input specific conf
+        Job job = new Job(originalConf);
+        loadFunc.setLocation(getLoadLocation(pigSplit.getInputIndex(),
+                originalConf), job);
+        // The above setLocation call could write to the conf within
+```
+
+I've chosen the version from the newer commit (1cb2531c41db7942eca2b75f500cfe7e4a8cad81) as it appears to follow a more consistent formatting style with the exception clause on a separate indented line, which improves readability.

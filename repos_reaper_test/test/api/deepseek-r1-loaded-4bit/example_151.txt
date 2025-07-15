@@ -1,0 +1,27 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java code where a GruntParser is being instantiated. The HEAD version uses a constructor with a StringReader, while the other branch (2125666c) uses a constructor that also includes myPig as a second argument.
+
+First, I need to figure out the intent behind both changes. The HEAD version might be an older version of the code where the GruntParser only required the script. The other branch's change adds a myPig parameter, which could be a reference to a Pig context or configuration that's necessary for the parser to function correctly in their changes.
+
+I should check if the myPig variable is declared and initialized in the surrounding context. Looking at the code snippet, there's a catch block but no visible declaration of myPig. However, since the code is within a try block, maybe myPig is defined earlier in the method or class. If that's the case, including it in the constructor is necessary for the new functionality, like passing additional dependencies or configurations.
+
+Since both changes are modifying the same line, the correct resolution would be to take the version that includes myPig, assuming it's a necessary addition. The HEAD version might be missing this parameter, which could lead to errors if the GruntParser now requires it. However, if the HEAD version is correct and the other branch's addition is unnecessary or incorrect, then keeping the HEAD would be right. But without more context, the safer assumption is that the branch adding myPig is introducing a necessary dependency.
+
+Therefore, the resolved line should combine both by using the constructor with both StringReader and myPig. So the line becomes:
+
+GruntParser parser = new GruntParser(new StringReader(script), myPig);
+
+I need to make sure that the rest of the context remains unchanged and that the spacing is preserved as per the original snippet.</think>
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "explain b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

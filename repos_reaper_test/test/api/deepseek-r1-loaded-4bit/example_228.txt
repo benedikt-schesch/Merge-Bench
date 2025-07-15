@@ -1,0 +1,21 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the setUp() method where a PigServer is being initialized. The HEAD version uses MAPREDUCE directly, while the other branch uses ExecType.MAPREDUCE.
+
+First, I need to understand the intent of both changes. The PigServer constructor probably expects an ExecType enum value. The HEAD version might have a static import for ExecType.MAPREDUCE, allowing just MAPREDUCE. The other branch is explicitly qualifying it with ExecType.
+
+If the code was relying on a static import, but that import is missing in one branch, it could cause an error. However, without knowing if the static import is present, it's safer to use the fully qualified name. That way, it's clear and avoids potential compilation errors if the import isn't there.
+
+So the correct resolution is to use ExecType.MAPREDUCE. That ensures the code compiles regardless of imports. The conflict markers should be removed, keeping the explicit enum reference.</think>
+```java
+    private PigServer pig;
+    
+    @Before
+    @Override
+    protected void setUp() throws Exception {
+        pig = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+    }
+
+    @Test
+    public void testBigGroupAll() throws Throwable {
+
+```

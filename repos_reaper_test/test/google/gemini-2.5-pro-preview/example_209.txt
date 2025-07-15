@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to understand the intent of both branches.
+
+*   **`HEAD` Branch Intent:** This branch aims to introduce a logging method `public void log(int arg0, String arg1)`.
+*   **`1488b22ce313803d012c8ace36c3b12f930ee309` Branch Intent:**This branch aims to introduce a method `public boolean isEnabled(int arg0)` which controls logging behavior (defaulting to false, i.e., not logging).
+
+Crucially, the code *after* the conflict block (`>>>>>>> 1488b...`) already contains the exact same `log(int arg0, String arg1)` method that `HEAD` is trying to introduce. This indicates that the `1488b...` branch also intended for this `log` method to be present, placing it after its newly introduced `isEnabled` method.
+
+The conflict arises because `HEAD` tries to add the `log` method at a location where `1488b...` has added the `isEnabled` method.
+
+To resolve this semantically:
+1.  We should include the `isEnabled(int arg0)` method from the `1488b...` branch, as this is its unique contribution in the conflicted section.
+2.  The `log(int arg0, String arg1)` method introduced by `HEAD` is already present in the lines immediately following the conflict block (which is part of the `1488b...` branch's changes or was common ground that `1488b...` built upon). Therefore, the `log` method from `HEAD` within the conflict markers is redundant.
+
+The resolved code should thus incorporate the `isEnabled` method from `1488b...` and retain the `log` method that follows the conflict block. This ensures both intents are met: the logging capability is added, and the control mechanism (`isEnabled`) for it is also added.
+
+```java
+    public SocketImpl createSocketImpl() {
+        return new SSHSocketImpl(session);
+
+    }
+
+    public boolean isEnabled(int arg0) {
+        // Default to not logging anything
+        return false;
+    }
+
+    public void log(int arg0, String arg1) {
+        log.error(arg0 + ": " + arg1);
+    }
+
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to determine the intent of both changes:
+
+- The parent version (HEAD) adds a line to create a `PigContext` with `ExecType.LOCAL` and empty `Properties`
+- The incoming change (1488b22) removes this line
+
+The issue is that after the merge, there's a reference to `pigContext` which is used as a parameter to the `LogicalPlanBuilder` constructor. If we remove the line that creates `pigContext`, this would cause a compilation error since the variable wouldn't be defined.
+
+Since the `pigContext` variable is needed by the subsequent code, the most semantically correct resolution is to keep the line that creates the `PigContext`.
+
+```java
+        return buildPlan(query, LogicalPlanBuilder.class.getClassLoader());
+    }
+
+    public LogicalPlan buildPlan(String query, ClassLoader cldr) {
+        LogicalPlanBuilder.classloader = cldr;
+        PigContext pigContext = new PigContext(ExecType.LOCAL, new Properties());
+        LogicalPlanBuilder builder = new LogicalPlanBuilder(pigContext); //
+
+        try {
+            LogicalPlan lp = builder.parse("Test-Plan-Builder",
+                                           query,
+```

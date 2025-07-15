@@ -1,0 +1,110 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The method in question is unmarshall, which has two conflicting versions. 
+
+Looking at the HEAD version, the method uses a DocumentStream created from a DBObject. It then calls mapper.readValue with parameters from the stream: data, offset, size, and the class. The exception caught is IOException, and the error message includes the document's string.
+
+The other branch (4dad4b6) uses a reader.withType(clazz).readValue(json), and catches a general Exception. The error message refers to a json variable and includes that in the message.
+
+Hmm. First, I need to figure out what's the intent here. The HEAD version seems to be using a stream obtained from the DBObject, possibly reading bytes with offset and size. The other branch is using a json variable directly with the reader. 
+
+Wait, where does the 'json' variable come from in the other branch? In the HEAD code, there's a DocumentStream stream created, and they use stream.getData(), etc. But in the other branch, they're using 'json' which isn't declared in the context shown. That's a problem. Maybe the other branch has a different setup, perhaps the 'json' is supposed to be the data from the stream. 
+
+Wait, looking at the code: in HEAD, the stream is created from the DBObject, and then stream.getData(), offset, size are passed to mapper.readValue. The other branch uses reader.withType(clazz).readValue(json). So perhaps the 'json' variable is supposed to be the content from the stream. But in the current code, the variable 'json' isn't defined. That suggests that the other branch might have a different setup, maybe the stream is converted to a JSON string, stored in 'json', which isn't present in the HEAD version. 
+
+This is a conflict because one side is using the stream's data with offset and size, and the other is using a json variable that's not present here. So maybe the resolution requires combining both approaches. But how?
+
+Alternatively, maybe the 'json' variable in the other branch is equivalent to the stream's data as a String. So perhaps in the other branch, they read the stream's data into a json string. But in the current conflict, that code isn't present. So maybe the correct resolution is to take the HEAD version's method of reading from the stream but adjust the reader part. Wait, the HEAD uses mapper.readValue, while the other branch uses reader.withType(clazz).readValue(json). Are these two different ways of doing the same thing? 
+
+Assuming that 'reader' is an instance of an ObjectReader (from Jackson), and 'mapper' is an ObjectMapper, perhaps the two approaches are compatible. But the problem is that the other branch's code doesn't have access to 'json' unless it's derived from the stream. 
+
+Wait, in the other branch's code, after creating the stream, they might have a line that converts the stream's data into a JSON string, but that line is missing in the conflict. Because in the current code, the stream is created but not used to get 'json'. So if the other branch had something like String json = stream.getDataAsString(); then that would make sense. But since that line isn't present in either version, maybe that's part of the conflict. 
+
+Alternatively, maybe the other branch's code is from a different refactoring where they don't use the stream's offset and size but instead read the entire content as a JSON string. But without knowing where 'json' comes from, it's hard to integrate. 
+
+This seems ambiguous. The HEAD version uses the stream's data with offset and size, which might be more efficient if the data is a byte array. The other branch uses a JSON string, which might be necessary if the reader expects a String input. 
+
+But since in the conflict code, the other branch's 'json' variable isn't declared, that's a problem. Unless there's a line that's missing in the conflict snippet that declares 'json'. For example, maybe in the other branch, after creating the stream, they have something like String json = new String(stream.getData(), stream.getOffset(), stream.getSize(), StandardCharsets.UTF_8); but that's not present here. 
+
+If that's the case, then the resolution would require adding that line. However, in the given code snippet, the only lines in the try block are the return statements. So in the current conflict, the 'json' variable isn't declared, leading to a compile error. 
+
+Therefore, the correct resolution would need to incorporate both changes, but since the 'json' variable isn't present in the context, perhaps the HEAD version is correct. Alternatively, maybe the 'json' is a parameter or a field, but that's unlikely given the context. 
+
+Alternatively, perhaps the other branch's code is incorrect because 'json' isn't defined, but maybe the intent was to use the stream's data as a JSON string. So the correct resolution would be to read the JSON from the stream and then use the reader. 
+
+Wait, let me think again. The HEAD version uses the mapper's readValue method with the byte array, offset, size, and class. The other branch uses the reader's readValue method with a json string. So perhaps the correct approach is to read the JSON string from the stream's data and then pass that to the reader. 
+
+So in the resolved code, perhaps we should first convert the stream's data into a JSON string, then use the reader to read it. 
+
+But how to do that? Let's see. The DocumentStream's getData() returns a byte array. The offset and size are used to get a subset of that array. Then, we can create a String from that subset. 
+
+So, in the try block, we can do:
+
+byte[] data = stream.getData();
+int offset = stream.getOffset();
+int size = stream.getSize();
+String json = new String(data, offset, size, StandardCharsets.UTF_8);
+
+Then, use the reader to read the json string. 
+
+But that code isn't present in either branch. So if we are to merge both changes, we need to include that. However, in the given conflict, the only lines in the try block are the return statements. So how to resolve this?
+
+The HEAD's code is:
+
+return mapper.readValue(stream.getData(), stream.getOffset(), stream.getSize(), clazz);
+
+The other branch's code is:
+
+return reader.withType(clazz).readValue(json);
+
+But without the 'json' variable being declared, the other branch's code is invalid. Therefore, the conflict can't be resolved without additional context. However, perhaps the intent of both branches is to unmarshall the document into the class, but using different methods. The HEAD uses the byte array with offset and size, while the other branch uses a JSON string. 
+
+If we can assume that the 'json' variable is supposed to be the content of the stream, then the correct resolution would be to generate the json string from the stream's data and then use the reader. But that requires adding code to convert the stream's data to a string. 
+
+However, the user's instruction says to return the entire snippet including full context as provided, only modifying the conflict if the intent is clear. If the intent is ambiguous, leave the conflict. 
+
+Given that the 'json' variable is not declared in the provided snippet, the other branch's code is incomplete. Therefore, the conflict is ambiguous, and we should leave it as is. 
+
+But wait, maybe the 'json' variable is a field or a parameter. Looking at the surrounding code, the method parameters are document and clazz. There's no 'json' parameter. So 'json' is not a parameter. It could be a field, but that's unlikely since the method is about unmarshalling a document. 
+
+Therefore, the other branch's code is incorrect because 'json' is not declared. So the correct resolution would be to keep the HEAD version, as the other branch has an undefined variable. 
+
+But the user is asking to resolve the conflict by considering the intent. If both sides are trying to read the document into the class, but using different approaches (byte array vs. JSON string), and the other branch's code is missing the declaration of 'json', then it's unclear. 
+
+Alternatively, perhaps the 'json' variable is supposed to be the document's content as a string. In that case, maybe the other branch's code is trying to use the document's JSON string directly. But how to get that? The document is a DBObject. Maybe in the other branch, they have a way to convert the DBObject to a JSON string, which is stored in 'json'. But in the given code, the only thing done is creating the stream from the DBObject, and then using 'json'. 
+
+Wait, in the other branch's code, the line is DocumentStream stream = DocumentStreamFactory.fromDBObject(document); but then they use 'json' which is not related to the stream. So perhaps the 'json' variable is supposed to be derived from the stream. 
+
+In that case, the correct resolution would be to read the json from the stream. So in the try block, first, read the json string from the stream, then use the reader. 
+
+But how to do that? For example:
+
+try {
+    String json = new String(stream.getData(), stream.getOffset(), stream.getSize(), StandardCharsets.UTF_8);
+    return reader.withType(clazz).readValue(json);
+} catch ...
+
+But that line is missing in both branches. So this is a case where the two branches have conflicting approaches, and without additional code, it's impossible to resolve. 
+
+Therefore, since the intent is unclear and the 'json' variable is undefined, the conflict cannot be resolved automatically. Thus, the merged code should retain the conflict markers.</think>
+```java
+
+    public <T> T unmarshall(DBObject document, Class<T> clazz) throws MarshallingException {
+
+        DocumentStream stream = DocumentStreamFactory.fromDBObject(document);
+        try {
+<<<<<<< HEAD
+            return mapper.readValue(stream.getData(), stream.getOffset(), stream.getSize(), clazz);
+        } catch (IOException e) {
+            String message = String.format("Unable to unmarshall result to %s from content %s", clazz, document.toString());
+=======
+            return reader.withType(clazz).readValue(json);
+        } catch (Exception e) {
+            String message = String.format("Unable to unmarshall from json: %s to %s", json, clazz);
+>>>>>>> 4dad4b6f9ffd42aaf0a81bf4fc4026ac51e656d0
+            throw new MarshallingException(message, e);
+        }
+    }
+
+    public DBObject marshall(Object obj) throws MarshallingException {
+
+```

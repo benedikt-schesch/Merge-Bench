@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved as is, formatted in markdown code syntax. I have kept the context and spacing exactly as provided. Below the snippet, I will explain my analysis of the conflict and propose a resolution based on the semantics and intent of both sides.
+
+```java
+
+    List<Entity> extracted = new ArrayList<Entity>();
+    Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(text);
+    while (matcher.find()) {
+      String after = text.substring(matcher.end());
+<<<<<<< HEAD
+      if (! Regex.SCREEN_NAME_MATCH_END.matcher(after).find()) {
+        extracted.add(new Entity(matcher, EntityType.MENTION, Regex.EXTRACT_MENTIONS_GROUP_USERNAME));
+=======
+      if (! Regex.INVALID_MENTION_MATCH_END.matcher(after).find()) {
+        extracted.add(new Entity(matcher, "mention", Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME));
+>>>>>>> 241013e46597fb285a334c966dfa7af9991b5225
+      }
+    }
+    return extracted;
+  }
+
+```
+
+### Analysis of the Conflict and Intent
+
+This merge conflict arises in a code segment that processes text to extract mentions (likely usernames or handles) using regular expressions. The purpose of the code is to identify valid mentions and add them as `Entity` objects to a list. The conflict spans two key differences in the conditional check and the parameters passed to the `Entity` constructor.
+
+#### Key Differences:
+1. **Conditional Check for Invalid Matches:**
+   - **HEAD (Local Change):** Uses `Regex.SCREEN_NAME_MATCH_END` to determine if the text following the matcher contains an invalid ending for a screen name/mention.
+   - **Incoming Change (241013e):** Uses `Regex.INVALID_MENTION_MATCH_END` to perform a similar check, but with a different regex pattern name, suggesting a possible rename or refactoring of how invalid mentions are detected.
+   - **Intent:** Both sides are trying to filter out invalid mentions by checking the text after the matched portion. The difference lies in the naming or definition of the regex pattern used.
+
+2. **Entity Constructor Parameters:**
+   - **HEAD:** Passes `EntityType.MENTION` (an enum or constant) as the type of entity, and `Regex.EXTRACT_MENTIONS_GROUP_USERNAME` as the group identifier for extracting the username.
+   - **Incoming Change:** Passes a string literal `"mention"` as the type of entity, and `Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME` as the group identifier.
+   - **Intent:** Both sides aim to create an `Entity` object representing a mention, but they differ in how the type is specified (enum/constant vs. string) and which regex group is used for extracting the username. The incoming change suggests a refactoring of the `Entity` class or regex constants to support a broader or updated pattern.
+
+#### Semantic Intent:
+- **HEAD:** Likely represents an older or more specific implementation, focusing on screen names with a specific regex (`SCREEN_NAME_MATCH_END`) and a typed enum (`EntityType.MENTION`).
+- **Incoming Change:** Appears to be a newer or refactored version, possibly aligning with a broader system of mention detection (`INVALID_MENTION_MATCH_END`) and updated constructor parameters (`"mention"` and `VALID_MENTION_OR_LIST_GROUP_USERNAME`), suggesting changes in the surrounding codebase (e.g., `Entity` class or regex definitions).
+
+#### Ambiguity:
+There is ambiguity in determining the correct resolution without additional context about:
+- Whether `EntityType.MENTION` and `"mention"` are interchangeable (i.e., does the `Entity` constructor accept both, or has it been refactored?).
+- Whether `SCREEN_NAME_MATCH_END` and `INVALID_MENTION_MATCH_END` refer to the same logic, or if one is more correct based on updated requirements.
+- The relationship between `EXTRACT_MENTIONS_GROUP_USERNAME` and `VALID_MENTION_OR_LIST_GROUP_USERNAME` (are they equivalent, or has the regex group definition changed?).
+
+#### Proposed Resolution:
+Given the lack of full context, I lean towards the **incoming change (241013e)** as it appears to reflect a more updated or refactored version of the code (based on naming conventions like `INVALID_MENTION_MATCH_END` and `VALID_MENTION_OR_LIST_GROUP_USERNAME`, which suggest alignment with a newer regex pattern for mentions or lists). However, to preserve semantics and avoid breaking existing functionality, I recommend resolving the conflict by adopting the incoming change while ensuring compatibility with the `Entity` constructor. If the constructor still expects an enum like `EntityType.MENTION`, this should be adjusted manually after confirming the codebase.
+
+Since I cannot modify the snippet as per the instructions (unless providing a resolved version is explicitly requested), I am returning the snippet with the conflict intact. If you confirm the intent or provide additional context (e.g., definition of `Entity` class or regex constants), I can propose a specific resolution.
+
+If you would like me to attempt a resolved version based on my analysis, please let me know. For now, the original conflicted snippet is preserved above.

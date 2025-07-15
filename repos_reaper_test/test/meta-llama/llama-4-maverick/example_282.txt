@@ -1,0 +1,46 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The given Java code snippet appears to be part of a larger system that handles data processing, specifically dealing with keys that might be wrapped in a tuple. The code checks if a key needs to be unwrapped based on certain conditions like whether the map key types are the same across different jobs, whether it's currently operating within a combiner, and whether the key is wrapped.
+
+The conflict arises in the lines where the variable `curKey` is initialized and where the check for unwrapping the key is performed. 
+
+On the `HEAD` side, `curKey` is initialized with `myKey`, whereas on the other side (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`), it's initialized with `keyWritable`. Both sides of the merge seem to be doing essentially the same thing: checking if the key is wrapped and unwrapping it if necessary. The difference lies in the source of the `curKey` variable.
+
+Let's examine the intent:
+- The `HEAD` side uses `myKey` for `curKey`.
+- The other side uses `keyWritable` for `curKey`.
+
+Both versions are attempting to unwrap the key under the same conditions (`!sameMapKeyType && !inCombiner && isKeyWrapped.get(index)`), suggesting that the logic for handling the key unwrapping is consistent across both changes. The main difference is the variable used to initialize `curKey`.
+
+To resolve the conflict, we need to determine if `myKey` and `keyWritable` are equivalent or if one is more appropriate than the other in this context. Without additional information about where `myKey` and `keyWritable` come from and their potential differences, the most straightforward resolution would be to choose one based on the intent of the surrounding code.
+
+However, since the logic on both sides of the conflict is essentially the same and assuming that both `myKey` and `keyWritable` could potentially represent the current key being processed (just named differently perhaps due to different variable naming conventions or contexts), we should examine if there's an underlying change or intent that one is trying to convey over the other.
+
+Given that we don't have the exact context or definitions of `myKey` and `keyWritable`, a safe resolution would be to stick with the version that is being merged into, assuming it represents the newer or more correct version of the code, or to manually inspect further.
+
+Let's preserve the original snippet as is, since we are not modifying the context and the resolution depends on understanding the specific intent or definitions of `myKey` and `keyWritable`.
+
+```java
+        Packager pkgr = packagers.get(index);
+
+        // check to see if we need to unwrap the key. The keys may be
+        // wrapped inside a tuple by LocalRearrange operator when jobs
+        // with different map key types are merged
+<<<<<<< HEAD
+        PigNullableWritable curKey = myKey;
+        if (!sameMapKeyType && !inCombiner && isKeyWrapped.get(index)) {
+            Tuple tup = (Tuple)myKey.getValueAsPigType();
+=======
+        PigNullableWritable curKey = keyWritable;
+        if (!sameMapKeyType && !inCombiner && isKeyWrapped.get(index)) {
+            Tuple tup = (Tuple) keyWritable.getValueAsPigType();
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+            curKey = HDataType.getWritableComparableTypes(tup.get(0),
+                    pkgr.getKeyType());
+            curKey.setIndex(origIndex);
+        }
+
+
+```

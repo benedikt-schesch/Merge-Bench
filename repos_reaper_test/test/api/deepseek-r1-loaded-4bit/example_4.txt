@@ -1,0 +1,90 @@
+<think>
+Okay, let's look at this merge conflict. The two branches are modifying the same part of the code where a Gson instance is being assigned. 
+
+In the HEAD version, they check the protocol version of the handshake. If it's 1.7.2, they use gsonLegacy, otherwise, the regular gson. The other branch, from commit 80b3135, just uses the regular gson without any condition.
+
+So the conflict is between a conditional assignment and a direct one. To resolve this, I need to determine if the conditional check is still necessary or if the other branch's approach of always using gson is correct now. 
+
+If the protocol version check was added for a reason, like compatibility with older clients, then keeping the conditional makes sense. But if the other branch removed that check because it's no longer needed (maybe all versions now use the same Gson), then using the regular gson directly is better.
+
+Since the user hasn't provided additional context on why these changes were made, I have to make an educated guess. If the 80b3135 commit is updating the code to remove legacy support, then their change is intentional. However, the HEAD's change adds a feature for handling different protocol versions. 
+
+Without knowing which is more recent or the project's current state, it's safer to assume both changes are valid but need to be integrated. Wait, but they can't both coexist as written. The conflict is on the same lines. 
+
+Wait, looking again: the HEAD version includes the unthrottle call before setting Gson, while the other branch doesn't have that line. Wait no, the conflict markers are around the Gson assignment. The line with unthrottle is only in the HEAD. Wait, the code shows:
+
+In HEAD:
+- unthrottle line
+- Gson assignment with condition
+
+In the other branch:
+- Gson assignment direct
+
+So the conflict is between the two Gson lines, but the unthrottle line is only present in HEAD. So when merging, we need to include the unthrottle line from HEAD and decide which Gson assignment to take.
+
+Wait, the conflict is between the two Gson lines. The code from HEAD has the unthrottle line first, then the conditional Gson. The other branch removes the unthrottle line and just has the direct Gson. Wait no, looking at the code:
+
+The conflict starts at the line after unthrottle. So in HEAD, the code is:
+
+BungeeCord.getInstance().getConnectionThrottle().unthrottle(...);
+Gson gson = ...;
+
+In the other branch, the code is:
+
+Gson gson = ...;
+
+So the other branch's version doesn't have the unthrottle line. Therefore, the merge conflict is between keeping the unthrottle line plus conditional Gson (HEAD) vs. not having unthrottle and having a direct Gson (other branch). 
+
+Wait, that can't be right. Let me check the original code again.
+
+Original code:
+
+<<<<<<< HEAD
+                        BungeeCord.getInstance().getConnectionThrottle().unthrottle( getAddress().getAddress() );
+                        Gson gson = handshake.getProtocolVersion() == ProtocolConstants.MINECRAFT_1_7_2 ? BungeeCord.getInstance().gsonLegacy : BungeeCord.getInstance().gson;
+=======
+                        Gson gson = BungeeCord.getInstance().gson;
+>>>>>>> 80b3135a93f0e23489cc19086e31feb12ff51798
+
+Ah, right. So in the HEAD version, there are two lines: the unthrottle and the conditional Gson. In the other branch, there's only the Gson line, which is set directly. So the conflict is between adding the unthrottle line and conditional Gson vs. just the direct Gson. 
+
+Therefore, the merge needs to include the unthrottle line from HEAD and then resolve the Gson assignment. The problem is that the other branch removes the conditional. So the correct resolution would be to keep the unthrottle line and decide which Gson assignment to use. 
+
+But why would the other branch remove the unthrottle line? Wait, no. Looking at the conflict markers, the other branch's code doesn't have the unthrottle line. So when merging, if we take both changes, we would have the unthrottle line from HEAD and the Gson line from the other branch. But that's possible only if the Gson lines don't conflict. Wait, no, because the conflict is in the same area. 
+
+Wait, the conflict is between the two versions of the code in the same block. The HEAD adds the unthrottle line and the conditional Gson, while the other branch replaces the Gson line. So the conflict is that in HEAD, there's an additional line (unthrottle) before the Gson line, which is conditional. The other branch modifies the Gson line to be non-conditional but doesn't have the unthrottle line. 
+
+So to resolve this, we need to keep the unthrottle line from HEAD and decide whether to take the conditional Gson or the direct Gson from the other branch. 
+
+But why would the other branch not have the unthrottle line? It's possible that in their branch, they removed it, but that's unlikely. Wait, perhaps the other branch was based on an older version that didn't have the unthrottle line. So when merging, the correct approach is to keep the unthrottle line (since it's in HEAD) and then resolve the Gson assignment. 
+
+But the other branch's change is to set Gson to BungeeCord.getInstance().gson, which is the same as the else case in HEAD's conditional. So maybe the other branch is removing the conditional check, assuming that the legacy Gson is no longer needed. 
+
+If that's the case, the correct resolution would be to keep the unthrottle line from HEAD and take the Gson assignment from the other branch (direct assignment), thus removing the conditional. 
+
+But how to confirm? If the other branch's commit message indicates that they removed legacy code for versions before 1.7.2, then it's safe to remove the conditional. Otherwise, perhaps the conditional is still needed. 
+
+Since the user hasn't provided that context, but asks to resolve based on intent and semantics, we have to assume that both changes are valid. The unthrottle line is a separate action that should be retained, and the Gson assignment should take the latest change from the other branch (direct assignment), implying that the conditional check is no longer necessary. 
+
+Therefore, the resolved code should include the unthrottle line from HEAD and the Gson assignment from the other branch. 
+
+So the final code would be:
+
+                        BungeeCord.getInstance().getConnectionThrottle().unthrottle( getAddress().getAddress() );
+                        Gson gson = BungeeCord.getInstance().gson;
+
+Because we keep the unthrottle line (from HEAD) and take the Gson assignment from the other branch.</think>
+```java
+                Callback<ProxyPingEvent> callback = new Callback<ProxyPingEvent>()
+                {
+                    @Override
+                    public void done(ProxyPingEvent pingResult, Throwable error)
+                    {
+                        BungeeCord.getInstance().getConnectionThrottle().unthrottle( getAddress().getAddress() );
+                        Gson gson = BungeeCord.getInstance().gson;
+                        unsafe.sendPacket( new StatusResponse( gson.toJson( pingResult.getResponse() ) );
+                    }
+                };
+
+                bungee.getPluginManager().callEvent( new ProxyPingEvent( InitialHandler.this, result, callback ) );
+```

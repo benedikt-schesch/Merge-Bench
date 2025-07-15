@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears that both sides are trying to create a `GruntParser` instance, but the right side (from commit 2125666c) is passing an additional parameter `myPig` to the constructor. This suggests that the constructor signature might have been updated to require a Pig instance parameter. To properly resolve this, I would use the version that includes the additional parameter.
+
+Here's the resolved snippet:
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "explain b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

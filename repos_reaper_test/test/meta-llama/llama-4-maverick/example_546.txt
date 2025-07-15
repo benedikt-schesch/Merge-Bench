@@ -1,0 +1,47 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first analyze the provided code snippet and understand the context and intent behind it.
+
+The code snippet is written in Java and appears to be part of a method or function that performs certain checks and initializations based on the values of several variables (`defSource`, `jaxRsResources`, `language`, and `serviceUrl`). The checks include verifying if a definition source is provided, if the specified language is supported, and if a service URL is given.
+
+The merge conflict arises from the differing versions of the check for the supported language. Let's examine both versions:
+
+1. The version from `HEAD` (local changes):
+   ```java
+   if (!StringUtils.isNullOrEmpty(language)
+           && !SUPPORTED_LANGUAGES.contains(language)) {
+       failWithErrorMessage("The language " + language
+               + " is not currently supported. ");
+   }
+   ```
+
+2. The version from `1d97bfac1d91e13b3835ca099b3a998c1969478f` (incoming changes):
+   ```java
+   if (!StringUtils.isNullOrEmpty(language) && !SUPPORTED_LANGUAGES.contains(language)) {
+       failWithErrorMessage("The language " + language + " is not currently supported. ");
+   }
+   ```
+
+Both versions of the code check if the `language` is not empty and not contained within `SUPPORTED_LANGUAGES`, and if so, they fail with an error message indicating that the language is not supported. The difference lies in the formatting: the local version (`HEAD`) has a line break after the condition, while the incoming version (`1d97bfac1d91e13b3835ca099b3a998c1969478f`) is on a single line.
+
+Given that the functionality of both versions is identical, and the difference is purely in formatting (line break vs. single line), we can resolve this conflict by choosing one version over the other. However, since the intent and semantics are the same, and to avoid modifying the context or the spacing unnecessarily, we can directly resolve it by picking one of the formats.
+
+Let's resolve the conflict by keeping the version from `1d97bfac1d91e13b3835ca099b3a998c1969478f` as it is a common formatting style to keep related conditional statements and their bodies on fewer lines if they are short.
+
+Here is the resolved snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+
+        if (StringUtils.isNullOrEmpty(defSource) && jaxRsResources.isEmpty()) {
+            failWithErrorMessage("You should specify the definition source to use (value no prefixed by any option). ");
+        }
+
+        if (!StringUtils.isNullOrEmpty(language) && !SUPPORTED_LANGUAGES.contains(language)) {
+            failWithErrorMessage("The language " + language + " is not currently supported. ");
+        }
+
+        if (StringUtils.isNullOrEmpty(serviceUrl)) {
+            serviceUrl = "https://apispark.restlet.com/";
+        }
+
+```

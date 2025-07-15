@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Here is the resolved snippet preserving the context and semantics of both versions:
+
+```java
+	static public File createInputFile(String tmpFilenamePrefix, 
+			                           String tmpFilenameSuffix, 
+			                           String[] inputData) 
+	throws IOException {
+		File f = File.createTempFile(tmpFilenamePrefix, tmpFilenameSuffix);
+		f.deleteOnExit();
+		PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"));
+		for (int i=0; i<inputData.length; i++){
+			pw.println(inputData[i]);
+		}
+		pw.close();
+		return f;
+```
+
+**Resolution Explanation:**
+1. Added `f.deleteOnExit()` from the conflicting version to ensure proper cleanup of temporary files
+2. Used UTF-8 encoding (`OutputStreamWriter(new FileOutputStream(f), "UTF-8")`) to ensure consistent text encoding across platforms
+3. Retained the file creation logic and data writing pattern from both versions
+4. Preserved all original method structure and spacing exactly as provided

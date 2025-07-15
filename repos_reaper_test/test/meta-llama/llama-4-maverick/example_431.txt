@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made in both branches.
+
+The code snippet is in Java and appears to be part of a larger class, possibly within an Android application given the presence of an `mAdapter` and a `ListRow`. The snippet includes a merge conflict in the method name: `refreshSubCategories` vs `rebuildSubCategories`.
+
+1. **Understanding the Conflict**: The conflict arises because the method name has been changed differently in two branches. In one branch (HEAD), the method is named `refreshSubCategories`, suggesting it refreshes or updates the subcategories in some manner. In the other branch (`308db82053c3707c95c8a180e78ac06043dff2a5`), the method is named `rebuildSubCategories`, implying a potentially more thorough reconstruction or rebuilding of subcategories.
+
+2. **Analyzing the Method's Purpose**: The method, regardless of its name, fetches a list of `Video` objects, sorts them based on their creation time in descending order (newest first), and presumably updates the UI or data structure related to subcategories with this sorted list.
+
+3. **Resolving the Conflict**: To resolve the conflict, we need to decide whether `refreshSubCategories` or `rebuildSubCategories` better captures the intent of the method. Both names could be considered reasonable depending on the specifics of what the method does beyond what's shown. `refreshSubCategories` might imply updating the existing list of subcategories, potentially with new data or reordering. `rebuildSubCategories`, on the other hand, suggests a more significant action: potentially clearing the current subcategories and rebuilding them from scratch.
+
+4. **Semantic Analysis**: The method fetches all `Video` objects, sorts them, and then (though not shown in this snippet) presumably updates the subcategories. This suggests a rebuilding or significant updating of subcategories based on the current state of `Video` objects.
+
+5. **Decision**: Without more context on the exact behavior intended by the developers of both branches, the most straightforward resolution is to choose one of the method names based on the semantic intent. However, since the code within the method is identical in both versions (aside from the method name), and without additional context on how these subcategories are used or updated elsewhere, either name could be justified.
+
+Given the information and focusing on the semantics:
+- `refreshSubCategories` implies an update, possibly not a complete rebuild.
+- `rebuildSubCategories` suggests a more comprehensive action, potentially including clearing and then rebuilding.
+
+Both could be valid depending on the implementation details not shown. 
+
+Since we are to return the entire snippet including the conflict if the intent is ambiguous, and given that we don't have explicit information on why one branch chose to rename it to `rebuildSubCategories` while the other kept or named it `refreshSubCategories`, the safest resolution when unsure is to leave the conflict as is or to choose based on external context not provided.
+
+Here is the original snippet with the conflict preserved, formatted as requested:
+
+```java
+                mAdapter.add(0, new ListRow(header, listRowAdapter));
+            }
+        }
+    }
+
+<<<<<<< HEAD
+    private void refreshSubCategories() {
+=======
+    private void rebuildSubCategories() {
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+        List<Video> videos = Video.listAll(Video.class);
+        Collections.sort(videos, new Comparator<Video>() {
+            @Override
+            public int compare(Video o1, Video o2) {
+                return Long.valueOf(o2.getCreated()).compareTo(o1.getCreated());
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two approaches to retrieving the meta plugin. One side casts the result to PluginManager, ensuring the method gets called correctly, while the other does not. The cast is necessary to access getMetaPlugin() if getPluginManager() returns a super type.
+
+```java
+	private final Map<Integer, Widget> spoutMessages = new HashMap<Integer, Widget>();
+	// The hashmap that contains the plugin's debug messages
+	private final Map<Plugin, Widget> messages = new HashMap<Plugin, Widget>();
+
+	public DebugScreen() {
+		plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+		init();
+	}
+
+	@Override
+	public void open() {
+```

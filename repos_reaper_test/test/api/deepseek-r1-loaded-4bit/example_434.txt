@@ -1,0 +1,27 @@
+<think>
+Okay, let me look at this merge conflict. The problem is in the Java imports. The HEAD version has SortedArrayObjectAdapter, while the other branch has SortedObjectAdapter. I need to figure out which one to keep or if both are needed.
+
+First, I should consider the intent of both changes. Maybe one branch renamed the class from SortedObjectAdapter to SortedArrayObjectAdapter, and the other branch is using the old name. Or perhaps they're different classes introduced in separate features.
+
+Looking at the surrounding imports, both are from the same package com.jerrellmardis.amphitheatre.widget. The other imports like CardPresenter and TvShowsCardPresenter are present. If SortedArrayObjectAdapter is a subclass or a replacement for SortedObjectAdapter, maybe one is deprecated. Alternatively, maybe one branch added a new class and the other modified an existing one.
+
+If I can't determine the intent, I should leave the conflict as is. But if they're meant to be the same class with a name change, the correct resolution would be to pick the newer name if it's a rename. However, without more context, it's risky. Since the user said to resolve based on semantics and intent, but I don't have info on why these changes were made, it's ambiguous. Therefore, the safe choice is to leave the conflict unresolved.</think>
+```java
+import com.jerrellmardis.amphitheatre.util.Enums;
+import com.jerrellmardis.amphitheatre.util.PicassoBackgroundManagerTarget;
+import com.jerrellmardis.amphitheatre.util.SecurePreferences;
+import com.jerrellmardis.amphitheatre.util.VideoUtils;
+import com.jerrellmardis.amphitheatre.widget.CardPresenter;
+<<<<<<< HEAD
+import com.jerrellmardis.amphitheatre.widget.SortedArrayObjectAdapter;
+=======
+import com.jerrellmardis.amphitheatre.widget.SortedObjectAdapter;
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+import com.jerrellmardis.amphitheatre.widget.TvShowsCardPresenter;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
+
+``` 
+
+The conflict remains unresolved as the intent behind the different adapter class names (`SortedArrayObjectAdapter` vs `SortedObjectAdapter`) cannot be clearly determined from the given context. These appear to be distinct class implementations that both need to coexist, or potentially a refactoring that wasn't fully reconciled. Additional context about the relationship between these adapter classes would be needed to make a semantically correct merge decision.

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two changes: updating the cluster type parameter and adding Windows path handling. Both changes can be resolved by adopting the right-side modifications as they enhance compatibility and fix potential issues.
+
+```java
+	 * @param cluster a reference to the minicluster
+	 * @param localFileName the pathname of local file
+	 * @param fileNameOnCluster the name with which the file should be created on the minicluster
+	 * @throws IOException
+	 */
+<<<<<<< HEAD
+     static public void copyFromLocalToCluster(MiniGenericCluster cluster,
+        String localFileName, String fileNameOnCluster) throws IOException {
+=======
+	static public void copyFromLocalToCluster(MiniCluster cluster, String localFileName, String fileNameOnCluster) throws IOException {
+        if(Util.WINDOWS){
+            localFileName = localFileName.replace('\\','/');
+            fileNameOnCluster = fileNameOnCluster.replace('\\','/');
+        }
+>>>>>>> 8923da8cd49c041d99fd5996ddf807f54915c79e
+        PigServer ps = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+        String script = getMkDirCommandForHadoop2_0(fileNameOnCluster) + "fs -put " + localFileName + " " + fileNameOnCluster;
+
+	    GruntParser parser = new GruntParser(new StringReader(script));
+        parser.setInteractive(false);
+```

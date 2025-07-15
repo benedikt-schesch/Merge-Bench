@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to involve two changes:
+
+1. The property key access syntax has been updated
+2. The return type of the `parser.processFile()` method has been changed
+
+Here is the resolved code based on the semantic intent:
+
+```java
+    @Test
+    public void parseAsciidocFileWithPrettifyAttribute() {
+
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify");
+        Map<String, Object> map = parser.processFile(asciidocWithSource);
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("class=\"paragraph\"")
+```

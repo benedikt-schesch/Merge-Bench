@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Here is the entire code snippet with the merge conflict resolved:
+
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public TokenInfoResponse requestTokenInfo() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
+    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
+    request.execute().parseAs(TokenInfoResponse.class);
+  }
+
+  /** Updates the authorization headers. */
+  private void updateAuthorizationHeaders() {
+
+```
+
+*Change made*: I chose the version from the right side. I considered that using `createRequestFactory().buildGetRequest()` is more consistent with the pattern of creating HTTP requests, as it allows for better control over the request configuration. The addition of the parser after building the request is correct as it ensures the parser is properly set up before executing the request.

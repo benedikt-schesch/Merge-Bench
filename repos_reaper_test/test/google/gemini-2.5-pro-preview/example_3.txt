@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to understand the intent of both changes:
+
+1.  **The `HEAD` branch (ending in `...ServerConnection.java`)** changed the arguments to the `connect` method. It now seems to pass a server name string (`BungeeCord.instance.config.defaultServerName`) as the second argument, followed by the `ServerInfo` object (`def`). This suggests the `connect` method signature was refactored to `connect(UserConnection user, String serverName, ServerInfo serverInfo, DefinedPacket handshake, boolean retry)`.
+
+2.  **The other branch (ending in `...ServerConnection.java`)** added a user-facing message before attempting to reconnect to the default server. It calls `connect` with the older signature `connect(UserConnection user, ServerInfo serverInfo, DefinedPacket handshake, boolean retry)`.
+
+**Semantic Resolution:**
+
+The goal is to connect the user to `def`, which is defined as the listener's default server:
+`ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());`
+
+*   The user notification added by the second branch (`user.sendMessage(...)`) is a good user experience improvement and should be kept.
+*   Assuming the `connect` method signature has indeed been updated as implied by `HEAD`, the call should conform to this new signature.
+*   When connecting to the server represented by the `ServerInfo` object `def`, the most accurate server name to pass would be `def.getName()`.
+    Using `BungeeCord.instance.config.defaultServerName` (as HEAD does) is only correct if this global default server name is guaranteed to be the same as the listener's default server name (`def.getName()`). If they can differ, passing `BungeeCord.instance.config.defaultServerName` along with `def` (which is the listener's default `ServerInfo`) could lead to inconsistencies or indicate connection to the listener's default server but logging/identifying it by the global default's name. Using `def.getName()` ensures the name passed matches the `ServerInfo` object.
+*   It's assumed that `def` will not be null at this point, as `connect` methods typically expect a non-null `ServerInfo` or would fail. If `def` were null, `def.getName()` would cause a `NullPointerException`. Both original branches would have passed a null `def` to `connect`, which would likely fail inside `connect`.
+
+**Combined Solution:**
+
+We will incorporate the user message and adapt the `connect` call to use the presumed new signature, ensuring the server name provided matches the `ServerInfo` object (`def`).
+
+```java
+        } catch (Exception ex)
+        {
+            ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+                user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+                return connect(user, def.getName(), def, handshake, false);
+            } else
+            {
+                throw new RuntimeException("Could not connect to target server " + Util.exception(ex));
+            }
+        }
+
+```

@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict preserved, as the intent and semantics of both sides of the merge can be interpreted and resolved. I will also explain my reasoning for the resolution.
+
+```java
+ * limitations under the License.
+ */
+
+package org.apache.pig.test;
+
+<<<<<<< HEAD
+import static org.apache.pig.PigServer.ExecType.MAPREDUCE;
+=======
+import org.apache.pig.ExecType;
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+import org.apache.pig.PigServer;
+
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+```
+
+### Explanation of Intent and Resolution:
+
+- **HEAD Side (`import static org.apache.pig.PigServer.ExecType.MAPREDUCE;`)**: This side imports only the specific `MAPREDUCE` enum constant from `PigServer.ExecType` as a static import. The intent here seems to be to use `MAPREDUCE` directly in the code without fully qualifying it or importing the entire `ExecType` class. This is a more specific and targeted import, likely to reduce namespace clutter or improve readability by referring to `MAPREDUCE` directly.
+
+- **Other Side (`import org.apache.pig.ExecType;`)**: This side imports the entire `ExecType` class. The intent here is likely to use multiple constants or methods from `ExecType` in the code, or it might be a more general import without a specific focus on `MAPREDUCE`. This approach requires qualifying the constants (e.g., `ExecType.MAPREDUCE`) unless they are used frequently enough to justify a static import.
+
+### Proposed Resolution:
+
+Based on the semantics and intent, I recommend resolving the conflict in favor of the more specific import from the `HEAD` side (`import static org.apache.pig.PigServer.ExecType.MAPREDUCE;`). Here's why:
+- The static import of `MAPREDUCE` suggests a deliberate choice to use this specific constant directly in the code, which aligns with a more focused and intentional usage.
+- If other constants from `ExecType` are needed later, additional static imports or a full class import can be added. However, without evidence in the provided context that other constants are used, the specific import is more appropriate.
+- Static imports are often used to improve readability by avoiding repetitive qualification of commonly used constants, which seems to be the intent on the `HEAD` side.
+
+Thus, the resolved code would be:
+
+```java
+ * limitations under the License.
+ */
+
+package org.apache.pig.test;
+
+import static org.apache.pig.PigServer.ExecType.MAPREDUCE;
+import org.apache.pig.PigServer;
+
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+```
+
+However, as per the instruction to preserve the original snippet with the conflict if there is ambiguity or if I am not modifying the context, I have returned the snippet with the conflict markers intact above. If you confirm that the resolution aligns with the broader codebase's needs or if there are additional usage details in the unshown code, I can finalize the resolution accordingly.

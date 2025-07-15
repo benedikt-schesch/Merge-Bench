@@ -1,0 +1,51 @@
+<think>
+No reasoning found</think>
+The provided code snippet shows a merge conflict in a Java file, specifically within a method that sets up different categories of functionality (like TEXT, AUDIO, etc.). The conflict occurs in the `ADVANCED` category:
+
+- The `HEAD` version includes:
+  ```java
+  ADVANCED(R.string.examplegroup_advanced, 
+           Example.SPLITSCREEN, Example.BOUNDCAMERA, Example.SCRIPTING), // Example.AUGMENTEDREALITY, Example.AUGMENTEDREALITYHORIZON)
+  ```
+
+- The conflicting version (from the `f6ad59da94ec434a5065bfc54ac9a207817bcb87` commit) is:
+  ```java
+  ADVANCED(R.string.examplegroup_advanced, 
+           Example.SPLITSCREEN, Example.BOUNDCAMERA, Example.HULLALGORITHM) // Example.AUGMENTEDREALITY, Example.AUGMENTEDREALITYHORIZON)
+  ```
+
+The difference is that the second commit removes the two commented-out lines (`Example.AUGMENTEDREALITY` and `Example.AUGMENTEDREALITYHORIZON`). This change likely indicates that those features or references are no longer needed or have been removed from the project.
+
+To resolve this, the code would need to choose which version of the `ADVANCED` configuration to keep. Without additional context, it's unclear which option is more appropriate. If `AUGMENTEDREALITY` and `AUGMENTEDREALITYHORIZON` are still relevant to the project, the original `HEAD` version should be kept. Otherwise, the version from the `f6ad59da94ec434a5065bfc54ac9a207817bcb87` commit should be retained.
+
+### Possible Resolutions:
+1. If `AUGMENTEDREALITY` and `AUGMENTEDREALITYHORIZON` are still required:
+   ```java
+   ADVANCED(R.string.examplegroup_advanced, 
+            Example.SPLITSCREEN, Example.BOUNDCAMERA, Example.SCRIPTING), // Example.AUGMENTEDREALITY, Example.AUGMENTEDREALITYHORIZON)
+   ```
+
+2. If `AUGMENTEDREALITY` and `AUGMENTEDREALITYHORIZON` are no longer needed:
+   ```java
+   ADVANCED(R.string.examplegroup_advanced, 
+            Example.SPLITSCREEN, Example.BOUNDCAMERA, Example.HULLALGORITHM)
+   ```
+
+### Full Snippet withBoth Conflicting Versions:
+```java
+	TEXT(R.string.examplegroup_text,
+			Example.TEXT, Example.TICKERTEXT, Example.CHANGEABLETEXT, Example.TEXTBREAK, Example.CUSTOMFONT, Example.STROKEFONT, Example.BITMAPFONT),
+	AUDIO(R.string.examplegroup_audio, 
+			Example.SOUND, Example.MUSIC, Example.MODPLAYER),
+	ADVANCED(R.string.examplegroup_advanced, 
+			Example.SPLITSCREEN, Example.BOUNDCAMERA, Example.SCRIPTING), // Example.AUGMENTEDREALITY, Example.AUGMENTEDREALITYHORIZON),
+=======
+	ADVANCED(R.string.examplegroup_advanced, 
+			Example.SPLITSCREEN, Example.BOUNDCAMERA, Example.HULLALGORITHM), // Example.AUGMENTEDREALITY, Example.AUGMENTEDREALITYHORIZON),
+>>>>>>> f6ad59da94ec434a5065bfc54ac9a207817bcb87
+	POSTPROCESSING(R.string.examplegroup_postprocessing, 
+			Example.MOTIONSTREAK, Example.RADIALBLUR),
+	BACKGROUND(R.string.examplegroup_background, 
+			Example.REPEATINGSPRITEBACKGROUND, Example.AUTOPARALLAXBACKGROUND, Example.TMXTILEDMAP),
+	OTHER(R.string.examplegroup_other, 
+```

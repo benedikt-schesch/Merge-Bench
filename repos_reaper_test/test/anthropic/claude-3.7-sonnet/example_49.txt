@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I'll analyze what each side is trying to achieve:
+
+1. The HEAD version uses `players.toArray(new Player[players.size()])` and explicitly specifies the generic type in the ArrayList constructor.
+2. The incoming change uses `players.toArray(new Player[0])` which is a more modern approach, and uses the diamond operator `<>` for the ArrayList, which is also a more modern Java syntax.
+
+Both are functionally equivalent, but the incoming change represents more modern Java practices. The intent is the same - to create an array copy of the players collection and initialize an ArrayList of appropriate size.
+
+Here's the resolved version:
+
+```java
+   *
+   * @return Player information for every player in this game: Name, score, status.
+   */
+  public List<Map<GamePlayerInfo, Object>> getAllPlayerInfo() {
+    final List<Map<GamePlayerInfo, Object>> info;
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    info = new ArrayList<>(playersCopy.length);
+    for (final Player player : playersCopy) {
+      final Map<GamePlayerInfo, Object> playerInfo = getPlayerInfo(player);
+      info.add(playerInfo);
+    }
+    return info;
+```

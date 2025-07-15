@@ -1,0 +1,61 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The given Java code snippet is defining several public static final Patterns and integers related to text processing, likely for a Twitter-like application given the context of screen names, hashtags, and auto-linking.
+
+The conflict arises between two commits (or branches): `HEAD` (the current branch) and `b83625b0ee263ecfe1fa0ceea3439cfcbf843606` (the other branch being merged into `HEAD`).
+
+1. The `HEAD` branch contains the following definitions:
+   - `SCREEN_NAME_MATCH_END`
+   - `AUTO_LINK_HASHTAGS` with a specific regular expression pattern that includes `Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE`.
+   
+2. The `b83625b0ee263ecfe1fa0ceea3439cfcbf843606` branch modifies `AUTO_LINK_HASHTAGS` by changing its regular expression slightly and removes `Pattern.UNICODE_CASE`, leaving only `Pattern.CASE_INSENSITIVE`. It also does not include the definition of `SCREEN_NAME_MATCH_END`.
+
+To resolve this conflict, we need to consider the intent behind both changes.
+
+- `SCREEN_NAME_MATCH_END` in `HEAD` is used somewhere else in the codebase (not shown in the snippet), and its presence does not directly conflict with the changes made in the other branch regarding `AUTO_LINK_HASHTAGS`.
+
+- The change in `AUTO_LINK_HASHTAGS` between the two branches is two-fold:
+  - The first part of the regex is modified from `([^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "])(#|\uFF03)` to `([^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+)(#|\uFF03)`, effectively changing the match from a single character that is not in `HASHTAG_ALPHA_NUMERIC_CHARS` to one or more such characters. This could be seen as an improvement or a necessary change depending on the requirements of the application.
+  - The flags used for compiling the pattern are changed from `Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE` to just `Pattern.CASE_INSENSITIVE`, potentially affecting how case-insensitive matching is performed, especially with Unicode characters.
+
+To resolve the conflict while preserving the intent of both sides:
+
+1. We should keep `SCREEN_NAME_MATCH_END` as it is because it's not conflicting directly with the changes from the other branch.
+2. For `AUTO_LINK_HASHTAGS`, we need to decide whether to keep the regex pattern and the flags as they are in `HEAD`, change them to what's in the other branch, or find a middle ground.
+
+Given the information and without further context on the requirements or the effects of these changes, a straightforward resolution is to keep the changes from both sides where they do not conflict directly. Thus, we could include both `SCREEN_NAME_MATCH_END` from `HEAD` and the modified `AUTO_LINK_HASHTAGS` from the other branch.
+
+Here's the merged version:
+
+```java
+  /* Begin public constants */
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+  public static final Pattern SCREEN_NAME_MATCH_END = Pattern.compile("^(?:[" + AT_SIGNS_CHARS + LATIN_ACCENTS_CHARS + "]|://)");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+)(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE);
+  public static final int AUTO_LINK_HASHTAGS_GROUP_BEFORE = 1;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_HASH = 2;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_TAG = 3;
+  public static final Pattern HASHTAG_MATCH_END = Pattern.compile("^(?:[#＃]|://)");
+```
+
+However, the removal of `Pattern.UNICODE_CASE` in the other branch might be intentional for performance or compatibility reasons, and mixing it with the `HEAD` version could potentially lead to issues if not tested thoroughly.
+
+Since the intent is to preserve both changes and assuming that both are necessary and tested, the above resolution seems reasonable. 
+
+Here is the resolved snippet in markdown code syntax as requested:
+```java
+  /* Begin public constants */
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+  public static final Pattern SCREEN_NAME_MATCH_END = Pattern.compile("^(?:[" + AT_SIGNS_CHARS + LATIN_ACCENTS_CHARS + "]|://)");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+)(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE);
+  public static final int AUTO_LINK_HASHTAGS_GROUP_BEFORE = 1;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_HASH = 2;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_TAG = 3;
+  public static final Pattern HASHTAG_MATCH_END = Pattern.compile("^(?:[#＃]|://)");
+```

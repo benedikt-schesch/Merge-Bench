@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+`@EnableFacebook` and the various other imports (like `FacebookConnectionFactory`) aren't mutually exclusive in terms of presence—they're all merely imports. What matters is how the actual code uses these imports, which we aren't seeing here. Since the conflict arises solely between **which import statements to include**, and the semantics suggest that both sets of imports could be justified in a single coherent unit (some higher-level Spring configuration and some class-level usage), the correct resolution is to **include all of them**, ensuring that both sets of imports are preserved.
+
+Thus, after resolving the semantic merge conflict, here’s the resulting snippet with the full context untouched beyond the merge conflict itself:
+
+```java
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.web.ConnectController;
+import org.springframework.social.connect.web.ProviderSignInController;
+import org.springframework.social.facebook.config.annotation.EnableFacebook;
+import org.springframework.social.connect.web.ReconnectFilter;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.facebook.connect.FacebookConnectionFactory;
+import org.springframework.social.facebook.web.DisconnectController;
+import org.springframework.social.linkedin.config.annotation.EnableLinkedIn;
+import org.springframework.social.showcase.facebook.PostToWallAfterConnectInterceptor;
+import org.springframework.social.showcase.signin.SimpleSignInAdapter;
+import org.springframework.social.showcase.twitter.TweetAfterConnectInterceptor;
+```

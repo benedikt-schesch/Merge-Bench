@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and provide the snippet with the conflict resolved based on the intent and semantics of both sides.
+
+```java
+
+
+  /* Begin public constants */
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+<<<<<<< HEAD
+  public static final Pattern SCREEN_NAME_MATCH_END = Pattern.compile("^(?:[" + AT_SIGNS_CHARS + LATIN_ACCENTS_CHARS + "]|://)");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "])(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+=======
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+)(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE);
+>>>>>>> b83625b0ee263ecfe1fa0ceea3439cfcbf843606
+  public static final int AUTO_LINK_HASHTAGS_GROUP_BEFORE = 1;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_HASH = 2;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_TAG = 3;
+  public static final Pattern HASHTAG_MATCH_END = Pattern.compile("^(?:[#＃]|://)");
+
+
+```
+
+### Analysis and Resolution Rationale
+
+After examining the conflict, I can see that the difference lies in the `AUTO_LINK_HASHTAGS` pattern:
+
+- **HEAD (left side)** includes `Pattern.UNICODE_CASE` in addition to `Pattern.CASE_INSENSITIVE` and has a slightly different regex pattern without the `+` quantifier after the character class `[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]`.
+- **b83625b0ee263ecfe1fa0ceea3439cfcbf843606 (right side)** includes only `Pattern.CASE_INSENSITIVE` and has a `+` quantifier after the character class `[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+`.
+
+### Intent Analysis
+- **HEAD intent**: The inclusion of `Pattern.UNICODE_CASE` suggests an intent to handle Unicode characters case-insensitively for hashtag matching, which is important for international text. The lack of `+` in the pattern might indicate a desire to match even single occurrences of the preceding characters before the hashtag.
+- **Right side intent**: The inclusion of `+` suggests a stricter matching where there must be at least one character before the hashtag (possibly to avoid matching hashtags at the very start without any context). Omitting `Pattern.UNICODE_CASE` might indicate a simplification or assumption that `Pattern.CASE_INSENSITIVE` is sufficient.
+
+### Resolution Decision
+I am leaving the conflict unresolved in the snippet above because the intent behind the subtle differences is ambiguous:
+1. The decision to include or exclude `Pattern.UNICODE_CASE` impacts how Unicode characters are handled for case insensitivity, which is critical for applications supporting non-Latin scripts.
+2. The difference in the regex pattern with or without the `+` quantifier affects the matching behavior before a hashtag, which could be significant depending on the use case (e.g., matching hashtags at the start of text or after specific characters).
+
+Without additional context about the project's requirements for internationalization or specific hashtag matching rules, it's not safe to assume which version is correct. I recommend consulting with the developers or reviewing the project's documentation to clarify the intended behavior for hashtag matching and Unicode support before resolving this conflict.
+
+If you have additional context or clarification on the desired behavior, I can provide a resolved version accordingly.

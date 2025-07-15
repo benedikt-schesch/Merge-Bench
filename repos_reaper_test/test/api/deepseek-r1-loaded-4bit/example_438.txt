@@ -1,0 +1,31 @@
+<think>
+Okay, let's look at this merge conflict. The code has two sets of changes in the same area. On the HEAD side, they added PALETTE_VISIBILITY and PALETTE_VIBRANCY constants. On the other branch, they added LIBRARY_UPDATED_ACTION. Both are adding new static final String variables in the same class.
+
+Since these are different constants, there's no direct conflict in their names or purposes. The conflict arises because both changes are adding lines in the same place. The correct resolution would be to include both sets of constants. The order might matter, but looking at the existing code, the constants are grouped by related keys. The PALETTE ones are related to the palette settings, and the LIBRARY one is an action. The original HEAD had VIDEO_UPDATE_ACTION, then the palette constants. The other branch added LIBRARY_UPDATED_ACTION after VIDEO_UPDATE_ACTION.
+
+To resolve, we should keep both new constants. The order could be adjusted, but since the PALETTE constants are related, they should stay together. The LIBRARY_UPDATED_ACTION can be placed either before or after, depending on what makes sense. In the original conflict, the HEAD added the palette constants after VIDEO_UPDATE_ACTION, and the other branch added library after the same line. So merging both would mean adding both the palette constants and the library action. But they can't be in the same spot. Wait, the conflict is between the two blocks. The HEAD has the palette lines, and the other branch has the library line. So the correct merge is to include both, perhaps placing the library action first, then the palette constants, or vice versa. But since the original order in HEAD was VIDEO_UPDATE_ACTION followed by palette, and the other branch adds library after VIDEO_UPDATE_ACTION, maybe the intended order is to have both actions together. So VIDEO_UPDATE_ACTION, then LIBRARY_UPDATED_ACTION, then the palette constants. That way, similar action constants are grouped, and the palette settings come after. That makes the code organized by related groups. So the resolved code would have all three actions first, then the palette settings. But wait, the original code in HEAD had VIDEO_UPDATE_ACTION, then palette. The other branch added LIBRARY_UPDATED_ACTION after VIDEO_UPDATE_ACTION. So merging would insert the library action right after video, then keep the palette lines. That way, all actions are together. So the correct merge is to have:
+
+public static final String VIDEO_UPDATE_ACTION = "videoUpdateAction";
+public static final String LIBRARY_UPDATED_ACTION = "libraryUpdatedAction";
+public static final String PALETTE_VISIBILITY = "paletteVisibility";
+public static final String PALETTE_VIBRANCY = "paletteVibrancy";
+
+That way, both new constants from each branch are included, maintaining logical grouping. There's no semantic conflict here because they're adding different constants. So the conflict markers should be removed, and both sets of lines kept in order.</think>
+```java
+
+    public static final String PREFS_USER_KEY = "user";
+    public static final String PREFS_PASSWORD_KEY = "password";
+
+    public static final String VIDEO_UPDATE_ACTION = "videoUpdateAction";
+    public static final String LIBRARY_UPDATED_ACTION = "libraryUpdatedAction";
+
+    public static final String PALETTE_VISIBILITY = "paletteVisibility";
+    public static final String PALETTE_VIBRANCY = "paletteVibrancy";
+}
+```
+
+Both additions appear to be legitimate new constants serving different purposes:
+1. `LIBRARY_UPDATED_ACTION` from the incoming branch represents a new event type
+2. `PALETTE_*` constants from HEAD appear to control UI palette settings
+
+The resolution preserves both sets of changes while maintaining logical grouping of action-related constants together. Spacing is preserved according to original context structure.

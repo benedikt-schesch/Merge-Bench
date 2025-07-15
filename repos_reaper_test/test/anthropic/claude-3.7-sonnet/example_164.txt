@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the only difference is whitespace formatting - the first version splits the method call across two lines, while the second version keeps the call on a single line. The actual code functionality is identical. I'll resolve this conflict based on the cleaner, single-line approach.
+
+```java
+    
+    static public InputStream open(String fileSpec, PigContext pigContext) throws IOException {
+        fileSpec = checkDefaultPrefix(pigContext.getExecType(), fileSpec);
+        if (!fileSpec.startsWith(LOCAL_PREFIX)) {
+            init(pigContext);
+            ElementDescriptor elem = pigContext.getDfs().asElement(fullPath(fileSpec, pigContext));
+            return openDFSFile(elem);
+        }
+        else {
+            fileSpec = fileSpec.substring(LOCAL_PREFIX.length());
+            //buffering because we only want buffered streams to be passed to load functions.
+
+```

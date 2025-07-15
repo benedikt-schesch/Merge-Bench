@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved, as the intent and semantics of the conflicting changes are ambiguous and require further clarification. I’ve kept the context and spacing exactly as provided.
+
+```java
+         * Download the best video with best vcodec no better than h264 and
+         * the best audio with best acodec no better than aac and
+         * with neither height nor width larger than 576.
+         */
+        ProcessBuilder pb = new ProcessBuilder("yt-dlp", "--ignore-config",
+<<<<<<< HEAD
+                "--simulate", "--dump-single-json", "-S vcodec:h264,res:576,acodec:aac",
+=======
+                "--simulate", "--dump-single-json", "-S res:576,hcodec:h264,acodec:aac",
+>>>>>>> 8549031e59a43d7b4f2763f42d84b589806c9176
+                "--no-cache-dir", "--no-playlist",
+                "--playlist-end=" + MAX_VIDEOS_PER_PAGE, uri.toString());
+        logger.info("running: " + String.join(" ", pb.command()));
+
+        Process proc = null;
+```
+
+### Explanation of Ambiguity:
+The conflict revolves around the order and naming of parameters in the `-S` option for `yt-dlp`, which is used for sorting and selecting formats based on criteria like video codec (`vcodec` vs. `hcodec`), resolution (`res`), and audio codec (`acodec`). 
+
+- **HEAD** uses `vcodec:h264,res:576,acodec:aac`, which specifies the video codec as `vcodec:h264` and places it first in the sort order.
+- **Branch (8549031e)** uses `res:576,hcodec:h264,acodec:aac`, which prioritizes resolution (`res:576`) first and uses `hcodec` instead of `vcodec` for the video codec.
+
+The intent of both sides seems to be to limit the video quality to a resolution of 576 and codecs to H.264 for video and AAC for audio. However, the differences in parameter naming (`vcodec` vs. `hcodec`) and sort order could imply different priorities or compatibility with different versions of `yt-dlp`. Without additional context about the `yt-dlp` version, documentation, or the desired priority of constraints (e.g., resolution first or codec first), I cannot confidently resolve the conflict. It is also unclear whether `vcodec` and `hcodec` are interchangeable or if one is deprecated.
+
+I recommend consulting the `yt-dlp` documentation or the developers involved in these changes to clarify the correct parameter naming and intended sort order before resolving the conflict.

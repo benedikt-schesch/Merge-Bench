@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Let me analyze the merge conflict in the provided code snippet. I'll preserve the context exactly as provided and resolve the conflict based on the semantic intent of both sides.
+
+Looking at the conflict:
+- The `HEAD` side uses `@BeforeEach` (JUnit 5) and initializes `updatedFiles` as a `List` using `newArrayList()` (likely from Guava).
+- The other side (commit `ee249315`) uses `@Before` (JUnit 4) and defines `updatedFiles` as a `HashSet` with a `throws IOException` clause.
+
+Semantically, the intent seems to be setting up a test method with initialization logic. The difference lies in the JUnit version and the data structure used for `updatedFiles`. Since the surrounding context does not show the declaration of `updatedFiles`, I'll assume it should be consistent with the rest of the codebase. The choice of JUnit version also seems significant, and JUnit 5 (`@BeforeEach`) is likely the more modern approach that the `HEAD` is aiming for. The `throws IOException` on the other side might indicate a specific test requirement but isn't reflected in the rest of the visible code.
+
+Given that `HEAD` appears to be aligning with a newer JUnit version and the data structure difference isn't critical in the visible context, I'll lean towards the `HEAD` version but note that if `updatedFiles` is expected to be a `HashSet` elsewhere, it might need adjustment post-merge.
+
+Here is the resolved code snippet with the full context preserved as is:
+
+```java
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+	private DefaultInfinitestCore core;
+	private ChangeDetector changeDetector;
+	private TestDetector testDetector;
+
+	@BeforeEach
+	void inContext() {
+		updatedFiles = newArrayList();
+		core = new DefaultInfinitestCore(mock(TestRunner.class), new ControlledEventQueue());
+		
+		changeDetector = mock(ChangeDetector.class);
+		when(changeDetector.findChangedFiles()).thenReturn(updatedFiles);
+		core.setChangeDetector(changeDetector);
+```

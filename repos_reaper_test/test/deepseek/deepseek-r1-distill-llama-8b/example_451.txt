@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The provided code shows a merge conflict where the right-hand side includes an additional parameter `OptionHandlerFilter filter` in the method signature. This parameter is then used in the conditional to determine whether to proceed with processing the option. 
+
+To resolve this, we select the version from the right-hand side as it introduces the necessary functionality with the added parameter, which aligns with the updated logic in the if statement. This ensures the method correctly filters options based on the `OptionHandlerFilter`.
+
+```java
+     * @param handler  handler where to receive the information
+     * @param len      Maximum length of metadata column
+     * @param rb       ResourceBundle for I18N
+     * @see Setter#asAnnotatedElement()
+     */
+<<<<<<< HEAD
+    protected void printOption(PrintWriter out, OptionHandler handler, int len, ResourceBundle rb) {
+=======
+    private void printOption(PrintWriter out, OptionHandler handler, int len, ResourceBundle rb, OptionHandlerFilter filter) {
+>>>>>>> 1acff436c29ed9c0f9ce81ad845b3df7480dde83
+		// Hiding options without usage information
+    	if (handler.option.usage() == null ||
+            handler.option.usage().length() == 0 ||
+            !filter.select(handler)) {
+	    	return;
+>>>>>>> 1acff436c29ed9c0f9ce81ad845b3df7480dde83
+```

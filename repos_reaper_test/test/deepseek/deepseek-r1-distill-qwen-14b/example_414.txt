@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The code has a merge conflict in the test method, specifically in the expected exit status. The left side (HEAD) uses `SystemExit.CONFIGURATION_ERROR.getStatus()`, while the right side uses a hardcoded `1`.
+
+**Intent Analysis:**
+- **Left Side (HEAD):** Uses the `SystemExit` enum to retrieve the configuration error status.
+- **Right Side:** Hardcodes the exit status to `1`, which is a generic error code.
+
+**Resolution:**
+The left side is more maintainable and adheres to proper error code handling using the `SystemExit` constants. It clarifies the error type and avoids magic numbers.
+
+```java
+    @Test
+    void shouldTellUserThatTemplateOptionRequiresInitOption() throws Exception {
+
+        String[] args = {"-t", "groovy-mte"};
+
+<<<<<<< HEAD
+        assertExitWithStatus(SystemExit.CONFIGURATION_ERROR.getStatus(), ()->Main.main(args));
+=======
+        assertExitWithStatus(1, () -> Main.main(args));
+>>>>>>> d68ddea7554653e7928d220f8a3af13bfb30cdb
+
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
+
+        LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+        assertThat(loggingEvent.getMessage()).isEqualTo("Error: Missing required argument(s): --init");
+=======
+The merge conflict remains as the intent is ambiguous. The left side uses the `SystemExit.CONFIGURATION_ERROR.getStatus()` for a specific configuration error, ensuring clarity and proper error handling. The right side uses a generic `1`, which is less descriptive. To maintain consistency and readability, the left side is preferable.
+```

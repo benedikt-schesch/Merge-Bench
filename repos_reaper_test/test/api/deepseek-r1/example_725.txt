@@ -1,0 +1,27 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in a Java interface declaration. The HEAD version has the interface as `public interface ABActivityViewer{` while the other branch adds `extends TaskController` to it. 
+
+First, I need to understand what each side is doing. The HEAD version is the current state, and the other branch is modifying the interface to extend TaskController. The TaskController might be adding some functionality that the interface needs. 
+
+I should check if extending TaskController is necessary. Since the other branch is adding it, maybe the intent is to include methods from TaskController in ABActivityViewer. If TaskController has methods that the presenter expects the view to implement, then merging the two makes sense.
+
+Looking at the context, the comment mentions that the view contains a reference to a presenter and calls presenter methods on events. If TaskController is related to handling tasks (like network calls or background tasks), extending it might be adding necessary control methods for the view to manage tasks, which the presenter uses.
+
+Since there's no obvious reason why these changes would conflict semantically, the correct resolution is to include the `extends TaskController` from the other branch into the HEAD declaration. That way, the interface inherits from TaskController, which is probably adding important functionality without removing anything from the HEAD. 
+
+I should make sure that the merge doesn't cause any duplication or syntax errors. The correct line should be `public interface ABActivityViewer extends TaskController{`. Also, check if there are any other conflicts in the surrounding code, but in this snippet, it's just the interface declaration. 
+
+So, the resolved code would combine both changes by adding the extends clause. There's no ambiguity here because one side adds an inheritance that the other doesn't, and they don't conflict in a way that requires choosing one over the other. It's a straightforward addition.</think>
+```java
+ * Date: 7/17/14.
+ * <p/>
+ * MVP的View层，UI相关，Activity需要实现该interface
+ * 它会包含一个Presenter的引用，当有事件发生（比如按钮点击后），会调用Presenter层的方法
+ */
+public interface ABActivityViewer extends TaskController{
+
+    /**
+     * 显示Toast信息
+     *
+     * @param message
+```

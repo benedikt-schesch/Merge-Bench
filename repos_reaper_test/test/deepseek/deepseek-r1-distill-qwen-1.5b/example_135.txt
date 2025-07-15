@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+        fw1.close();
+
+        try {
+           String[] args = { "-x", "local", "-c",  PIG_FILE };
+           PigRunner.run(args, null);
+           // Alternatively, if you want to keep the delete, keep the delete call
+           // final deletion code
+        } finally {
+            new File(PIG_FILE).delete();
+            // Remove the cluster and output deletion if necessary
+            Util.removeClusterHeader(cluster);
+            if (metadataFound) Util.deleteOutput(file, cluster, cluster, metadataFound);
+        }
+>>>>>>> 57eb1bac81a4e03e9838c06f642a1432dbbe4e1b
+```
+
+The merges preserve the original structure while aligning the delete with the run() call. If the delete is to be kept separate, adjust accordingly.

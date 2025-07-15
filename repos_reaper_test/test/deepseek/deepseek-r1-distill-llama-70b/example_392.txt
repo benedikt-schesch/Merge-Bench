@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict appears to be resolving differences in setting up the test context, including changes to annotations, method signature, and the type of `updatedFiles`. The HEAD version uses JUnit 5's `@BeforeEach` with an `ArrayList`, while the other branch uses JUnit 4's `@Before` with a `HashSet`. Both approaches are presented for your resolution:
+
+```java
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+	private DefaultInfinitestCore core;
+	private ChangeDetector changeDetector;
+	private TestDetector testDetector;
+
+<<<<<<< HEAD
+	@BeforeEach
+	void inContext() {
+		updatedFiles = newArrayList();
+=======
+	@Before
+	public void inContext() throws IOException {
+		updatedFiles = new HashSet<>();
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+		core = new DefaultInfinitestCore(mock(TestRunner.class), new ControlledEventQueue());
+		
+		changeDetector = mock(ChangeDetector.class);
+		when(changeDetector.findChangedFiles()).thenReturn(updatedFiles);
+		core.setChangeDetector(changeDetector);
+```

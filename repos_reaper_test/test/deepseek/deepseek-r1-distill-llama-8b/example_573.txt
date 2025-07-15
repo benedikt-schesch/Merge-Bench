@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the accurate approach is to retain the local version which correctly strips only the surrounding quotes. The remote approach incorrectly removes all quotes, which could corrupt the data when quotes are inside the string. Thus, we keep the local version.
+
+```java
+   *           If an error occurs while mapping JSON to Java.
+   */
+  @SuppressWarnings("unchecked")
+  protected <T> T toPrimitiveJavaType(String json, Class<T> type) {
+
+<<<<<<< HEAD
+    // cleanup the json string
+=======
+    if (json.length() > 1 && json.startsWith("\"") && json.endsWith("\"")) {
+      json = json.replaceFirst("\"", "");
+      json = json.substring(0, json.length() - 1);
+    }
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+```

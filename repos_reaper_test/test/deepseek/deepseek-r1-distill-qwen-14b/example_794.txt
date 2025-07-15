@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to determine which change better fulfills the intent of ensuring the buffer has enough readable bytes. The new code uses `ensureReadable()`, which simplifies the logic and likely handles the buffer check more effectively than the old manual index management.
+
+```java
+      try {
+        HBaseRpc.checkArrayLength(buf, length);
+        // Make sure we have that many bytes readable.
+        // This will have to change to be able to do streaming RPCs where we
+        // deserialize parts of the response as it comes off the wire.
+<<<<<<< HEAD
+        buf.markReaderIndex();
+        buf.skipBytes(length);
+        buf.resetReaderIndex();
+=======
+        ensureReadable(buf, length);
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+      } catch (IllegalArgumentException e) {
+        LOG.error("WTF?  RPC #" + rpcid + ": ", e);
+      }
+```
+
+The conflict is resolved by replacing the manual buffer operations with the `ensureReadable()` method, as it better encapsulates the buffer check and enhances code maintainability.

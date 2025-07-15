@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I notice that the difference is in the namespace URI of the XML Event element. One version has:
+`"urn:schemas-upnp-org:metadata-1-0/RCS/"` (HEAD)
+
+While the other has:
+`"urn:schemas-upnp-org:metadata-1-0//RCS/"` (incoming change) with an extra slash.
+
+After analyzing the standard URI format for UPnP metadata, I'll resolve this conflict:
+
+```java
+
+        assertEquals(renderingControlLastChange.toString(), "");
+        mp.setVolume(0.50);
+        Thread.sleep(500);
+        lastChangeExpected =
+                "<Event xmlns=\"urn:schemas-upnp-org:metadata-1-0/RCS/\">" +
+                        "<InstanceID val=\"0\">" +
+                        "<Volume channel=\"Master\" val=\"50\"/>" +
+                        "</InstanceID>" +
+                "</Event>";
+        assertEquals(renderingControlLastChange.toString(), lastChangeExpected);
+
+```
+
+The HEAD version has the correct URI format with a single slash between "1-0" and "RCS", which is the standard UPnP namespace format.

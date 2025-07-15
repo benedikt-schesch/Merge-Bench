@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Here is the resolved snippet with the conflict resolved by adopting the more idiomatic array creation approach from the second branch while preserving the rest of the code:
+
+```java
+  /**
+   * @return A list of all {@code User}s in this game.
+   */
+  private List<User> playersToUsers() {
+    final List<User> users;
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    users = new ArrayList<>(playersCopy.length);
+    for (final Player player : playersCopy) {
+      users.add(player.getUser());
+    }
+    synchronized (spectators) {
+      users.addAll(spectators);
+
+```

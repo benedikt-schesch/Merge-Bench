@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+     * is based and merge it with the Conf supplied
+     *
+     * package level access so that this is not publicly used elsewhere
+     * @throws IOException
+     */
+    static void mergeSplitSpecificConf(LoadFunc loadFunc, PigSplit pigSplit, Configuration originalConf)
+            throws IOException {
+        // set up conf with entries from input specific conf
+        Job job = new Job(originalConf);
+        loadFunc.setLocation(getLoadLocation(pigSplit.getInputIndex(),
+                originalConf), job);
+        // The above setLocation call could write to the conf within
+```

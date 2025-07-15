@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Since the conflict consists of two entirely separate additions (blanks limit and password handling) that appear to be unrelated, we can resolve the conflict by including both changes. The code will handle both the password parameter and the blanks limit parameter from the request.
+
+```java
+          if (!cardSetId.isEmpty()) {
+            cardSets.add((CardSet) game.getHibernateSession().load(CardSet.class,
+                Integer.parseInt(cardSetId)));
+          }
+        }
+        final int blanksLimit = Integer.parseInt(request.getParameter(AjaxRequest.BLANKS_LIMIT));
+        final String oldPassword = game.getPassword();
+        String password = request.getParameter(AjaxRequest.PASSWORD);
+        if (password == null) {
+          password = "";
+        }
+        // We're not directly assigning this with Boolean.valueOf() because we want to default to
+```

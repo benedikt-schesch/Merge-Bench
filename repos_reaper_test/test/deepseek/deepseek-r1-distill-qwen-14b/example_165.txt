@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from changing the method called on `context` from `getDfs()` to `getFs()`. The `getDfs()` method likely returns a DFS (Hadoop HDFS) storage, while `getFs()` might return a more general Filesystem or DataStorage. The commit suggests replacing DFS with a more abstract storage system.
+
+```java
+        }
+    }
+
+    public static boolean fileExists(String filename, PigContext context)
+            throws IOException {
+<<<<<<< HEAD
+        return fileExists(filename, context.getDfs());
+=======
+        return fileExists(filename, context.getFs());
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+
+    public static boolean fileExists(String filename, DataStorage store)
+            throws IOException {
+        ElementDescriptor elem = store.asElement(filename);
+```

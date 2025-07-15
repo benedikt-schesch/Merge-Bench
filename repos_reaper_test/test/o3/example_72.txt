@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+    data.put(LongPollResponse.EVENT, LongPollEvent.GAME_ROUND_COMPLETE.toString());
+    data.put(LongPollResponse.ROUND_WINNER, cardPlayer.getUser().getNickname());
+    data.put(LongPollResponse.WINNING_CARD, clientCardId);
+    data.put(LongPollResponse.INTERMISSION, ROUND_INTERMISSION);
+    if (showRoundLinkProvider.get()) {
+      data.put(LongPollResponse.ROUND_PERMALINK,
+          String.format(roundPermalinkFormatProvider.get(), roundId));
+    }
+    broadcastToPlayers(MessageType.GAME_EVENT, data);
+
+    notifyPlayerInfoChange(getJudge());
+    notifyPlayerInfoChange(cardPlayer);
+```

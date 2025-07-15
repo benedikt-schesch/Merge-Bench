@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+```

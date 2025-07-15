@@ -1,0 +1,47 @@
+<think>
+No reasoning found</think>
+The provided code snippet includes a merge conflict related to the rotation value being passed to `flinger.setRotation()`. Both sides aim to set the correct rotation for the thumbnail, but with a divergence in implementation strategy:
+
+- **HEAD** suggests applying a dynamic rotation adjustment via `mOrientationCompensation + 90`, which likely reflects a need to account for device orientation changes dynamically. This line implies that `mOrientationCompensation` is a variable that captures some form of orientation adjustment elsewhere in the app logic — possibly tied to device sensors or UI layout orientation.
+
+- **c9237517** overrides this logic entirely by setting the rotation to a static `90` degrees, suggesting that either the variable `mOrientationCompensation` is no longer valid or was causing unwanted or incorrect rotation under current configurations.
+
+---
+
+### Semantic Intent Evaluation
+
+Both conflicting versions share the core intent: to correctly orient the visual element (`flinger`) by rotating it 90 degrees. However, the difference arises from whether this adjustment should be **static (always 90°)** or **context-aware (90° plus any orientation compensation)**.
+
+This represents a **configuration-level or environment-dependent decision** — whether the app layer is already compensating elsewhere for orientation and thus only requires applying a constant initial rotation, or whether it still needs to adaptively adjust rotation relative to the device's orientation.
+
+---
+
+### Conflict Resolution Judgment
+
+Since the actual value of `mOrientationCompensation` is invisible here and no broader project context is available (e.g., other related code changes, project history, camera orientation behavior), the **intent remains ambiguous**.
+
+- If `mOrientationCompensation` is outdated or set incorrectly, then the `c9237517` version is safer as it avoids erroneous rotation.
+- If `mOrientationCompensation` is correct and critical to dynamic orientation support, then the `HEAD` version is appropriate.
+
+Without additional context, **we cannot definitively determine which semantic path prevails**.
+
+---
+
+### Final Output (Conflict Preserved as Per Guidance)
+
+```java
+            final ThumbnailFlinger flinger = new ThumbnailFlinger(CameraActivity.this);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    layout.addView(flinger);
+<<<<<<< HEAD
+                    flinger.setRotation(mOrientationCompensation+90);
+=======
+                    flinger.setRotation(90);
+>>>>>>> c923751783db11df8cb8dc1909ab59605492344c
+                    flinger.setImageBitmap(info.mThumbnail);
+                    flinger.doAnimation();
+                }
+            });
+```

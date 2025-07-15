@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and propose a resolution based on the intent and semantics of the code.
+
+The conflict involves the declaration of `snapshotManager`, `players`, and `sessions`. Let's break it down:
+
+1. The `HEAD` version declares `snapshotManager` as `protected final` and doesn't include the `players` and `sessions` declarations.
+
+2. The other version declares:
+   - `snapshotManager` as `private final`
+   - `players` as `private final SnapshotableLinkedHashMap<String, SpoutPlayer>`
+   - `sessions` as `protected final SpoutSessionRegistry`
+
+### Key Observations:
+- The `players` and `sessions` declarations are only present in the second version.
+- The difference in access modifiers for `snapshotManager` (protected vs private) suggests conflicting intents for whether the `snapshotManager` should be accessible within subclasses.
+
+### Proposed Resolution:
+Given that the `HEAD` version has `sessions` declared as `protected`, it makes sense to keep that consistent. For `snapshotManager`, since there's ambiguity about its intended accessibility, we'll adopt the more restrictive access modifier (`private`) to prevent unintended access, as seen in the second version. This aligns with common Java practices where classes should start with `private` access unless there's a specific need for broader access.
+
+Here's the resolved code:
+
+```java
+	private final PluginManager pluginManager = new PluginManager(this, securityManager, 0.0);
+	private final ConsoleManager consoleManager;
+	private final EventManager eventManager = new SimpleEventManager();
+	private final RecipeManager recipeManager = new SimpleRecipeManager();
+	private final ServiceManager serviceManager = new ServiceManager();
+	protected final SnapshotManager snapshotManager = new SnapshotManager();
+	private final SnapshotableLinkedHashMap<String, SpoutPlayer> players = new SnapshotableLinkedHashMap<String, SpoutPlayer>(snapshotManager);
+	protected final SpoutSessionRegistry sessions = new SpoutSessionRegistry();
+	protected final SpoutScheduler scheduler = new SpoutScheduler(this);
+	protected final SpoutParallelTaskManager parallelTaskManager = new SpoutParallelTaskManager(this);
+	private final AtomicBoolean setupComplete = new AtomicBoolean(false);
+	private final SpoutConfiguration config = new SpoutConfiguration();
+	private final SpoutInputConfiguration inputConfig = new SpoutInputConfiguration();
+```

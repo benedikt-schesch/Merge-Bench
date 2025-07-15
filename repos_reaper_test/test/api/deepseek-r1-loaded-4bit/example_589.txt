@@ -1,0 +1,22 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code snippet provided, the conflict is between the HEAD version and the a17acec0655b8058aaf4d336ba2a1352aa49e2fe branch. The conflict is in the import statements of a Java file.
+
+In the HEAD version, there's no import for CLIENT_LOGGER, while the other branch adds an import static com.restfb.logging.RestFBLogger.CLIENT_LOGGER. The rest of the imports are the same in both branches. 
+
+The goal here is to resolve the conflict by combining both changes if they don't interfere. Since both sides are adding static imports, and they are different classes, they can coexist. The CLIENT_LOGGER import is new in the other branch, and the HEAD doesn't have it. So the correct resolution would be to include both imports. 
+
+I need to check if the order matters. In Java, the order of static imports doesn't affect functionality, so it's safe to merge them. The conflict markers should be removed, and both imports should be included. 
+
+Therefore, the resolved code should have the CLIENT_LOGGER import from the other branch added to the existing imports in HEAD. The rest of the context remains unchanged. There's no ambiguity here because the two imports are distinct and don't conflict semantically. So the merged code will include both imports without any issues.</think>
+```java
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.restfb;
+
+import static com.restfb.logging.RestFBLogger.CLIENT_LOGGER;
+import static com.restfb.util.StringUtils.isBlank;
+import static com.restfb.util.StringUtils.trimToEmpty;
+import static com.restfb.util.UrlUtils.urlEncode;
+import static java.util.Arrays.asList;
+```

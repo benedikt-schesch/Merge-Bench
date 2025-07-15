@@ -1,0 +1,56 @@
+<think>
+Okay, let's look at this merge conflict. The code snippet has a conflict between the HEAD version and another branch. The HEAD side is from StarSpec.java and has some imports: ArrayList, List, Properties. The other side is from NodeIdGenerator.java and adds a package statement.
+
+First, I need to check if these changes can coexist. The package declaration is essential for the class's location. The HEAD version doesn't have a package, but the other branch adds it. So the correct package should be included.
+
+Looking at the imports, the HEAD has java.util.Properties, List, ArrayList. The other branch doesn't have those but adds HashMap and Map. Since the merged file is NodeIdGenerator.java, the package should be from the other branch. The imports from both sides might be needed if the class uses all of them. But wait, the original NodeIdGenerator.java in the other branch already has HashMap and Map. The HEAD's imports might be from a different file, but since this is a merge, maybe both sets are needed.
+
+Wait, the conflict is in the same file location now. The correct approach is to take the package from the other branch because that's where the file is located. Then include all necessary imports from both sides, removing duplicates. The original HEAD imports (ArrayList, List, Properties) might not be needed in NodeIdGenerator, but perhaps they are part of the merge. Alternatively, maybe the merge is combining changes from both files, which is a problem.
+
+Wait, the files are different: StarSpec.java vs. NodeIdGenerator.java. This might be a file move or rename conflict. If the user is merging these, perhaps the correct resolution is to keep the package from the destination branch (NodeIdGenerator.java's package) and include the necessary imports. But the HEAD's imports are from StarSpec, which might not be relevant here. However, since the conflict is in the same file location now, maybe both changes are intended.
+
+Alternatively, this could be a case where the merge incorrectly combines two different files. But the user provided the code snippet as a conflict in the same file. So perhaps the correct resolution is to include the package from the other branch, then combine the imports from both sides, ensuring no duplicates. Let's check the order.
+
+Original HEAD has:
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+The other branch has:
+import java.util.Map;
+import java.util.HashMap;
+
+The merged code should have all these imports, sorted, and the package statement. So the resolved code would be:
+
+package org.apache.pig.impl.plan;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+public class NodeIdGenerator {
+
+But wait, the original conflict markers are between the license header and the imports. The other branch adds the package statement where the HEAD adds imports. So in the merged file, the package must come first, then the imports. The HEAD's imports are added after the package, which is correct Java syntax. So the correct resolution is to take the package from the other branch, then include all the imports from both sides, combining them and removing duplicates if any.
+
+So the resolved code would have the package, then all the necessary imports from both branches. The original conflict was between the package (from one branch) and the imports (from the other). So the correct merge is to include the package and all the imports, as they are from different parts of the file.
+
+Therefore, the merged code should have the package statement, followed by all the imports from both sides, sorted appropriately.</think>
+```java
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.pig.impl.plan;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+public class NodeIdGenerator {
+
+```

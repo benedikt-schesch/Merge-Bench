@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The snippet contains a merge conflict where both sides are adding different mock objects. The left side (HEAD) is adding mocks for `ModuleRootManager` and `Sdk`, while the right side is adding mocks for `ModuleSettings` and `RuntimeEnvironment`. 
+
+Since both sets of mocks appear to be part of test setup and there's no clear indication that one side should be favored over the other, I will preserve both sets of mocks by merging them. Here is the resolved snippet:
+
+```java
+		messageBus = mock(MessageBus.class);
+		messageBusConnection = mock(MessageBusConnection.class);
+		projectFileIndex = mock(ProjectFileIndex.class);
+		projectRootManager = mock(ProjectRootManager.class);
+		launcher = mock(InfinitestLauncher.class);
+		moduleRootManager = mock(ModuleRootManager.class);
+		sdk = mock(Sdk.class);
+		moduleSettings = mock(ModuleSettings.class);
+		runtimeEnvironment = mock(RuntimeEnvironment.class);
+		control = new ProjectTestControl(project);
+		annotator = mock(InfinitestAnnotator.class);
+		
+		when(project.getComponent(ModuleManager.class)).thenReturn(moduleManager);
+		when(project.getMessageBus()).thenReturn(messageBus);
+```

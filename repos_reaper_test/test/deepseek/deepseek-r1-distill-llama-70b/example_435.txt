@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to identify the changes made in both branches and decide which changes to keep. In this case:
+
+- The `HEAD` branch added a new field `private SharedPreferences mSharedPreferences;`
+- The other branch (commit `308db82`) does not have this field
+
+Since the field `mSharedPreferences` appears to be a new addition in the `HEAD` branch, and there is no conflicting change in the other branch, we can incorporate the change from `HEAD` while preserving the surrounding context.
+
+Here is the resolved code:
+
+```java
+    private Timer mBackgroundTimer;
+    private String mBackgroundImageUrl;
+    private ArrayObjectAdapter mAdapter;
+    private CardPresenter mCardPresenter;
+    private TvShowsCardPresenter mTvShowsCardPresenter;
+    private SharedPreferences mSharedPreferences;
+
+    private BroadcastReceiver videoUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+```

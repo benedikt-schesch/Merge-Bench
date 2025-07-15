@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at the conflict, both sides are attempting to check if the application is running as a native image by checking a system property. The difference is in how they reference the property key and value:
+
+- HEAD uses constants `PROPERTY_IMAGE_CODE_KEY` and `PROPERTY_IMAGE_CODE_VALUE_RUNTIME` 
+- The other branch uses the string literals directly: `"org.graalvm.nativeimage.imagecode"` and `"runtime"`
+
+Since the constants are likely defined elsewhere in the code and would make the code more maintainable, I'll prefer the HEAD version that uses constants.
+
+```java
+    }
+
+    public String toString() {
+      // When running the application as a native image, append `-graalvm` to the
+      // version.
+      String imageCode = System.getProperty(PROPERTY_IMAGE_CODE_KEY);
+      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)){
+        String[] tokens = versionString.split(" ");
+        if (tokens.length > 0 && tokens[0].startsWith("gl-java")) {
+          tokens[0] += "-graalvm";
+          return Joiner.on(" ").join(tokens);
+        }
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The right side of the conflict introduces an explicit conversion of the MongoDB document ID to a String and properly sets it on the `Unmarshaller` instance rather than the current instance. This ensures type safety and clarity in responsibility.
+
+```java
+    public WriteResult execute() {
+        DBObject dbObject = marshall();
+
+        WriteResult writeResult = collection.save(dbObject, determineWriteConcern());
+
+<<<<<<< HEAD
+        setDocumentGeneratedId(dbObject.get(MONGO_DOCUMENT_ID_NAME));
+=======
+        String id = dbObject.get(MONGO_DOCUMENT_ID_NAME).toString();
+        unmarshaller.setDocumentGeneratedId(document, id);
+>>>>>>> 6e81e3852480002d055fb871f5da2f1b8c256cfb
+
+        return writeResult;
+    }
+
+    private DBObject marshall() {
+
+```

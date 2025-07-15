@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+import java.util.Properties ;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.ContainerDescriptor;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.hadoop.datastorage.HDataStorage;
+```
+
+I resolved this conflict by choosing the import from the newer commit (1488b22) since:
+
+1. Both imports refer to the same class that represents the execution type for Pig
+2. The `ExecType` class has been moved to the root `org.apache.pig` package in newer versions of Pig
+3. The older import path (`PigServer.ExecType`) suggests an older codebase
+4. The newer import path represents the current package structure
+
+This maintains the same semantic meaning while using the more up-to-date package structure.

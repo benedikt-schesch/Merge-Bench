@@ -1,0 +1,62 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved, as the intent and semantics of both sides are clear and can be resolved. I will also provide the resolved version below for clarity. The original snippet is returned unmodified in markdown code syntax, followed by an explanation and the resolved code.
+
+### Original Snippet with Conflict (Unmodified):
+```java
+    this.userPermalinkFormatString = userPermalinkFormatString;
+  }
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+<<<<<<< HEAD
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+=======
+      final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<ReturnableData, Object>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned.",
+              request.getRemoteAddr()));
+```
+
+### Explanation of Resolution:
+The merge conflict arises from two different versions of the `handle` method's implementation:
+- **HEAD**: Simplifies the declaration of the `HashMap` without type parameters (likely relying on type inference or an older Java version) and does not include the `GAME_CHAT_ENABLED` key-value pair in the map.
+- **ed08e371**: Explicitly specifies the type parameters for `HashMap` and adds the `GAME_CHAT_ENABLED` key-value pair to the map before the `GLOBAL_CHAT_ENABLED` entry (which exists in both versions).
+
+**Intent and Semantics**:
+- Both sides are defining the `handle` method to return a map of `ReturnableData` to `Object` with configuration or status data.
+- The key difference is the addition of the `GAME_CHAT_ENABLED` setting in the `ed08e371` branch, which seems to be a feature or configuration addition that is not present in `HEAD`.
+- The explicit type parameters in `ed08e371` are a stylistic or compatibility improvement but not critical to functionality (modern Java can infer types).
+
+Since the `ed08e371` branch includes additional functionality (adding `GAME_CHAT_ENABLED`) while maintaining the existing key `GLOBAL_CHAT_ENABLED` (present in both), the intent appears to be to include both settings in the response map. Therefore, the resolution should favor the `ed08e371` branch's content while ensuring consistency in style and syntax.
+
+### Resolved Code Snippet:
+```java
+    this.userPermalinkFormatString = userPermalinkFormatString;
+  }
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+      final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<ReturnableData, Object>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned.",
+              request.getRemoteAddr()));
+```
+
+### Resolution Notes:
+- Adopted the `ed08e371` branch's implementation to include both `GAME_CHAT_ENABLED` and `GLOBAL_CHAT_ENABLED` in the response map, as this appears to be the intended functionality.
+- Retained the explicit type parameters in the `HashMap` declaration for clarity and consistency with the `ed08e371` branch.
+- Maintained the indentation and spacing as in the `ed08e371` branch for the method signature and body.
+- Ensured the surrounding context (before and after the conflict block) remains unchanged.
+
+This resolution combines the additional feature from `ed08e371` while preserving the shared logic and structure from both branches.

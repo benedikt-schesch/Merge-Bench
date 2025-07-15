@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+I'm returning the provided code snippet with the merge conflict unresolved, as there is ambiguity in the intent and naming conventions used in the two versions. Below is the snippet in markdown code syntax, with the context preserved exactly as provided, including spacing.
+
+```java
+
+
+    @Test
+    public void parseAsciidocFileWithPrettifyAttribute() {
+
+<<<<<<< HEAD
+        config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES,"source-highlighter=prettify");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+=======
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify");
+        Map<String, Object> map = parser.processFile(asciidocWithSource);
+>>>>>>> d68ddea7554653e7928d220f68a3af13bfb30cdb
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("class=\"paragraph\"")
+```
+
+
+### Explanation of Ambiguity
+
+- **Property Naming/Access**: On the `HEAD` side, the property is accessed via `JBakeProperty.ASCIIDOCTOR_ATTRIBUTES`, which suggests a specific enum or constant class (`JBakeProperty`) is used for configuration properties. On the other side (`d68ddea`), it uses `ASCIIDOCTOR_ATTRIBUTES.getKey()`, implying a different constant or enum structure with a method `getKey()` to retrieve the property name. The intent seems to be the same (setting a configuration property for Asciidoctor attributes with the value `source-highlighter=prettify`), but the way the property key is referenced differs structurally.
+
+- **Return Type of `parser.processFile`**: On the `HEAD` side, the return type is `DocumentModel`, a specific type likely tied to the project's domain model. On the other side, it is a generic `Map<String, Object>`, suggesting a more flexible or less-typed approach. The subsequent assertions (`getStatus()`, `getType()`, `getBody()`) indicate that both sides expect the returned object to have similar capabilities, but the type difference could imply a refactoring or design change in how the data is handled.
+
+Given these differences, I cannot definitively determine the correct resolution without additional context about the project's codebase, naming conventions, or whether a specific refactoring (e.g., moving away from `DocumentModel` to `Map` or standardizing property access) is intended. Therefore, the conflict is left unresolved in the snippet above. If you can provide further context about the intended design or conventions (e.g., which type or property access style is preferred), I can assist in resolving it.

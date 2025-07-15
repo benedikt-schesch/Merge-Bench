@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made in both branches.
+
+The code snippet is a Java test class for the `Properties` class, specifically for the `from(Object[])` method. The conflict arises in the import statements.
+
+### Understanding the Conflict
+
+The conflict is between:
+```java
+<<<<<<< HEAD
+import org.fest.test.Employee;
+import org.fest.test.Name;
+=======
+import org.fest.test.*;
+>>>>>>> 06e86330876dee7fcb1356794176b04a7161cf65
+```
+
+### Analyzing the Changes
+
+- The `HEAD` (presumably the current branch) has explicit imports for `Employee` and `Name` from the `org.fest.test` package.
+- The other branch (with the commit hash `06e86330876dee7fcb1356794176b04a7161cf65`) has a wildcard import `org.fest.test.*;`.
+
+### Resolving the Conflict
+
+To resolve this conflict, we need to understand the intent behind both changes.
+
+1. **Explicit Imports in `HEAD`**: The explicit imports suggest that the test class is using `Employee` and `Name` classes. The developer has explicitly imported these, possibly to avoid polluting the namespace or to make the dependencies clear.
+
+2. **Wildcard Import in the Other Branch**: The wildcard import (`org.fest.test.*;`) indicates that the other branch is likely using at least one more class from the `org.fest.test` package beyond just `Employee` and `Name`, or the developer preferred a wildcard import for simplicity or due to the use of multiple classes from this package.
+
+### Semantic Merge
+
+Given that both `Employee` and `Name` are already covered by the wildcard import, and assuming there are other classes being used from `org.fest.test` (or there will be), the most straightforward resolution is to use the wildcard import. This is because it encompasses both `Employee` and `Name`, and potentially other classes.
+
+However, it's worth noting that some coding standards prefer explicit imports over wildcard imports to avoid namespace pollution and to make it clear exactly which classes are being used.
+
+### Resolution
+
+Since using a wildcard import does not conflict with the intent of having `Employee` and `Name` available (as it includes them), and assuming that the other branch's change is either currently using or intending to use other classes from `org.fest.test`, the conflict can be resolved by accepting the wildcard import.
+
+The resolved code snippet in markdown code syntax, without modifying the context or spacing, is:
+```java
+import static org.mockito.Mockito.*;
+
+import java.util.*;
+
+import org.fest.assertions.internal.PropertySupport;
+import org.fest.test.*;
+import org.junit.*;
+
+/**
+ * Tests for <code>{@link Properties#from(Object[])}</code>.
+ * 
+```

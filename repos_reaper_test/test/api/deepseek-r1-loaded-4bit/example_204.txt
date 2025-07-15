@@ -1,0 +1,25 @@
+<think>
+Okay, let's tackle this merge conflict. The code snippet shows a conflict in the Javadoc comments for the fileSize method. The HEAD version has the @param filename tag, while the other branch (1488b22) adds the @return tag. 
+
+First, I need to understand what each side is doing. The HEAD has the @param, which is correct because the method has a filename parameter. The other branch adds an @return to document the return value, which is also good practice. These two changes don't conflict semantically; they're both adding different Javadoc tags. 
+
+The conflict markers are indicating that both changes were made in the same area. Since they're separate tags, they should coexist. So the correct resolution is to combine both the @param and @return tags in the Javadoc.
+
+Looking at the spacing, the conflict occurs between the two tags. The HEAD has the @param line, and the other branch adds @return below it. The correct merged Javadoc should include both tags. So the resolved code will have both @param and @return, maintaining the order as they appeared. The @return was added by the other branch, so it should come after the @param.
+
+Also, checking if there are any other differences. The method signature and the rest of the context remain the same. The throws declaration is present in both, so no issues there.
+
+Therefore, merging both tags into the Javadoc without any conflicts. The final comment block should include both @param filename and @return length of the file in bytes, followed by @throws IOException.</think>
+```java
+    }
+
+    /**
+     * Returns the length of a file in bytes which exists in the HDFS (accounts for replication).
+     * @param filename
+     * @return length of the file in bytes
+     * @throws IOException
+     */
+    public long fileSize(String filename) throws IOException {
+        DataStorage dfs = pigContext.getDfs();
+        ElementDescriptor elem = dfs.asElement(filename);
+```

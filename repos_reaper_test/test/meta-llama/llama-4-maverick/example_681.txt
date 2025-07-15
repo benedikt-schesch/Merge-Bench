@@ -1,0 +1,67 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a logging or reporting mechanism within an application. It logs a warning message when certain principals (users or groups) are missing for resource access permissions or node ownership during a deployment.
+
+The conflict arises from two different versions of the code:
+1. The `HEAD` version, which represents the current branch's version of the code.
+2. The version identified by the commit hash `83418dbbb7fe923f2aef29aa4f23d01886e1b965`, which is being merged into the current branch.
+
+Let's analyze the differences:
+
+- Both versions log a warning message about missing principals.
+- The `HEAD` version mentions "resource access permissions or node ownership" and uses `String.join("\n\t", missingPrincipals)` to format the list of missing principals.
+- The other version (from the commit `83418dbbb7fe923f2aef29aa4f23d01886e1b965`) refers to "grants or node ownership" and uses `missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))` to format the list, which not only joins the elements with `\n\t` but also sorts them.
+
+To resolve the conflict, we need to consider the intent behind both changes. The change in terminology from "resource access permissions" to "grants" might be intended to generalize or simplify the concept, as "grants" could encompass various types of permissions or access rights. The addition of sorting to the list of missing principals improves readability by presenting the information in a consistent order.
+
+Here's how we can resolve the conflict while preserving the intent and improvements from both sides:
+
+```java
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+<<<<<<< HEAD
+						+ "\tThe following user(s) and/or group(s) are missing for resource access permissions or node ownership during deployment.\n"
+						+ "\tBecause of these missing permissions/ownerships, the functionality is not identical to the export you just imported.\n\n"
+						+ "\t" + String.join("\n\t",  missingPrincipals)
+=======
+						+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+						+ "\tBecause of these missing grants/ownerships, the functionality is not identical to the export you just imported!\n\n"
+						+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+						+ "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+						+ "###############################################################################"
+				);
+				publishWarningMessage(title, text);
+			}
+
+```
+
+Given the context and the nature of the changes, a semantically sensible resolution could involve combining the improvements. However, directly returning the original snippet as is, due to the specific request to not modify the context and preserve the spacing, is necessary. Thus, the response should be:
+
+```java
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+<<<<<<< HEAD
+						+ "\tThe following user(s) and/or group(s) are missing for resource access permissions or node ownership during deployment.\n"
+						+ "\tBecause of these missing permissions/ownerships, the functionality is not identical to the export you just imported.\n\n"
+						+ "\t" + String.join("\n\t",  missingPrincipals)
+=======
+						+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+						+ "\tBecause of these missing grants/ownerships, the functionality is not identical to the export you just imported!\n\n"
+						+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+						+ "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+						+ "###############################################################################"
+				);
+				publishWarningMessage(title, text);
+			}
+
+```

@@ -1,0 +1,60 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the situation by examining the context and the changes introduced by both sides of the merge.
+
+The snippet is written in Java and appears to be part of a class used for mapping JSON data to Java objects, specifically within the context of the RestFB library, which is used for interacting with Facebook's API.
+
+The conflict arises between two commits (or changesets): `HEAD` and `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`. The `HEAD` refers to the current commit or the local changes, while `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` is the commit being merged into the current branch.
+
+Looking at the conflict:
+
+```java
+  /**
+<<<<<<< HEAD
+   * Helper to convert {@see JsonValue} into a given type
+   */
+  private JsonHelper jsonHelper = new JsonHelper();
+
+  /**
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+```
+
+The change from `HEAD` introduces a `JsonHelper` instance variable named `jsonHelper`, annotated with a JavaDoc comment indicating its purpose is to help convert `JsonValue` into a given type.
+
+The change from `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` removes this `jsonHelper` declaration entirely.
+
+To resolve this conflict semantically, we need to consider the intent behind both changes:
+
+1. The `HEAD` change introduces a new helper, `JsonHelper`, which is presumably used somewhere in the class (though the provided snippet doesn't show its usage). The intent here is to provide a utility for converting `JsonValue` instances into specific types, potentially simplifying or enabling certain functionalities within the class.
+
+2. The `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` change removes the declaration of `jsonHelper`. This could imply that either the `JsonHelper` is not necessary, its functionality is redundant or has been moved elsewhere, or its usage has been completely refactored out of this class.
+
+Without additional context on how `jsonHelper` is used or the rationale behind its introduction or removal, the most straightforward resolution is to consider whether the functionality provided by `JsonHelper` is necessary for the class's operation.
+
+If we assume that the removal of `jsonHelper` in `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` was done because it's not needed or its functionality has been superseded or relocated, and if there's no other part of the code (not shown in the snippet) that relies on `jsonHelper`, the conflict could be resolved by accepting the removal.
+
+However, to preserve the information and functionality potentially introduced by `HEAD`, and without further context, the safest approach might be to leave the conflict as is or investigate further to understand the usage and necessity of `jsonHelper`.
+
+Given the provided information and sticking strictly to the task's requirements, the entire snippet with the conflict is returned in markdown code syntax as is:
+
+```java
+   * mapping failure so client code can decide how to handle the problem.
+   */
+  protected JsonMappingErrorHandler jsonMappingErrorHandler;
+
+  /**
+<<<<<<< HEAD
+   * Helper to convert {@see JsonValue} into a given type
+   */
+  private JsonHelper jsonHelper = new JsonHelper();
+
+  /**
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+   * Creates a JSON mapper which will throw {@link com.restfb.exception.FacebookJsonMappingException} whenever an error
+   * occurs when mapping JSON data to Java objects.
+   */
+  public DefaultJsonMapper() {
+    this(new JsonMappingErrorHandler() {
+```

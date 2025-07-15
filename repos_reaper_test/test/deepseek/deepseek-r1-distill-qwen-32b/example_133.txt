@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to determine whether adding the `final` modifier to the `sJobConfInternal` field is appropriate given the intent of both sides of the merge.
+
+The change from both sides:
+- The `HEAD` side declares `sJobConfInternal` as a mutable `ThreadLocal`.
+- The other side (`57eb1bac`) declares `sJobConfInternal` as a `final` immutable `ThreadLocal`.
+
+Since both changes are relatively simple and the only difference is the addition of the `final` modifier, we can resolve this by taking the version that adds `final`, as immutability is generally a safer and better practice.
+
+Here is the resolved code:
+
+```java
+     * <pre>UdfContext.getUdfContext().getJobConf()</pre>
+     */
+    @Deprecated
+    public static Configuration sJobConf = null;
+
+    public static final ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();
+
+    public static class Map extends PigMapBase {
+
+        @Override
+        public void collect(Context oc, Tuple tuple)
+
+```

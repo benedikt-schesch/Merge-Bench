@@ -1,0 +1,28 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict. My task is to resolve the conflict by understanding the intent of both changes and merging them appropriately without altering the surrounding context.
+
+Looking at the code, the conflict is between the HEAD version and the branch f8f91f1d455f6842ca57b8294f6a263ff0cde1e4. The HEAD side doesn't have the block where the action bar's background is set, while the other branch adds that block. 
+
+First, I need to check if these changes are independent. The code in the HEAD version initializes the presenters and sets up the toolbar. The conflicting code from the other branch sets the action bar's background color. These seem like separate concerns, so they can coexist without issues.
+
+Next, I should ensure that the order of operations makes sense. The action bar setup is typically done early in the activity lifecycle, like in onCreate. However, in the given context, the code after initializing the presenter is setting up the toolbarExtra. The action bar code is added right after initializing the presenter, which might be correct if the activity is setting up its UI components. Since the toolbarExtra is part of the layout, setting the action bar's background before or after might depend on the specific setup, but there's no obvious reason they can't be in sequence.
+
+So the solution would be to include both blocks. The action bar code from the branch and the toolbar setup from HEAD. Since there's no overlap in the lines except for the conflict markers, the correct merge is to place the action bar code block where it was added, followed by the toolbarExtra lines. That way, both changes are preserved in the correct order.
+
+I also need to make sure the indentation and syntax are correct. The action bar code is within the same indentation level as the surrounding code. No syntax errors are present. Therefore, merging the two blocks sequentially should resolve the conflict without issues.</think>
+```java
+
+      Scheduler observeOn = AndroidSchedulers.mainThread();
+      Scheduler subscribeOn = Schedulers.io();
+      contentEditorPresenter = new ContentEditorPresenter(getString(R.string.imgur_client_id), new ImgurUpload(), observeOn, subscribeOn);
+
+      if (getSupportActionBar() != null) {
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(AttributesUtils.getPrimaryColor(this)));
+      }
+
+      toolbarExtra.inflateMenu(R.menu.content_editor_extra);
+      toolbarExtra.setOnMenuItemClickListener(this);
+
+      final String hint = getIntent().getExtras().getString(HINT);
+
+```

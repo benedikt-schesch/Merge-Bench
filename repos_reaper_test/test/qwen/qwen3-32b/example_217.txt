@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with the conflict resolved by integrating the PigServer initialization and setup from the merge branch:
+
+```java
+    @Test
+    public void testStringLte() throws Throwable {
+        PigServer pig = new PigServer(initString);
+        File tmpFile = File.createTempFile("test", "txt");
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpFile));
+        int expectedCount = 0;
+        for(int i = 0; i < LOOP_COUNT; i++) {
+            if(i % 5 == 0) {
+                ps.println("x");
+                expectedCount++;
+            }
+        }
+        ps.close();
+
+        String relationName = "A";
+        pig.registerQuery("A = load '" + tmpFile.getAbsolutePath() + "' using PigStorage();");
+        pig.registerQuery("B = filter A by $0 <= 'zzz';");
+        Iterator<Tuple> it = pig.openIterator("B");
+        int count = 0;
+        while (it.hasNext()) {
+            it.next();
+            count++;
+        }
+        
+        assertEquals(expectedCount, count);
+    }
+```
+
+The key semantic resolution steps:
+1. Added required `PigServer` initialization from the merge branch
+2. Maintained the test's original structure for setting up temporary files, counting expected values, running the query, and verifying results
+3. Preserved all the original loop logic and assertion mechanism

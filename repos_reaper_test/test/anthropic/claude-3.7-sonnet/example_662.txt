@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to determine how to handle the exception:
+
+- In the HEAD version, there's no exception handling code
+- In the 4b0f0ad0 commit, there's a call to `e.printStackTrace()`
+
+Since this is in a try-catch block where both sides ultimately return false, the key difference is whether to print the stack trace. I'll preserve the exception printing since it's likely an improvement for debugging, helping diagnose why the project configuration failed.
+
+```java
+    protected boolean classpathContainerContains(IJavaProject project, String id, String path)
+            throws JavaModelException {
+        try {
+            return getClasspathEntry(project, id, path) != null;
+        } catch (ProjectConfigurationException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    protected IClasspathEntry getClasspathEntry(IJavaProject project, String id, String path) throws JavaModelException {
+
+```

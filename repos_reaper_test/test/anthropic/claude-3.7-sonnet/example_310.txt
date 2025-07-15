@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it seems both changes are trying to fetch messages but they are using different database adapters or methods. Without more context, it's hard to determine the intent precisely, but let's analyze:
+
+1. Original: Uses `getDb().fetchAllTweets(TwitterDbAdapter.TABLE_TWEET)`
+2. Incoming: Uses `getDb2().fetchAllTweets(StatusTable.TABLE_NAME)`
+
+The changes differ in:
+- Using `getDb()` vs `getDb2()`
+- Referencing `TwitterDbAdapter.TABLE_TWEET` vs `StatusTable.TABLE_NAME`
+
+Since this appears to be a significant architectural change (possibly database refactoring), I cannot confidently determine the correct resolution without more context about which approach is intended to be used going forward.
+
+```java
+		}
+	}
+
+	@Override
+	protected Cursor fetchMessages() {
+<<<<<<< HEAD
+		return getDb().fetchAllTweets(TwitterDbAdapter.TABLE_TWEET);
+=======
+		return getDb2().fetchAllTweets(StatusTable.TABLE_NAME);
+>>>>>>> de460f053e7948460b81e71a410d665d956db90a
+	}
+
+	@Override
+	protected String getActivityTitle() {
+		return getResources().getString(R.string.page_title_home);
+```

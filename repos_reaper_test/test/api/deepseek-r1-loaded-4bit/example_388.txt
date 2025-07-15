@@ -1,0 +1,82 @@
+<think>
+Okay, let's take a look at this merge conflict. The user provided a Java code snippet with a conflict between the HEAD and another branch (ee2493...). The conflict is around the `@AfterEach void verifyWorkspace()` method. 
+
+In the HEAD version, there's an `@AfterEach` method that calls `verifyNoInteractions(workspace)`. The other branch has removed this method. So the conflict is whether to keep that method or not.
+
+The goal is to resolve this conflict semantically. I need to think about the intent of both sides. The HEAD adds a verification that no interactions happened with the workspace after each test, which is a common practice in mocking to ensure tests don't have unexpected side effects. The other branch might have removed it because perhaps they don't want this check, or maybe they moved it elsewhere.
+
+But without more context, it's possible that the test in the snippet `shouldNotRespondToPreBuildEvents` might rely on this verification. If the `verifyWorkspace` method is part of the test setup to ensure cleanliness, removing it could cause tests to pass even if there are unintended interactions. 
+
+Alternatively, maybe the other branch removed it because it's redundant or not needed. However, since the user asks to resolve based on intent and semantics, if both changes are valid but conflicting, we might need to keep both. Wait, but in this case, one side added the method and the other side didn't have it. So the conflict is whether the method exists or not.
+
+If the test `shouldNotRespondToPreBuildEvents` doesn't interact with the workspace, then the `verifyNoInteractions` would pass, so keeping the `@AfterEach` makes sense. The other branch might have removed it by mistake, or perhaps they have a different setup. 
+
+But since the user is asking to resolve the conflict, and if there's no clear reason to exclude the `@AfterEach` method, it's safer to keep it. Because removing it could introduce false positives in tests. So the resolution would be to keep the `@AfterEach` method from HEAD, and include the test from both branches. Wait, looking at the code, the conflict is between the `@AfterEach` method in HEAD and the test method in the other branch. The test method is present in both branches, but the conflict markers are around the `@AfterEach` method. So the other branch (ee2493) doesn't have the `@AfterEach` method, while HEAD does. 
+
+So when merging, if both changes are to the same area, the correct resolution is to include both. But in this case, the `@AfterEach` is added in HEAD and removed in the other branch. So the merge conflict is whether to keep that method or not. 
+
+If the test `shouldNotRespondToPreBuildEvents` is added in the other branch, and the `@AfterEach` is in HEAD, then perhaps the merge should include both. Wait, looking at the code again: the HEAD has the `@AfterEach` method, then the test method. The other branch has the test method without the `@AfterEach`. So the conflict is that in HEAD, between the `inContext()` method and the `@Test`, there's an `@AfterEach` method, which the other branch doesn't have. 
+
+So the merge conflict is whether to include the `@AfterEach` method or not. To resolve this, we need to determine if both changes can coexist. Since the `@AfterEach` is a separate method, perhaps the other branch's addition of the test method doesn't conflict, but the removal of `@AfterEach` does. Wait, maybe the other branch didn't remove it, but in their version, the `@AfterEach` isn't present. So when merging, if the other branch added the test but didn't have the `@AfterEach`, and the HEAD added the `@AfterEach`, then the correct resolution is to have both: the `@AfterEach` and the test. Because those are separate changes. 
+
+Wait, maybe the conflict is because in one branch, the `@AfterEach` is added between `inContext()` and the test, and in the other branch, the test is added without that method. So when merging, the conflict arises because both changes affect the same region. 
+
+But looking at the code, the structure is:
+
+- void inContext() { ... }
+- <<<<<<< HEAD
+- @AfterEach method
+- =======
+- >>>>>>> ee2493...
+- @Test void shouldNotRespond...
+
+So in HEAD, after inContext(), there's the @AfterEach method, then the @Test. In the other branch, after inContext(), directly the @Test. So the conflict is whether the @AfterEach exists between them. 
+
+To resolve, we need to see if the @AfterEach is necessary. If the test in the other branch expects that the verifyNoInteractions is called, then keeping the @AfterEach is correct. If the other branch's test doesn't need that verification, perhaps because it's testing something else, then maybe the @AfterEach should be kept as it's part of the test setup in HEAD. 
+
+Alternatively, maybe the other branch's test was written without knowledge of the @AfterEach method, and including both is correct. 
+
+Since the user says to think about the intent: the HEAD's intent is to add a verification after each test that the workspace wasn't interacted with. The other branch's intent is to add a new test. These two intents don't conflict; they can coexist. Therefore, the correct resolution is to keep the @AfterEach method from HEAD and include the test from the other branch. 
+
+Wait, but in the provided code, the test is present in both versions. Because in the conflict snippet, the HEAD includes the @AfterEach and then the @Test, while the other branch has the @Test without the @AfterEach. But looking at the exact code:
+
+HEAD has:
+
+	@AfterEach
+	void verifyWorkspace() {
+		verifyNoInteractions(workspace);
+	}
+
+	@Test
+	void shouldNotRespondToPreBuildEvents() { ... }
+
+The other branch has:
+
+	@Test
+	void shouldNotRespondToPreBuildEvents() { ... }
+
+So the conflict is that in the HEAD, between inContext() and the test, there's an @AfterEach method. In the other branch, there's no @AfterEach, so the test comes right after inContext(). 
+
+Therefore, merging these would require deciding whether to include the @AfterEach or not. If both changes are valid, then the @AfterEach should be kept, and the test from the other branch is already present. Wait, but the test is the same in both branches? Or is the test added in the other branch? 
+
+Looking at the code, the test method `shouldNotRespondToPreBuildEvents` is present in both sides. The conflict is only about the @AfterEach method. So the other branch (ee2493) has the test but not the @AfterEach, while HEAD has both. 
+
+Therefore, when merging, the @AfterEach should be kept if it's intended to be part of the test setup. Since the user is a semantic merge expert, the resolution is to keep the @AfterEach method because it's a valid verification that doesn't interfere with the test itself. The other branch's change (adding the test) doesn't conflict with the @AfterEach method. Therefore, the correct resolution is to include the @AfterEach method and the test, as they are in HEAD. 
+
+Wait, but the conflict is that the other branch doesn't have the @AfterEach. So when merging, the conflict is that in one branch the method is present, and in the other it's not. The semantic resolution depends on whether the @AfterEach is needed. Since it's a verification step, it's likely important for test correctness. Unless the other branch intentionally removed it because it's no longer needed. But without more context, it's safer to assume that the @AfterEach is a necessary part of the test setup in HEAD, and the other branch's test should include it. Therefore, the resolved code would have the @AfterEach method followed by the test method.</think>
+```java
+	void inContext() {
+		workspace = mock(WorkspaceFacade.class);
+		processor = new ClassFileChangeProcessor(workspace);
+	}
+
+	@AfterEach
+	void verifyWorkspace() {
+		verifyNoInteractions(workspace);
+	}
+
+	@Test
+	void shouldNotRespondToPreBuildEvents() {
+		IResourceChangeEvent event = new ResourceChangeEvent(this, PRE_BUILD, AUTO_BUILD, null);
+		assertFalse(processor.canProcessEvent(event));
+```

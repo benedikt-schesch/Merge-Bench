@@ -1,0 +1,61 @@
+<think>
+No reasoning found</think>
+```java
+	private Text notScannedText;
+	private Button[] displayMethod;
+	private Button showInfoCheckbox;
+	private Button askConfirmationCheckbox;
+	private Combo languageCombo;
+<<<<<<< HEAD
+	private String[] languages = { "system", "en", "hu", "lt", "es", "ku" };
+
+	@Inject public PreferencesDialog(PingerRegistry pingerRegistry, Config globalConfig, ScannerConfig scannerConfig, GUIConfig guiConfig) {
+=======
+	private String[] languages = { "system", "en", "hu", "lt", "es", "ku", "tr" };
+	
+	public PreferencesDialog(PingerRegistry pingerRegistry, Config globalConfig, ScannerConfig scannerConfig, GUIConfig guiConfig, ConfigDetectorDialog configDetectorDialog) {
+>>>>>>> 90b95dd53d88e33bb1dd393eab78bae4f6ab5b14
+		this.pingerRegistry = pingerRegistry;
+		this.globalConfig = globalConfig;
+		this.scannerConfig = scannerConfig;
+		this.guiConfig = guiConfig;
+	}
+```
+
+I'll provide an explanation of the conflict resolution.
+
+Both sides of the conflict are modifying the PreferencesDialog class constructor and the languages array.
+
+On the local side (HEAD):
+- Kept the @Inject annotation
+- Removed "tr" from the list of supported languages
+- Removed the configDetectorDialog parameter
+
+On the remote side (90b95dd):
+- Removed the @Inject annotation
+- Added "tr" as a supported language
+- Added configDetectorDialog as a constructor parameter
+
+To resolve this conflict, I'll combine the changes:
+- Remove the @Inject annotation
+- Add the additional language "tr"
+- Keep all constructor parameters
+- Keep proper formatting
+
+Here is the resolved code:
+
+```java
+	private Text notScannedText;
+	private Button[] displayMethod;
+	private Button showInfoCheckbox;
+	private Button askConfirmationCheckbox;
+	private Combo languageCombo;
+	private String[] languages = { "system", "en", "hu", "lt", "es", "ku", "tr" };
+	
+	public PreferencesDialog(PingerRegistry pingerRegistry, Config globalConfig, ScannerConfig scannerConfig, GUIConfig guiConfig, ConfigDetectorDialog configDetectorDialog) {
+		this.pingerRegistry = pingerRegistry;
+		this.globalConfig = globalConfig;
+		this.scannerConfig = scannerConfig;
+		this.guiConfig = guiConfig;
+	}
+```

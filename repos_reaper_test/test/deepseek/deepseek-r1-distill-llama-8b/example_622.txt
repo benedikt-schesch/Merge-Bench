@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The left side uses `rawMessageTagsObject.names()` which enumerates all keys in the JSON object. The right side uses `getNames(rawMessageTagsObject)`, which is likely a custom method providing a specific subset or controlled list of keys. To maintain intended functionality and avoid unnecessary iterations, the right side's `getNames()` should be used.
+
+```java
+    }
+
+    try {
+      List<MessageTag> resultList = new ArrayList<MessageTag>();
+      JsonObject rawMessageTagsObject = jsonMapper.toJavaObject(rawTags, JsonObject.class);
+      for (String key : getNames(rawMessageTagsObject)) {
+        String tagArrayString = rawMessageTagsObject.get(key).toString();
+        resultList.addAll(jsonMapper.toJavaList(tagArrayString, MessageTag.class));
+      }
+      return resultList;
+    } catch (FacebookJsonMappingException je) {
+```

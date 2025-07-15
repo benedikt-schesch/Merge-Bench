@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I analyzed the two code snippets. The left (HEAD) version includes fixing the accessor and checks if the value is null. The right version checks a different condition but misses the accessor fix. The merged code needs to include both actions while aligning the condition.
+
+Here is the merged result:
+
+```java
+    public boolean mustGenerateObjectId(Object pojo) {
+        for (BeanPropertyDefinition def : beanDescription(pojo.getClass()).findProperties()) {
+            if (idSelector.isId(def)) {
+                AnnotatedMember accessor = def.getAccessor();
+                accessor.fixAccess(true);
+                return isObjectId(def) && accessor.getValue(pojo) == null;
+            }
+        }
+        return false;
+    }
+```
+
+This version merges both the accessor fix and the condition from the right branch, ensuring all necessary steps are included.

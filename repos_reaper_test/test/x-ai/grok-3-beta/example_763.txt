@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+I'm returning the snippet with the conflict unresolved, as the intent behind the `false &&` condition on the `HEAD` side is ambiguous. It's unclear whether this was intentionally disabled for testing or debugging purposes, or if it reflects a specific logic that should be preserved. The other side (commit `8063e77766d4195dc7c60d5ab8e9f23d50eca9cf`) removes the `false &&` condition and adds a `final` modifier to the `buf` variable, suggesting a desire for cleaner or more strict code without altering the core logic. Without additional context or clarification on the purpose of `false &&`, I cannot confidently resolve the conflict.
+
+Here is the original snippet with the conflict preserved:
+
+```java
+        // Piggyback a version request in the 1st packet, after the payload
+        // we were trying to send.  This way we'll have the version handy
+        // pretty quickly.  Since it's most likely going to fit in the same
+        // packet we send out, it adds ~zero overhead.  But don't piggyback
+        // a version request if the payload is already a version request.
+<<<<<<< HEAD
+        ChannelBuffer buf;
+        if (false && !isVersionRequest(payload)) {
+=======
+        final ChannelBuffer buf;
+        if (!isVersionRequest(payload)) {
+>>>>>>> 8063e77766d4195dc7c60d5ab8e9f23d50eca9cf
+          final RegionClient client = ctx.getPipeline().get(RegionClient.class);
+          final ChannelBuffer version =
+            client.encode(client.getProtocolVersionRequest());
+          buf = ChannelBuffers.wrappedBuffer(header, payload, version);
+        } else {
+```

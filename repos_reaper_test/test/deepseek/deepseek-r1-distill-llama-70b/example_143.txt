@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The error message is updated to be more generic, indicating a job launch error without specifying map-reduce, aligning with the method's general job control context.
+
+```java
+        public void uncaughtException(Thread thread, Throwable throwable) {
+            jobControlExceptionStackTrace = Utils.getStackStraceStr(throwable);
+            try {
+                jobControlException = getExceptionFromString(jobControlExceptionStackTrace);
+            } catch (Exception e) {
+                String errMsg = "Could not resolve error that occured when launching job: "
+                        + jobControlExceptionStackTrace;
+                jobControlException = new RuntimeException(errMsg, throwable);
+            }
+        }
+    }
+```

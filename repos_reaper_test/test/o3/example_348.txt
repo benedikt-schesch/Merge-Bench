@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+		} catch (WifiStateException e1) {
+			mInfo = null;
+		}
+		mSubscribers = new HashSet<Handler>();
+	}
+	
+	public synchronized void subscribe(Handler handler) {
+		Log.i("NowPlayingPoller", "Subscribing handler " + handler.getClass().getName() + " to now playing events.");
+		// update handler on the state of affairs
+		final ICurrentlyPlaying currPlaying = mControl.getCurrentlyPlaying(mManagerStub);
+		sendSingleMessage(handler, MESSAGE_PROGRESS_CHANGED, currPlaying);
+		sendSingleMessage(handler, MESSAGE_PLAYLIST_ITEM_CHANGED, currPlaying);
+		sendSingleMessage(handler, MESSAGE_COVER_CHANGED, currPlaying);
+```

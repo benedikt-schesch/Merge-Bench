@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+I'll preserve the conflict since the intent is ambiguous without more context.
+
+```java
+    public boolean mustGenerateObjectId(Object pojo) {
+        for (BeanPropertyDefinition def : beanDescription(pojo.getClass()).findProperties()) {
+            if (idSelector.isId(def)) {
+                AnnotatedMember accessor = def.getAccessor();
+                accessor.fixAccess(true);
+<<<<<<< HEAD
+                return idSelector.isObjectId(def) && accessor.getValue(pojo) == null;
+=======
+                return isObjectId(def) && accessor.getValue(pojo) == null;
+>>>>>>> c417ada53c003bd4dbb38959f4581fa161b47d43
+            }
+        }
+        return false;
+    }
+```

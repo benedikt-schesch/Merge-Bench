@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to consider both code snippets and determine the correct approach. Here's the step-by-step explanation:
+
+1. **List Initialization**: The local code (HEAD) initializes a new list `dataItem`, while the other side (a17acec) uses `dataList` without declaring it, which could be incorrect or a reference to an undefined variable.
+
+2. **JsonArray Extraction**: The local code uses `jsonObject.get("data").asArray()`, whereas the other version uses `getJsonArray("data")`. Assuming the correct method is `getJsonArray`, that part should be kept.
+
+3. **Loop Logic**: Both versions have similar loops, but the method `length()` vs `size()` may differ based on the library used. Assuming the library uses `size()`, the local version is correct.
+
+4. **Exception Handling**: The code above correctly throws an exception for parsing errors.
+
+**Resolved Code**
+
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    List<T> dataItem = new ArrayList<T>(jsonData.size());
+    for (int i = 0; i < jsonData.size(); i++) {
+      dataItem.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+```

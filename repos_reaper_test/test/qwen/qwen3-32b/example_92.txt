@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different implementations of the same `handle` method in the given method definition. The conflict arises from subtle differences in the initialization of the `HashMap<ReturnableData, Object>` and the population of the map with chat status indicators.
+
+---
+
+- **HEAD Version**: Initializes the map using Java's diamond operator (`new HashMap<>()`), which is a concise and modern syntax. The code thereafter only adds `GLOBAL_CHAT_ENABLED`.
+  
+- **Conflicted Version (ed08e3719785...)**: Initializes the map using explicit generic bounds (`new HashMap<ReturnableData, Object>()`), a more verbose style that functionally matches the diamond operator. It also adds `GAME_CHAT_ENABLED` to the map.
+
+Both versions aim to create a response map for an AJAX handler. The key difference is in the initialization of the `HashMap` and the inclusion of `GAME_CHAT_ENABLED`. Since these are stylistic and the semantic addition (in `GAME_CHAT_ENABLED`) is needed, **the correct resolution is to keep the diamond syntax from the HEAD and augment the map to also include `GAME_CHAT_ENABLED` as the conflicted branch does.**
+
+---
+
+Here is the correctly resolved code snippet in markdown format:
+
+```java
+    this.userPermalinkFormatString = userPermalinkFormatString;
+  }
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned.",
+              request.getRemoteAddr()));
+```

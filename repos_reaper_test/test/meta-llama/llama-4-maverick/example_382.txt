@@ -1,0 +1,59 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is from a Java class that appears to be managing the initialization or enabling of a component or service named "Galgo." The method in question, `enable(Context context, GalgoOptions options)`, is used to start or enable Galgo with custom options.
+
+The conflict arises between two commits:
+1. One commit (represented by `HEAD`) checks if `options` is `null` and throws an `IllegalArgumentException` if so.
+2. The other commit (represented by the commit hash `6252198314e0911154221dbed662947c98d77aa3`) introduces a call to `checkPermission(context)` before proceeding.
+
+Let's analyze the intent behind both changes:
+
+1. The check for `options == null` ensures that the method is not executed with a `null` value for `options`, preventing potential `NullPointerExceptions` later on. This is a defensive programming practice that enhances the robustness of the method.
+
+2. The introduction of `checkPermission(context)` suggests that there's a need to verify certain permissions or conditions related to the provided `context` before enabling Galgo. This could be related to security, licensing, or other forms of validation that are context-dependent.
+
+Both changes seem to serve important purposes:
+- The `null` check for `options` ensures the method's robustness against invalid input.
+- The `checkPermission(context)` call introduces a necessary validation or authorization check.
+
+To resolve the conflict in a way that respects the intent of both changes, we should ensure that both the `null` check for `options` and the permission check for `context` are performed.
+
+Here's how the resolved code snippet should look:
+
+```java
+     * * Starts a new Galgo with custom {@link com.inaka.galgo.GalgoOptions}
+     * @param context Context
+     * @param options Custom {@link com.inaka.galgo.GalgoOptions}
+     */
+    public static void enable(Context context, GalgoOptions options) {
+        if (options == null) {
+            throw new IllegalArgumentException("GalgoOptions must not be null");
+        }
+        checkPermission(context);
+        sOptions = options;
+        init(context);
+    }
+
+    /**
+```
+This resolution combines the checks from both sides of the merge, ensuring that `options` is not `null` and that the necessary permissions are checked before proceeding with the initialization of Galgo.
+
+The code is returned in markdown code syntax as provided, without modifying the context or spacing:
+```java
+     * * Starts a new Galgo with custom {@link com.inaka.galgo.GalgoOptions}
+     * @param context Context
+     * @param options Custom {@link com.inaka.galgo.GalgoOptions}
+     */
+    public static void enable(Context context, GalgoOptions options) {
+        if (options == null) {
+            throw new IllegalArgumentException("GalgoOptions must not be null");
+        }
+        checkPermission(context);
+        sOptions = options;
+        init(context);
+    }
+
+    /**
+```

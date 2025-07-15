@@ -1,0 +1,24 @@
+<think>
+Okay, let's tackle this merge conflict. The user provided a Java test method with a conflict between the HEAD and another branch. The conflict is in the assertions after parsing a Wifi object.
+
+Looking at the HEAD version, there's a line that uses assertThat with instanceOf, and then a commented-out line that's using is(Wifi.class). The other branch has the same assertThat line but without the comment. 
+
+The goal here is to determine which change is correct. The comment in HEAD suggests that maybe someone was testing or considering a different assertion but decided to comment it out. The other branch just has the assertThat line without the comment. 
+
+Semantically, both sides want to check that the scheme is an instance of Wifi. The HEAD version has a redundant commented line, which might be leftover from debugging. The other branch's version is cleaner without the comment. 
+
+Since the commented line isn't adding any value and might be just clutter, the correct resolution would be to keep the assertThat line from the other branch and remove the commented line. That way, the test remains clean and only has the necessary assertions. 
+
+So the merged code should include the assertThat without the comment. The surrounding context like the test setup and other assertions remain the same. There's no ambiguity here because both changes are trying to achieve the same thing, but one has an unnecessary comment.</think>
+```java
+	@Test
+	public void parseWifi() throws Exception {
+		Object scheme = createParser().parse("WIFI:S:some weird SSID;T:WPA;P:aintNoSecret;H:true;");
+		assertNotNull(scheme);
+		assertThat(scheme, instanceOf(Wifi.class));
+		Wifi wifi = (Wifi) scheme;
+		assertEquals("some weird SSID", wifi.getSsid());
+		assertEquals("WPA", wifi.getAuthentication());
+		assertEquals("aintNoSecret", wifi.getPsk());
+		assertTrue(wifi.isHidden());
+```

@@ -1,0 +1,28 @@
+<think>
+Okay, let's take a look at this merge conflict. The user wants me to resolve it by understanding the intent of both sides. The conflict is in a Java code snippet where constants are being defined.
+
+In the HEAD version, after DIALOG_COMPOSE = 31; there's a DIALOG_FIND = 32; added. On the other branch, there are three new constants: DIALOG_REPORT = 33;, DIALOG_THREAD_CLICK = 34;, and DIALOG_VIEW_PROFILE = 35;. 
+
+The conflict arises because both branches added different constants starting from 32. The HEAD adds one, and the other branch adds three. Since these are static final int declarations, each should have a unique value. 
+
+Looking at the numbers, the HEAD adds 32, then the other branch starts at 33. So they are sequential. The problem is that in HEAD, after 31 comes 32, but the other branch has 33, 34, 35 after 31. So if we combine both, we can have DIALOG_FIND =32, then DIALOG_REPORT=33, etc. That way, all constants have unique values and both changes are incorporated.
+
+So the resolution would be to include all the constants in order, making sure the numbers are sequential and there's no overlap. Since 32 is from HEAD and 33-35 are from the other branch, merging them in order should resolve the conflict without any issues. There's no semantic overlap here; both sides are adding new dialog constants, just different ones. So combining them makes sense.</think>
+```java
+    static final int DIALOG_MESSAGE_CLICK = 25;
+    static final int DIALOG_GOTO_PARENT = 28;
+    static final int DIALOG_EDIT = 29;
+    static final int DIALOG_DELETE = 30;
+    static final int DIALOG_COMPOSE = 31;
+    static final int DIALOG_FIND = 32;
+    static final int DIALOG_REPORT = 33;
+    static final int DIALOG_THREAD_CLICK = 34;
+    static final int DIALOG_VIEW_PROFILE = 35;
+
+    // progress dialogs
+    static final int DIALOG_LOGGING_IN = 1000;
+    static final int DIALOG_SUBMITTING = 1004;
+    static final int DIALOG_REPLYING = 1005;
+```
+
+Rationale: Both branches are adding new dialog constants with sequential numbering. The conflict can be resolved by preserving all unique constants from both branches in numerical order. The HEAD's DIALOG_FIND (32) comes first as it was numbered earlier, followed by the other branch's DIALOG_REPORT (33), DIALOG_THREAD_CLICK (34), and DIALOG_VIEW_PROFILE (35). This maintains semantic consistency of dialog constants while preserving unique numerical identifiers from both branches.

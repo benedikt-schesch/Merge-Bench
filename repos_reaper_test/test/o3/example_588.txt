@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+   * find log data for debugging.
+   *
+   * @return the Facebook API error {@code fbtrace_id}
+   */
+  public String getFbtraceId() {
+    if (getRawErrorJson() != null && getRawErrorJson().get("error").isObject()) {
+      JsonObject errorJson = getRawErrorJson().get("error").asObject();
+      return errorJson.getString("fbtrace_id", "");
+    }
+
+    return "";
+  }
+```

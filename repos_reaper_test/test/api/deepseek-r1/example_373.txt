@@ -1,0 +1,22 @@
+<think>
+Okay, let me look at this merge conflict. The conflict is in a Java method between the HEAD version and the commit 51762f2. The HEAD version adds the @Beta annotation above the isMtls() method, while the other side doesn't have that annotation.
+
+So, the question is whether to keep the @Beta annotation or not. The user wants a semantic resolution. If both changes are compatible, maybe we should include the @Beta. But why is there a conflict here? Perhaps one branch added the annotation, and the other didn't. Since the HEAD has @Beta and the other side doesn't, merging them would require deciding if the annotation should stay.
+
+If the intent of the HEAD branch was to mark isMtls() as Beta, and the other branch just added the method without the annotation, then including @Beta would be correct. But if the other branch removed the @Beta, then there's a conflict. However, since the conflict markers show that HEAD added @Beta and the other side didn't have it, the merge should probably keep the @Beta because it's an addition that doesn't conflict with the method's existence. Unless the other branch explicitly removed it, but based on the given code, the other side just doesn't have the @Beta line.
+
+Therefore, the resolved code should include the @Beta annotation from HEAD. So the merged code would have both the @Override and @Beta annotations before the method. The surrounding context remains unchanged, and spacing is preserved as per the original.</think>
+```java
+  public boolean supportsMethod(String method) {
+    return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
+  }
+
+  @Override
+  @Beta
+  public boolean isMtls() {
+    return this.isMtls;
+  }
+
+  @Override
+
+```

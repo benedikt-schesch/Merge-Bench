@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the code structure needs to correctly handle both cases where the JsonGenerator is either MongoBsonGenerator or TokenBuffer. The error is that the else if was replaced with a general else, which doesn't correctly handle both scenarios. Restoring the else if ensures proper control flow.
+
+Here is the corrected version:
+
+```java
+    static class Decimal128Serializer extends JsonSerializer<Decimal128> {
+
+        public void serialize(Decimal128 decimal, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            if (jsonGenerator instanceof MongoBsonGenerator) {
+                ((MongoBsonGenerator) jsonGenerator).writeDecima128(decimal);
+            } else if (jsonGenerator instanceof TokenBuffer) {
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeFieldName("$numberDecimal");
+                jsonGenerator.writeString(decimal.bigDecimalValue().toString());
+                jsonGenerator.writeEndObject();
+            }
+        }
+```

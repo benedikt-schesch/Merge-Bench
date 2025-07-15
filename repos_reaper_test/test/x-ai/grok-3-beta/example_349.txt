@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved as is, including the full context and spacing, formatted in markdown code syntax:
+
+```java
+    }
+
+    public String toString() {
+      // When running the application as a native image, append `-graalvm` to the
+      // version.
+<<<<<<< HEAD
+      String imageCode = System.getProperty("org.graalvm.nativeimage.imagecode");
+      if (imageCode != null && imageCode.equals("runtime")){
+=======
+      String imageCode = System.getProperty(PROPERTY_IMAGE_CODE_KEY);
+      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)) {
+>>>>>>> 2a9778c6bfd2a032bf3a67da5cfb9d6ec9364a04
+        String[] tokens = versionString.split(" ");
+        if (tokens.length > 0 && tokens[0].startsWith("gl-java")) {
+          tokens[0] += "-graalvm";
+          return Joiner.on(" ").join(tokens);
+        }
+```
+
+**Explanation of Intent and Semantics (Reason for Preserving the Conflict):**
+
+After analyzing both sides of the merge conflict, I’ve determined that the intent and semantics behind the changes are unclear without additional context about the broader codebase. Below is my reasoning:
+
+- **HEAD (Left Side):** This version uses a hardcoded property key `"org.graalvm.nativeimage.imagecode"` and checks if its value equals `"runtime"`. The intent appears to be detecting whether the application is running as a native image in a GraalVM context, using a specific, explicit property and value.
+
+- **2a9778c6 (Right Side):** This version replaces the hardcoded values with constants or variables `PROPERTY_IMAGE_CODE_KEY` and `PROPERTY_IMAGE_CODE_VALUE_RUNTIME`. The intent here seems to be making the code more maintainable and configurable by avoiding hardcoded strings, likely defining these values elsewhere in the codebase for consistency and reusability.
+
+Both changes aim to achieve the same functional goal: checking if the application is running in a specific runtime environment (likely GraalVM native image runtime) to append `-graalvm` to the version string. However, the approach differs significantly:
+- HEAD prioritizes simplicity and explicitness with hardcoded values.
+- The right side prioritizes flexibility and maintainability with abstracted constants.
+
+**Why the Conflict is Preserved:**  
+The resolution depends on context that is not available in the provided snippet. Specifically:
+1. Are `PROPERTY_IMAGE_CODE_KEY` and `PROPERTY_IMAGE_CODE_VALUE_RUNTIME` defined elsewhere, and do they map to the same values as in HEAD (`"org.graalvm.nativeimage.imagecode"` and `"runtime"`)? If not, adopting the right side could change the behavior.
+2. Is there a broader codebase convention or style guide favoring hardcoded values or constants?
+3. Is there a requirement for configurability that the right side addresses?
+
+Without this information, merging the two sides could risk breaking the functionality or violating the project’s design principles. Therefore, I am returning the snippet with the conflict unresolved, as the intent cannot be definitively determined from the provided code alone. If additional context (e.g., definitions of the constants or project guidelines) is provided, I can revisit the resolution.

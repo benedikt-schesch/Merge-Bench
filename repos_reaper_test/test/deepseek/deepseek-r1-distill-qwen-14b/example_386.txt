@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The code snippet has a merge conflict between two changes: updating the test annotation from `@Before` to `@BeforeEach` and changing the list initialization. After analyzing the intent, the newer `@BeforeEach` annotation is preferred, and the explicit list initialization is more standard.
+
+```java
+	private List<ProjectFacade> projects;
+	private CoreRegistry coreRegistry;
+	private ProjectSet projectSet;
+	private EclipseWorkspace workspace;
+
+<<<<<<< HEAD
+	@BeforeEach
+	void inContext() throws CoreException {
+		projects = newArrayList();
+=======
+	@BeforeEach
+	public void inContext() throws CoreException {
+		projects = new ArrayList<>();
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+		projectSet = mock(ProjectSet.class);
+		projects.add(new ProjectFacade(project));
+		coreRegistry = mock(CoreRegistry.class);
+		CoreFactory coreFactory = new CoreFactory(null);
+		workspace = new EclipseWorkspace(projectSet, coreRegistry, coreFactory, new SystemClassPathJarLocator());
+```

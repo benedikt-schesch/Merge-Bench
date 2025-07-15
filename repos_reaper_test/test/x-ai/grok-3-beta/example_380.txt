@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in terms of intent and semantics.
+
+Both sides are attempting to define a test case for writing data to a locked URI Beacon, with the expectation of an error due to insufficient authorization. Let's look at the differences:
+
+- **HEAD**: Uses `ConfigUriBeacon.INSUFFICIENT_AUTHORIZATION` which seems to be a specific error code or constant representing an authorization error when writing long data to a locked beacon.
+- **Branch (72bcd2216d792365c9e99dc69ee413acb1dc5b8e)**: Uses `TestData.VALID_LENGTH_AUTHORIZATION_ERRORS` which might be a broader set of error conditions or a different naming convention for expected errors related to authorization with valid length data.
+
+The semantic intent appears to be the same: testing the behavior when attempting to write long URI data to a locked beacon, expecting an authorization-related error. The difference lies in the representation of the expected error condition.
+
+Since the intent is clear but the exact constant or error set to use is ambiguous without further context about the codebase's naming conventions or error handling structure, I will preserve the conflict as is.
+
+Here is the unchanged snippet with the merge conflict:
+
+```java
+                  BluetoothGatt.GATT_SUCCESS)
+      );
+      specUriBeaconTestsBuilder.add(
+          new Builder()
+              .name("Locked: Try Long Data")
+<<<<<<< HEAD
+              .reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")
+              .write(ProtocolV2.DATA, TestData.LONG_URI, ConfigUriBeacon.INSUFFICIENT_AUTHORIZATION)
+=======
+              .write(ProtocolV2.DATA, TestData.LONG_URI, TestData.VALID_LENGTH_AUTHORIZATION_ERRORS)
+>>>>>>> 72bcd2216d792365c9e99dc69ee413acb1dc5b8e
+      );
+      specUriBeaconTestsBuilder.add(
+          new Builder()
+              .name("Locked: Try Short Flags")
+              .reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")
+```

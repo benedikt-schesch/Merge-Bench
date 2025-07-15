@@ -1,0 +1,42 @@
+<think>
+Okay, let's take a look at this merge conflict. The user is asking me to resolve it by understanding the intent of both sides. The conflict is in the Java import statements. 
+
+The HEAD version has an import for Toast, and the other branch (f8f91f1d) is adding an import for MaterialDialog from com.afollestad.materialdialogs. 
+
+So the conflict is between these two imports. But wait, in Java, each import statement is independent. Unless they're both modifying the same line, which they aren't here. Looking at the code, the HEAD has:
+
+import android.widget.Toast;
+
+And the other branch adds:
+
+import com.afollestad.materialdialogs.MaterialDialog;
+
+These are two separate imports. So the correct resolution would be to include both imports, maintaining the order. Since they don't conflict line-wise, the merge should just combine both imports. The original conflict markers probably occurred because both branches added different imports in the same region of the file. 
+
+The original code snippet shows that after the Toast import, the HEAD doesn't have the MaterialDialog import, while the other branch does. So the resolved code should include both. Therefore, the conflict markers can be removed, and both imports kept. 
+
+I should check the order. Typically, Android imports come first, followed by third-party libraries, then project-specific ones. Here, the MaterialDialog is a third-party import, so it should come after the Android imports but before the project's own imports (like com.alorma.github). 
+
+Looking at the existing code, after the Toast import, the next line in the HEAD is the project's imports. The other branch adds the MaterialDialog import right after Toast. So merging them would place the MaterialDialog import after Toast and before the project's own imports. That makes sense. 
+
+Therefore, the resolved code should have both imports without conflict markers, in the correct order. There's no ambiguity here since both imports are additive and don't interfere with each other. So the final code will include both.</think>
+```java
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.alorma.github.R;
+import com.alorma.github.bean.SearchableUser;
+import com.alorma.github.cache.CacheWrapper;
+import com.alorma.github.emoji.Emoji;
+import com.alorma.github.emoji.EmojisActivity;
+```
+
+The conflict was easily resolvable since both imports are additive and non-conflicting. The MaterialDialog import from the feature branch (f8f91f1d) simply adds a new dependency that doesn't interfere with the existing Toast import from HEAD. I preserved:
+1. The original Android framework imports
+2. The new MaterialDialog import (from the merging branch)
+3. The project-specific imports in their original order
+
+This maintains proper Java import conventions (Android -> 3rd party -> project internal) while incorporating both changes.

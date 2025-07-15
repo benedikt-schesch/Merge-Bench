@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+		when(coreRegistry.getCore(projectAUri)).thenReturn(core);
+		return core;
+	}
+
+	@Test
+	void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 0);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(noTestsRun());
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+
+```

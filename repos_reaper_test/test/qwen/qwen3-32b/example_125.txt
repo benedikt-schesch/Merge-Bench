@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the conflict markers intact since the intent appears ambiguous. The conflict shows different branches defining two distinct types for the same method name with different class names:
+
+```java
+    return new GenericRepository<>(null, api);
+  }
+
+  @Provides
+  @PerActivity
+<<<<<<< HEAD
+  ChangeRepositoryStarUseCase provideChangeRepositoryStarRepository() {
+    return new ChangeRepositoryStarUseCase();
+=======
+  ChangeRepositoryStarRepository provideChangeRepositoryStarRepository() {
+    return new ChangeRepositoryStarRepository();
+>>>>>>> 46751d2846d926dab116569835f3660a6297da86
+  }
+
+  @Provides
+  @PerActivity
+<<<<<<< HEAD
+```
+
+The conflict shows:
+1. One side is providing a `ChangeRepositoryStarUseCase` with a constructor that takes no arguments
+2. The other side is providing a `ChangeRepositoryStarRepository` with a default constructor
+3. Both use the method name "provideChangeRepositoryStarRepository" which appears inconsistent with the return types
+
+This represents a naming convention conflict rather than an implementation conflict. The method names should match the return types (e.g., "provideChangeRepositoryStarUseCase" for the first option), but there's not enough context to determine which branch has the correct intent or class structure.

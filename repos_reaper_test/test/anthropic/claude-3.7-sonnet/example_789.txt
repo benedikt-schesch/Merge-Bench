@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'll resolve the merge conflict for the given Java code snippet. Based on the context, it seems that the code from the target branch (d54360...) is adding a new method `deserialize` that's not present in the current HEAD. This is a straightforward addition that doesn't conflict with existing functionality.
+
+```java
+    serializeInto(buf);
+
+    return buf;
+  }
+
+  @Override
+  Object deserialize(final ChannelBuffer buf, int cell_size) {
+    HBaseRpc.ensureNoCell(cell_size);
+    final MutateResponse resp = readProtobuf(buf, MutateResponse.PARSER);
+    return null;
+  }
+
+  /** Serialize the raw underlying `Put' into the given buffer.  */
+  void serializeInto(final ChannelBuffer buf) {
+    buf.writeByte(CODE); // Code for a `Put' parameter.
+    buf.writeByte(CODE); // Code again (see HBASE-2877).
+    buf.writeByte(1);    // Put#PUT_VERSION.  Stick to v1 here for now.
+
+```

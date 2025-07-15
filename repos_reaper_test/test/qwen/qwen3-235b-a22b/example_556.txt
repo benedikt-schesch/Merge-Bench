@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+The provided merge conflict occurs around a single import statement. On one side (HEAD), the line `import org.restlet.ext.apispark.internal.introspection.util.Types;` has been added, whereas the other branch does not contain any change in that location, as indicated by the empty space between the merge conflict markers.
+
+---
+
+### Analysis
+
+This represents a potential conflict between the following two possibilities:
+
+- The `HEAD` branch added this import to support a dependency introduced in its changes, suggesting the `Types` utility is now required in the code that follows.
+- The other branch either did not include or perhaps explicitly removed this line, suggesting a different dependency state is assumed or it's no longer necessary.
+
+Since the snippet only includes the imports and not the full file contents, the actual usage of the `Types` class is **not visible** in this context. Therefore, we cannot determine definitively whether the import is still required or has become obsolete.
+
+---
+
+### Resolution Decision
+
+Given the **uncertainty of semantic intent**—especially when considering whether the `Types` class is used later in the code or whether it's safe to remove the import without introducing a compilation error—the most appropriate course of action is to **retain the original conflict**, as per the instructions for ambiguous merges.
+
+---
+
+### Final Output (Conflict Unresolved)
+
+```java
+import org.restlet.ext.apispark.internal.model.QueryParameter;
+import org.restlet.ext.apispark.internal.model.Representation;
+import org.restlet.ext.apispark.internal.model.Resource;
+import org.restlet.ext.apispark.internal.model.Response;
+import org.restlet.ext.apispark.internal.utils.SampleUtils;
+<<<<<<< HEAD
+import org.restlet.ext.apispark.internal.introspection.util.Types;
+=======
+>>>>>>> 4e8f0414b4f5ea733fcc30dd19944fd1e104bf74
+
+import com.wordnik.swagger.models.ArrayModel;
+import com.wordnik.swagger.models.Contact;
+import com.wordnik.swagger.models.Info;
+import com.wordnik.swagger.models.License;
+```

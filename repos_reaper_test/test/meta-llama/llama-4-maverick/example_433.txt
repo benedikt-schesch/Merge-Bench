@@ -1,0 +1,48 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The provided snippet is in Java and appears to be part of an Android application, given the use of `FragmentManager`, `DialogFragment`, and other Android-specific classes.
+
+1. The first part of the code snippet shows the creation and display of an `AddSourceDialogFragment`. This is not within the conflict section.
+   
+2. The conflict arises around the `showCustomizeDialog()` method.
+
+Let's analyze the conflict:
+
+- On the left side (`HEAD`), there's a method named `showCustomizeDialog()` that creates and shows a `CustomizeFragment`. The intent here seems to be to display a customization dialog or fragment when this method is called.
+
+- On the right side (`308db82053c3707c95c8a180e78ac06043dff2a5`), the `showCustomizeDialog()` method is entirely missing. This suggests that either the method was not present in the branch being merged into the current branch (`HEAD`), or it was removed in that branch.
+
+To resolve this conflict, we need to understand the intent behind both versions:
+
+1. The `HEAD` version intends to keep the `showCustomizeDialog()` method, suggesting that this functionality is required or desired in the current branch.
+
+2. The other version (`308db82053c3707c95c8a180e78ac06043dff2a5`) either never had this method or intentionally removed it, implying that either the functionality is not needed, or it was moved/refactored elsewhere.
+
+Without additional context on why `showCustomizeDialog()` was added or removed, the safest resolution that preserves the functionality from both sides (considering we are looking at a partial snippet and the removal might be part of a larger refactoring) is to check the intent behind the removal or addition.
+
+Since we are not provided with further context or the rest of the codebase, the best course of action would be to return the snippet as is, with the conflict markers, to highlight that there's a semantic conflict that needs manual resolution.
+
+```java
+        AddSourceDialogFragment addSourceDialog = AddSourceDialogFragment.newInstance();
+        addSourceDialog.setTargetFragment(this, 0);
+        addSourceDialog.show(fm, AddSourceDialogFragment.class.getSimpleName());
+    }
+
+<<<<<<< HEAD
+    private void showCustomizeDialog() {
+        FragmentManager fragmentManager = getFragmentManager();
+        CustomizeFragment customizeFragment = new CustomizeFragment();
+        customizeFragment.setTargetFragment(this, 0);
+        customizeFragment.show(fragmentManager, CustomizeFragment.class.getSimpleName());
+    }
+
+=======
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+    private class UpdateBackgroundTask extends TimerTask {
+        @Override
+        public void run() {
+            mHandler.post(new Runnable() {
+                @Override
+```

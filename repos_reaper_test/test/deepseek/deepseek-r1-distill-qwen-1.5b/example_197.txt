@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve the conflict between these two function calls in the same file. Both functions appear to be attempting to instantiate a functional class based on a given alias (~example). Due to their circular dependency, both invocations would execute, conflicting with each other.
+
+Solution: Remove the second function call within `StringUtil` to eliminate the circular reference.
+
+```java
+        }
+        return resolveClassName(className);
+    }
+  
+
+        public Object instantiateFuncFromAlias(String alias) throws IOException {
+        String funcSpec;
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+        if (definedFunctions != null && (funcSpec = definedFunctions.get(alias)) != null)
+            return instantiateFuncFromSpec(funcSpec);
+        else
+            return instantiateFuncFromSpec(alias);
+    }
+```
+
+The merge combines the two function calls into one so that `instantiateFuncFromAlias` only executes once, rather than having concurrent invocations.

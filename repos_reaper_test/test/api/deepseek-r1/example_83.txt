@@ -1,0 +1,21 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java method formatBlackCard. The two versions are using different methods to determine the initial capacity of the ArrayList. The HEAD version uses textParts.size(), while the other branch uses textParts.length(). 
+
+Wait, textParts is a JSONArray. I need to recall what methods JSONArray has. In JSONArray, the method to get the number of elements is length(), right? Because in JSON, arrays don't have a size() method; they use length(). So the correct method here should be length(). 
+
+But the HEAD version is using size(), which might be incorrect if JSONArray doesn't have a size() method. The conflicting change is between the two branches. The correct approach here is to use textParts.length() because that's the proper method for JSONArray. So the merge should take the version from the branch, replacing the HEAD's size() with length().
+
+Therefore, the resolved line should be final List<String> strs = new ArrayList<>(textParts.length());. The rest of the code remains the same. The context around the conflict doesn't change, so the rest of the code is kept as is. There's no ambiguity here since JSONArray uses length(), so the conflict can be resolved by choosing the correct method.</think>
+```java
+  private CustomCardFormatHelper() {
+  }
+
+  public static String formatBlackCard(final JSONArray textParts) {
+    // TODO this is going to need some work to look pretty.
+    final List<String> strs = new ArrayList<>(textParts.length());
+    for (final Object o : textParts) {
+      strs.add((String) o);
+    }
+    final String text = StringUtils.join(strs, "____");
+    return StringEscapeUtils.escapeXml11(text);
+```

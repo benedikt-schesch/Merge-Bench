@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet:
+
+```java
+     * @param function - the new function alias to define.
+     * @param functionSpec - the FuncSpec object representing the name of 
+     * the function class and any arguments to constructor.
+     * 
+     */
+    public void registerFunction(String function, FuncSpec functionSpec) {
+        if (functionSpec == null) {
+            definedFunctions.remove(function);
+        } else {
+            definedFunctions.put(function, functionSpec);
+        }
+```
+
+This resolves the conflict by selecting the version with `FuncSpec` as the parameter type since:
+1. The Javadoc explicitly states that `functionSpec` should be a `FuncSpec` object
+2. The implementation uses `functionSpec` in a way that requires it to be an object (null check and map operations)
+3. The parameter name matches the expected semantic meaning in the Javadoc
+
+The base version using String would make the parameter type inconsistent with both the documentation and the implementation logic.

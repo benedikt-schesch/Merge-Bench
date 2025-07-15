@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The code on both sides of the merge conflict shows different approaches in handling deserialization setup. The left side has a redundant `when` statement and sets up deserializers. The right side utilizes the deserializer to deserialize the stream and perform assertions. To resolve this, the redundant `when` is removed, aligning both sides to properly set up the deserializer and use it for deserialization.
+
+```java
+		when(provider.parameterNamesFor(bark.getMethod())).thenReturn(new String[] { "dog" });
+
+		List<JsonDeserializer> deserializers = new ArrayList<JsonDeserializer>();
+		deserializers.add(new br.com.caelum.vraptor.serialization.iso8601.gson.CalendarISO8601Deserializer(new ISO8601Util()));
+
+		deserializer = new GsonDeserialization(provider, new DefaultJsonDeserializers(deserializers), request);
+
+		Object[] deserialized = deserializer.deserialize(stream, bark);
+
+		assertThat(deserialized.length, is(1));
+		assertThat(deserialized[0], is(instanceOf(Dog.class)));
+		Dog dog = (Dog) deserialized[0];
+```

@@ -1,0 +1,16 @@
+<think>
+Okay, let's look at this merge conflict. The code has a conflict between the HEAD and the other branch. In the HEAD version, there's an else if block that checks the same condition as the if block above it. Wait, the if condition is checking if maxUriLength is greater than 0 and uriString.length is greater than maxUriLength. Then the else if is checking the exact same condition. That doesn't make sense because if the first condition is true, the else if would never be reached. So maybe that's a mistake.
+
+The other branch (from commit cbc12a8) removes that else if block entirely. So the conflict is between keeping that redundant else if or removing it. The intent here seems to be that the else if is redundant and should be removed. Because after the initial if block, checking the same condition again in else if is impossible—it can't be true. So the correct resolution would be to remove the else if block, keeping only the initial if. That way, if the condition isn't met, it proceeds to the else block. Therefore, the merge conflict should be resolved by accepting the version from the other branch, which deletes the else if. So the resolved code would have the if block and then the else, without the redundant else if. That makes the code correct and removes the duplicate check.</think>
+```java
+                        if (maxUriLength > 0 && uriString.length() > maxUriLength){
+                            if (verbose){
+                                System.err.println("[WARNING] File " + newUrl + " creates a data URI larger than " + maxUriLength + " bytes. Skipping.");
+                            }      
+                            builder.append(url);
+                        } else {
+
+                            /*
+                             * Determine what to do. Eventually, you should be able to
+                             * have both a data URI and MHTML in the same file.
+```

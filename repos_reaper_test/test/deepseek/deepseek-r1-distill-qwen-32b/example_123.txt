@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Let me analyze this merge conflict step by step:
+
+1. **Context**: The code is setting up a ContentEditorPresenter and configuring the toolbar.
+
+2. **Conflict Analysis**:
+- The HEAD version initializes the presenter and sets up the toolbar menu.
+- The f8f91f1 version adds code to set the toolbar's background color.
+
+3. **Intent**:
+- Both changes are complementary - they're configuring different aspects of the toolbar
+- Neither change interferes with the other
+
+4. **Resolution**:
+- We should merge both changes as they provide separate but related configurations
+- The background color setup should be placed before the menu inflation
+
+Here's the resolved code:
+
+```java
+      Scheduler observeOn = AndroidSchedulers.mainThread();
+      Scheduler subscribeOn = Schedulers.io();
+      contentEditorPresenter = new ContentEditorPresenter(getString(R.string.imgur_client_id), new ImgurUpload(), observeOn, subscribeOn);
+
+      if (getSupportActionBar() != null) {
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(AttributesUtils.getPrimaryColor(this)));
+      }
+
+      toolbarExtra.inflateMenu(R.menu.content_editor_extra);
+      toolbarExtra.setOnMenuItemClickListener(this);
+
+      final String hint = getIntent().getExtras().getString(HINT);
+```

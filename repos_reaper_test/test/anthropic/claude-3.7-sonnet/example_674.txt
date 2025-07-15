@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, one version includes a `displayName` parameter and a `callbackUrl` parameter that the other doesn't. The difference appears to be in the constructor parameters for `AccountProviderParameters`.
+
+Here's the resolved snippet:
+
+```java
+	}
+	
+	private AccountProviderParameters getParameters(final String provider) {
+		return jdbcTemplate.queryForObject(SELECT_ACCOUNT_PROVIDER_BY_NAME, new RowMapper<AccountProviderParameters>() {
+			public AccountProviderParameters mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccountProviderParameters(provider, rs.getString("displayName"), encryptor.decrypt(rs
+						.getString("apiKey")), encryptor.decrypt(rs.getString("secret")), rs.getLong("appId"), rs
+						.getString("requestTokenUrl"), rs.getString("authorizeUrl"), rs.getString("callbackUrl"), rs
+						.getString("accessTokenUrl"));
+			}
+		}, provider);
+	}
+
+```

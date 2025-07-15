@@ -1,0 +1,249 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is in the method getLoadLocation. Both sides are trying to deserialize the PIG_INPUTS from the configuration. 
+
+Looking at the differences between HEAD and the other branch. The HEAD version has:
+
+ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+
+And the other branch has:
+
+ArrayList<FileSpec> inputs = 
+                (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                        conf.get(PIG_INPUTS));
+
+So the only difference is the indentation. The HEAD uses one level of indentation for the deserialize line, and the other branch uses two levels. The lines are otherwise identical. 
+
+Since both changes are about formatting, not the actual logic, the semantic intent is the same. The correct resolution would be to pick one of the indentations. Maybe check which one is more consistent with the surrounding code's style. 
+
+Looking at the surrounding code, like the return statement and other method definitions. If the project uses a specific indentation style, like 4 spaces or 8 spaces, but here the lines are wrapped. The original code in HEAD has the deserialize line indented once under the assignment, while the other branch indents it twice. 
+
+Alternatively, maybe the other branch's version aligns better with the project's coding standards, perhaps using an 8-space indent for continued lines. But without more context, it's hard to tell. However, since the conflict is purely about whitespace, it's safe to choose either, but perhaps the second one is more correct if the project uses a deeper indentation for line continuations. 
+
+Wait, but in the HEAD version, the line starts after the assignment, so maybe the deserialize is indented by 12 spaces (assuming 4-space tabs, but it's hard to tell). The other branch indents it more, maybe 16 spaces. But perhaps the correct approach is to make sure the code is properly aligned. However, since the user said to preserve spacing as is if unsure, but if the intent is the same, resolve by choosing the correct indentation. 
+
+Alternatively, maybe the difference is just in the line breaks and spacing. For example, the HEAD has "deserialize(" on the next line with one indent, and the conf.get is on the next line with another indent. The other branch does the same but with an extra indent. 
+
+Wait, looking at the code:
+
+HEAD:
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+
+Other branch:
+        ArrayList<FileSpec> inputs = 
+                (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                        conf.get(PIG_INPUTS));
+
+In the HEAD, the deserialize line is indented one level (maybe 4 spaces) from the assignment. The conf.get line is indented another level (maybe 8 spaces). In the other branch, the deserialize line is indented two levels (8 spaces), and the conf.get is indented three levels (12 spaces). 
+
+But if the project's code style uses 4 spaces per indent, then in the HEAD version, the lines are indented once and then twice. The other branch indents twice and thrice. 
+
+But maybe both versions are acceptable, but the conflict arises from different formatting preferences. Since the semantic intent is the same, the correct resolution is to pick one of the formatting styles. Alternatively, maybe the correct code is to have consistent indentation. 
+
+Alternatively, perhaps the second version (from the other branch) adds an extra space before the assignment operator. Wait, in the HEAD, it's "inputs =", and in the other branch, it's "inputs = " with a space after the equals. Wait, looking back:
+
+HEAD has:
+ArrayList<FileSpec> inputs =
+            (ArrayList<...>
+
+Other branch:
+ArrayList<FileSpec> inputs = 
+                (ArrayList<...>
+
+So the HEAD has the line break after the =, with the deserialize starting on the next line. The other branch has a space after the = and then the line break. That's a minor difference. But in Java, that's just a formatting difference, no semantic impact. 
+
+So the conflict is purely about code formatting. Since the user said to resolve based on intent and semantics, and both sides are doing the same thing, the correct approach is to choose whichever formatting is more consistent with the project's style. But since I don't have more context, I should check if the code around this area uses similar formatting. 
+
+Looking at the surrounding code, for example, the method before this is:
+
+    @SuppressWarnings("unchecked")
+    private static String getLoadLocation(int inputIndex, Configuration conf) throws IOException {
+
+And after the conflict, the return statement is:
+
+        return inputs.get(inputIndex).getFileName();
+
+So the existing code's indentation style is probably using 4 spaces per indent. The HEAD version uses one indent for the deserialize line, and the other branch uses two. If the surrounding code uses one indent for line continuations, then HEAD is correct. Otherwise, if the project uses two indents, then the other branch is correct. 
+
+But since I can't see more context, maybe the best way is to choose the version that has proper alignment. Alternatively, since both are correct semantically, maybe just pick one. 
+
+Alternatively, perhaps the only difference is that in the other branch, the line after the assignment is indented with more spaces. But since the user wants to resolve the conflict, and there's no semantic difference, I can merge the two by choosing either. 
+
+But according to the user's instructions: if unsure, return the same snippet with the conflict. However, if the intent is clear and the changes are purely formatting, resolve by choosing one. 
+
+But the user says to think in terms of intent and semantics. Both versions are trying to get the inputs from the configuration. The code is the same except for indentation. So the correct resolution is to accept one of the versions. 
+
+In this case, maybe the second version (from the other branch) has more consistent indentation. For example, the line after the assignment is indented by 8 spaces (two levels), and the conf.get line is indented by 12 (three levels). If that's the project's standard, then that's better. Alternatively, maybe the HEAD version is correct. 
+
+But without more context, the safest way is to choose the version that's more readable. Alternatively, perhaps the lines should be aligned for readability. 
+
+Alternatively, maybe the only difference is that in the other branch, the assignment line ends with a space, but that's trivial. 
+
+Since the code's functionality is identical, the conflict can be resolved by choosing either version. Let me check if there's any other difference. The line breaks are the same. The only difference is the indentation level of the lines after the assignment. 
+
+In the HEAD, after the assignment, the deserialize line is indented once (4 spaces?), and the conf.get is indented twice (8 spaces). In the other branch, deserialize is indented twice (8 spaces), conf.get thrice (12). 
+
+If the project uses 4 spaces per indent, then the HEAD version is correct. For example:
+
+HEAD:
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+
+Which would be:
+
+Line 1: assignment starts, line breaks after =
+Line 2: deserialize call indented by 4 spaces (one level)
+Line 3: conf.get indented by 8 spaces (two levels)
+
+Other branch:
+
+        ArrayList<FileSpec> inputs = 
+                (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                        conf.get(PIG_INPUTS));
+
+Line 1: assignment ends with a space and line break
+Line 2: deserialize indented by 8 spaces (two levels)
+Line 3: conf.get indented by 12 spaces (three levels)
+
+If the surrounding code uses one level of indent for line continuations, then HEAD is correct. Otherwise, if the project uses two levels, then the other branch is correct. 
+
+But since this is a merge conflict, perhaps the correct approach is to accept both changes, but that's not possible. Alternatively, the correct indentation is the one from the other branch. 
+
+Alternatively, maybe the original code in HEAD had a certain indentation, and the other branch adjusted it for consistency. 
+
+But without more context, I should proceed to resolve the conflict by choosing the version that seems more standard. In Java, it's common to indent continuation lines by one level. So perhaps the HEAD version is correct. 
+
+Alternatively, maybe the other branch is fixing the indentation. For example, if the deserialize line was previously not properly indented, and the other branch adds an extra indent. 
+
+But in the absence of project-specific style guidelines, the merge can be resolved by selecting the most reasonable indentation. 
+
+Given that, perhaps the correct resolution is to take the other branch's version, as it adds proper indentation. Or maybe both are acceptable. 
+
+Alternatively, the user's instruction says to preserve spacing as is if unsure. But in the case where the conflict is purely about indentation and there's no semantic difference, the correct resolution is to pick one. 
+
+In this case, since the code is identical except for indentation, the conflict can be resolved by choosing either. However, in the absence of more information, perhaps the best way is to merge the two by taking the second version's indentation. 
+
+Wait, but the user says "make sure you do not modify the context at all and preserve the spacing as is." Only if I'm not sure or the intent is ambiguous, return the same snippet with the conflict. 
+
+But the intent here is not ambiguous. Both sides are doing the same thing with different indentation. Therefore, the correct resolution is to pick one of the versions. Since the user asked to think in terms of intent and semantics, which are the same, the merge can be resolved by selecting either. 
+
+But how to decide which one? Maybe the second version (from the branch 1cb2531c) has a more consistent indentation with the rest of the code. 
+
+Alternatively, perhaps the lines were changed in the other branch to fix indentation. 
+
+Given that, perhaps the best approach is to choose the version from the other branch, as it's likely a style fix. But since I don't have the full context, maybe the safest way is to keep the HEAD version. 
+
+Alternatively, maybe the other branch's indentation is more aligned. Let's look at the code again. 
+
+Original HEAD version:
+
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+
+Other branch:
+
+        ArrayList<FileSpec> inputs = 
+                (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                        conf.get(PIG_INPUTS));
+
+In the other branch, the deserialize line is indented two levels (assuming 4 spaces per level), and the conf.get line three levels. That might be over-indented. The HEAD version has deserialize indented one level and conf.get two levels. 
+
+In Java, typically, when a line is split, the continuation lines are indented one level more than the previous line. So the assignment line is split, so the deserialize line would be indented one level. Then, the deserialize method call is split into two lines, so the conf.get line would be indented another level. 
+
+So HEAD's indentation is:
+
+- Line 1: assignment split after =, next line indented once.
+- Line 2: deserialize call split after (, next line indented once more.
+
+Which would be:
+
+inputs = 
+    (ArrayList...) ObjectSerializer.deserialize(
+        conf.get(...));
+
+Which is standard. 
+
+The other branch's version:
+
+inputs = 
+        (ArrayList...) ...deserialize(
+                conf.get(...));
+
+Which is two levels for the deserialize line, and three for conf.get. That might be over-indented. 
+
+So the correct indentation is the HEAD version. Therefore, the conflict should be resolved by keeping the HEAD version. 
+
+Wait, but in the original conflict, the other branch's code is more indented. But if the standard is to indent continuation lines by one level, then HEAD is correct. 
+
+Alternatively, perhaps the other branch's code was reformatted to match a different style. But without knowing, I should prefer the HEAD version. 
+
+But perhaps both are acceptable. However, given that, since the user instructs to resolve if possible, and the intent is the same, then pick one. 
+
+In conclusion, the correct resolution is to keep the HEAD version. Or maybe the other branch's version. 
+
+Alternatively, perhaps the code in the other branch fixes an indentation mistake. 
+
+But since I can't know for sure, perhaps the best way is to accept the other branch's version. But I'm not sure. 
+
+Wait, but the user says "if you are not sure on how to resolve the conflict or if the intent is ambiguous, please return the same snippet with the conflict." 
+
+In this case, the intent is the same (both versions do the same thing), but the conflict is purely about formatting. Since the user wants the conflict resolved if possible, then I should merge the two by choosing one. 
+
+But how to choose? The answer is to select the version that's more correct in terms of code style. 
+
+Since in Java, continuation lines are typically indented by one level (4 spaces) from the previous line. 
+
+So the assignment line is split after the =, so the next line is indented one level. Then, the deserialize call is split over two lines, so each subsequent line is indented one more level. 
+
+So the HEAD's indentation is correct. 
+
+Therefore, the conflict should be resolved by keeping the HEAD version. 
+
+Wait, let's check:
+
+HEAD:
+
+ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+
+Assuming that the first line is at indentation level 0, then the next line is indented once (4 spaces), then the deserialize line is indented once (4 spaces), and the conf.get line is indented twice (8 spaces). 
+
+Wait, maybe the deserialize line is part of the assignment. So after the =, the deserialize is part of the assignment. Therefore, the deserialize line should be indented one level. Then, the deserialize method call has parameters split into the next line, which should be indented two levels. 
+
+So the conf.get line is part of the deserialize parameters, so it should be indented two levels. 
+
+Therefore, the HEAD version has the deserialize line indented once (correct), and the conf.get indented twice (correct). 
+
+The other branch's version has deserialize indented twice and conf.get thrice. That's over-indented. 
+
+Therefore, the correct resolution is to keep the HEAD version. 
+
+Thus, the resolved code would be:
+
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+
+And remove the conflict markers.</think>
+```java
+        return (LoadFunc) PigContext.instantiateFuncFromSpec(loadFuncSpec);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String getLoadLocation(int inputIndex, Configuration conf) throws IOException {
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+        return inputs.get(inputIndex).getFileName();
+    }
+
+    /**
+     * Pass loader signature to LoadFunc and to InputFormat through
+
+```

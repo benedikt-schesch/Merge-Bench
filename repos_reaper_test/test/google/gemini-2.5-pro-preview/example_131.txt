@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+      String query = "DATA = LOAD 'empty' USING mock.Storage();"
+        + "A = rank DATA;"
+        + "store A into 'empty_result' using mock.Storage();";
+
+      Util.registerMultiLineQuery(pigServer, query);
+
+      Multiset<Tuple> expected = ImmutableMultiset.of();
+      verifyExpected(data.get("empty_result"), expected);
+    }
+
+    @Test
+    public void testRankWithSplitInMap() throws Exception {
+        String query = "R1 = LOAD 'testsplit' USING mock.Storage() AS (a:int,b:int);"
+
+```

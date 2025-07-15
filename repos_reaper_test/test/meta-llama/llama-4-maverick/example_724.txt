@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, we first need to understand the intent and semantics of both versions of the `isEquals` method.
+
+The version from `HEAD` (the local branch) checks if `obj1` is not null, and if so, it returns the result of `obj1.equals(obj2)`. If `obj1` is null, it returns whether `obj2` is also null. This is a common idiom for checking equality in Java where null is considered equal to null, and a non-null object is equal to another object if their `equals` method returns true.
+
+The version from `41bc0309ba863dbff4e537b458048d65f4238312` (the branch being merged) achieves the same result but with a conditional expression (ternary operator). It checks if `a` is null, returning whether `b` is null if so, or the result of `a.equals(b)` if `a` is not null.
+
+Both implementations have the same intent and semantics: to correctly compare two objects for equality, handling the case where either or both are null.
+
+Since both versions are semantically equivalent and achieve the same result, we can choose either one for the resolution. However, to maintain consistency with the rest of the code (e.g., the naming convention used in other methods), we should consider the naming and style used elsewhere.
+
+The original code snippet uses `obj1` and `obj2` as parameter names, while the incoming change uses `a` and `b`. To resolve the conflict, we can pick one version. Let's choose the version with the ternary operator because it is a more concise way to express the same logic.
+
+Here is the resolved code snippet in markdown code syntax as requested:
+```java
+
+    public static boolean isLeast(int[] objs, int count) {
+        return null != objs && objs.length >= count;
+    }
+
+    public static boolean isEquals(Object a, Object b) {
+        return (a == null) ? (b == null) : a.equals(b);
+    }
+
+    public static String trim(CharSequence charSequence) {
+        return null == charSequence ? null : charSequence.toString().trim();
+    }
+
+```

@@ -1,0 +1,54 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the snippet and the changes introduced by both sides of the merge.
+
+The original code snippet is in Java and appears to be part of an Android activity. It involves setting up a presenter for a content editor, configuring schedulers for RxJava operations, and customizing the action bar and toolbar.
+
+The conflict arises from the introduction of a new conditional statement that checks if the support action bar is not null before attempting to set its background drawable. This change is introduced in the `f8f91f1d455f6842ca57b8294f6a263ff0cde1e4` commit.
+
+Let's examine the code before and after the conflict:
+
+```java
+Scheduler observeOn = AndroidSchedulers.mainThread();
+Scheduler subscribeOn = Schedulers.io();
+contentEditorPresenter = new ContentEditorPresenter(getString(R.string.imgur_client_id), new ImgurUpload(), observeOn, subscribeOn);
+
+<<<<<<< HEAD
+=======
+if (getSupportActionBar() != null) {
+  getSupportActionBar().setBackgroundDrawable(new ColorDrawable(AttributesUtils.getPrimaryColor(this)));
+}
+
+>>>>>>> f8f91f1d455f6842ca57b8294f6a263ff0cde1e4
+toolbarExtra.inflateMenu(R.menu.content_editor_extra);
+toolbarExtra.setOnMenuItemClickListener(this);
+
+final String hint = getIntent().getExtras().getString(HINT);
+```
+
+The code on the left side of the conflict (`HEAD`) continues with setting up `toolbarExtra` and retrieving a hint from the intent extras without any interruptions.
+
+The change introduced on the right side (`f8f91f1d455f6842ca57b8294f6a263ff0cde1e4`) adds a check for the support action bar and sets its background color if it's not null. This change seems to be related to customizing the action bar's appearance.
+
+To resolve this conflict, we should consider whether the customization of the action bar's background color is essential and if it conflicts with any other changes or functionality introduced by the `HEAD` side.
+
+Upon inspection, it seems that the changes are not directly related; one is about setting up a presenter and toolbar, and the other is about customizing the action bar. Therefore, we can likely integrate both changes without semantic conflicts.
+
+Here's the resolved code snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+
+      Scheduler observeOn = AndroidSchedulers.mainThread();
+      Scheduler subscribeOn = Schedulers.io();
+      contentEditorPresenter = new ContentEditorPresenter(getString(R.string.imgur_client_id), new ImgurUpload(), observeOn, subscribeOn);
+
+      if (getSupportActionBar() != null) {
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(AttributesUtils.getPrimaryColor(this)));
+      }
+
+      toolbarExtra.inflateMenu(R.menu.content_editor_extra);
+      toolbarExtra.setOnMenuItemClickListener(this);
+
+      final String hint = getIntent().getExtras().getString(HINT);
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The correct resolution involves recognizing the intent behind both code variants: ensuring that the buffer contains sufficient readable bytes to process the length of data being requested. The key insight comes from the comment about enabling **streaming RPCs**, which indicates that the authors of the merging branch (i.e., `ensureReadable`) were evolving the implementation to better support partial deserialization as data arrives, instead of assuming all the data is already present.
+
+Using `ensureReadable(buf, length)` directly expresses this intent more clearly and appropriately than the pattern of marking, skipping, and resetting. It also encapsulates the underlying logic for waiting, reading additional data, or throwing, depending on the buffer's implementation—making it more robust, maintainable, and in line with the comment in the original context.
+
+Thus, the merge conflict is resolved by embracing the `ensureReadable(buf, length)` call as the more semantically appropriate and future-proof solution.
+
+---
+
+### ✅ Final Resolved Snippet:
+
+```java
+      try {
+        HBaseRpc.checkArrayLength(buf, length);
+        // Make sure we have that many bytes readable.
+        // This will have to change to be able to do streaming RPCs where we
+        // deserialize parts of the response as it comes off the wire.
+        ensureReadable(buf, length);
+      } catch (IllegalArgumentException e) {
+        LOG.error("WTF?  RPC #" + rpcid + ": ", e);
+      }
+    }
+```

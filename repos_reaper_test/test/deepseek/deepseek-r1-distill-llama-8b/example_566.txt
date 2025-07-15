@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs because both sides of the code are asserting the value of the `counter` variable using different assertion methods. On the left side, it uses `assertThat(counter).isEqualTo(18)` (likely from [AssertJ](https://assertj.com)), while the right side uses `assertEquals(18, counter)` from JUnit.
+
+Since the surrounding code already uses standard JUnit assertions, it's appropriate to use `assertEquals()` to maintain consistency. Therefore, the left side is replaced to match this convention.
+
+Here's the resolved code:
+
+```java
+      for (FacebookType type : page) {
+        counter++;
+      }
+    }
+
+    assertEquals(18, counter);
+  }
+
+  @Test
+  public void checkIterator_snapshot() {
+    Connection<FacebookType> connection = create3PageConnection();
+```

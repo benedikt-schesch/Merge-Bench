@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+>>>>>>> The merge conflict involves how the GruntParser is initialized. One side uses `new GruntParser(new StringReader(script))` while the other uses `new GruntParser(new StringReader(script), myPig)`. The correct resolution depends on the purpose of the `myPig` argument. Assuming `myPig` is a Pig instance that's necessary for the parser's functionality, the version with `myPig` should be used.
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "dump b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

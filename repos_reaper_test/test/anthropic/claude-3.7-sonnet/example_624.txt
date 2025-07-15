@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that one branch wants to add a `serialVersionUID` field while the other branch removes it. Since this class is extending `AbstractFacebookType` which likely implements `Serializable`, it's generally good practice to include an explicit `serialVersionUID` for serializable classes. I'll resolve by keeping the serialVersionUID definition.
+
+```java
+    }
+  }
+
+  public static class Targeting extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * @RestFB.GraphApi.Since 2.8
+     */
+    @Getter
+    @Setter
+
+```

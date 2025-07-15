@@ -1,0 +1,29 @@
+<think>
+Okay, let's take a look at this merge conflict. The user is trying to merge two branches, and there's a conflict in the import statements of a Java file. The HEAD branch added an import for android.gesture.GestureOverlayView, while the other branch (9963fea) added imports for android.content.Context and android.content.Intent.
+
+First, I need to understand the context. Both sides are adding different imports. Since these are in the same block of imports, the conflict arises because both changes were made to the same part of the file but with different imports. 
+
+The key here is that these imports don't conflict in terms of functionality. GestureOverlayView is related to gestures, while Context and Intent are fundamental Android components. It's likely that both sets of imports are needed for different parts of the code. 
+
+The original order in the code has the HEAD adding GestureOverlayView after Activity, and the other branch adds Context and Intent after Activity. The correct resolution would be to include all three imports. Since they're in the same section (android.* packages), they should be ordered alphabetically. 
+
+Looking at the order: android.app.Activity comes first. Then, the next imports would be android.content.Context, android.content.Intent, followed by android.gesture.GestureOverlayView. Then the rest like android.os.* etc.
+
+So the merged imports should include all three, ordered alphabetically within their package hierarchy. Therefore, the conflict can be resolved by keeping both changes and arranging the new imports in the correct order.
+
+No other changes are needed in the context. The surrounding lines like the other imports and the rest of the code remain the same. There's no ambiguity here because the imports are additive and don't interfere with each other. So the resolved code should have all the necessary imports from both branches.</think>
+```java
+import com.teleca.jamendo.widget.OnAlbumClickListener;
+import com.teleca.jamendo.widget.ProgressBar;
+import com.teleca.jamendo.R;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.gesture.GestureOverlayView;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.Log;
+```

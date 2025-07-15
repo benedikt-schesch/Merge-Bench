@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Here's the code snippet with the merge conflict resolved:
+
+```java
+        if (dtzStr != null && dtzStr.length() > 0) {
+            // ensure that the internal timezone is uniformly in UTC offset style
+            DateTimeZone.setDefault(DateTimeZone.forOffsetMillis(DateTimeZone.forID(dtzStr).getOffset(null)));
+        }
+
+        boolean aggregateWarning = "true".equalsIgnoreCase(conf.get("aggregate.warning"));
+        PigStatusReporter pigStatusReporter = PigStatusReporter.getInstance();
+        pigStatusReporter.setContext(new TaskContext<FetchContext>(new FetchContext()));
+        PigHadoopLogger pigHadoopLogger = PigHadoopLogger.getInstance();
+        pigHadoopLogger.setReporter(pigStatusReporter);
+        pigHadoopLogger.setAggregate(aggregateWarning);
+```
+
+I've resolved the conflict by choosing the incoming change (from 57eb1bac81a4e03e9838c06f642a1432dbbe4e1b). This looks like a refactoring where the property is now being retrieved from a `conf` object rather than from `pigContext.getProperties()`. The incoming change is likely more up-to-date with how configuration properties are accessed in the codebase.

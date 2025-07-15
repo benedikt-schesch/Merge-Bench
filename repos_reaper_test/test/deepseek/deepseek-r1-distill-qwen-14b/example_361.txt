@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to determine the correct approach for constructing the HTTP request and handling the parser. The new change encapsulates the parser with the specific request and uses `GenericUrl`, which is more appropriate for this operation. 
+
+Here is the resolved code:
+
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public String exchangeForSessionToken() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubSessionToken"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+    SessionTokenResponse sessionTokenResponse =
+        request.execute().parseAs(SessionTokenResponse.class);
+    String sessionToken = sessionTokenResponse.sessionToken;
+    setToken(sessionToken);
+    return sessionToken;
+  }
+```

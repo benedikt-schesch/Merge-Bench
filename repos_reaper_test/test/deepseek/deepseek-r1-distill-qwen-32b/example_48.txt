@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+```java
+    for (final Player player : playersCopy) {
+      playerNames.add(player.getUser().getNickname());
+    }
+    info.put(GameInfo.PLAYERS, playerNames);
+
+    final User[] spectatorsCopy = spectators.toArray(new User[0]);
+    final List<String> spectatorNames = new ArrayList<>(spectatorsCopy.length);
+    for (final User spectator : spectatorsCopy) {
+      spectatorNames.add(spectator.getNickname());
+    }
+    info.put(GameInfo.SPECTATORS, spectatorNames);
+```
+
+The changes made are:
+1. Changed `spectators.toArray(new User[spectators.size()])` to `spectators.toArray(new User[0])` as this is a safer way to convert a collection to an array
+2. Changed `new ArrayList<String>(spectatorsCopy.length)` to the diamond operator shorthand `new ArrayList<>(spectatorsCopy.length)`  
+
+Both changes are semantic improvements and don't conflict with each other, so I've integrated them together.

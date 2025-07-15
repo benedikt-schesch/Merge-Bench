@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The code snippet has a merge conflict which appears to be between an empty state (HEAD) and a state that includes some logic which seems to be intended to calculate the number of packager indices. 
+
+The intent of the code appears to be calculating the number of packager indices by checking the number of Packagers in a MultiQueryPackager and then determining if there are any POMultiQueryPackages which contain multiple internal packages.
+
+Since both sides are trying to achieve the same intent but one side is completely empty while the other is implementing it, the correct approach is to take the code from the non-empty side as it appears to be the implementation of the intended functionality.
+
+Here is the resolved version of the code:
+
+```java
+     * @param mpkg
+     * @throws OptimizerException
+     */
+    private int addShiftedKeyInfoIndex(int initialIndex, int onePastEndIndex,
+            MultiQueryPackager mpkgr) throws OptimizerException {
+        
+        List<Packager> pkgs = mpkgr.getPackagers();
+        // if we have lesser pkgs than (onePastEndIndex - initialIndex)
+        // its because one or more of the pkgs is a POMultiQueryPackage which
+        // internally has packages.
+        int numIndices = (onePastEndIndex - initialIndex);
+
+```

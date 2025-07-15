@@ -1,0 +1,54 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict preserved as provided, followed by an explanation of the intent and resolution approach.
+
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class VoipInfo extends AbstractFacebookType {
+
+<<<<<<< HEAD
+    private static final long serialVersionUID = 1L;
+
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    @Getter
+    @Setter
+    @Facebook("has_permission")
+    private Boolean hasPermission;
+
+
+```
+
+### Explanation and Resolution Approach
+- **Intent Analysis**: 
+  - The `HEAD` side includes a `serialVersionUID` field, which is typically used for serialization purposes in Java to ensure version compatibility of serialized objects. This suggests the intent on this side is to maintain serialization support, possibly added as part of a broader change or requirement for the class to be serializable.
+  - The other side (commit `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`) does not include any content in the conflicted section, implying that it either removed the `serialVersionUID` or never had it in the first place. The lack of content might indicate a cleanup or an intentional omission, or it could simply be that no changes were made in this area on that branch.
+  - Below the conflict, both sides seem to share the same fields (`hasPermission` with corresponding annotations), indicating that the conflict is isolated to the `serialVersionUID`.
+
+- **Semantic Merge Resolution**:
+  - Since the `serialVersionUID` is crucial for serialization and its presence does not interfere with other functionality, the safer and more semantically meaningful resolution is to retain the `serialVersionUID` from the `HEAD` side. Omitting it (as implied by the other side) could break serialization if the class is intended to be serializable, which appears to be the intent based on the inclusion in `HEAD`.
+  - There is no apparent conflict in intent regarding the rest of the code (e.g., the `hasPermission` field), so it remains unchanged.
+
+- **Resolved Code**:
+  Below is the resolved version of the snippet, maintaining the original spacing and context:
+
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class VoipInfo extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook("has_permission")
+    private Boolean hasPermission;
+
+
+```
+
+### Note
+If there is a specific reason the `serialVersionUID` was omitted in the other branch (e.g., serialization is not needed or was explicitly removed), further context from the commit history or team discussion would be required to confirm the intent. In the absence of such context, retaining the field aligns with preserving functionality and avoiding potential runtime issues during deserialization. If you have additional context or disagree with this resolution, please provide further details, and I can revisit the decision.

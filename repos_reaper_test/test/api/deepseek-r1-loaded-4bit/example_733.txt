@@ -1,0 +1,22 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is dealing with orientation compensation. The conflict is between the HEAD version and the branch version.
+
+Looking at the HEAD side, the line is: if (orientationCompensation == 90). Then, the line below adds 180 to orientationCompensation. The branch side has the same condition but adds curly braces, and the else if is the same in both.
+
+The main difference is the addition of curly braces in the branch version. Java allows if statements without braces, but using braces is generally better practice for clarity and to avoid potential errors. The branch version is adding braces, which is a stylistic improvement. 
+
+However, the HEAD version might have been written without braces because the statement is a single line. But since the branch adds braces, merging that in would be acceptable. The logic in both cases is the same: when orientationCompensation is 90, add 180, and if it's 270, subtract 180. 
+
+So the resolution is to keep the branch's version with the braces because it's more readable and doesn't change the functionality. The surrounding context doesn't seem to affect this, and there's no semantic conflict here. The code will behave the same way, just with better formatting.</think>
+```java
+                    && config.orientation == Configuration.ORIENTATION_PORTRAIT)) {
+                nativeLandscape = true;
+            }
+
+            int orientationCompensation = mOrientation; // + (nativeLandscape ? 0 : 90);
+            if (orientationCompensation == 90) {
+                orientationCompensation += 180;
+            } else if (orientationCompensation == 270) {
+                orientationCompensation -= 180;
+            }
+```

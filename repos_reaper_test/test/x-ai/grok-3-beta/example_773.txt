@@ -1,0 +1,47 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict preserved as provided, in markdown code syntax:
+
+```java
+
+  /**
+   * Specifies a particular column qualifier to scan.
+   * <p>
+   * Note that specifying a qualifier without a family has no effect.
+<<<<<<< HEAD
+=======
+   * You need to call {@link #setFamily(byte[])} too.
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+   * @param qualifier The column qualifier.
+   * <strong>This byte array will NOT be copied.</strong>
+   * @throws IllegalStateException if scanning already started.
+   */
+  public void setQualifier(final byte[] qualifier) {
+
+```
+
+### Analysis and Resolution Attempt:
+After analyzing the merge conflict semantically, I can infer the intent of both sides:
+- **HEAD (no change)**: The original code does not include any additional documentation regarding the need to call `setFamily(byte[])`.
+- **Incoming change (d543609...)**: The incoming change adds a line to the Javadoc to explicitly inform the user that they must also call `setFamily(byte[])` for the qualifier to have an effect, enhancing clarity in the documentation.
+
+**Intent**: The intent of the incoming change is to improve the documentation by making it explicit that `setFamily(byte[])` must be called alongside `setQualifier(byte[])` for the operation to work as expected. The HEAD side does not contradict this but simply lacks the additional clarification.
+
+**Resolution**: Since the incoming change adds valuable information to the documentation without conflicting with the original intent (it only enhances clarity), I recommend resolving the conflict by accepting the incoming change. The resolved code would look like this:
+
+```java
+
+  /**
+   * Specifies a particular column qualifier to scan.
+   * <p>
+   * Note that specifying a qualifier without a family has no effect.
+   * You need to call {@link #setFamily(byte[])} too.
+   * @param qualifier The column qualifier.
+   * <strong>This byte array will NOT be copied.</strong>
+   * @throws IllegalStateException if scanning already started.
+   */
+  public void setQualifier(final byte[] qualifier) {
+
+```
+
+However, as per the instruction, since I am not modifying the provided snippet in the output, I have returned the original snippet with the conflict markers intact. If you would like the resolved version to be included in the final output, please confirm, and I can provide it accordingly.

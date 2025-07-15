@@ -1,0 +1,48 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the snippet and understand the intent and semantics of both sides of the merge.
+
+The code snippet is in Java and appears to be part of a test class, given the presence of `@Test` annotations. The conflict arises in a test method named `shouldUpdateCoreOnAutoBuild`.
+
+On the left side of the conflict (between `<<<<<<< HEAD` and `=======`), the method is declared as:
+```java
+void shouldUpdateCoreOnAutoBuild() throws CoreException {
+    InfinitestCore core = prepateCore(projectAUri(), 10);
+```
+
+On the right side (between `=======` and `>>>>>>>`), the method is declared as:
+```java
+public void shouldUpdateCoreOnAutoBuild() throws CoreException {
+    InfinitestCore core = prepareCore(projectAUri(), 10);
+```
+
+The differences are:
+1. Access modifier: The left side has default (package-private) access, while the right side has `public` access.
+2. Method name and parameter remain the same on both sides.
+3. There's a typo correction: `prepateCore` is corrected to `prepareCore`.
+
+To resolve this conflict, we should consider the intent behind the changes on both sides. The correction of `prepateCore` to `prepareCore` is clearly a bug fix and improves the code. The change from default access to `public` access modifier could be related to accessibility requirements or test framework specifications.
+
+Since the test method is likely intended to be executed by a test framework, it is reasonable to make it `public` as test frameworks typically require test methods to be `public`. Therefore, making the method `public` seems to be a valid change.
+
+However, we need to ensure that the rest of the method's behavior is correctly represented by the changes. Both versions of the method seem to be testing similar functionality, with the right side having the correction of the `prepareCore` method call.
+
+Thus, considering the intent and semantics, the resolved code should incorporate both the correction of the typo and the change to `public` access modifier.
+
+Here is the resolved snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+		assertEquals(1, updates);
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+	}
+
+	@Test
+	public void shouldUpdateCoreOnAutoBuild() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 10);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(findingTests(0, projects.size(), 0));
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+
+```

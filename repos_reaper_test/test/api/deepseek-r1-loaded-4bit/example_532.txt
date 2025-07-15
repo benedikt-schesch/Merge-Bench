@@ -1,0 +1,23 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the constructor of a Resource class in Java. Both sides are calling the same constructor with similar parameters, but there's a difference in the method used to convert the InputStream to a byte array.
+
+In the HEAD version, the method is IOUtil.toByteArray(in), while the other branch uses IOUtils.toByteArray(in). The difference is the class name: IOUtil vs. IOUtils. This is probably a typo or a case of similar utility classes from different libraries.
+
+I need to figure out which one is correct. Maybe IOUtils is from Apache Commons IO, which has a method toByteArray in IOUtils. On the other hand, IOUtil could be a custom utility class in the project. If both branches are intending to use the same functionality but one has a typo, that's the key here.
+
+Since the commit messages or context aren't provided, I have to infer. If the project uses Apache Commons IO, then IOUtils is correct. If there's a custom IOUtil class, then that's right. But without knowing, it's ambiguous. However, the correct class name for Apache Commons is IOUtils, which is more standard. Maybe the HEAD version has a typo, and the other branch fixes it. Alternatively, maybe the project uses their own IOUtil.
+
+Since the conflict can't be resolved without knowing the project's dependencies, the safest approach is to leave the conflict as is. But wait, the user said to resolve if possible by understanding the intent. If both are trying to convert the InputStream to a byte array, and the only difference is the utility class, maybe the correct one is IOUtils (from Apache), so the second version is correct. Therefore, resolving the conflict by choosing the IOUtils version.</think>
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+```

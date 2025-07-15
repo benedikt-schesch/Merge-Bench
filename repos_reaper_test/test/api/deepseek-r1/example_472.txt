@@ -1,0 +1,28 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in the import statements of a Java file. The HEAD version has specific imports from java.util.concurrent: ExecutionException, TimeUnit, and TimeoutException. The other side, from commit a77e57e, is importing java.util.concurrent.*, which is a wildcard import for all classes in that package.
+
+I need to determine the intent of both changes. The HEAD side is explicitly importing three specific exceptions. Maybe they wanted to avoid wildcard imports for clarity or to adhere to a coding standard that discourages wildcards. The other side is using a wildcard, which might be their standard practice to reduce the number of import lines.
+
+To resolve this, I should merge both intentions. The wildcard import from the other side already includes all classes from java.util.concurrent, including the three exceptions listed in HEAD. However, some coding standards prefer explicit imports. But if both branches are adding imports, combining them might lead to redundant imports if we list both specific and wildcard. But Java allows wildcard imports alongside specific ones, though it's redundant.
+
+Wait, but in Java, if you import a package with a wildcard, individual class imports from that package are redundant. The compiler doesn't care, but some style guides might. The conflict arises because one side uses specific imports and the other uses a wildcard.
+
+The best approach here is to use the wildcard import since it covers all the classes from java.util.concurrent, including the ones specified in HEAD. That way, both the specific exceptions and any other classes from concurrent that might be used are covered. Alternatively, if the project prefers explicit imports, we should list all three exceptions explicitly and remove the wildcard.
+
+But how do I know which one is correct? The user hasn't provided info about the project's style guide. Since the conflict is between explicit and wildcard, and the wildcard includes the explicit ones, merging by using the wildcard would resolve the conflict without losing any necessary imports. However, if the project prefers explicit imports, then the HEAD version is better. But without that context, perhaps the safest way is to take the wildcard import from the other branch, as it includes all necessary classes, making the explicit ones redundant. So, resolving the conflict by choosing the wildcard import and removing the explicit ones.
+
+Therefore, the resolved import statement should be java.util.concurrent.*; as that covers all the classes from both sides. So the merged code would have the wildcard import, replacing the three specific ones.</think>
+```java
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.*;
+
+import javax.annotation.Nonnull;
+
+import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.internal.OperationFuture;
+
+```

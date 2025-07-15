@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, the difference is in the namespace URI of the `Event` element. One side has a single `/` after `metadata-1-0` while the other side has a double `//`. 
+
+Based on common XML namespace conventions and the rest of the code, the correct version would typically have a single slash. The double slash in the namespace URI appears to be a typo.
+
+Here's the resolved code:
+
+```java
+
+        assertEquals(renderingControlLastChange.toString(), "");
+        mp.setMute(true);
+        Thread.sleep(500);
+        lastChangeExpected =
+                "<Event xmlns=\"urn:schemas-upnp-org:metadata-1-0/RCS/\">" +
+                        "<InstanceID val=\"0\">" +
+                        "<Volume channel=\"Master\" val=\"0\"/>" +
+                        "<Mute channel=\"Master\" val=\"1\"/>" +
+                        "</InstanceID>" +
+                "</Event>";
+
+```

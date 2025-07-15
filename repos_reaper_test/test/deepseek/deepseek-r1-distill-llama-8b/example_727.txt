@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The left and right versions of `setStackMargin` differ in variable names (`mStackMargin` vs. `mMargin`) and include an additional `initLayout()` call. The right version seems to correctly use `mMargin`, which aligns with variable names in the surrounding code. Thus, we should adopt the right version to avoid a compile error and ensure proper initialization.
+
+```java
+        FrameLayout v = new FrameLayout(getContext());
+        viewCollection.add(v);
+        addView(v);
+    }
+
+    public void setStackMargin(int margin){
+        mMargin = margin;
+        mCardAnimator.setStackMargin(mMargin);
+        mCardAnimator.initLayout();
+>>>>>>> 4f63cd1aed839ff53f4afb6076a74f113d583e40
+    }
+
+    public int getStackMargin() {
+        return mMargin;
+```

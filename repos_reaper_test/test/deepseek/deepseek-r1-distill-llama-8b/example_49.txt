@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict in the `toArray()` method usage. Both sides of the merge attempt to convert the `players` list to an array, but with different array sizes. The left side uses `players.size()` to determine the array size, while the right side uses 0. Using `new Player[0]` could cause an exception if the list isn't empty. The left side is correct as it ensures the array is the right size.
+
+```java
+   *
+   * @return Player information for every player in this game: Name, score, status.
+   */
+  public List<Map<GamePlayerInfo, Object>> getAllPlayerInfo() {
+    final List<Map<GamePlayerInfo, Object>> info;
+<<<<<<< HEAD
+    final Player[] playersCopy = players.toArray(new Player[players.size()]);
+    info = new ArrayList<Map<GamePlayerInfo, Object>>(playersCopy.length);
+=======
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    info = new ArrayList<>(playersCopy.length);
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+    for (final Player player : playersCopy) {
+      final Map<GamePlayerInfo, Object> playerInfo = getPlayerInfo(player);
+      info.add(playerInfo);
+    }
+    return info;
+
+```

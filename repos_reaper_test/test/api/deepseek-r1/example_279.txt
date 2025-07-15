@@ -1,0 +1,46 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is between the HEAD version and the other branch's version. The code in question is around the line where `toPkgr.setSameMapKeyType(isSameKeyType);` is called.
+
+In the HEAD version, there's a blank line after that statement, and in the other branch (88ae4a5), there's a line with some whitespace—maybe a space or a tab—but it's hard to tell exactly. The rest of the code is the same in both branches.
+
+The key here is that the only difference is the presence of a blank line vs. a line with whitespace. Since both changes are about the spacing after that method call, I need to decide which one to keep or if they can be merged without conflict.
+
+Wait, in the HEAD, after `setSameMapKeyType`, there's a newline, and in the other branch, there's a line with just whitespace (maybe a trailing space). If I merge these, perhaps the correct resolution is to remove the conflict by keeping one of the versions. But since the intent of both branches is likely the same—adding some spacing—maybe the conflict is just a whitespace difference. However, in Java, trailing whitespace is generally harmless but sometimes considered a style issue.
+
+Alternatively, maybe one side added a blank line for readability, and the other had a line with a space. But in reality, both are just affecting the formatting. The actual code logic isn't changed here. So the semantic intent is the same. Therefore, the conflict can be resolved by choosing either version, but since the code after the conflict is the same, perhaps the correct approach is to remove the conflicting markers and keep the line as is from one side.
+
+Wait, the HEAD has a blank line after the method call, and the other branch has a line with whitespace. So the conflict is between a blank line and a line with whitespace. But when merged, how does that look? If we take the HEAD's blank line, then after the method call, there's a blank line before the if statement. If we take the other branch's line, there's a line with just whitespace, which might be considered a no-op.
+
+But in code, a line with only whitespace is effectively a blank line. However, some style guides discourage trailing whitespace. So perhaps the HEAD version is better because it's a clean blank line without any trailing spaces. Alternatively, maybe the other branch's line has a trailing space, which is unnecessary.
+
+Assuming that the other branch's line (with `        `) is a line with some spaces, perhaps it's a mistake, and the intended change was to have a blank line. Or maybe the other branch removed a blank line but accidentally left some spaces. Alternatively, maybe there was a line with a comment that was removed, leading to this.
+
+But without more context, it's hard to tell. However, the conflict is about whitespace. Since both sides are trying to adjust the spacing around that line, and the actual code logic isn't affected, maybe the correct resolution is to keep the blank line from HEAD, as trailing whitespace is generally not desired. Alternatively, if the other branch's line is just a blank line with no actual content, maybe they can be merged.
+
+Wait, looking at the code again:
+
+HEAD has:
+<<<<<<< HEAD
+
+=======
+        
+>>>>>>> 88ae4a5...
+
+So between the setSameMapKeyType line and the if statement, HEAD has a blank line, while the other branch has a line with some spaces (the line after the ==== is `        ` which is four spaces, assuming that's what's there). So in the merged code, if we take the HEAD version, there's a blank line. If we take the other branch, there's a line with four spaces.
+
+But in Java, a line with only whitespace is allowed but usually not necessary. So the conflict is purely about formatting. Since the user asked to resolve the conflict based on the intent and semantics, and if the intent is the same (i.e., spacing change), we can choose either. However, perhaps the original intention was to have a blank line there for readability. Maybe the other branch's line is a mistake (like trailing spaces), so the correct resolution is to keep the blank line from HEAD.
+
+Alternatively, maybe the other branch intended to have a line with some indentation, but that doesn't make sense here. So resolving by taking the HEAD's blank line seems better. Therefore, the resolved code would have the blank line after the setSameMapKeyType call, and then the if statement follows after that. Thus, the conflict markers are removed, keeping the blank line from HEAD.</think>
+```java
+            toPkgr.addPackager(cpkgr);
+            pkCount = 1;
+        }
+
+        toPkgr.setSameMapKeyType(isSameMapKeyType);
+
+        if (pkCount != total) {
+            int errCode = 2146;
+            String msg = "Internal Error. Inconsistency in key index found during optimization.";
+            throw new OptimizerException(msg, errCode, PigException.BUG);
+        }
+```

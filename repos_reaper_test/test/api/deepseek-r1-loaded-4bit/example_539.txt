@@ -1,0 +1,24 @@
+<think>
+Okay, let's look at this merge conflict. The code has a conflict between the HEAD version and another commit. The HEAD adds some empty lines, while the other side removes them. The main change is around the RemoveCallback function call.
+
+First, I need to understand what both sides are doing. The HEAD has an extra line with just a newline after the RemoveCallback line, and the other side doesn't. But looking at the surrounding code, maybe the empty line isn't necessary. The important part is the RemoveCallback call. Both versions have that line, but the spacing differs.
+
+Wait, actually, in the conflict markers, the HEAD shows an empty line after RemoveCallback, and the other side (2efc89d) doesn't have that. So the conflict is about whether to include that empty line or not.
+
+But maybe the intent of both branches is the same: call RemoveCallback and then check if callbackContext is null. The empty line might be just formatting. Since the conflict is about whitespace, perhaps we can remove the empty line to match the second version. Or maybe the first version added it for readability, but it's not essential.
+
+Alternatively, maybe the HEAD added some code that was later removed in the other branch. But in this case, it's just an empty line. Since the conflict is trivial, the best approach is to accept both changes by removing the conflict markers and keeping the code without the empty line, as the second version does. Because having an extra empty line might not be necessary, and the other side's commit removes it. So resolving by taking the second version's change, which is removing the empty line, would be better. That way, we avoid unnecessary whitespace changes.
+
+So the resolved code would have the RemoveCallback line followed immediately by the comment, without the empty line in between. Therefore, the correct merge is to keep the code from both sides but without the conflicting empty line.</think>
+```java
+          callbackContext.error(returnObj);
+        }
+        return;
+      }
+
+      RemoveCallback(characteristicUuid, connection, operationWrite);
+
+      //If no callback, just return
+      if (callbackContext == null) {
+        return;
+```

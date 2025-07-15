@@ -1,0 +1,24 @@
+<think>
+Okay, let's tackle this merge conflict. The user wants me to resolve it by understanding the intent of both changes.
+
+Looking at the code, the conflict is in the method checkPhysicalPlan. The HEAD version has a line that prints "===== check physical plan =====". The other branch (from commit d95d3beb) adds a call to lp.optimize before the print statement and keeps the print line as well.
+
+So, the main difference is the addition of lp.optimize(myPig.getPigContext()) in the other branch. The HEAD doesn't have that line. The print statement is present in both, but in the other branch, it's indented with some spaces, maybe due to formatting. But the key is the optimize call.
+
+To resolve, we need to include both changes. The optimize call is likely important for preparing the logical plan before compiling. The print statement is in both, so we can take one instance. Since the other branch adds the optimize and keeps the print, merging both would mean including the optimize line followed by the print line. The spacing in the print line might be a trailing space in the other branch, but that's probably insignificant.
+
+So the resolved code should have the optimize line first, then the print line, then proceed with compiling the physical plan. There's no conflict in the other parts, so the rest stays the same. The user wants the context preserved except for resolving the conflict markers. Therefore, the correct merge is to include both the optimize call and the print statement from the other branch, as the HEAD doesn't have the optimize, and the other branch adds it. The print is common, so just include once.</think>
+```java
+    }
+
+    private PhysicalPlan checkPhysicalPlan(LogicalPlan lp, int expectedRoots,
+            int expectedLeaves, int expectedSize) throws IOException {
+
+        lp.optimize(myPig.getPigContext());
+        System.out.println("===== check physical plan =====");
+
+        PhysicalPlan pp = ((MRExecutionEngine)myPig.getPigContext().getExecutionEngine()).compile(
+                lp, null);
+
+        Assert.assertEquals(expectedRoots, pp.getRoots().size());
+```

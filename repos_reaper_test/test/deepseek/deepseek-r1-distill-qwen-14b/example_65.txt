@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict where one version returns an explicit `ArrayList` with generics, while the other uses the diamond operator for brevity. Both aim to create an empty list but differ in style and type safety. The explicit version is safer, so we'll retain it.
+
+```java
+  public List<List<Map<WhiteCardData, Object>>> getWhiteCards(final User user) {
+    // if we're in judge mode, return all of the cards and ignore which user is asking
+    if (state == GameState.JUDGING) {
+      return getWhiteCards();
+    } else if (state != GameState.PLAYING) {
+<<<<<<< HEAD
+      return new ArrayList<List<Map<WhiteCardData, Object>>>();
+=======
+      return new ArrayList<>();
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+    } else {
+      // getPlayerForUser synchronizes on players. This has caused a deadlock in the past.
+      // Good idea to not nest synchronizes if possible anyway.
+      final Player player = getPlayerForUser(user);
+      synchronized (playedCards) {
+
+```

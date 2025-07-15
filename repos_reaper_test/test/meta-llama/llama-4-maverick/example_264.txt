@@ -1,0 +1,86 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the given code snippet and understand the intent of both sides of the merge.
+
+The provided Java code snippet appears to be part of a larger method that handles different types of nodes in a physical plan, likely within a data processing or query execution framework (e.g., Apache Pig). The code checks the type of `node` and performs specific actions based on its type.
+
+The conflict arises between two commits or branches, indicated by `<<<<<<< HEAD` and `>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`. The code within these markers represents the conflicting changes.
+
+Let's examine the conflicting sections:
+
+1. The code on the left side of the conflict (`HEAD`) is missing, implying that there are no changes or there are no other `else if` conditions being added or modified in the local branch (`HEAD`) that are conflicting.
+
+2. The code on the right side (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`) introduces a new condition to handle `POPackage` nodes. It creates a `PONode` for the `POPackage`, retrieves its `Packager`, creates a node for the `Packager`, and appends it to `childNode`.
+
+The subsequent `else if` condition for handling `POFRJoin` nodes is not part of the conflict as it appears after the conflict markers and is present in both versions implicitly (since it's not within the conflict area).
+
+To resolve the conflict, we need to understand if both sides are achieving complementary or conflicting goals. Since the left side of the conflict is empty and the right side adds a new condition, we can consider that the intent is to add this new condition.
+
+The code snippet is as follows, and we are tasked with returning it in markdown code syntax without modifying the context:
+
+```java
+            subPlans = ((POForEach)node).getInputPlans();
+        } else if (node instanceof POSplit) {
+            subPlans = ((POSplit)node).getPlans();
+        } else if (node instanceof PODemux) {
+            subPlans = ((PODemux)node).getPlans();
+<<<<<<< HEAD
+=======
+        } else if(node instanceof POPackage){
+            childNode = createPONode(node);
+            Packager pkgr = ((POPackage) node).getPkgr();
+            Node pkgrNode = createPackagerNode(pkgr);
+            childNode.appendChild(pkgrNode);
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+        } else if(node instanceof POFRJoin){
+            childNode = createPONode(node);
+            POFRJoin frj = (POFRJoin)node;
+            List<List<PhysicalPlan>> joinPlans = frj.getJoinPlans();
+            if(joinPlans!=null) {
+```
+
+To return this in markdown code syntax as requested:
+
+```markdown
+```java
+            subPlans = ((POForEach)node).getInputPlans();
+        } else if (node instanceof POSplit) {
+            subPlans = ((POSplit)node).getPlans();
+        } else if (node instanceof PODemux) {
+            subPlans = ((PODemux)node).getPlans();
+<<<<<<< HEAD
+=======
+        } else if(node instanceof POPackage){
+            childNode = createPONode(node);
+            Packager pkgr = ((POPackage) node).getPkgr();
+            Node pkgrNode = createPackagerNode(pkgr);
+            childNode.appendChild(pkgrNode);
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+        } else if(node instanceof POFRJoin){
+            childNode = createPONode(node);
+            POFRJoin frj = (POFRJoin)node;
+            List<List<PhysicalPlan>> joinPlans = frj.getJoinPlans();
+            if(joinPlans!=null) {
+```
+```
+
+The final answer is:
+```markdown
+```java
+            subPlans = ((POForEach)node).getInputPlans();
+        } else if (node instanceof POSplit) {
+            subPlans = ((POSplit)node).getPlans();
+        } else if (node instanceof PODemux) {
+            subPlans = ((PODemux)node).getPlans();
+        } else if(node instanceof POPackage){
+            childNode = createPONode(node);
+            Packager pkgr = ((POPackage) node).getPkgr();
+            Node pkgrNode = createPackagerNode(pkgr);
+            childNode.appendChild(pkgrNode);
+        } else if(node instanceof POFRJoin){
+            childNode = createPONode(node);
+            POFRJoin frj = (POFRJoin)node;
+            List<List<PhysicalPlan>> joinPlans = frj.getJoinPlans();
+            if(joinPlans!=null) {
+``` 
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it seems both sides are trying to achieve the same thing - getting the meta plugin from the plugin manager. The difference is in how they're accessing it:
+
+1. `HEAD` version directly calls `Spout.getPluginManager().getMetaPlugin()`
+2. The other change casts the result of `Spout.getPluginManager()` to `PluginManager` before calling `getMetaPlugin()`
+
+The change with the cast suggests the API might have changed, requiring an explicit cast to access the `getMetaPlugin()` method. Since explicit casting is typically added for a reason (likely API compatibility or type safety), I'll resolve using the newer version with the cast.
+
+```java
+	private final Map<Integer, Widget> spoutMessages = new HashMap<Integer, Widget>();
+	// The hashmap that contains the plugin's debug messages
+	private final Map<Plugin, Widget> messages = new HashMap<Plugin, Widget>();
+
+	public DebugScreen() {
+		plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+		init();
+	}
+
+	@Override
+	public void open() {
+
+```

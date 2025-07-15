@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the conflict resolved based on the semantic intent. Both sides of the merge are essentially trying to achieve the same functionality—deserializing a list of `FileSpec` objects from a configuration property. The difference is purely stylistic in terms of code formatting (line breaks and indentation). I will choose the formatting from the `HEAD` side as it appears more concise, but the functionality remains identical.
+
+Here is the entire snippet with the resolved conflict:
+
+```java
+        return (LoadFunc) PigContext.instantiateFuncFromSpec(loadFuncSpec);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String getLoadLocation(int inputIndex, Configuration conf) throws IOException {
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+        return inputs.get(inputIndex).getFileName();
+    }
+
+    /**
+     * Pass loader signature to LoadFunc and to InputFormat through
+```

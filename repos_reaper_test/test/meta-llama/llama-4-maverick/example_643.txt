@@ -1,0 +1,46 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's first understand the context and the changes made on both sides.
+
+The given code snippet is in Java and appears to be part of a test class, judging by the presence of `@Test` annotations. The tests seem to be checking the functionality of a `BinaryAttachment` class, specifically its content type when initialized with different types of data (an InputStream and potentially bytes, as indicated by the method names).
+
+The merge conflict occurs in the `checkContentTypeStream` method. Here, we're dealing with two different assertions:
+
+1. The local version (`HEAD`): `assertThat(att).hasContentType("image/png");`
+2. The version from the other branch (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`): `assertEquals("image/png", att.getContentType());`
+
+Both assertions are checking if the content type of the `BinaryAttachment` object `att` is "image/png". The difference lies in how the assertion is made.
+
+- The first assertion uses `assertThat` from a library like AssertJ, which provides a fluent assertion API. It checks if `att` has a content type of "image/png".
+- The second assertion uses JUnit's `assertEquals`, directly comparing the expected content type ("image/png") with the result of `att.getContentType()`.
+
+To resolve this conflict, we need to understand the intent behind both changes. Both assertions are essentially checking the same thing: that the content type is correctly identified as "image/png". The choice between them could depend on the testing style or library being used in the project.
+
+Since both assertions are semantically equivalent in terms of what they are checking, we could choose either one based on the project's testing style or conventions. However, without additional context on which assertion style is preferred or used elsewhere in the project, we can consider a few options:
+
+1. **Keep the local version (`HEAD`)**: If the project uses AssertJ or a similar fluent assertion API consistently, this might be the preferred choice.
+
+2. **Keep the other version (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`)**: If the project primarily uses JUnit's assertions, this would be the way to go.
+
+3. **Leave the conflict as is**: If it's not clear which style is preferred or if both styles are used interchangeably without a clear convention.
+
+Given that there's no clear indication of the project's convention or preference for assertion styles, and to avoid potentially introducing inconsistency, the safest resolution would be to leave the conflict as it is if we cannot determine the intent or the preferred style.
+
+However, since the task asks us to think in terms of intent and semantics, and both sides have the same intent (to verify the content type is "image/png"), we can choose one. Let's choose the version that uses `assertThat` for its readability and expressiveness, assuming the project is set up to use AssertJ or a similar library.
+
+Here is the resolved snippet in markdown code syntax:
+
+```java
+
+  @Test
+  public void checkContentTypeStream() {
+    InputStream stream = getClass().getResourceAsStream("/binary/fruits.png");
+    BinaryAttachment att = BinaryAttachment.with("example.png", stream);
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+
+```

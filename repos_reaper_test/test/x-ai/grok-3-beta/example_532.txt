@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and provide the snippet with the conflict unresolved, as the intent and semantics are not entirely clear without additional context. I'll preserve the original spacing and context as provided.
+
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> b9ca34bdf3a3ccf8c3ec778b8fbd52db1765325b
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+```
+
+**Analysis of Intent and Semantics:**
+
+- **HEAD (IOUtil.toByteArray)**: This side of the merge uses `IOUtil.toByteArray(in)` to convert the `InputStream` to a byte array. The intent appears to be using a utility class (`IOUtil`) that might be custom or specific to the project's internal libraries for handling input stream to byte array conversion. There is also an extra space after `in),` which might be a formatting inconsistency.
+
+- **b9ca34bdf3 (IOUtils.toByteArray)**: This side of the merge uses `IOUtils.toByteArray(in)`, which likely refers to a similar utility method, possibly from a different library (e.g., Apache Commons IO). The intent here is also to convert the `InputStream` to a byte array but using a potentially different implementation or library.
+
+- **Ambiguity**: The choice between `IOUtil` and `IOUtils` is ambiguous without additional context about the project's dependencies, coding standards, or the specific behavior of these utilities. It is unclear whether one is preferred due to performance, compatibility, or licensing issues, or if they are functionally identical. The extra space in the HEAD version could indicate a minor formatting difference but does not clarify intent.
+
+Since I cannot determine the correct choice without further information about the project's conventions or the specific utility classes being used, I am returning the snippet with the conflict markers intact. If you can provide more context (e.g., the library dependencies, the surrounding codebase, or the purpose of the change in the commit `b9ca34bdf3`), I can assist in resolving the conflict.

@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+I'll provide the code snippet with the merge conflict as is, since the intent and semantics of both changes need to be preserved and understood. Below is the unchanged snippet with full context in markdown code syntax, followed by an explanation of my analysis.
+
+```java
+		}
+
+		PendingIntent intent = PendingIntent.getActivity(this, 0,
+				MentionActivity.createIntent(this), 0);
+
+<<<<<<< HEAD
+		// @我的
+		notify(intent, MENTION_NOTIFICATION_ID, R.drawable.notify_mentions,
+				latestTweet.text, title, text);
+=======
+		notify(intent, MENTION_NOTIFICATION_ID, R.drawable.notify_mention,
+				Utils.getSimpleTweetText(latestTweet.text), title, text);
+>>>>>>> f977f63c0c0331b415e90b37d1c3b44ad214144b
+	}
+
+	private static int TWEET_NOTIFICATION_ID = 0;
+	private static int DM_NOTIFICATION_ID = 1;
+	private static int MENTION_NOTIFICATION_ID = 2;
+```
+
+### Analysis of the Conflict
+- **HEAD Side (Left Side)**: The intent here appears to be providing a localized comment (`// @我的`, which translates to "@me" or "mentions" in Chinese) and using a specific drawable resource `R.drawable.notify_mentions` for the notification icon. The tweet text is passed directly as `latestTweet.text` without any transformation. The semantics suggest a focus on localization or a specific icon for mentions.
+- **Incoming Side (Right Side, commit f977f63c)**: The intent here is to use a different drawable resource `R.drawable.notify_mention` (singular, possibly a different or updated icon) and to process the tweet text using `Utils.getSimpleTweetText(latestTweet.text)`, which likely simplifies or formats the text for display in the notification. The semantics suggest an update or refinement in how notifications are displayed, possibly for consistency or better user experience.
+- **Conflict Reasoning**: Both sides modify the same `notify()` call with different priorities. The HEAD side focuses on localization and a specific icon (`notify_mentions`), while the incoming side emphasizes text processing and a potentially updated/new icon (`notify_mention`). Without additional context about project conventions (e.g., naming of drawables, purpose of `Utils.getSimpleTweetText`), or which change is more recent/important, I cannot definitively resolve the conflict. Merging both intents (e.g., combining the comment with the text processing) could be an option, but the drawable discrepancy (`notify_mentions` vs. `notify_mention`) remains ambiguous.
+
+### Conclusion
+Since the intent behind the drawable choice and the importance of localization vs. text processing is unclear, I am returning the snippet with the conflict markers intact. If additional context (e.g., project guidelines, commit messages, or drawable naming conventions) is provided, I can assist in resolving this conflict. Alternatively, a manual decision by the developer on which icon or text processing to prioritize would be needed.

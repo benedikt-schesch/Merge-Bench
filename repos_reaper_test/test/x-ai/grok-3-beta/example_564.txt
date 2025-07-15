@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in the provided code snippet. Let's look at the intent and semantics of both sides of the merge.
+
+**Analysis of the Conflict:**
+- **HEAD (Left Side):** The line `failBecauseExceptionWasNotThrown(FacebookJsonMappingException.class);` indicates an intent to assert that an exception should have been thrown. This is likely used when the expected exception (defined in `@Test(expected = ...`) is not thrown, and the test should fail explicitly. This suggests the test is designed to ensure that invalid JSON input results in a `FacebookJsonMappingException`.
+- **Other Branch (Right Side):** The right side is empty, meaning the line is removed. This might imply that the test is relying solely on the `@Test(expected = ...)` annotation to handle the exception validation, and there’s no need for an explicit failure assertion. However, this could be problematic if the exception is not thrown as expected, as the test might pass incorrectly without the explicit fail assertion.
+
+**Intent and Semantics:**
+- The test method `checkInvalidJson()` is designed to verify that invalid JSON input results in a `FacebookJsonMappingException`. Using the `@Test(expected = ...)` annotation works if the exception is thrown as expected. However, if the exception is not thrown, the test might not behave as intended without an explicit failure assertion. The `failBecauseExceptionWasNotThrown` method from the HEAD side ensures that the test fails if the expected exception is not thrown, which aligns with robust test design, especially in older testing frameworks or versions of JUnit where `@Test(expected = ...)` might not be sufficient alone.
+- The right side’s removal of the line might be an attempt to simplify the test code, assuming the annotation is enough. However, this could lead to silent failures or incorrect test results if the exception behavior changes.
+
+**Resolution Decision:**
+Since the intent of the test is clear (to ensure an exception is thrown for invalid JSON), and the HEAD side provides a more defensive and explicit check, I will retain the `failBecauseExceptionWasNotThrown` line from the HEAD side. This ensures the test fails explicitly if the expected exception is not thrown, aligning with robust testing practices.
+
+Here is the resolved code snippet, including the full context, with the conflict resolved:
+
+```java
+  }
+
+  @Test(expected = FacebookJsonMappingException.class)
+  public void checkInvalidJson() {
+    new Connection<User>(new DefaultFacebookClient(Version.LATEST), "{", User.class);
+    failBecauseExceptionWasNotThrown(FacebookJsonMappingException.class);
+  }
+
+  @Test
+  public void checkIterator_reachAllElements() {
+    Connection<FacebookType> connection = create3PageConnection();
+
+```

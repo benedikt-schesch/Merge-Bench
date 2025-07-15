@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The given code snippet has a merge conflict due to a discrepancy in the number of parameters in the `Game` constructor on either side of the conflict. The left side (HEAD) has 12 parameters, while the right side has 11, which is causing a compilation error. To resolve this, the `Game` constructor should be consistent in both branches. If the right side is correct, it should be adjusted to include the same parameters as the left side, or vice versa, depending on the intended design.
+
+```java
+    // remove game 1 out from under it, to make sure it'll fix itself
+    gameManager.getGames().remove(1);
+    assertEquals(1, gameManager.get().intValue());
+    gameManager.getGames().put(1,
+<<<<<<< HEAD
+            new Game(1, cuMock, gameManager, timer, null, null, null, metricsMock, falseProvider,
+                    formatProvider, falseProvider, formatProvider));
+=======
+        new Game(1, cuMock, gameManager, timer, null, null, null, metricsMock, falseProvider,
+            formatProvider, falseProvider, formatProvider, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+    assertEquals(-1, gameManager.get().intValue());
+
+    gameManager.destroyGame(2);
+    gameManager.destroyGame(0);
+    assertEquals(2, gameManager.get().intValue());
+```

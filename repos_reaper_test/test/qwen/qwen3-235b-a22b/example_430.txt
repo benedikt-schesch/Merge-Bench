@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The code snippet presents an ambiguous semantic merge conflict between two versions of Java code involving adapter types (`SortedArrayObjectAdapter` vs. `SortedObjectAdapter`). The `if` and `else` branches in each version consistently use the same adapter type respectively, indicating a clear internal consistency within each change. However, there is insufficient contextual or semantic evidence to decide whether `SortedArrayObjectAdapter` or `SortedObjectAdapter` should be chosen in the resolved outcome.
+
+Both types are assumed to serve a similar purpose—maintaining a sorted collection of video items—but based on naming alone, it's possible they differ in internal behavior (e.g., how sorting is handled). Given that there is no stronger contextual signal or reveals of intent in the code's current usage or external references like documentation, data, or surrounding changes that would align one side of the merge over the other, the conflict cannot be resolved with certainty.
+
+Therefore, as instructed, the snippet is returned **with the original conflict markers intact**, reflecting this ambiguity and preserving the structure and spacing as requested:
+
+````markdown
+```java
+                    ListRow row = findListRow(category);
+
+                    // if found add this video
+                    // if not, create a new row and add it
+                    if (row != null) {
+<<<<<<< HEAD
+                        ((SortedArrayObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedArrayObjectAdapter listRowAdapter = new SortedArrayObjectAdapter(
+=======
+                        ((SortedObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedObjectAdapter listRowAdapter = new SortedObjectAdapter(
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+                                videoNameComparator, mCardPresenter);
+                        listRowAdapter.add(video);
+
+                        HeaderItem header = new HeaderItem(0, category, null);
+                        mAdapter.add(0, new ListRow(header, listRowAdapter));
+```
+````

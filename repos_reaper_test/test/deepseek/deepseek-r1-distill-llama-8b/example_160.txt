@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the `log` field is made static and final as it's used in static methods. This ensures the logger is only initialized once, improving efficiency.
+
+```java
+    public static JobContext sJobContext = null;
+
+    public static class Combine
+            extends Reducer<PigNullableWritable, NullableTuple, PigNullableWritable, Writable> {
+
+        private static final Log log = LogFactory.getLog(Combine.class);
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+        private byte keyType;
+
+        //The reduce plan
+        private PhysicalPlan cp;
+```

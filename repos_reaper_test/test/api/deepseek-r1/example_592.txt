@@ -1,0 +1,39 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the code snippet carefully.
+
+The conflict is between the HEAD and the a17acec0655b8058aaf4d336ba2a1352aa49e2fe branch. The HEAD version has the 'jsonMapper' field, followed by the 'illegalParamNames' declaration. The other branch adds a new field 'legacyFacebookExceptionMapper' between the jsonMapper and illegalParamNames.
+
+So, the problem is that both branches have added different things in the same area. The HEAD branch doesn't have the exception mapper, while the other branch does. Since these are two separate fields, they should both be included without conflicting. 
+
+The original code in HEAD has:
+
+/**
+   * Handles mapping...
+   */
+  protected JsonMapper jsonMapper;
+
+  /**
+   * Set of parameter names...
+   */
+  protected final Set<String> illegalParamNames...
+
+The other branch adds the legacyFacebookExceptionMapper between these two. So the correct resolution would be to include both fields in the correct order. The 'legacyFacebookExceptionMapper' from the other branch should come after the jsonMapper and before illegalParamNames. Since there's no overlap in the actual code (they're separate fields), the merge conflict markers can be removed, and both fields retained.
+
+Therefore, the resolved code should have jsonMapper, then legacyFacebookExceptionMapper, then illegalParamNames. The spacing and comments should be preserved as they were in each branch. The conflict markers (<<<<<<< HEAD, =======, >>>>>>>) should be removed, and both fields included in the correct order.</think>
+```java
+   * Handles mapping Facebook response JSON to Java objects.
+   */
+  protected JsonMapper jsonMapper;
+
+  /**
+   * Knows how to map Old REST API exceptions to formal Java exception types.
+   */
+  protected FacebookExceptionMapper legacyFacebookExceptionMapper;
+
+  /**
+   * Set of parameter names that user must not specify themselves, since we use these parameters internally.
+   */
+  protected final Set<String> illegalParamNames = new HashSet<String>();
+
+  /**
+```

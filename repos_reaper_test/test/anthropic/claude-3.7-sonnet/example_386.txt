@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I see a few differences:
+
+1. Left side uses `@BeforeEach` annotation (JUnit 5) while right side uses `@Before` (JUnit 4)
+2. Left side omits the `public` modifier
+3. Left side initializes the list with `newArrayList()` while right side uses `new ArrayList<>()`
+
+This looks like a migration from JUnit 4 to JUnit 5, so I'll resolve by keeping the JUnit 5 style while incorporating the more explicit initialization from the right side.
+
+```java
+	private List<ProjectFacade> projects;
+	private CoreRegistry coreRegistry;
+	private ProjectSet projectSet;
+	private EclipseWorkspace workspace;
+
+	@BeforeEach
+	void inContext() throws CoreException {
+		projects = new ArrayList<>();
+		projectSet = mock(ProjectSet.class);
+		projects.add(new ProjectFacade(project));
+		coreRegistry = mock(CoreRegistry.class);
+		CoreFactory coreFactory = new CoreFactory(null);
+		workspace = new EclipseWorkspace(projectSet, coreRegistry, coreFactory, new SystemClassPathJarLocator());
+
+```

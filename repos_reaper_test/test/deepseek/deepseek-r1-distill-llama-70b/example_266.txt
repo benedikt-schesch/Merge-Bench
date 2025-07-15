@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict is about code style differences in the comments. The HEAD branch uses a block comment with line continuation, while the other branch uses separate line comments. Both achieve the same documentation purpose.
+
+To resolve this, we'll preserve the block comment style for consistency with typical Java practices:
+
+```java
+ * it does not use the index in the NullableTuple to find the bag to put a
+ * tuple in.  Instead, the inputs are put in a bag corresponding to their
+ * offset in the tuple.
+ */
+public class CombinerPackager extends Packager {
+
+    private static final long serialVersionUID = 1L;
+
+    private boolean[] mBags; // For each field, indicates whether or not it
+                             // needs to be put in a bag.
+    private Map<Integer, Integer> keyLookup;
+
+    private int numBags;
+
+
+```

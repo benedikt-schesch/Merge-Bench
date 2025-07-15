@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a test class, given the presence of JUnit annotations (`@Before`, `@Rule`) and the import of `org.junit` packages. The merge conflict arises from the addition of new import statements.
+
+The original code (before the merge conflict was introduced) includes imports necessary for using Mockito for mocking, JUnit for testing, and some classes from the `org.fest.assertions` package for assertions.
+
+The conflicting changes are:
+- The original code (represented by `HEAD`) does not include any additional imports beyond what's already present.
+- The incoming change (represented by the commit hash `06e86330876dee7fcb1356794176b04a7161cf65`) adds two new import statements: `org.fest.assertions.internal.Failures` and `org.fest.assertions.internal.Shorts`.
+
+To resolve this conflict, we need to understand the intent behind both versions. The original code (`HEAD`) seems to be focused on setting up a test environment. The incoming change adds imports that are likely used for assertion failures handling and comparison of short values, respectively.
+
+Since the incoming change adds new imports that do not conflict with the existing code (in terms of syntax or semantics directly), and assuming these imports are used elsewhere in the class (not shown in the snippet), the most straightforward resolution is to include these new imports.
+
+However, to ensure we're not introducing unnecessary imports, we should verify if `Failures` and `Shorts` are used within the class. Without the full class, we proceed under the assumption that they are either used or might be used in other parts of the class not shown here.
+
+Thus, the resolution involves accepting both the original imports and the additional imports introduced by the merge. The resulting code snippet, preserved in markdown code syntax and with the original spacing, is:
+
+```java
+import static org.mockito.Mockito.spy;
+
+import org.junit.Before;
+import org.junit.Rule;
+
+import org.fest.assertions.internal.Failures;
+import org.fest.assertions.internal.Shorts;
+import org.fest.test.ExpectedException;
+import org.fest.assertions.util.AbsValueComparator;
+import org.fest.util.ComparatorBasedComparisonStrategy;
+
+/**
+```

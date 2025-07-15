@@ -1,0 +1,35 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the method `instantiateFuncFromAlias` regarding the type of `funcSpec`. In the HEAD version, it's declared as a String, while in the other branch (1488b22), it's a FuncSpec. 
+
+First, I need to understand the context. The method is trying to get a function specification from a map called `definedFunctions` using the alias. If it exists, it calls `instantiateFuncFromSpec` with `funcSpec`, otherwise it uses the alias as the spec.
+
+In the HEAD version, `definedFunctions` is a map where the value is a String. So `get(alias)` returns a String, assigned to `funcSpec` as a String. Then `instantiateFuncFromSpec` is called with that String. But in the other branch, `definedFunctions` now stores FuncSpec objects, so `funcSpec` is of type FuncSpec, and `instantiateFuncFromSpec` is called with a FuncSpec.
+
+The problem arises because the two branches changed both the type of `funcSpec` and the type of the map. To resolve this, we need to determine which type is correct, or if there's a way to reconcile both changes.
+
+Wait, maybe the method `instantiateFuncFromSpec` can accept both a String and a FuncSpec. Let me check. In the HEAD version, when it's not found in the map, it uses the alias (a String) as the spec. In the other branch, if it's not found, it also uses the alias as a spec, but now `instantiateFuncFromSpec` would need to handle a String in that case. But if the other branch changed `instantiateFuncFromSpec` to only accept FuncSpec, then passing a String would be an error. Alternatively, maybe `instantiateFuncFromSpec` is overloaded to handle both types.
+
+Assuming that the other branch's change is correct, where `definedFunctions` now stores FuncSpec objects, then the correct declaration is `FuncSpec funcSpec;`. However, in the else clause, passing the alias (a String) to `instantiateFuncFromSpec` would require that method to accept a String. If the other branch also modified `instantiateFuncFromSpec` to have an overload that takes a String, then this is okay. But if not, this could be a problem.
+
+Alternatively, maybe the else clause should also retrieve a FuncSpec, but from somewhere else. But given the code as is, the conflict is between the type of `funcSpec`.
+
+The resolution depends on which branch's changes are correct. If the intention is to migrate from using String specs to FuncSpec objects, then the correct version is the one from the other branch (FuncSpec). However, the else clause still passes a String, which might not be compatible. But perhaps in the other branch, `instantiateFuncFromSpec` can take either a FuncSpec or a String, perhaps through method overloading.
+
+Alternatively, maybe the else clause should convert the alias into a FuncSpec. But without more context, it's hard to say. However, the user asked to resolve based on intent and semantics. If both branches intended to have `definedFunctions` store either String or FuncSpec, but the correct approach is to use FuncSpec, then we should take the FuncSpec type. However, the else clause passes a String, which might mean that `instantiateFuncFromSpec` can handle both. If that's the case, then the correct resolution is to use FuncSpec type, as per the other branch, and keep the else as passing the String, assuming the method can handle it.
+
+Therefore, the resolved code would declare `funcSpec` as FuncSpec, and the assignment from `definedFunctions.get(alias)` would be correct if the map now holds FuncSpec. The else case passes a String, which is okay if the method is overloaded.
+
+So the conflict should be resolved by choosing the FuncSpec type from the other branch, and keeping the rest as is.</think>
+```java
+        }
+        return resolveClassName(className);
+    }
+  
+    public Object instantiateFuncFromAlias(String alias) throws IOException {
+        FuncSpec funcSpec;
+        if (definedFunctions != null && (funcSpec = definedFunctions.get(alias))!=null)
+            return instantiateFuncFromSpec(funcSpec);
+        else
+            return instantiateFuncFromSpec(alias);
+    }
+```

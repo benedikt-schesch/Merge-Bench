@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict based on the provided snippet.
+
+**Analysis of Intent:**
+
+- **HEAD Side (Left):** The HEAD side does not include any additional property settings for `Comment.Attachment` or `Comment.Comments`. This suggests that the intent on this branch might be to maintain the existing configuration without adding the specific nested method properties for `Comment`-related classes.
+- **Incoming Side (Right, commit a17acec0655b8058aaf4d336ba2a1352aa49e2fe):** This side introduces two new property settings for `Comment.Attachment` and `Comment.Comments`, using `StoryAttachment` and `Comment.Comments` classes respectively. The intent here seems to be an enhancement or update to include method properties for nested structures related to comments.
+
+**Resolution Reasoning:**
+
+The conflict arises because the incoming branch (right side) adds new configurations that are not present in the HEAD (left side). Since the additions do not overlap with or contradict existing lines in the HEAD, the semantic intent appears to be to extend the configuration with additional comment-related properties. There’s no indication of deletion or modification of existing entries on either side; it’s purely an addition. Thus, the safest and most likely intended resolution is to accept the incoming changes, as they represent an update or feature addition without conflicting with the HEAD’s intent.
+
+**Resolved Snippet:**
+
+```java
+    props.setProperty("CategorizedFacebookType.methods",
+      joinMethods(fetchMethodsFromClass(CategorizedFacebookType.class)));
+    props.setProperty("Category.methods", joinMethods(fetchMethodsFromClass(Category.class)));
+    props.setProperty("Checkin.methods", joinMethods(fetchMethodsFromClass(Checkin.class)));
+    props.setProperty("Comment.methods", joinMethods(fetchMethodsFromClass(Comment.class)));
+    props.setProperty("Comment.Attachment.methods", joinMethods(fetchMethodsFromClass(StoryAttachment.class)));
+    props.setProperty("Comment.Comments.methods", joinMethods(fetchMethodsFromClass(Comment.Comments.class)));
+    props.setProperty("Conversation.methods", joinMethods(fetchMethodsFromClass(Conversation.class)));
+    props.setProperty("Conversation.Tag.methods", joinMethods(fetchMethodsFromClass(Conversation.Tag.class)));
+    props.setProperty("DeAuth.methods", joinMethods(fetchMethodsFromClass(DeAuth.class)));
+    props.setProperty("Event.methods", joinMethods(fetchMethodsFromClass(Event.class)));
+    props.setProperty("Event.Category.methods", joinMethods(fetchMethodsFromClass(Event.Category.class)));
+```

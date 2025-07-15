@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The code snippet has a merge conflict regarding the initialization of a `HashMap`. Both sides initialize the map correctly, with the newer change using the diamond operator for brevity. Since both are functionally equivalent, the diamond operator is preferred.
+
+The resolved snippet using the diamond operator is:
+
+```java
+      synchronized (roundPlayers) {
+        for (final Player player : roundPlayers) {
+          final List<WhiteCard> cards = playedCards.getCards(player);
+          if (cards == null || cards.size() < blackCard.getPick()) {
+            final Map<ReturnableData, Object> data = new HashMap<>();
+            data.put(LongPollResponse.EVENT, LongPollEvent.HURRY_UP.toString());
+            data.put(LongPollResponse.GAME_ID, this.id);
+            final QueuedMessage q = new QueuedMessage(MessageType.GAME_EVENT, data);
+            player.getUser().enqueueMessage(q);
+          }
+        }
+      }
+```

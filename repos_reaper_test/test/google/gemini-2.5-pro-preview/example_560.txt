@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different ways of asserting the same behavior, likely due to different assertion libraries (AssertJ in HEAD vs. JUnit in the other branch).
+
+Both sides intend to:
+1.  Verify that the iterator `it` has no more elements (`it.hasNext()` should be false).
+2.  Verify that calling `it.next()` after all elements have been consumed throws a `NoSuchElementException`.
+
+The HEAD version uses AssertJ for both assertions:
+*   `assertThat(it.hasNext()).isFalse();`
+*   `failBecauseExceptionWasNotThrown(NoSuchElementException.class);` (This is called if the preceding `it.next();` *does not* throw an exception, thus failing the test as expected).
+
+The `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` version uses JUnit assertions:
+*   `assertFalse(it.hasNext());`
+*   `fail(NoSuchElementException.class.getName());` (This is called if the preceding `it.next();` *does not* throw an exception).
+
+Given that the HEAD version uses `assertThat`, which is part of AssertJ, it is more consistent to use AssertJ's mechanism for asserting that an exception should have been thrown. Therefore, the HEAD version is chosen for consistency within its own assertion style. Semantically, both achieve the same test objective.
+
+```java
+    ConnectionIterator<FacebookType> it = connection.iterator();
+    it.next(); // first page
+    it.next(); // second page
+    it.next(); // third and last page
+
+    assertThat(it.hasNext()).isFalse();
+    it.next();
+    failBecauseExceptionWasNotThrown(NoSuchElementException.class);
+  }
+
+  @Test
+  public void checkIterator_withCursor() {
+    Connection<FacebookType> connection = createCursorConnection();
+
+```

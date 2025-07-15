@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+To address the potential semantic merge issue, here's how the code can be presented in a modified format:
+
+```java
+            subPlans = ((POForEach)node).getInputPlans();
+        } else if (node instanceof POsplit) {
+            subPlans = ((POSplit)node).getPlans();
+        } else if (node instanceof POdemux) {
+            subPlans = ((PODemux)node).getPlans();
+        } else if (node instanceof PO-trash) {
+            subPlans = ((PO-trash)node).getPlans();
+        } else if (node instanceof POrekun) {
+            subPlans = ((POrekun)node).getPlans();
+        } else if (node instanceof POfrjoin) {
+            subPlans = ((POfrjoin)node).getJoinPlans();
+        }
+=======
+            } else if (node instanceof POPackage){
+                childNode = createPONode(node);
+                Packager pkgr = ((POPackage) node).getPkgr();
+                Node pkgrNode = createPackagerNode(pkgr);
+                childNode.appendChild(pkgrNode);
+            } else if (node instanceof POFRJoin){
+                childNode = createPONode(node);
+                POFRJoin frj = (POFRJOIN)node;
+                List<List<PhysicalPlan>> joinPlans = frj.getJoinPlans();
+                if(joinPlans!=null) {
+
+```

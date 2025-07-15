@@ -1,0 +1,19 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the method sendMessageWithServerSocket that takes varargs messages. The HEAD version uses a try block without a try-with-resources, declaring ServerSocket serverSocket = new ServerSocket(0) outside the try. The other side, from commit 6b1656b, uses a try-with-resources statement, initializing the ServerSocket within the try parentheses.
+
+The main difference here is resource management. The HEAD version manually creates the ServerSocket and then uses a try block, but doesn't use try-with-resources, which automatically closes the resource. The conflicting change is switching to try-with-resources, which is a better practice because it ensures the ServerSocket is closed automatically, preventing resource leaks.
+
+Since try-with-resources is the preferred approach in Java for managing resources that implement AutoCloseable, the merge should adopt the try-with-resources syntax from the incoming change. The ServerSocket is declared and initialized within the try statement, so the code from the branch (6b1656b) is correct. There's no conflict in the rest of the code, so the resolution is to keep the try-with-resources block and remove the conflict markers. The surrounding code remains the same. The methods' functionality isn't conflicting beyond how the ServerSocket is managed. So the resolved code should use the try-with-resources approach.</think>
+```java
+	private List<TestEvent> sendMessageWithServerSocket(String input) throws UnknownHostException, IOException, ClassNotFoundException {
+		return sendMessageWithServerSocket(new String[] { input });
+	}
+
+	private List<TestEvent> sendMessageWithServerSocket(String... messages) throws UnknownHostException, IOException, ClassNotFoundException {
+		try (ServerSocket serverSocket = new ServerSocket(0)) {
+			RuntimeEnvironment fakeEnvironment = fakeEnvironment();
+			File file = fakeEnvironment.createClasspathArgumentFile();
+			
+			ClasspathArgumentBuilder classpathArgumentBuilder = new FileClasspathArgumentBuilder(file);
+			factory.startProcess(serverSocket.getLocalPort(), fakeEnvironment, classpathArgumentBuilder);
+```

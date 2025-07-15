@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll analyze the intent and semantics of both sides of the merge conflict.
+
+- **Left Side (HEAD)**: The code simply accesses `Spout.getPluginManager().getMetaPlugin()` to assign a value to `this.plugin`. The intent appears to be straightforward—retrieving a plugin instance using the plugin manager's method.
+- **Right Side (67bcb76a96f...)**: The code casts `Spout.getPluginManager()` to `PluginManager` before calling `getMetaPlugin()`. The intent here might be to ensure type safety or to adapt to a change in the API where `getPluginManager()` returns a more generic type that needs to be explicitly cast to `PluginManager` to access `getMetaPlugin()`.
+
+Given the semantic analysis, the right side's intent seems to handle a potential API change or enforce type safety through an explicit cast. However, without more context about the API or the codebase (e.g., whether `Spout.getPluginManager()` already returns a `PluginManager` or if the cast is necessary due to a change in return type), it's ambiguous whether the cast is actually required. If the cast is unnecessary (i.e., `getPluginManager()` already returns a `PluginManager`), the left side (HEAD) is cleaner and sufficient. If the cast is required due to an API change, the right side is correct.
+
+Since the intent is ambiguous without additional context about the `Spout` API, I will return the snippet unchanged with the conflict markers intact, as per the instructions.
+
+```java
+	private DateFormat dateFormat;
+	private List<Widget> lines = new ArrayList<Widget>();
+	private float scroll = 0;
+
+	public DevConsole(Font font) {
+<<<<<<< HEAD
+		this.plugin = Spout.getPluginManager().getMetaPlugin();
+=======
+		this.plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+>>>>>>> 67bcb76a96f358fc131320b0611ffaa3bf3678c2
+		this.font = font;
+		init();
+	}
+	
+	public void clearConsole() {
+```

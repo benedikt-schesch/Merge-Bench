@@ -1,0 +1,18 @@
+<think>
+Okay, let's look at this merge conflict. The code has a conflict between the HEAD version and the other branch. The HEAD adds an else if block that checks the same condition as the first if, but with a different log message. The other branch removes that else if and just appends the url in the else case.
+
+Wait, the original code in HEAD has an if statement checking maxUriLength > 0 and uriString.length() > maxUriLength. If that's true, it logs a warning and appends the url. Then there's an else if with the same condition, which doesn't make sense because if the first condition is true, the else if would never execute. That seems like a mistake. The other branch (the one being merged) removes that else if, which probably corrects the duplicate condition. 
+
+So the intent of HEAD might have been to have two different messages based on some condition, but the else if is redundant because the condition is the same. The other branch removes that redundant else if, which is correct. Therefore, resolving the conflict by keeping the code without the else if block makes sense. So the correct code after merging should be: if the condition is met, log a warning and append url, else append the data URI. The else if in HEAD is a mistake, so we should accept the incoming change that removes it.</think>
+```java
+                        
+                        if (maxUriLength > 0 && uriString.length() > maxUriLength) {
+                            if (verbose){
+                                System.err.println("[WARNING] File " + newUrl + " creates a data URI larger than " + maxUriLength + " bytes. Skipping.");
+                            }      
+                            builder.append(url);
+                        } else {
+
+                            /*
+                             * Determine what to do. Eventually, you should be able to
+```

@@ -1,0 +1,28 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict. The task is to resolve the conflict by understanding the intent of both changes while preserving the context.
+
+Looking at the conflict, the HEAD version sets a property with "PigConfiguration.OPT_ACCUMULATOR" as the key and "true" as the value. The other side uses the string "opt.accumulator" instead. The rest of the code is the same.
+
+I need to determine if these are conflicting ways to set the same property. Maybe PigConfiguration.OPT_ACCUMULATOR is a constant that holds the string "opt.accumulator". If that's the case, both changes are semantically the same, just using a constant vs. the string literal. Using the constant is better practice for maintainability, so maybe the HEAD version is preferred. However, if the other branch is correcting a typo in the property name, that's a different scenario.
+
+Wait, perhaps the constant was introduced in a newer version, and the other branch is using the old string. Or maybe the property name was changed, and one branch uses the old name while the other uses the new. But without knowing the codebase, it's hard to tell. However, in Java, it's common to use constants for such properties to avoid typos. So the HEAD version using the constant is likely correct, and the other branch might be an older way. Alternatively, maybe "opt.accumulator" is the correct key, and the constant was mistyped.
+
+But the user wants a semantic resolution. If both are trying to enable the accumulator option by setting the property to true, the correct key is essential. If the two keys are equivalent (the constant's value is "opt.accumulator"), then using the constant is better. If not, there's a conflict.
+
+Assuming that PigConfiguration.OPT_ACCUMULATOR is indeed the correct constant that holds "opt.accumulator", then the HEAD version is preferable. However, if the other side is correcting the property name, then that should be used. Since the user can't confirm, but the task is to resolve if possible, perhaps the best approach is to use the constant from HEAD, as it's more maintainable. Alternatively, check if the strings are the same.
+
+If PigConfiguration.OPT_ACCUMULATOR's value is "opt.accumulator", then both lines are equivalent. In that case, choosing the HEAD version makes sense. Otherwise, it's a conflict. Since the user can't verify, but as a resolver, we have to make a choice. If the two property keys are the same, then resolve by taking HEAD. If not, leave as conflict. But without knowing, perhaps the safest is to use the constant, assuming it's correct. So the resolved line would be the HEAD version. Therefore, the conflict is resolved by keeping the HEAD's code.</think>
+```java
+        pigServer.registerQuery("B = group A by id;");
+        pigServer.registerQuery("C = foreach B generate group," +
+                "org.apache.pig.test.utils.AccumulativeSumBag(A);");
+
+        checkAccumulatorOff("C");
+        pigServer.getPigContext().getProperties().setProperty(
+                PigConfiguration.OPT_ACCUMULATOR, "true");
+    }
+
+    private void checkAccumulatorOff(String alias) {
+        try {
+            Iterator<Tuple> iter = pigServer.openIterator(alias);
+```

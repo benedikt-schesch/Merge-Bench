@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved as is, including the full context and spacing, formatted in markdown code syntax. I have not modified the context or resolved the conflict at this stage since the intent and semantics require further analysis to ensure correctness. Below, I will also explain my thought process regarding the conflict resolution.
+
+```java
+    @Nonnull
+    protected abstract SessionManager createSessionManager();
+
+    @Test
+    public void testConfigurationFormatMemcachedNodesFeature44() throws LifecycleException {
+<<<<<<< HEAD:core/src/test/java/de/javakaffee/web/msm/MemcachedSessionServiceTest.java
+        _service.setMemcachedNodes( "n1:127.0.0.1:11211" );
+        _service.startInternal(_memcachedMock);
+        Assert.assertEquals( _service.getNodeIds(), Arrays.asList( "n1" ) );
+=======
+        _manager.setMemcachedNodes( "127.0.0.1:11211" );
+        _manager.startInternal(_memcachedMock);
+        Assert.assertEquals( _manager.getNodeIds(), Arrays.asList( "n1" ) );
+>>>>>>> 4f2b3548a3427b3390027e8c087c6dce35a40f6c:core/src/test/java/de/javakaffee/web/msm/MemcachedBackupSessionManagerTest.java
+
+        _service.setMemcachedNodes( "n1:127.0.0.1:11211 n2:127.0.0.1:11212" );
+        _service.startInternal(_memcachedMock);
+        Assert.assertEquals( _service.getNodeIds(), Arrays.asList( "n1", "n2" ) );
+```
+
+### Analysis of the Merge Conflict
+
+Looking at the semantics and intent behind both sides of the merge conflict:
+
+- **HEAD (MemcachedSessionServiceTest.java)**: This version uses `_service` as the object reference for setting Memcached nodes and starting the internal service. It specifies the node with a prefix `n1:` in the address (`n1:127.0.0.1:11211`), and the assertion checks for a list of node IDs that includes `"n1"`. This suggests that the code expects node IDs to be extracted from the prefix of the node configuration string.
+  
+- **Other branch (4f2b3548, MemcachedBackupSessionManagerTest.java)**: This version uses `_manager` as the object reference for the same operations. Unlike the HEAD version, it does not include a node prefix in the address (`127.0.0.1:11211`), yet the assertion still expects a node ID of `"n1"`. This indicates an inconsistency or possibly a different default behavior for node ID assignment in this branch.
+
+### Key Differences
+1. **Object Reference**: `_service` vs `_manager`. This suggests that the test class or context in which this test resides might have changed the variable name or the object being tested.
+2. **Node Configuration Format**: The HEAD branch explicitly uses a node ID prefix (`n1:`), while the other branch does not, which might reflect a change in how node IDs are handled or parsed.
+
+### Intent Analysis
+- Both sides aim to test the configuration of Memcached nodes and verify that node IDs are correctly extracted or assigned.
+- The discrepancy in object naming (`_service` vs `_manager`) likely stems from a refactoring or a difference in test class context. Since the test method name is the same, it’s possible this test was copied or adapted between classes.
+- The node format difference suggests a potential change in implementation or configuration style for Memcached nodes between the two branches.
+
+### Why the Conflict is Not Resolved Yet
+I am not resolving the conflict at this stage because:
+- It is unclear which object reference (`_service` or `_manager`) is appropriate without additional context about the test class and variable definitions.
+- The discrepancy in node configuration format (`n1:127.0.0.1:11211` vs `127.0.0.1:11211`) could indicate a functional change in how node IDs are processed. Resolving this without understanding the expected behavior risks breaking the test.
+- The subsequent lines after the conflict use `_service`, which aligns with the HEAD version, suggesting that the HEAD version might be the intended one for this specific test. However, this is not conclusive without broader context.
+
+If additional context (e.g., the full test class, variable declarations, or commit messages) is provided, I can propose a resolution. For now, I have preserved the snippet as is with the conflict markers intact.

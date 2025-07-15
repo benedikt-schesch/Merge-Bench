@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Here is the resolved snippet with both fields preserved in their original positions:
+
+```java
+  private final ConnectedUsers connectedUsers;
+  private final GameManager gameManager;
+  private final Provider<Session> sessionProvider;
+  private final Object blackCardLock = new Object();
+  private final GameOptions options;
+  private final Set<Integer> customDecksIds = Collections.synchronizedSet(new HashSet<Integer>());
+  private final Set<String> cardcastDeckIds = Collections.synchronizedSet(new HashSet<>());
+  private final Metrics metrics;
+  private final Provider<Boolean> showGameLinkProvider;
+  private final Provider<String> gamePermalinkFormatProvider;
+  private final Provider<Boolean> showRoundLinkProvider;
+```
+
+**Resolution explanation:**  
+- Both `customDecksIds` (used for numeric deck IDs) and `cardcastDeckIds` (used for string-based deck IDs) serve distinct purposes and are required in the merged code.  
+- The order preserves the original `customDecksIds` from the `HEAD` branch while adding the new `cardcastDeckIds` from the other branch, maintaining synchronization and type consistency for concurrently accessed collections.

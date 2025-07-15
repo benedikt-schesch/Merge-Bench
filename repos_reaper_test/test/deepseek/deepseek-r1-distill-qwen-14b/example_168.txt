@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict is in the import statements for `PigInputFormat` and `SliceWrapper`. Both changes appear to be refactoring the package names from `mapreduceExec` to `mapReduceLayer`.
+
+Since `mapReduceLayer` seems to be the newer package structure, I'll assume that's the intended change.
+
+```java
+import org.apache.pig.backend.datastorage.ContainerDescriptor;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.hadoop.datastorage.HDataStorage;
+import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigInputFormat;
+import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.SliceWrapper;
+import org.apache.pig.impl.PigContext;
+import org.apache.pig.impl.util.WrappedIOException;
+import org.apache.pig.backend.hadoop.datastorage.ConfigurationUtil;
+
+public class FileLocalizer {
+
+```

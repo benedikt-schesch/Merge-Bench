@@ -1,0 +1,65 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, we need to examine the code snippet and understand the intent of both sides of the merge.
+
+The provided code snippet is in Java and appears to be part of a larger method that is constructing a string (`builder.append`) with various configuration settings. The conflict involves the injection of certain boolean values and their subsequent use in the string construction.
+
+Let's analyze the conflict step by step:
+
+1. **Conflict Area 1:**
+   - The first conflict involves the lines related to `BroadcastConnectsAndDisconnects.class`. On both sides of the conflict, there's a line getting an instance with `BroadcastConnectsAndDisconnects.class`, but they are not in conflict with each other directly; one is above the conflict markers, and the other is below. The first instance is related to a commit (`ed08e371978529db8a908e266dc1a8add1d37967`), and the other is part of the original code.
+
+2. **Conflict Area 2:**
+   - The actual conflict is between:
+     ```java
+     boolean insecureIdAllowed = injector.getInstance(Key.get(Boolean.class, InsecureIdAllowed.class));
+     ```
+     and
+     ```java
+     builder.append(String.format("cah.GAME_CHAT_ENABLED = %b;\n", gameChatEnabled));
+     ```
+   - The left-hand side (`HEAD`) introduces a variable `insecureIdAllowed` and uses it later.
+   - The right-hand side introduces a line that appends to `builder` with a variable `gameChatEnabled`, but `gameChatEnabled` is not defined in the given snippet.
+
+Upon closer inspection, we see that the variable `gameChatEnabled` is used but not declared in the conflicting snippet. It's likely that `gameChatEnabled` should be injected similarly to other boolean variables.
+
+To resolve the conflict, we should:
+- Keep the line that injects `insecureIdAllowed` as it seems to be used later.
+- Ensure `gameChatEnabled` is properly injected before it's used.
+
+Assuming `gameChatEnabled` should be injected similarly to other configuration properties, we can resolve the conflict by injecting it and keeping the necessary changes from both sides. Here's the resolution:
+
+```java
+        .getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+    builder.append(String.format("cah.COOKIE_DOMAIN = '%s';\n", cookieDomain));
+    boolean globalChatEnabled = injector.getInstance(Key.get(Boolean.class, GlobalChatEnabled.class));
+    builder.append(String.format("cah.GLOBAL_CHAT_ENABLED = %b;\n", globalChatEnabled));
+    boolean insecureIdAllowed = injector.getInstance(Key.get(Boolean.class, InsecureIdAllowed.class));
+    boolean gameChatEnabled = injector.getInstance(Key.get(Boolean.class, GameChatEnabled.class));
+    builder.append(String.format("cah.GAME_CHAT_ENABLED = %b;\n", gameChatEnabled));
+    builder.append(String.format("cah.INSECURE_ID_ALLOWED = %b;\n", insecureIdAllowed));
+    boolean broadcastingUsers = injector.getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+    builder.append(String.format("cah.BROADCASTING_USERS = %b;\n", broadcastingUsers));
+
+<<<<<<< HEAD
+```
+
+However, the correct resolution in markdown code syntax as requested, without modifying the original context or spacing, and directly resolving or keeping the conflict as is if unsure, is to directly provide the resolved or original snippet.
+
+Given the analysis and assuming we've correctly interpreted the intent, here's the revised snippet in the required markdown code syntax:
+
+```java
+        .getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+    builder.append(String.format("cah.COOKIE_DOMAIN = '%s';\n", cookieDomain));
+    boolean globalChatEnabled = injector.getInstance(Key.get(Boolean.class, GlobalChatEnabled.class));
+    builder.append(String.format("cah.GLOBAL_CHAT_ENABLED = %b;\n", globalChatEnabled));
+    boolean insecureIdAllowed = injector.getInstance(Key.get(Boolean.class, InsecureIdAllowed.class));
+    boolean gameChatEnabled = injector.getInstance(Key.get(Boolean.class, GameChatEnabled.class));
+    builder.append(String.format("cah.GAME_CHAT_ENABLED = %b;\n", gameChatEnabled));
+    builder.append(String.format("cah.INSECURE_ID_ALLOWED = %b;\n", insecureIdAllowed));
+    boolean broadcastingUsers = injector.getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+    builder.append(String.format("cah.BROADCASTING_USERS = %b;\n", broadcastingUsers));
+
+```

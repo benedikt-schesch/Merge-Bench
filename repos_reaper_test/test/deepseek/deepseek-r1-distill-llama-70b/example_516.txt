@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to decide which set of changes to keep based on their intent and semantics. Let's analyze both sides:
+
+1. **Left Side (HEAD):**
+   - Calls `clearTextureSources()` on `mBitmapTexture`
+   - Uses `BitmapTextureRegionFactory.createTiledFromAsset()`
+   - Uses relative path for texture assets: "face_box_tiled.png" or "face_circle_tiled.png"
+
+2. **Right Side (commit 91801fdd77):**
+   - Calls `clearTextureAtlasSources()` on `mBitmapTextureAtlas`
+   - Uses `BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset()`
+   - Uses absolute path for texture assets: "gfx/face_box_tiled.png" or "gfx/face_circle_tiled.png"
+
+The intent seems to be to:
+1. Change the texture management from `mBitmapTexture` to `mBitmapTextureAtlas`
+2. Update the texture paths to use an absolute path that includes "gfx/" directory
+3. Change the factory class from `BitmapTextureRegionFactory` to `BitmapTextureAtlasTextureRegionFactory`
+
+Given these intentional changes, the resolved code should incorporate all these modifications:
+
+```java
+        // ===========================================================
+        // Methods
+        // ===========================================================
+
+        private void toggle() {
+            this.mBitmapTextureAtlas.clearTextureAtlasSources();
+            this.mToggleBox = !this.mToggleBox;
+            BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, this.mToggleBox ? "gfx/face_box_tiled.png" : "gfx/face_circle_tiled.png", 0, 0, 2, 1);
+        }
+
+        // ===========================================================
+        // Inner and Anonymous Classes
+        // ===========================================================
+```

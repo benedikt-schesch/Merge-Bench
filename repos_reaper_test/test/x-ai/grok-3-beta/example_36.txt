@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Let me analyze this merge conflict and resolve it based on the semantics and intent of both sides.
+
+### Analysis of the Merge Conflict
+
+- **HEAD**: The method signature omits the `String commandName` parameter, indicating that the version on the HEAD branch does not consider the command name as a necessary parameter for this overload of the `usage` method.
+- **Incoming branch (a647950)**: The method signature includes the `String commandName` parameter, and the method body is enclosed in curly braces `{}` with proper formatting.
+
+### Intent and Semantics
+- The intent of the HEAD branch seems to be providing a simpler overload of the `usage` method that does not require a `commandName`.
+- The intent of the incoming branch is to maintain the `commandName` parameter, likely because it is needed for specific formatting or logic in the usage output (as seen in the context of the method body with comments like "NAME").
+- Given the context of the code (a method named `usage` that outputs command usage information), the `commandName` parameter seems semantically important for correctly identifying or displaying the command's name in the output.
+
+### Resolution Decision
+Since the method body in the incoming branch is consistent with using the `commandName` (based on the formatting intent), and the HEAD branch simply omits it (possibly introducing an overload), it is safer to retain the `commandName` parameter to avoid breaking dependent code that relies on this parameter. Additionally, the formatting in the incoming branch (with curly braces) aligns better with typical Java coding style.
+
+Thus, I will resolve the conflict by accepting the incoming branch's method signature while preserving the exact context and spacing as provided.
+
+Here is the unchanged snippet with the resolved conflict:
+
+```java
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, StringBuilder out)
+    {
+        usage(programName, groupName, commandName, command, new UsagePrinter(out, columnSize));
+    }
+
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, UsagePrinter out)
+    {
+        //
+        // NAME
+        //
+        out.append("NAME").newline();
+```

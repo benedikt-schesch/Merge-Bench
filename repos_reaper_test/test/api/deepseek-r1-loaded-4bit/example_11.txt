@@ -1,0 +1,34 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code snippet, the conflict is between the HEAD version and the branch starting at 7739f34. The HEAD side has only the line where they add the async manager. The other side adds that line and then includes an if statement checking if the platform is client to start the mesh generator thread.
+
+First, I need to understand what both sides are doing. The common part is adding the async manager. The conflicting part is the addition of the mesh generator thread call in the branch. The HEAD doesn't have that. So the question is whether these changes can coexist.
+
+Looking at the surrounding context, after adding the async manager, the branch adds a conditional check for the client platform before starting the mesh thread. The HEAD doesn't have this. Since these are from different branches, the correct resolution would be to include both changes. But wait, the HEAD version is just the addAsyncManager line, and the other branch adds that line plus the if block. So actually, the conflict is because one side added code after addAsyncManager, and the other didn't. So merging them would mean keeping both the addAsyncManager and the if block. But in the conflict markers, the HEAD side is the top part and the other is the bottom. So the correct resolution is to take both lines: addAsyncManager followed by the if statement.
+
+But wait, looking at the code, in the conflict, the HEAD has only the addAsyncManager line, and the other side adds the if block after it. So merging them should include both, because the two changes are additive. There's no overlap except the line where they both added code after. So the resolved code should have the addAsyncManager line, then the if statement from the branch, and then proceed with the threshold check.
+
+Therefore, the conflict can be resolved by keeping both changes. The order matters here. Since the branch adds the if block right after addAsyncManager, and the HEAD doesn't have any conflicting code there, combining them makes sense. So the resolved code would be:
+
+((SpoutScheduler)Spout.getScheduler()).addAsyncManager(region);
+
+if (Spout.getEngine().getPlatform() == Platform.CLIENT) {
+    region.startMeshGeneratorThread();
+}
+
+Then the rest of the code follows. The key is that both changes are compatible; one adds a line, the other adds an if block after that line. No overlapping modifications, so they should both be included.</think>
+```java
+		if (current != null) {
+			return current;
+		}
+		
+		((SpoutScheduler)Spout.getScheduler()).addAsyncManager(region);
+
+		if (Spout.getEngine().getPlatform() == Platform.CLIENT) {
+			region.startMeshGeneratorThread();
+		}
+
+		int threshold = warnThreshold.get();
+		if (regionsLoaded.getAndIncrement() > threshold) {
+			Spout.getLogger().info("Warning: number of spout regions exceeds " + threshold + " when creating (" +
+                x + ", " + y + ", " + z + ")");
+```

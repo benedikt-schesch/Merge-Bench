@@ -1,0 +1,28 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code snippet. Let me look at what's happening here.
+
+The conflict is in the IsEdit interface. The HEAD version has the interface declaration without any fields. The other branch, d543609, adds a static final byte array called MUTATE with the value {'M','u','t','a','t','e'}. 
+
+So the question is, should the MUTATE field be included in the merged code? Since the HEAD version doesn't have it and the other branch adds it, I need to check if these changes are compatible. 
+
+Looking at the comments, the HEAD side's comment says it's marking RPCs that change data in HBase, introduced in version 1.4. The other branch adds a method name for HBase 0.95+. Since HBase 0.95+ is older than 1.4 (assuming the versions are consistent), maybe the MUTATE constant is needed for compatibility with older versions. 
+
+But wait, the interface is package-private, so maybe both changes are valid. The MUTATE constant is a static field, which doesn't interfere with the interface's primary purpose of marking RPCs. The addition seems to be an enhancement or a necessary constant for the RPC method name. 
+
+Since the two changes are adding a new constant and the interface definition, they don't conflict semantically. The correct resolution would be to include the MUTATE field from the d543609 branch into the merged code. There's no duplication or overlap, so combining them should be safe. 
+
+Therefore, the resolved code should have both the interface declaration and the static final MUTATE field. I'll merge the two by keeping the addition from the d543609 branch.</think>
+```java
+  /**
+   * Package-private interface to mark RPCs that are changing data in HBase.
+   * @since 1.4
+   */
+  interface IsEdit {
+    /** RPC method name to use with HBase 0.95+.  */
+    static final byte[] MUTATE = { 'M', 'u', 't', 'a', 't', 'e' };
+  }
+
+  /*
+   * This class, although it's part of the public API, is mostly here to make
+   * it easier for this library to manipulate the HBase RPC protocol.
+```

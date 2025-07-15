@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+The merge conflict in the code involves testing the exception message after executing a request. Evaluating both sides:
+
+- The HEAD version uses exact string matching for the exception message.
+- The other version references the undefined variable 'ge' and uses startsWith.
+
+Since 'ge' is undefined and likely a typo, the correct variable is 'responseException'. Resolving the conflict involves replacing 'ge' with 'responseException' and deciding between exact match or startsWith.
+
+Given syntactic correctness and potential intent, the HEAD version's exact message check is preferable unless flexibility is needed, then using startsWith with 'responseException' would be better.
+
+The code should integrate the correct variable and intent, but without further context, the HEAD version is preserved.
+
+Final resolved code:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    String expectedMessage = "403\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+  }
+
+  public void testFrom_detailsArbitraryJsonContent() throws Exception {
+    HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.MEDIA_TYPE);
+    HttpRequest request =
+```
+
+Alternatively, if flexibility is desired:
+
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+    assertNull(responseException.getDetails());
+    assertTrue(responseException.getMessage().startsWith("403"));
+  }
+
+  public void testFrom_detailsArbitraryJsonContent() throws Exception {
+    HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.MEDIA_TYPE);
+    HttpRequest request =
+```
+
+However, without clear intent, the original HEAD version is chosen.

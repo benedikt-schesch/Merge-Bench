@@ -1,0 +1,56 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is in Java and appears to be part of a class that generates physical plans for a data processing system, likely Apache Pig given the presence of classes like `PODemux` and `POPackage`. The method `createDemuxPlan` is responsible for creating a physical plan involving a demux operation and a package operation.
+
+The conflict arises from the difference in the code between the `HEAD` (the local branch being merged) and the commit `88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a` (the branch being merged into the local branch). The difference is in the presence of blank lines between the declarations of `pkg` and `PhysicalPlan pl`.
+
+```java
+    private PhysicalPlan createDemuxPlan(boolean sameKeyType, boolean isCombiner)
+        throws VisitorException {
+        PODemux demux = getDemux(isCombiner);
+        POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);
+<<<<<<< HEAD
+
+=======
+        
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+        PhysicalPlan pl = new PhysicalPlan();
+        pl.add(pkg);
+        try {
+            pl.addAsLeaf(demux);
+        } catch (PlanException e) {
+```
+
+Let's analyze the intent:
+
+1. The `HEAD` side has a single blank line after `POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);`, suggesting some separation for readability but not excessive.
+   
+2. The other side (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`) introduces an additional blank line, potentially for further readability or to visually separate logical sections of the code.
+
+Both versions are syntactically correct and do not change the functionality of the code. The conflict is purely about code formatting and readability.
+
+To resolve this, one could argue that since both changes are about readability and do not affect the functionality, we could either:
+- Take the `HEAD` version for simplicity.
+- Take the other version if it is considered more readable.
+- Merge them by taking a single blank line as in `HEAD`, considering that both are trying to achieve better readability.
+
+However, since the task requires returning the entire snippet (including full context) in markdown code syntax without modifying the context and preserving the spacing as is, and given that the intent is somewhat ambiguous and related to code formatting rather than functionality, the most straightforward resolution is to return the snippet as is.
+
+```java
+    private PhysicalPlan createDemuxPlan(boolean sameKeyType, boolean isCombiner)
+        throws VisitorException {
+        PODemux demux = getDemux(isCombiner);
+        POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);
+<<<<<<< HEAD
+
+=======
+        
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+        PhysicalPlan pl = new PhysicalPlan();
+        pl.add(pkg);
+        try {
+            pl.addAsLeaf(demux);
+        } catch (PlanException e) {
+```

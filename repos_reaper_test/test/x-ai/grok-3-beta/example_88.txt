@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the merge conflict as is, since the intent behind the conflicting changes is ambiguous. The two sides of the merge appear to be addressing different functionalities (`blanksLimit` on the HEAD side and password handling on the other side), and it's unclear how these should be combined without additional context about the overall purpose of the code.
+
+Here is the original snippet with the conflict preserved:
+
+```java
+          if (!cardSetId.isEmpty()) {
+            cardSets.add((CardSet) game.getHibernateSession().load(CardSet.class,
+                Integer.parseInt(cardSetId)));
+          }
+        }
+<<<<<<< HEAD
+        final int blanksLimit = Integer.parseInt(request.getParameter(AjaxRequest.BLANKS_LIMIT));
+=======
+        final String oldPassword = game.getPassword();
+>>>>>>> d03dac9db71fadc7ff2663477514f7d0d10b3d94
+        String password = request.getParameter(AjaxRequest.PASSWORD);
+        if (password == null) {
+          password = "";
+        }
+        // We're not directly assigning this with Boolean.valueOf() because we want to default to
+```

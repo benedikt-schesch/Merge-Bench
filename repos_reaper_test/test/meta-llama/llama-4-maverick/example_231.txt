@@ -1,0 +1,63 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides.
+
+The code is written in Java and is part of the Apache Pig project. The snippet provided includes a merge conflict involving import statements.
+
+### Understanding the Conflict
+
+The conflict arises from two different changes made to the import statements:
+
+1. **Left Side (HEAD):** The left side of the conflict is using a static import for `org.apache.pig.PigServer.ExecType.MAPREDUCE`. This suggests that somewhere in the code (not shown in the snippet), `MAPREDUCE` is used directly without qualifying it with its class name.
+
+2. **Right Side (1488b22ce313803d012c8ace36c3b12f930ee309):** The right side imports `org.apache.pig.ExecType`. This indicates that the code on this side is likely using `ExecType` directly.
+
+### Analyzing Intent and Semantics
+
+To resolve the conflict, we need to consider the intent behind both changes. The left side is importing a specific enum value (`MAPREDUCE`) directly, suggesting its use in the code. The right side is importing the `ExecType` class, which is a broader import that could be used for any enum value within `ExecType`, not just `MAPREDUCE`.
+
+### Resolution
+
+Since the left side is importing a specific value (`MAPREDUCE`) and the right side is importing the entire `ExecType` enum, we should first check if there's any overlap or conflict in their usage.
+
+If the code uses `MAPREDUCE` directly (thanks to the static import on the left), and also uses other values from `ExecType` (due to the import on the right), then both imports serve different purposes.
+
+Let's preserve both intents by including both imports in the resolved code.
+
+### Resolved Code Snippet
+
+```java
+ * limitations under the License.
+ */
+
+package org.apache.pig.test;
+
+import org.apache.pig.ExecType;
+import static org.apache.pig.PigServer.ExecType.MAPREDUCE;
+import org.apache.pig.PigServer;
+
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+```
+
+However, to accurately represent the original task's request, we must return the snippet in the exact format as provided, with the conflict markers if we cannot resolve it, or the resolved version if we can.
+
+### Checking for Direct Usage
+
+Since the actual code using these imports isn't shown, and assuming both changes are valid and used within the class, the resolved version above seems plausible.
+
+### Final Output
+
+```java
+ * limitations under the License.
+ */
+
+package org.apache.pig.test;
+
+import org.apache.pig.ExecType;
+import static org.apache.pig.PigServer.ExecType.MAPREDUCE;
+import org.apache.pig.PigServer;
+
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.Tuple;
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that there are two differences:
+
+1. The `@SuppressWarnings("unchecked")` annotation in the HEAD version
+2. The `@Test` annotation placement - in the HEAD it's at class level, while in the incoming change it's at method level
+
+The most likely correct resolution is to take the method-level `@Test` annotation (which is standard in JUnit) while preserving the `@SuppressWarnings("unchecked")` annotation.
+
+Here's the resolved code:
+
+```java
+>>>>>>> a647950590fa8dec1925101321699283f22a8bff
+
+@Test
+public class HelpTest
+{
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGit()
+    {
+        CliBuilder<Runnable> builder = Cli.<Runnable>builder("git")
+                .withDescription("the stupid content tracker")
+                .withDefaultCommand(Help.class)
+                .withCommands(Help.class,
+
+```

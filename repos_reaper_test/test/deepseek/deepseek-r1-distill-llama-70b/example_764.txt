@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict resolved by preserving both changes in a way that maintains their intent and functionality:
+
+```java
+                                 final ChannelEvent event) {
+      if (event instanceof MessageEvent) {
+        synchronized (ctx) {
+          final ChannelPipeline pipeline = ctx.getPipeline();
+
+          // After acquiring the lock on `ctx', if we're still in the pipeline
+          // it means that no message has been sent downstream yet, we're the
+          // first one to attempt to send something.
+          if (pipeline.get(SayHelloFirstRpc.class) == this) {
+            final MessageEvent me = (MessageEvent) event;
+            final ChannelBuffer payload = (ChannelBuffer) me.getMessage();
+            final ChannelBuffer header = ChannelBuffers.wrappedBuffer(HELLO_HEADER);
+            final RegionClient client = pipeline.get(RegionClient.class);
+```

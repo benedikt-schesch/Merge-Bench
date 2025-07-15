@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that there are two changes to the `deserializeObject` method:
+
+1. In HEAD, the method is an instance method (no `static` modifier) and accepts 3 parameters: `buf`, `rpcid`, and `request`.
+2. In the other branch, the method is a static method and only accepts 2 parameters: `buf` and `request`, removing the `rpcid` parameter.
+
+Given that the method signature has changed significantly in both versions with different parameter counts and method modifiers, I'll resolve the conflict based on what appears to be the newer approach (making the method static) but preserving the `rpcid` parameter which likely serves an important function:
+
+```java
+   * De-serializes a "Writable" serialized by
+   * {@code HbaseObjectWritable#writeObject}.
+   * @return The de-serialized object (which can be {@code null}).
+   */
+  @SuppressWarnings("fallthrough")
+  static Object deserializeObject(final ChannelBuffer buf,
+                                 final int rpcid,
+                                 final HBaseRpc request) {
+    switch (buf.readByte()) {  // Read the type of the response.
+      case  1:  // Boolean
+        return buf.readByte() != 0x00;
+      case  6:  // Long
+        return buf.readLong();
+```

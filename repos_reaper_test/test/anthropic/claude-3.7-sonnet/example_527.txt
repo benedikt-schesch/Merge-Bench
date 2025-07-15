@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```java
+    public void handleApplicationCommandRequest(SerialMessage serialMessage, int offset, int endpoint) {
+        logger.debug("NODE {}: Received central scene command (v{})", this.getNode().getNodeId(), this.getVersion());
+        int command = serialMessage.getMessagePayloadByte(offset);
+        switch (command) {
+            case SCENE_SET:
+                // offset+1 is an incrementing number
+                int sceneId = serialMessage.getMessagePayloadByte(offset + 3);
+                int time = serialMessage.getMessagePayloadByte(offset + 2);
+                if (time > 127) {
+                    // Values of 128 and above are in minutes (128 = 1 minute)
+                    time = (time - 127) * 60;
+```

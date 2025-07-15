@@ -1,0 +1,23 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is a Java method that returns a list of lists of maps. The conflict is between the HEAD version returning `new ArrayList<List<Map<WhiteCardData, Object>>>()`, and the other branch using `new ArrayList<>()` with the diamond operator.
+
+First, I need to understand the intent of both changes. The HEAD version explicitly specifies the generic types, while the other branch uses the diamond operator, which was introduced in Java 7 to reduce verbosity by inferring the type from the context.
+
+Since the method's return type is `List<List<Map<WhiteCardData, Object>>>`, when creating an empty ArrayList, the diamond operator should be safe here. The compiler can infer the correct type from the assignment context. Therefore, using `new ArrayList<>()` is equivalent but more concise.
+
+I should check if there's any reason the explicit type might be necessary. Maybe in an older Java version, but if the project is using Java 7 or newer, the diamond operator is preferred for readability. Both versions create the same empty list structure. There's no functional difference between them; it's just syntactic sugar.
+
+Therefore, resolving the conflict by choosing the version with the diamond operator makes sense. It's cleaner and modern Java practice. The surrounding context doesn't show any other issues, so replacing the explicit generic with the diamond operator here should resolve the conflict without introducing errors.</think>
+```java
+  public List<List<Map<WhiteCardData, Object>>> getWhiteCards(final User user) {
+    // if we're in judge mode, return all of the cards and ignore which user is asking
+    if (state == GameState.JUDGING) {
+      return getWhiteCards();
+    } else if (state != GameState.PLAYING) {
+      return new ArrayList<>();
+    } else {
+      // getPlayerForUser synchronizes on players. This has caused a deadlock in the past.
+      // Good idea to not nest synchronizes if possible anyway.
+      final Player player = getPlayerForUser(user);
+      synchronized (playedCards) {
+```

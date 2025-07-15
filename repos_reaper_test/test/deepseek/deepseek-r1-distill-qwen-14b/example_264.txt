@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict arises from duplicate `else if` blocks for `POPackage`. To resolve this, remove the old block and keep the updated one.
+
+```java
+            subPlans = ((POForEach)node).getInputPlans();
+        } else if (node instanceof POSplit) {
+            subPlans = ((POSplit)node).getPlans();
+        } else if (node instanceof PODemux) {
+            subPlans = ((PODemux)node).getPlans();
+        } else if(node instanceof POPackage){
+            childNode = createPONode(node);
+            Packager pkgr = ((POPackage) node).getPkgr();
+            Node pkgrNode = createPackagerNode(pkgr);
+            childNode.appendChild(pkgrNode);
+        } else if(node instanceof POFRJoin){
+            childNode = createPONode(node);
+            POFRJoin frj = (POFRJoin)node;
+            List<List<PhysicalPlan>> joinPlans = frj.getJoinPlans();
+            if(joinPlans!=null) {
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+```

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, carefully analyze the intent of both sides. The first side aims to add debug logging before processing the stream, while the second side correctly processes the stream to return a String. The incorrect return of the InputStream needs to be fixed by properly reading it into a String.
+
+The correct approach is to:
+1. Add debug logging after initializing the String but before processing.
+2. Properly read the InputStream into the String and ensure it's not null.
+3. Remove the erroneous return statement.
+
+```java
+        mResponse = null;
+    }
+
+    public String asString() throws ResponseException {
+        if (TwitterApplication.DEBUG){
+            DebugTimer.betweenStart("AS STRING");
+        }
+
+        String str = null;
+        InputStream is = asStream();
+        if (null == is) {
+            return str;
+        }
+
+        try {
+            str = someEncoding ? new String(is, StandardCharsets.UTF_8) : new String(is);
+        } catch (IOException e) {
+            throw new ResponseException("Failed to convert InputStream to String", e);
+        }
+        
+        return str;
+    }
+```

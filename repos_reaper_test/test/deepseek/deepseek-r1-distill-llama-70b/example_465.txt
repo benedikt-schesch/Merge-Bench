@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+Ok, I need to consider the intent of both sides of this merge conflict.
+
+The HEAD version has:
+```
+public MetricResult measureUser(TestUser user, ResultList recs, Context context) {
+    LongSet good = goodItems.selectItems(context.universe, context.recommender, user);
+```
+
+While the ae1b395 version has:
+```
+public MetricResult measureUser(TestUser user, int targetLength, ResultList recs, Context context) {
+    LongSet good = goodItems.selectItems(context.universe, user);
+```
+
+Here's my analysis:
+
+1. Both sides intend to implement the same method measureUser() which appears to be part of some recommendation or rating system
+2. The key differences are:
+   - The parameter list differs (targetLength parameter added in one version)
+   - The arguments passed to goodItems.selectItems() differ (recommender included/excluded)
+
+Since I don't have enough context about:
+- Why targetLength was added in one version
+- Why context.recommender was removed in the other version
+- What the significance of goodItems.selectItems() parameter changes are
+
+I cannot resolve this conflict with confidence as the intent behind these changes is ambiguous.
+
+Here is the original snippet with the conflict preserved:
+
+```java
+        return new AggregateResult(context).withSuffix(suffix);
+    }
+
+    @Nonnull
+    @Override
+<<<<<<< HEAD
+    public MetricResult measureUser(TestUser user, ResultList recs, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, context.recommender, user);
+=======
+    public MetricResult measureUser(TestUser user, int targetLength, ResultList recs, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, user);
+>>>>>>> ae1b395ec63b1333c717fdac150e0860cf0326e0
+        if (good.isEmpty()) {
+            logger.warn("no good items for user {}", user.getUserId());
+            return new UserResult(0, false);
+        }
+```

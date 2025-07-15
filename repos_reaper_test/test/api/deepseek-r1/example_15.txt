@@ -1,0 +1,22 @@
+<think>
+Okay, let's look at this merge conflict. The method `worldChanged` has two different implementations. In the HEAD version, they create a SpoutClientWorld with parameters (name, this, uuid), then get the datatable and deserialize. The other branch creates the world with more parameters, including getEngineItemMap() twice, and gets data instead of datatable.
+
+Hmm, the intent seems to be initializing the world with necessary data. The HEAD version has a print statement, which might be useful for debugging. The parameters in the constructor differ. Maybe the correct parameters are a combination of both? Or perhaps one branch added new parameters that the other didn't. Also, the data field is called datatable in one and data in the other. That's a problem. Need to check which one is correct.
+
+Wait, maybe the correct approach is to take both changes. The print statement from HEAD is useful, but the constructor parameters from the other branch might be necessary. Also, the SerializableMap is obtained from getData() in one and getDatatable() in the other. If the method was renamed, that's a conflict. Without knowing which is correct, maybe it's safer to check. If both branches are modifying different parts, perhaps we can merge them. But the constructor parameters are conflicting. The HEAD uses (name, this, uuid), the other uses (name, uuid, this, getEngineItemMap(), getEngineItemMap()). That's a significant difference. Maybe the other branch added new parameters to the constructor, so we should use those. Also, the data vs datatable: if the other branch renamed getDatatable() to getData(), then using getData() is correct. So combining the print statement from HEAD, using the new constructor parameters, and the getData() method. So the resolved code would include the System.out.println, create the world with the parameters from the other branch, and use getData(). Then deserialize as before. Let me put that together.</think>
+```java
+	public SpoutClientWorld getDefaultWorld() {
+		return world.get();
+	}
+
+	public SpoutClientWorld worldChanged(String name, UUID uuid, byte[] data) {
+		System.out.println("WORLD CHANGED!");
+		SpoutClientWorld world = new SpoutClientWorld(name, uuid, this, getEngineItemMap(), getEngineItemMap());
+
+		SerializableMap map = world.getData();
+		try {
+			map.deserialize(data);
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to deserialize data", e);
+		}
+```

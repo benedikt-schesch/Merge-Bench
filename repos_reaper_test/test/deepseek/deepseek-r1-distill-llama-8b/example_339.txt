@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict appears to be a simple formatting issue with inconsistent indentation after the `if` statement. The right side doesn't properly close the `if` block before continuing with the rest of the method. I will fix the indentation to resolve the syntax conflict while maintaining the original functionality of checking if the tweet already exists.
+
+The corrected code:
+```java
+  public final static DateFormat DB_DATE_FORMATTER = new SimpleDateFormat(
+      "yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+
+  // TODO: move all these to the model.
+  public long createTweet(String tableName, Tweet tweet, String prevId, boolean isUnread) {
+      //如果已经存在就忽略
+      if (isTweetExists(tableName, tweet.id)){
+          return -1;
+      }
+      Log.i(TAG, "Insert tweet to table " + TABLE_TWEET + " : " + tweet.toString());
+
+      ContentValues initialValues = new ContentValues();
+      initialValues.put(KEY_ID, tweet.id);
+      initialValues.put(KEY_USER, tweet.screenName);
+      initialValues.put(KEY_TEXT, tweet.text);
+      initialValues.put(KEY_PROFILE_IMAGE_URL, tweet.profileImageUrl);
+  }
+```
+
+The key changes made:
+1. Properly indented the code block after the `if` statement.
+2. Fixed the indentation of the opening curly brace for the method.
+3. Ensured consistent indentation throughout the method to prevent future formatting issues.
+
+The functionality remains exactly the same, with the method still checking if a tweet already exists and returning `-1` if it does, while properly logging the operation and preparing the data for insertion.

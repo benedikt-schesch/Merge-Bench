@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+I'll preserve both changes as they appear to enhance the method's functionality by adding targetLength and adjusting how good items are selected.
+
+```java
+        return new AggregateResult(context).withSuffix(suffix);
+    }
+
+    @Nonnull
+    @Override
+    public MetricResult measureUser(TestUser user, int targetLength, ResultList recommendations, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, user);
+        if (good.isEmpty()) {
+            logger.warn("no good items for user {}", user.getUserId());
+        }
+
+        Integer rank = null;
+```

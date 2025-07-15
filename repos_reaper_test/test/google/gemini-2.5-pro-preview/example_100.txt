@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I need to understand the intent behind the changes from both `HEAD` and the incoming commit `61056d641fa4f45156766a8c333ee3f4179fcae7`.
+
+The conflict is in the definition of the `isNotEqualTo` method:
+```java
+<<<<<<< HEAD
+  public ByteAssert isNotEqualTo(byte expected){
+=======
+  public ByteAssert isNotEqualTo(byte expected) {
+>>>>>>> 61056d641fa4f45156766a8c333ee3f4179fcae7
+```
+
+*   **HEAD's version:** `public ByteAssert isNotEqualTo(byte expected){`
+*   **Commit `61056d641fa4f45156766a8c333ee3f4179fcae7`'s version:** `public ByteAssert isNotEqualTo(byte expected) {`
+
+**Intent Analysis:**
+Both versions of the code are defining the exact same method in terms of name, return type (`ByteAssert`), and parameter (`byte expected`). The only difference is a single space character before the opening curly brace `{` in the method signature. This is a purely stylistic difference.
+
+**Resolution Strategy:**
+The semantic intent is identical. The common Java coding convention is to include a space before the opening curly brace of a method definition for better readability. Therefore, the version from commit `61056d641fa4f45156766a8c333ee3f4179fcae7` is stylistically preferred.
+
+I will choose the version: `public ByteAssert isNotEqualTo(byte expected) {`
+
+The rest of the provided snippet, including other potential conflict markers not part of this specific `isNotEqualTo` conflict, will be preserved as "context" according to the instructions.
+
+```java
+>>>>>>> 61056d641fa4f45156766a8c333ee3f4179fcae7
+    bytes.assertEqualTo(description, actual, expected);
+    return this;
+  }
+
+  public ByteAssert isNotEqualTo(byte expected) {
+    bytes.assertNotEqualTo(description, actual, expected);
+    return this;
+  }
+
+<<<<<<< HEAD
+
+```

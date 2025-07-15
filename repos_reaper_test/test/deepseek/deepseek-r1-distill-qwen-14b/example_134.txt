@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to be due to whitespace differences only, specifically indentation. Both changes aim to call `setupUDFContext` in the same location, but the indentation varies. Since this is a style difference and not a functional change, we can choose one consistent indentation.
+
+To resolve the conflict, we'll maintain the existing 4-space indentation as per the left side.
+
+```java
+                    roots = rp.getRoots().toArray(new PhysicalOperator[1]);
+                    leaf = rp.getLeaves().get(0);
+                }
+
+                // Get the UDF specific context
+                MapRedUtil.setupUDFContext(jConf);
+
+            } catch (IOException ioe) {
+                String msg = "Problem while configuring reduce plan.";
+                throw new RuntimeException(msg, ioe);
+            }
+```

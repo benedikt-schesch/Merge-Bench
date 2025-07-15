@@ -1,0 +1,23 @@
+<think>
+Okay, let me look at this merge conflict. The code has two versions in the conflict. The HEAD side has some variables like initCallbackContext, scanCallbackContext, scanLock, permissionsCallback, and locationCallback. Then the other side from commit 2efc89d adds more variables: initPeripheralCallback, gattServer, addServiceCallback, advertiseCallbackContext, isAdvertising, and also a comment about connections and discovery.
+
+The conflict is between the two sets of variable declarations. The user wants me to merge these without modifying the context otherwise. Since both sides are adding different variables to the same section of the class, the correct resolution would be to include all variables from both branches. The order might matter, but since the second part adds variables after locationCallback in their branch, maybe they should come after. But looking at the original conflict markers, the HEAD side doesn't have a line break after locationCallback, while the other side does. So in the conflicting area, the second part starts with a new line. To merge them, I should combine all variables, preserving the order from both.
+
+So the HEAD has up to locationCallback, then the other branch adds their variables. Since in the conflict, the other side has a line break after locationCallback, maybe that's intentional. So the merged code should have all variables from both, maintaining the structure. The variables from the second branch should be added after locationCallback, possibly with the line break as in their version. Also, check if any variables are duplicated or if there's any overlap. It doesn't look like it. So the resolved code would list all variables from both sides in the order they appear, combining them without conflict. The connections and discovery comments are after, so they stay as is. So the final merged code includes all variables from both branches, ordered as per both changes.</think>
+```java
+  private CallbackContext initCallbackContext;
+  private CallbackContext scanCallbackContext;
+  private Object scanLock = new Object();
+  private CallbackContext permissionsCallback;
+  private CallbackContext locationCallback;
+  private CallbackContext initPeripheralCallback;
+  private BluetoothGattServer gattServer;
+  private CallbackContext addServiceCallback;
+  private CallbackContext advertiseCallbackContext;
+  private boolean isAdvertising = false;
+
+  //Store connections and all their callbacks
+  private HashMap<Object, HashMap<Object,Object>> connections;
+
+  //Discovery related variables
+```

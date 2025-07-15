@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to analyze the intent and semantics of both sides of the merge.
+
+The code snippet appears to be part of a method that handles connecting a user to a server in a proxy server environment. When an exception occurs during the connection process, it catches the exception and checks if it should retry the connection or not.
+
+The conflicting lines are within the `if (retry && !info.equals(def))` block.
+
+The left-hand side (HEAD) of the merge is calling the `connect` method with the following parameters: `user`, `BungeeCord.instance.config.defaultServerName`, `def`, `handshake`, and `false`. 
+
+The right-hand side (cae71552cdabc4cd1ce3f9736d59de4caadac434) of the merge is calling the `connect` method with the parameters: `user`, `def`, `handshake`, and `false`. It also includes an additional line to send a message to the user indicating that they have been moved to the default server due to a connection failure.
+
+To resolve the conflict, we need to understand the intent behind the different parameters passed to the `connect` method and the additional message sent in the right-hand side.
+
+Upon closer inspection, it appears that both sides are trying to achieve a similar goal - reconnecting the user to the default server when the initial connection fails. However, they differ in the parameters passed to the `connect` method.
+
+The left-hand side is passing `BungeeCord.instance.config.defaultServerName` as the second parameter, whereas the right-hand side is directly passing `def`. 
+
+Since `def` is derived from `ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer())`, it seems more related to the actual default server object rather than just its name. Thus, using `def` directly might be more appropriate or at least consistent with how `def` is being used.
+
+Moreover, the right-hand side includes a user-friendly message that informs the user about being moved to the default server, which is a good practice for user experience.
+
+Combining these insights, a potential resolution could involve taking the `connect` call from the right-hand side and the overall structure, while keeping the essence of both sides.
+
+However, the exact method signature and the type of `BungeeCord.instance.config.defaultServerName` are not provided. Assuming that `def` is the server info object and is being used correctly on the right-hand side, and if `connect` method on the right-hand side matches the expected signature, we could potentially resolve it by taking the right-hand side's changes.
+
+Here is the resolved snippet in markdown code syntax:
+
+```java
+        } catch (Exception ex)
+        {
+            ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+                user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+                return connect(user, def, handshake, false);
+            } else
+            {
+                throw new RuntimeException("Could not connect to target server " + Util.exception(ex));
+            }
+        }
+```

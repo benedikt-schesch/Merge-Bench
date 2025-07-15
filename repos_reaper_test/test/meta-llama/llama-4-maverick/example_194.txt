@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we first need to understand the intent and semantics of both sides of the merge.
+
+The conflict is in the `instantiateFuncFromSpec` method. The left-hand side (HEAD) is using the `getClassNameFromSpec` and `getArgStringFromSpec` methods to extract information from the `funcSpec` string and then passing it to `instantiateFunc`. The right-hand side (1488b22ce313803d012c8ace36c3b12f930ee309) is creating a new `FuncSpec` object from the `funcSpec` string and then passing it to `instantiateFuncFromSpec` (which seems to be an overloaded method).
+
+To determine the correct resolution, we need to consider the intent behind both changes. 
+
+1. The left-hand side seems to be directly parsing the `funcSpec` and using the extracted information to instantiate a function.
+2. The right-hand side is encapsulating the `funcSpec` within a `FuncSpec` object and then using it to instantiate the function, potentially allowing for more flexibility or additional functionality that `FuncSpec` might provide.
+
+Without knowing the specifics of `FuncSpec` and its benefits or how `instantiateFuncFromSpec(FuncSpec)` is implemented, the most straightforward resolution is to understand if one approach supersedes or complements the other.
+
+However, the provided snippet does not include the implementation of `instantiateFuncFromSpec(FuncSpec)` or the details about `FuncSpec`. Thus, based on the given information alone, we can't be certain which approach is superior or if they are equivalent in intent.
+
+Given this context, a safe approach would be to preserve the conflict or choose one side based on external knowledge about the codebase. Since we are to return the snippet as is if the intent is ambiguous, we'll do that.
+
+Here is the original snippet in markdown code syntax, unmodified:
+
+```java
+            throw new RuntimeException(sb.toString(), e);
+        }
+        return ret;
+    }
+    
+<<<<<<< HEAD
+    public static Object instantiateFuncFromSpec(String funcSpec) {
+        return instantiateFunc(getClassNameFromSpec(funcSpec), getArgStringFromSpec(funcSpec));
+=======
+    public static Object instantiateFuncFromSpec(String funcSpec)  {
+        return instantiateFuncFromSpec(new FuncSpec(funcSpec));
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+    
+    
+    public Class getClassForAlias(String alias) throws IOException{
+<<<<<<< HEAD
+
+```

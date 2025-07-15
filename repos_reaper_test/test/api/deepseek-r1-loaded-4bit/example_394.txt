@@ -1,0 +1,24 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code snippet provided, there's a conflict in the test method. The HEAD version has the method declared as `void shouldUpdateCoreOnAutoBuild()` with the `@Test` annotation, while the other branch (ee24931) uses `public void shouldUpdateCoreOnAutoBuild()`. Also, there's a difference in the method name `prepateCore` vs `prepareCore`—looks like a typo in HEAD.
+
+First, in JUnit 5 (Jupiter), test methods don't need to be public, so the `public` modifier is optional. The HEAD version is using the more modern JUnit 5 style without `public`, which is correct. However, the other branch might be using JUnit 4, where test methods need to be public. But since the `@Test` annotation here is probably from JUnit 5 (as it's `@Test` without any import conflicts), keeping the method non-public makes sense. So we should go with the HEAD's version without `public`.
+
+Next, the method name `prepateCore` in HEAD is a typo. The correct method name is `prepareCore`, as seen in the other branch. That's a clear mistake, so we should correct that to `prepareCore`.
+
+So the resolved code should have the method without `public` and the correct method name. Let me check the surrounding context. The verify calls and assertions seem consistent on both sides. The parameters passed to `prepareCore` are the same. The rest of the code after the conflict markers is the same in both branches, so no issues there.
+
+Therefore, the resolved code will merge the method declaration from HEAD (without `public`), correct the typo in the method call to `prepareCore`, and keep the rest as is. The surrounding context like the `assertEquals` and `verify` calls remain unchanged because there's no conflict there.</think>
+```java
+		assertEquals(1, updates);
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+	}
+
+	@Test
+	void shouldUpdateCoreOnAutoBuild() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 10);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(findingTests(0, projects.size(), 0));
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+```

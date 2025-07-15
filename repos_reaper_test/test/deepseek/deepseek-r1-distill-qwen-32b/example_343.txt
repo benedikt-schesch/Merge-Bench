@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+To resolve the conflict in the given Java code snippet, we'll consider the semantic intent of both branches. The branch 'fe1b8ab' marks the method as obsolete by adding a `throw` statement, while the HEAD branch may still rely on the existing functionality.
+
+### Step-by-Step Explanation:
+1. **Identify the Conflict:** The method has differing access modifiers and functionality between branches.
+2. **Analyze Intent:** The other branch aims to deprecate the method, while the HEAD expects it to function as before.
+3. **Resolve:** Choose to keep the method functional to maintain compatibility. If deprecation is the goal, ensure callers are updated first.
+
+Here's the resolved code:
+
+```java
+	 *            Parameters
+	 * @param manager
+	 *            Reference back to business layer
+	 * @return Parsed JSON object, empty object on error.
+	 */
+	protected JsonNode query(String command, JsonNode parameters,
+			INotifiableManager manager) {
+		URLConnection uc = null;
+		try {
+			final ObjectMapper mapper = Client.MAPPER;
+
+			if (mUrl == null) {
+				throw new NoSettingsException();
+```
+
+Both changes from the other branch (deprecation and access modifier) were considered but reverted to maintain existing functionality.

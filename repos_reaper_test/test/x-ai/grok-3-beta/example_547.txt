@@ -1,0 +1,57 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict, preserved exactly as given with the original context and spacing, followed by my analysis and resolution.
+
+```java
+        if (language != null) {
+            if ("swagger".equals(language)) {
+                definition = SwaggerUtils
+                        .getDefinition(defSource, ulogin, upwd);
+            } else {
+<<<<<<< HEAD
+                failWithErrorMessage("The language " + language
+                        + " is not currently supported. ");
+=======
+                failWithErrorMessage("The language " + language + " is not currently supported. ");
+>>>>>>> 1d97bfac1d91e13b3835ca099b3a998c1969478f
+            }
+        } else {
+            if (defSource != null) {
+                Class<?> clazz = null;
+                try {
+```
+
+**Analysis and Resolution:**
+
+Upon examining the merge conflict, I observe that both sides of the conflict (HEAD and the commit `1d97bfac1d91e13b3835ca099b3a998c1969478f`) have nearly identical code. The difference lies in the formatting of the string concatenation:
+
+- **HEAD**: `"The language " + language + " is not currently supported. "`
+  - The string is split across two lines for readability, with a space after the period in `"supported. "`.
+- **Other Branch (1d97bfac1d91e13b3835ca099b3a998c1969478f)**: `"The language " + language + " is not currently supported. "`
+  - The string is on a single line, also with a space after the period in `"supported. "`.
+
+**Intent and Semantics:**
+
+The semantic intent on both sides is the same: to throw an error message indicating that the specified language is not supported. The difference is purely stylistic, involving line breaking for readability. There is no functional difference between the two versions, as the resulting string will be identical in both cases during execution.
+
+**Resolution:**
+
+Since the intent is identical and the difference is only in code formatting (line break), I will resolve the conflict by choosing one of the styles for consistency. I will adopt the single-line format from the branch `1d97bfac1d91e13b3835ca099b3a998c1969478f` as it is more concise. However, if the project has a specific coding style guide regarding line breaks for long strings, that should be followed instead. In the absence of such a guideline, I will proceed with the single-line version.
+
+Here is the resolved snippet with the full context preserved:
+
+```java
+        if (language != null) {
+            if ("swagger".equals(language)) {
+                definition = SwaggerUtils
+                        .getDefinition(defSource, ulogin, upwd);
+            } else {
+                failWithErrorMessage("The language " + language + " is not currently supported. ");
+            }
+        } else {
+            if (defSource != null) {
+                Class<?> clazz = null;
+                try {
+```
+
+This resolution maintains the original intent and functionality while resolving the stylistic difference introduced by the merge conflict.

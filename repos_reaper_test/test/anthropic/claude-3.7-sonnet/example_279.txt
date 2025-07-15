@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this code, I see a simple merge conflict that only involves whitespace. Both sides of the merge have an empty line between `toPkgr.setSameMapKeyType(isSameKeyType);` and the `if (pkCount != total) {` block, but they're represented slightly differently.
+
+Here's the resolved code:
+
+```java
+            toPkgr.addPackager(cpkgr);
+            pkCount = 1;
+        }
+
+        toPkgr.setSameMapKeyType(isSameKeyType);
+
+        if (pkCount != total) {
+            int errCode = 2146;
+            String msg = "Internal Error. Inconsistency in key index found during optimization.";
+            throw new OptimizerException(msg, errCode, PigException.BUG);
+        }
+```

@@ -1,0 +1,22 @@
+<think>
+Okay, let's look at this merge conflict. The code has two different lines being added in the same spot. On the HEAD side, there's a line for customDecksServiceProvider, and on the other branch, it's cardcastServiceProvider. Both are service providers, but the names are different. 
+
+I need to figure out if these are two separate services that should both be included or if they're conflicting names for the same thing. Since the variable names are different (customDecks vs cardcast), they might be separate dependencies. Maybe one branch added a new service for custom decks, and another added one for Cardcast (which is a service for importing decks). If the class uses both, then both lines should stay. But if they're meant to replace each other, then one should be chosen.
+
+Looking at the surrounding code, the variables being initialized are dependencies for the class. It's possible that both services are needed, so the correct resolution is to include both lines. The order might matter, but since they're different variables, both should be present. So the conflict is because both branches added a new provider in the same place. The solution is to keep both lines, placing one after the other without conflict markers.</think>
+```java
+    this.options = gameOptionsProvider.get();
+    this.connectedUsers = connectedUsers;
+    this.gameManager = gameManager;
+    this.globalTimer = globalTimer;
+    this.sessionProvider = sessionProvider;
+    this.customDecksServiceProvider = customDecksServiceProvider;
+    this.cardcastServiceProvider = cardcastServiceProvider;
+    this.uniqueIdProvider = uniqueIdProvider;
+    this.metrics = metrics;
+    this.showRoundLinkProvider = showRoundLinkProvider;
+    this.roundPermalinkFormatProvider = roundPermalinkFormatProvider;
+    this.showGameLinkProvider = showGameLinkProvider;
+```
+
+Rationale: Both service providers appear to be distinct dependencies based on their names (`customDecks` vs `cardcast`). Since they're different fields being initialized and there's no obvious naming collision or semantic overlap, the safest resolution is to preserve both lines. This assumes both service providers are legitimate requirements added by different features/branches.

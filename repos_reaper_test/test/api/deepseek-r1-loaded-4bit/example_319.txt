@@ -1,0 +1,33 @@
+<think>
+Okay, let's see what the problem is here. The user provided a Java code snippet with a merge conflict. The task is to resolve the conflict by understanding the intent of both changes and merging them appropriately without altering the surrounding context.
+
+Looking at the conflict:
+
+The HEAD version has the method asString() starting with declaring a String variable and then getting an InputStream. The other branch (cbb20c8) adds some debug code using TwitterApplication.DEBUG and DebugTimer. The conflict occurs because the debug code is added right after the method declaration, while the HEAD version doesn't have that.
+
+So, the goal is to incorporate both changes. The debug code from the other branch should be placed at the beginning of the method, right after the method's opening brace. Then, the existing code from HEAD follows. That way, the debug timing is measured for the entire method execution, which makes sense.
+
+I need to check the syntax. The debug code is within an if statement checking TwitterApplication.DEBUG. Then they start a timer. After that, the original code proceeds. So merging those two should work. There's no overlap in the code except the placement. So the correct merge would be to include the debug code first, then the rest of the method.
+
+So the resolved code should have the debug block at the start of the method, followed by the String declaration and InputStream handling. That way, both the debug timing and the original logic are preserved.
+
+I should make sure that the indentation is correct. The debug code is indented with four spaces in the conflicting version. The original code uses four spaces for indentation, so that's consistent. The merged code should maintain that indentation.
+
+Also, check if there are any other possible conflicts, but in this case, the rest of the code is the same. The conflict markers are only around the added debug lines. So removing the conflict markers and placing the debug code correctly should resolve it.
+
+So the final merged code would have the debug block right after the method starts, then the rest of the code as in HEAD. That should satisfy both changes without any issues.</think>
+```java
+        mResponse = null;
+        return is;
+    }
+
+    public String asString() throws ResponseException {
+        if (TwitterApplication.DEBUG) {
+            DebugTimer.betweenStart("AS STRING");
+        }
+
+        String str = null;
+        InputStream is = asStream();
+        if (null == is) {
+            return str;
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The code contains a merge conflict where one side introduces a conditional check for handling key index shifting. The resolved code includes this check to ensure proper key lookup when the packager isn't a MultiQueryPackager.
+
+```java
+    private void mergeOneReducePlanWithIndex(PhysicalPlan from,
+            PhysicalPlan to, int initial, int current, byte mapKeyType) throws VisitorException {
+        POPackage pk = (POPackage)from.getRoots().get(0);
+        from.remove(pk);
+        Packager fromPkgr = pk.getPkgr();
+        if (!(fromPkgr instanceof MultiQueryPackager)) {
+            // XXX the index of the original keyInfo map is always 0,
+            // we need to shift the index so that the lookups works
+            // with the new indexed key
+            addShiftedKeyInfoIndex(initial, fromPkgr);
+
+```

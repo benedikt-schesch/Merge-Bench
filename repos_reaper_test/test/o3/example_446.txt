@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+
+	@Test
+	public void parseWifi() throws Exception {
+		Object scheme = createParser().parse("WIFI:S:some weird SSID;T:WPA;P:aintNoSecret;H:true;");
+		assertNotNull(scheme);
+		assertThat(scheme,instanceOf(Wifi.class));
+		//assertThat(scheme, is(Wifi.class));
+		Wifi wifi = (Wifi) scheme;
+		assertEquals("some weird SSID", wifi.getSsid());
+		assertEquals("WPA", wifi.getAuthentication());
+		assertEquals("aintNoSecret", wifi.getPsk());
+		assertTrue(wifi.isHidden());
+
+```

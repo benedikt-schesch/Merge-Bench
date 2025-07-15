@@ -1,0 +1,75 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java imports. Let me look at what's happening here.
+
+The HEAD version has imports for RestfbAssertions.assertThat, StringUtils.fromInputStream, and Assertions.failBecauseExceptionWasNotThrown. The other branch, a17acec, imports StringUtils.fromInputStream and JUnit's Assert.*.
+
+Hmm, the conflicting parts are the static imports. The HEAD uses RestfbAssertions and AssertJ's failBecauseExceptionWasNotThrown, while the other branch uses JUnit's Assert. The common import is fromInputStream from StringUtils, which is present in both.
+
+So, the conflict is between different testing frameworks. RestfbAssertions.assertThat might be a custom assertion, and the other side is using JUnit's assertions. The failBecauseExceptionWasNotThrown from AssertJ vs. the JUnit's assert methods.
+
+The goal is to merge these without breaking the intent. If both sets of imports are needed, we should include all of them. But maybe some are redundant or conflicting.
+
+Wait, in Java, you can have multiple static imports. So perhaps combine both? Let's check:
+
+HEAD has:
+import static com.restfb.testutils.RestfbAssertions.assertThat;
+import static com.restfb.util.StringUtils.fromInputStream;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+
+The other branch has:
+import static com.restfb.util.StringUtils.fromInputStream;
+import static org.junit.Assert.*;
+
+So the common import is fromInputStream, which is already in both. The conflict is between the RestfbAssertions, AssertJ's fail..., and JUnit's Assert.*.
+
+If the code after the merge uses both JUnit and AssertJ assertions, then all imports are needed. But maybe the tests were migrated from JUnit to AssertJ, or vice versa. But since the user is merging, perhaps both are needed.
+
+Alternatively, maybe one branch replaced the other's imports. For example, if HEAD switched from JUnit to AssertJ, but the other branch still has JUnit. But without more context, it's hard to tell.
+
+The safest approach, if unsure, is to keep both. However, in Java, importing both JUnit's Assert.* and AssertJ's assertions can lead to ambiguity if both have methods with the same name, like assertThat. But in this case, the HEAD uses RestfbAssertions.assertThat, which is a specific custom one, and AssertJ's fail... So maybe there's no direct conflict between JUnit's Assert and the others.
+
+Alternatively, maybe the intention was to replace JUnit with AssertJ. If the HEAD is part of a refactor to use AssertJ, then the correct merge would be to take both RestfbAssertions and AssertJ's fail, and remove the JUnit imports. But if the other branch added JUnit imports, maybe that's needed.
+
+Alternatively, perhaps the JUnit imports were accidentally added in one branch and the other uses AssertJ. But without knowing the project's testing framework, it's tricky.
+
+Since the user said to think in terms of intent and semantics, maybe both sets of imports are needed. So the merged imports should include all unique ones from both branches. Let's list them:
+
+From HEAD:
+- com.restfb.testutils.RestfbAssertions.assertThat
+- com.restfb.util.StringUtils.fromInputStream
+- org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
+
+From a17acec:
+- com.restfb.util.StringUtils.fromInputStream
+- org.junit.Assert.*
+
+So combining these, we have:
+
+import static com.restfb.testutils.RestfbAssertions.assertThat;
+import static com.restfb.util.StringUtils.fromInputStream;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.junit.Assert.*;
+
+But wait, fromInputStream is duplicated, so we can just include it once.
+
+So the merged imports would be all four imports. However, in Java, having both Assert.* and AssertJ might lead to conflicts if methods have the same name. For example, if the code uses assertThat, but both JUnit and AssertJ have that method. However, in the HEAD version, they are using RestfbAssertions.assertThat, which is a different class. So maybe there's no conflict here.
+
+Alternatively, if the other branch's code uses methods from JUnit's Assert, like assertEquals, etc., then those imports are needed. The HEAD code uses AssertJ's failBecauseExceptionWasNotThrown. So both sets of imports are necessary for the code to compile.
+
+Therefore, the correct resolution is to include all the static imports from both branches, removing the duplicate fromInputStream. So the merged block would have all the imports from both sides, except the duplicate.</think>
+```java
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.restfb;
+
+import static com.restfb.testutils.RestfbAssertions.assertThat;
+import static com.restfb.util.StringUtils.fromInputStream;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.junit.Assert.*;
+
+import com.restfb.WebRequestor.Response;
+import com.restfb.exception.FacebookJsonMappingException;
+import com.restfb.exception.FacebookOAuthException;
+import com.restfb.exception.FacebookResponseContentException;
+```

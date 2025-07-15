@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'll analyze this merge conflict and provide the code snippet as requested. After reviewing the intent and semantics, I notice that the conflict is purely about formatting (line break in the condition). Both sides of the merge have the same logical functionality, with the only difference being how the code is split across lines.
+
+Since the intent and semantics are identical (detecting a significant vertical or horizontal gesture to trigger a slide open action when conditions are met), I'll return the snippet with the conflict resolved by choosing one consistent formatting style.
+
+Here is the code snippet with the full context preserved in markdown code syntax, and the conflict resolved:
+
+```java
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            mDownX = event.getRawX();
+            mDownY = event.getRawY();
+            mListener.onShutterButtonPressed();
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX() - mDownX) > getWidth() / 2) && mListener != null) {
+                if (!mSlideOpen) {
+                    mListener.onSlideOpen();
+                    mSlideOpen = true;
+                }
+            } else {
+```
+
+**Explanation of Resolution**:  
+The conflict is resolved by adopting the formatting from the `HEAD` side, as it keeps the condition on a single line, which is more readable and consistent with common coding styles. The logic and intent remain unchanged since both sides of the merge have identical functionality; the difference was purely in the line break of `Math.abs(event.getRawX() - mDownX)`. The condition checks for a vertical swipe greater than half the height or a horizontal swipe greater than half the width to trigger the `onSlideOpen()` listener if not already open.

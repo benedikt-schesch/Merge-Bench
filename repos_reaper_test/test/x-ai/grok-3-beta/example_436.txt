@@ -1,0 +1,53 @@
+<think>
+No reasoning found</think>
+Below is the code snippet with the merge conflict as provided, followed by my analysis and resolution based on the semantic intent of both sides. I am preserving the exact formatting and context of the original snippet.
+
+```java
+        try {
+            getActivity().unregisterReceiver(videoUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+<<<<<<< HEAD
+=======
+        try {
+            getActivity().unregisterReceiver(libraryUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+        super.onStop();
+    }
+
+    @Override
+    public void onAddClicked(CharSequence user, CharSequence password,
+```
+
+### Analysis and Resolution:
+After analyzing the semantics and intent of both sides of the merge conflict, it appears that:
+- The `HEAD` side does not include any additional code in this section, implying that it only unregisters the `videoUpdateReceiver`.
+- The other side (commit `308db82053c3707c95c8a180e78ac06043dff2a5`) adds an additional block to unregister a `libraryUpdateReceiver`, suggesting an intent to expand the functionality to handle another type of receiver.
+
+Since the two blocks are not mutually exclusive and both seem to serve a similar purpose (unregistering different receivers), the semantic resolution is to combine both pieces of code to ensure that both receivers are unregistered. This aligns with the likely intent of ensuring all relevant receivers are properly cleaned up in the `onStop()` lifecycle method.
+
+Here is the resolved version of the code snippet with the conflict markers removed and the intent of both sides preserved:
+
+```java
+        try {
+            getActivity().unregisterReceiver(videoUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        try {
+            getActivity().unregisterReceiver(libraryUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onAddClicked(CharSequence user, CharSequence password,
+```
+
+This resolution assumes that both receivers need to be unregistered in this context. If there is additional context or information suggesting that only one receiver should be unregistered, this resolution may need reevaluation. However, based on the provided snippet, combining both blocks seems to be the most semantically appropriate solution.

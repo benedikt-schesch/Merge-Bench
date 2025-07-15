@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict appears to be a dimensional error where a 2D array was changed to a 3D array. The original code correctly sets `this.qualifiers` as a 2D array containing the provided qualifier. Since the method is intended to set a single qualifier, the change to a 3D array is likely incorrect. Thus, the original implementation should be retained.
+
+```java
+   * @throws IllegalStateException if scanning already started.
+   */
+  public void setQualifier(final byte[] qualifier) {
+    KeyValue.checkQualifier(qualifier);
+    checkScanningNotStarted();
+<<<<<<< HEAD
+    this.qualifiers = new byte[][] { qualifier };
+=======
+    this.qualifiers = new byte[][][] { { qualifier } };
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+  }
+
+  /** Specifies a particular column qualifier to scan.  */
+  public void setQualifier(final String qualifier) {
+    setQualifier(qualifier.getBytes());
+=======
+>>>>>>> rest of the code
+```

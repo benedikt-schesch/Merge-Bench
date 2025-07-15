@@ -1,0 +1,70 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first analyze the intent and semantics of both sides of the merge.
+
+The code snippet provided is a part of a Java class that appears to be handling database operations related to account providers. The method `getParameters` fetches account provider parameters from a database using a JDBC template and maps the result to an `AccountProviderParameters` object.
+
+The conflict arises in the `mapRow` method of the `RowMapper` anonymous class. Both versions of the code create a new `AccountProviderParameters` object, but they differ in the parameters they pass to its constructor.
+
+The version from `HEAD` (the local changes) includes the following parameters:
+- `provider`
+- `rs.getString("displayName")`
+- `encryptor.decrypt(rs.getString("apiKey"))`
+- `encryptor.decrypt(rs.getString("secret"))`
+- `rs.getLong("appId")`
+- `rs.getString("requestTokenUrl")`
+- `rs.getString("authorizeUrl")`
+- `rs.getString("callbackUrl")`
+- `rs.getString("accessTokenUrl")`
+
+The version from `228af53d8db4ea1b58282f203bd404a3d011b7a8` (the changes being merged) includes:
+- `provider`
+- `encryptor.decrypt(rs.getString("apiKey"))`
+- `encryptor.decrypt(rs.getString("secret"))`
+- `rs.getLong("appId")`
+- `rs.getString("requestTokenUrl")`
+- `rs.getString("authorizeUrl")`
+- `rs.getString("accessTokenUrl")`
+
+The main difference is that the `HEAD` version includes `rs.getString("displayName")` and `rs.getString("callbackUrl")`, while the other version does not.
+
+To resolve the conflict, we need to understand the intent behind both versions. If the `displayName` and `callbackUrl` are crucial for the functionality intended by the local changes (`HEAD`), and their absence in the other version is not due to their being unnecessary or deprecated, then the `HEAD` version should be preferred. Conversely, if the changes being merged (`228af53d8db4ea1b58282f203bd404a3d011b7a8`) intentionally removed or never included `displayName` and `callbackUrl`, we should stick with that version.
+
+Given the information, it seems that `displayName` and `callbackUrl` were either added or are considered necessary in the `HEAD` version. Without more context on why `228af53d8db4ea1b58282f203bd404a3d011b7a8` removed or didn't include them, the safest resolution to preserve functionality intended by both sides isn't straightforward.
+
+However, since `callbackUrl` is present in the `HEAD` version but not in the version being merged, and there's no indication that `callbackUrl` is deprecated or unnecessary, we can attempt to merge the parameters by including all the necessary fields. 
+
+Let's look at the constructor parameters for `AccountProviderParameters` in both versions. The version from `HEAD` has 9 parameters, while the version being merged has 7 parameters. The common parameters are `provider`, `apiKey`, `secret`, `appId`, `requestTokenUrl`, `authorizeUrl`, and `accessTokenUrl`. The `HEAD` version additionally includes `displayName` and `callbackUrl`.
+
+To resolve, we will assume that `displayName` and `callbackUrl` are necessary. The merged version should include all necessary parameters.
+
+Here is the resolution:
+```java
+	}
+	
+	private AccountProviderParameters getParameters(final String provider) {
+		return jdbcTemplate.queryForObject(SELECT_ACCOUNT_PROVIDER_BY_NAME, new RowMapper<AccountProviderParameters>() {
+			public AccountProviderParameters mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccountProviderParameters(provider, rs.getString("displayName"), encryptor.decrypt(rs.getString("apiKey")), encryptor.decrypt(rs.getString("secret")), rs.getLong("appId"), rs.getString("requestTokenUrl"), rs.getString("authorizeUrl"), rs.getString("callbackUrl"), rs.getString("accessTokenUrl"));
+			}
+		}, provider);
+	}
+
+<<<<<<< HEAD
+
+``` 
+However, the above resolution directly favors the `HEAD` version. To properly resolve with markdown code syntax as requested and without modifying the context or spacing:
+```java
+	}
+	
+	private AccountProviderParameters getParameters(final String provider) {
+		return jdbcTemplate.queryForObject(SELECT_ACCOUNT_PROVIDER_BY_NAME, new RowMapper<AccountProviderParameters>() {
+			public AccountProviderParameters mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccountProviderParameters(provider, rs.getString("displayName"), encryptor.decrypt(rs.getString("apiKey")), encryptor.decrypt(rs.getString("secret")), rs.getLong("appId"), rs.getString("requestTokenUrl"), rs.getString("authorizeUrl"), rs.getString("callbackUrl"), rs.getString("accessTokenUrl"));
+			}
+		}, provider);
+	}
+
+<<<<<<< HEAD
+
+```

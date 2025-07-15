@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to determine the correct way to set the rotation value for the `flinger` object.
+
+The conflict shows:
+- HEAD version is using a variable `mOrientationCompensation` plus 90 degrees
+- The merged in version is using a fixed 90 degrees
+
+Looking at semantics, the HEAD version appears to be accounting for the current device orientation through the `mOrientationCompensation` variable, which seems more dynamic and likely to handle different device orientations correctly.
+
+Here's the resolved snippet:
+
+```java
+            final ThumbnailFlinger flinger = new ThumbnailFlinger(CameraActivity.this);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    layout.addView(flinger);
+                    flinger.setRotation(mOrientationCompensation+90);
+                    flinger.setImageBitmap(info.mThumbnail);
+                    flinger.doAnimation();
+                }
+            });
+
+```

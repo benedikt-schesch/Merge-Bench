@@ -1,0 +1,63 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a class responsible for synchronizing network updates in a game or simulation environment, likely using the Spout engine. The method in question, `worldChanged(World world)`, is called when the world (or the environment/state of the game) changes.
+
+The conflict arises in the `worldChanged` method where two different versions of the code are presented:
+
+1. The version from the `HEAD` (presumably the current branch being worked on or merged into) sends a `WorldChangeMessage` with the `world` and `world.getDatatable()` as parameters.
+2. The version from the commit `67bcb76a96f358fc131320b0611ffaa3bf3678c2` sends a `WorldChangeMessage` with `world` and `world.getData()` as parameters, and it also includes a boolean value `false` as the first parameter to the `session.send` method.
+
+Let's analyze the changes:
+
+- The original code (from `HEAD`) uses `world.getDatatable()`, suggesting that the `WorldChangeMessage` is being constructed with some data retrieved from the `world` object using a method named `getDatatable()`.
+- The incoming change (from the commit) uses `world.getData()` instead, indicating a possible rename or change in the method used to retrieve data from the `world` object. Additionally, it includes a boolean parameter `false` in the `session.send` call.
+
+To resolve this conflict, we need to understand the intent behind both changes:
+
+1. The change from `getDatatable()` to `getData()` suggests a refactoring or API change where `getDatatable()` has been renamed or replaced with `getData()`. This implies that `getData()` serves a similar or identical purpose to `getDatatable()`.
+   
+2. The addition of a boolean parameter `false` to the `session.send` method could indicate a change in the method's signature, possibly to control some aspect of how the message is sent (e.g., reliability, urgency).
+
+Given these observations, if we assume that both changes are valid and intended to be part of the final code, we should attempt to merge them in a way that respects both intents.
+
+Here's the resolution:
+
+```java
+		session.send(new EntityTransformMessage(player.getId(), new Transform(p, rot, Vector3.ONE), getRepositionManager()));
+	}
+
+	@Override
+	protected void worldChanged(World world) {
+<<<<<<< HEAD:src/main/java/org/spout/engine/protocol/builtin/SpoutServerNetworkSynchronizer.java
+		session.send(new WorldChangeMessage(world, world.getDatatable()));
+=======
+		session.send(false, new WorldChangeMessage(world, world.getData()));
+>>>>>>> 67bcb76a96f358fc131320b0611ffaa3bf3678c2:src/main/java/org/spout/engine/protocol/builtin/SpoutNetworkSynchronizer.java
+	}
+
+	@Override
+	public void updateBlock(Chunk chunk, int x, int y, int z, BlockMaterial material, short data) {
+		session.send(new BlockUpdateMessage(chunk.getBlock(x, y, z)));
+```
+
+However, since the conflict markers are still present, it means we need to manually resolve it. Let's do that by choosing the version that seems most updated and coherent with potential changes in the codebase.
+
+If `getData()` is the new standard and the `session.send` method now requires a boolean parameter, the updated code should reflect these changes.
+
+The resolved version, presented in markdown code syntax as requested, is:
+
+```java
+		session.send(new EntityTransformMessage(player.getId(), new Transform(p, rot, Vector3.ONE), getRepositionManager()));
+	}
+
+	@Override
+	protected void worldChanged(World world) {
+		session.send(false, new WorldChangeMessage(world, world.getData()));
+	}
+
+	@Override
+	public void updateBlock(Chunk chunk, int x, int y, int z, BlockMaterial material, short data) {
+		session.send(new BlockUpdateMessage(chunk.getBlock(x, y, z)));
+```

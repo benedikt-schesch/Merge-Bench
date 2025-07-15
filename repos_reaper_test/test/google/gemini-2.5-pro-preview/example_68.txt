@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I've considered the semantic intent of both branches:
+1.  The `HEAD` branch introduces `customDecksIds` as a `Set<Integer>`. This suggests a system for identifying custom decks using integer-based IDs, possibly from a local database or internal numbering.
+2.  The `5adedd24812861bedaf540555ec046744b42b42a` branch introduces `cardcastDeckIds` as a `Set<String>`. This specifically refers to Cardcast, a known service for sharing card decks, which typically uses string-based identifiers.
+
+Given that the types (`Integer` vs. `String`) and the names (`customDecksIds` vs. `cardcastDeckIds`) are distinct, it's most likely that these represent two different features or two different sources/types of deck IDs that the application intends to support concurrently. "Custom decks" is a general category, while "Cardcast decks" are a specific type of external deck. It's plausible for the application to support both generic custom decks (identified by integers) and Cardcast decks (identified by strings).
+
+Therefore, the resolution is to include both fields, as they serve different semantic purposes and are not mutually exclusive.
+
+```java
+  private final ConnectedUsers connectedUsers;
+  private final GameManager gameManager;
+  private final Provider<Session> sessionProvider;
+  private final Object blackCardLock = new Object();
+  private final GameOptions options;
+  private final Set<Integer> customDecksIds = Collections.synchronizedSet(new HashSet<Integer>());
+  private final Set<String> cardcastDeckIds = Collections.synchronizedSet(new HashSet<>());
+  private final Metrics metrics;
+  private final Provider<Boolean> showGameLinkProvider;
+  private final Provider<String> gamePermalinkFormatProvider;
+  private final Provider<Boolean> showRoundLinkProvider;
+<<<<<<< HEAD
+
+```

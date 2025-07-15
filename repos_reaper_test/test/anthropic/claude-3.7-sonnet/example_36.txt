@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I see that both sides have a `usage` method but with slightly different function signatures:
+
+- HEAD has a method without the `commandName` parameter
+- The other branch has a method with the `commandName` parameter
+
+Given the context above the conflict where another `usage` method already includes the `commandName` parameter and calls this version, it seems like this is meant to be an overloaded method that doesn't require the command name. Therefore, I'll resolve by keeping the HEAD version but with the styling of the other branch.
+
+```java
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, StringBuilder out)
+    {
+        usage(programName, groupName, commandName, command, new UsagePrinter(out, columnSize));
+    }
+
+    public void usage(@Nullable String programName, @Nullable String groupName, CommandMetadata command, UsagePrinter out)
+    {
+        //
+        // NAME
+        //
+        out.append("NAME").newline();
+
+```

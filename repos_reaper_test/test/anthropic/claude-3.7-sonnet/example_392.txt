@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that it involves a setup method for a test class. The two branches are making different changes to the method signature and the initialization of `updatedFiles`. Analyzing the intent:
+
+1. HEAD is using JUnit 5 style (`@BeforeEach` and no exception declaration)
+2. The other branch is using JUnit 4 style (`@Before`, method is `public` and declares `IOException`)
+3. HEAD initializes `updatedFiles` with `newArrayList()` while the other branch uses `new HashSet<>()`
+
+Here's the resolved conflict:
+
+```java
+	private DefaultInfinitestCore core;
+	private ChangeDetector changeDetector;
+	private TestDetector testDetector;
+
+	@BeforeEach
+	void inContext() throws IOException {
+		updatedFiles = new HashSet<>();
+		core = new DefaultInfinitestCore(mock(TestRunner.class), new ControlledEventQueue());
+		
+		changeDetector = mock(ChangeDetector.class);
+		when(changeDetector.findChangedFiles()).thenReturn(updatedFiles);
+		core.setChangeDetector(changeDetector);
+```
+
+I chose `@BeforeEach` from HEAD which suggests a migration to JUnit 5, but kept the `throws IOException` and `HashSet<>()` initialization from the other branch as they seem to be important functional changes.

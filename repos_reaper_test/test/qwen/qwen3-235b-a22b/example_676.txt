@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The code snippet with the unresolved merge conflict is returned below, preserving the original context and spacing exactly as provided. The conflict involves a semantic divergence in logic and field usage, and without further clarification on intent, the appropriate resolution cannot be determined.
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+<<<<<<< HEAD
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+=======
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+```

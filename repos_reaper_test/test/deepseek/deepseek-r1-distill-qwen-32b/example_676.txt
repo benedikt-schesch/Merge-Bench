@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The code conflicted because the left side inserted a token with provider ID unconditionally, while the right side introduced a condition to only insert access tokens using resource ID. The intent seems to handle different token types, but without more context, the conflict remains unresolved.
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+<<<<<<< HEAD
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+=======
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+
+```

@@ -1,0 +1,60 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch (HEAD) adding a test method `emptyFacebookMap` and another branch (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`) effectively deleting this same section (or having a state before this test was added).
+
+**Intent of HEAD:**
+The HEAD branch intends to add a test case named `emptyFacebookMap`. This test:
+1. Creates an instance of `MapObject`.
+2. Serializes this object to JSON using `createJsonMapper().toJson(obj, true)`.
+3. Asserts that the resulting JSON string is `{"id":12345}`.
+This suggests that an "empty" or default `MapObject` is expected to serialize with a default `id` field. The name "FacebookMap" implies this test might be specific to a "MapObject" representation related to Facebook data or a Facebook SDK integration.
+
+**Intent of `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`:**
+This branch's state reflects the absence of the `emptyFacebookMap` test. This could mean:
+1. The test was explicitly deleted on this branch, possibly because the "Facebook map" functionality it tests was removed, refactored, or found to be flawed.
+2. This branch diverged before the `emptyFacebookMap` test was ever added, and it never incorporated this specific test.
+
+**Semantic Analysis and Ambiguity:**
+The key point of ambiguity is the term "FacebookMap" in the test name and its relation to `MapObject`.
+
+*   **Scenario 1: `MapObject` is Facebook-specific, and this functionality was removed/changed.**
+    If `MapObject` is intrinsically tied to a Facebook feature, and branch `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` involved removing or significantly altering this Facebook-specific functionality, then deleting the test `emptyFacebookMap` would be the correct semantic action. The test would be obsolete.
+
+*   **Scenario 2: `MapObject` is a generic test object, and "FacebookMap" is a misnomer or historical artifact.**
+    It's possible that `MapObject` is a general-purpose object used for testing (similar to `ListObject` in the preceding test, which also results in `{"id":12345}`). In this case, the test might be valid for `MapObject` itself, but the "Facebook" part of the name could be misleading. If `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` removed Facebook features, it might have deleted this test assuming it was solely for those removed features, even if `MapObject` itself remained relevant. In this scenario, keeping the test, perhaps with a rename to `emptyMapObject`, might be appropriate.
+
+*   **Scenario 3: Redundancy or Consolidation.**
+    The test might have been removed on `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` because its coverage is provided by another test (e.g., the `emptyObject()` test below it, if `MapObject` is simple enough to be covered by a generic case).
+
+Without more context on:
+1.  The nature of `MapObject` (Is it Facebook-specific? Is it a generic test utility class?).
+2.  The changes introduced by commit `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` (Did it remove Facebook-related features? Did it refactor `MapObject`?).
+3.  The overall testing strategy for such objects.
+
+It is difficult to definitively determine the correct resolution. The presence of "Facebook" in the test name is a strong indicator that makes Scenario 1 plausible (i.e., the test is obsolete due to feature removal/change). However, the structural similarity to the `ListObject` test might suggest Scenario 2.
+
+Given this ambiguity and the instruction to return the conflict if unsure, preserving the conflict markers is the safest approach. This prompts the developer performing the merge to investigate further with more contextual knowledge (e.g., commit messages, related file changes, or team discussions).
+
+```java
+    ListObject obj = new ListObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+
+<<<<<<< HEAD
+  @Test
+  public void emptyFacebookMap() {
+    MapObject obj = new MapObject();
+    String json = createJsonMapper().toJson(obj, true);
+    assertThat(json).isEqualTo("{\"id\":12345}");
+  }
+
+=======
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  /**
+   * Can we handle the empty object?
+   */
+  @Test
+  public void emptyObject() {
+
+```

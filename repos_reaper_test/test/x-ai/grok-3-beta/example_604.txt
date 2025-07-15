@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict, preserved exactly as given with full context and spacing. After that, I will explain my analysis of the intent and semantics behind both sides of the merge conflict and provide a resolution.
+
+```java
+   * @return The number of likes the page has
+   * @since 1.6.5
+   */
+  @Getter
+  @Setter
+<<<<<<< HEAD
+  @Facebook("likes")
+  private Long likesCount;
+=======
+  @Facebook
+  private Long likes;
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+
+  /**
+   * The Pages that this Page Likes.
+   *
+   * @RestFB.GraphApi.Since 2.6
+```
+
+### Analysis of Intent and Semantics
+
+- **HEAD Side (`@Facebook("likes") private Long likesCount;`)**: This side explicitly maps the field to the Facebook API field named "likes" using the `@Facebook("likes")` annotation. The variable name `likesCount` suggests a clear intent to represent the count of likes, which aligns with the Javadoc comment above (`@return The number of likes the page has`). The naming convention (`likesCount`) implies a numerical value, likely used to store the total count of likes for a page.
+- **Other Side (`@Facebook private Long likes;`)**: This side uses the `@Facebook` annotation without specifying a field name, implying that the field name `likes` is directly mapped to the corresponding field in the Facebook API. The variable name `likes` is more concise but less descriptive about whether it represents a count or something else (e.g., a list of likes). Given the Javadoc comment, it likely still intends to represent the count of likes, but the naming is ambiguous compared to `likesCount`.
+- **Shared Intent**: Both sides are aiming to map a field to the Facebook API to store the number of likes for a page, as inferred from the surrounding Javadoc. The primary difference lies in the naming of the variable (`likesCount` vs. `likes`) and the explicitness of the API field mapping in the `@Facebook` annotation.
+
+### Resolution Rationale
+
+The key semantic intent is to represent the number of likes a page has, as described in the Javadoc. The naming `likesCount` (from HEAD) is more descriptive and aligns better with the convention of explicitly indicating a count, reducing ambiguity. On the other hand, explicitly specifying the API field name with `@Facebook("likes")` is more precise and avoids potential mapping errors if the API field name differs from the variable name. Combining the best of both sides, I recommend keeping the explicit mapping from HEAD and the descriptive name `likesCount`. This resolution prioritizes clarity in both code readability and API integration.
+
+### Resolved Code Snippet
+
+```java
+   * @return The number of likes the page has
+   * @since 1.6.5
+   */
+  @Getter
+  @Setter
+  @Facebook("likes")
+  private Long likesCount;
+
+  /**
+   * The Pages that this Page Likes.
+   *
+   * @RestFB.GraphApi.Since 2.6
+```

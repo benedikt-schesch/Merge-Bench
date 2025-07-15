@@ -1,0 +1,59 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the two versions. 
+
+In the HEAD version, the message says "The following user(s) and/or group(s) are missing for resource access permissions or node ownership during deployment." The next line mentions "missing permissions/ownerships" and uses String.join on missingPrincipals.
+
+The other branch changes "resource access permissions" to "grants" and "missing permissions/ownerships" to "missing grants/ownerships". It also uses a stream to sort and join the missingPrincipals. The exclamation mark is added in the second line. The URL in the last part is formatted differently, using single quotes and a shortened link.
+
+Hmm, the intent here seems to be improving the message. Using "grants" might be a more precise term than "resource access permissions". The stream with sorted() would sort the principals, which is better for consistency. The exclamation mark adds emphasis. The URL formatting change is stylistic but doesn't affect functionality. 
+
+So the correct merge would take the message from the second branch but ensure both the String.join and the stream are handled. Wait, but the two versions are modifying the same lines. The HEAD uses String.join("\n\t", missingPrincipals) while the other uses missingPrincipals.stream().sorted().collect(...). The sorted() is a good addition. So combining both messages but using the stream approach makes sense. 
+
+Also, the URL part: the HEAD has it as a hyperlink in the text, while the other branch uses single quotes and a shorter link. The original text above the conflict has the hyperlink, so maybe the second part's URL change is redundant. Wait, looking at the context before the conflict: the initial part of the string already includes the <a href> for the pre-deploy.conf. The conflicting part is in the logger.info message. The HEAD version in the logger has the URL as part of the text, while the other branch changes it to the same URL but formatted differently. But actually, looking closely, the HEAD's logger message does not include the URL again because the initial variable 'text' already includes that. Wait, the code has "text" variable being published, but the logger.info is a separate message. Let me check the original code.
+
+The code snippet starts with a line that's part of the 'text' variable: "+ "Consider adding these principals to your <a href=\"...\">pre-deploy.conf</a> and re-importing."; Then, the logger.info is building a similar message but in the log. The conflict is within the logger.info part.
+
+In the HEAD version, the logger message's last line before the URL part says "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n". Wait, no, the conflict markers show that in the HEAD, the line is:
+
+"\t" + String.join("\n\t",  missingPrincipals)
+and then the next line is part of the logger message. The other branch has:
+
+"\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+and then the next line is "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see ...) and re-importing.\n".
+
+Wait, the part after the missingPrincipals is part of the same string. So in the HEAD, after joining the missingPrincipals, the message continues with "\n\n\tBecause of these..." etc., but the actual conflict is in three parts: the lines starting with "\tThe following...", "\tBecause...", and the line that joins the missingPrincipals.
+
+So the two versions have different wording in the messages and different ways of handling the missingPrincipals list. The HEAD uses "resource access permissions or node ownership" and "permissions/ownerships", while the other branch uses "grants or node ownership" and "grants/ownerships". Also, the other branch adds an exclamation mark and sorts the principals.
+
+The question is, which wording is correct? "Grants" might be a technical term in the context, so maybe the second version is more accurate. Also, sorting the principals is better for consistency. The exclamation mark adds emphasis, which is acceptable.
+
+So the resolved code should take the second branch's message lines but merge any necessary parts. The URL in the logger message is presented differently: the HEAD has it as part of the text with a hyperlink, but in the logger, it's just text. The other branch uses 'pre-deploy.conf' with single quotes and the URL as a see link. However, in the initial 'text' variable, the URL is already formatted with an <a> tag. The logger message is separate, so perhaps the second branch's version is more appropriate for the log (without HTML). So the logger should have the plain URL.
+
+Putting it all together, the correct merge would be:
+
+Use the second branch's lines for the message, including "grants", the exclamation, sorted missingPrincipals, and the URL formatted as 'pre-deploy.conf' with the link. So the resolved code would have:
+
+"\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
++ "\tBecause of these missing grants/ownerships, the functionality is not identical to the export you just imported!\n\n"
++ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
++ "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+
+And ensure that the Collectors.joining is properly imported, but since it's Java, that's probably handled.
+
+So the final merged code should take the changes from both branches where the second branch's changes are more precise and include the sorted stream.</think>
+```java
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+						+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+						+ "\tBecause of these missing grants/ownerships, the functionality is not identical to the export you just imported!\n\n"
+						+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+						+ "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+						+ "###############################################################################"
+				);
+				publishWarningMessage(title, text);
+			}
+
+```

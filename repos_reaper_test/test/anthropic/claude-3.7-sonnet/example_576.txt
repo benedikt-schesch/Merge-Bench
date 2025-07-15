@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that both sides are trying to log a similar debug message when enum mapping fails. Let's analyze:
+
+- HEAD is using `rawValue.asString()` to get the string value that failed to map
+- The other branch is using `jsonObject.getString(facebookFieldName)` to get the same value
+
+The context shows that `rawValue` is the variable being used in the surrounding code (we see it referenced both before and after the conflict). The variable `jsonObject` and `facebookFieldName` don't appear in the provided context and were likely introduced in the other branch.
+
+Since the rest of the method is using `rawValue`, I'll resolve in favor of HEAD:
+
+```java
+      Class<? extends Enum> enumType = type.asSubclass(Enum.class);
+      try {
+        return Enum.valueOf(enumType, rawValue.asString());
+      } catch (IllegalArgumentException iae) {
+        if (MAPPER_LOGGER.isDebugEnabled()) {
+          MAPPER_LOGGER.debug(format("Cannot map string %s to enum %s", rawValue.asString(), enumType.getName()));
+        }
+      }
+    }
+
+    String rawValueAsString = jsonHelper.getStringFrom(rawValue);
+
+```

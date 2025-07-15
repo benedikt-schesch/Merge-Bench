@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The given Java code snippet contains a merge conflict where both sides are trying to instantiate a class with parameters. The conflict arises from different ways of checking the number of arguments. One side uses `args.size()` (assuming `args` is a collection), while the other uses `args.length` (assuming `args` is an array). Both aim to get the parameter types correctly, but their approaches differ based on the type of `args`.
+
+Since the conflict is about the nature of `args`, the correct resolution depends on whether `args` is an array or a collection. Without additional context, the safest approach is to preserve the conflict and request clarification on the intended type of `args`.
+
+```java
+            throw new RuntimeException("Cannot instantiate:" + className, ioe) ;
+        }
+
+        try {
+            // Do normal instantiation
+<<<<<<< HEAD
+            if (args != null && args.size() > 0) {
+                Class paramTypes[] = new Class[args.size()];
+=======
+            if (args != null && args.length > 0) {
+                Class paramTypes[] = new Class[args.length];
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+                for (int i = 0; i < paramTypes.length; i++) {
+                    paramTypes[i] = String.class;
+                }
+                Constructor c = objClass.getConstructor(paramTypes);
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+```

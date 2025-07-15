@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, this involves a small difference in an error message. In the HEAD version, the message says "not found", while in the commit 4b0f0ad0 it says "nt found" (missing the letter "o"). The correct spelling should be "not found", so I'm resolving in favor of the HEAD version.
+
+```java
+        for (IClasspathEntry entry : container.getClasspathEntries()) {
+            if (entry.getPath().toOSString().contains(path)) {
+                return entry;
+            }
+        }
+        throw new ProjectConfigurationException("ClasspathEntry [" + path + "] not found in container [" + id + "]");
+    }
+
+    protected void assertErrorMarker(IProject project, String type) throws CoreException {
+        List<IMarker> markers = findMarkers(project, IMarker.SEVERITY_ERROR);
+        for (IMarker marker : markers) {
+
+```

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            mDownX = event.getRawX();
+            mDownY = event.getRawY();
+            mListener.onShutterButtonPressed();
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX()
+                    - mDownX) > getWidth() / 2) && mListener != null) {
+                if (!mSlideOpen) {
+                    mListener.onSlideOpen();
+                    mSlideOpen = true;
+                }
+            } else {
+```

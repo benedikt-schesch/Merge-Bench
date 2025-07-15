@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The merge conflict in the `seekTo` method involves two approaches to ensure `sMediaPlayer` is not null before calling `seekTo`. The left side assigns `sMediaPlayer` first and then checks for null, while the right side checks for null before any operations. To preserve the correct functionality and improve efficiency, the right side is preferable as it eliminates redundant assignments.
+
+**Step-by-Step Explanation:**
+
+1. **Identify the conflict**: The code has two versions of the `seekTo` method with different null checks for `sMediaPlayer`.
+2. **Analyze both approaches**:
+   - **Left Side**: Assigns `sMediaPlayer` and checks for null before calling `seekTo`.
+   - **Right Side**: Checks for null first, avoiding unintended assignments.
+3. **Assess the trade-offs**:
+   - **Left Side**: Slightly less efficient due to the unnecessary assignment if `sMediaPlayer` is null.
+   - **Right Side**: More efficient by avoiding a potential unnecessary object assignment.
+4. **Choose the better approach**: The right side is cleaner and more efficient, so it should be adopted.
+
+**Resolved Code:**
+
+```java
+    }
+
+    @Override
+    public void seekTo(long msec) {
+        if (sMediaPlayer != null) {
+            sMediaPlayer.seekTo((int) msec);
+        }
+    }
+
+    @Override
+    public void tryPrepareNext(final Query query) {
+        TomahawkRunnable r = new TomahawkRunnable(1) {
+```

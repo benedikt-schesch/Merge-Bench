@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, both sides are calling the same method `metrics.gameStart()` with the same parameters, just with different formatting. The HEAD version has the parameters broken across multiple lines, while the 5adedd24 commit version has all parameters on a single line.
+
+Here's the resolved code:
+
+```java
+        synchronized (options.cardSetIds) {
+          cardSets = loadCardSets(session);
+          blackDeck = loadBlackDeck(cardSets);
+          whiteDeck = loadWhiteDeck(cardSets);
+        }
+        metrics.gameStart(currentUniqueId, cardSets, options.blanksInDeck, options.playerLimit,
+            options.scoreGoal, !StringUtils.isBlank(options.password));
+        startNextRound();
+        gameManager.broadcastGameListRefresh();
+      }
+      return started;
+    } finally {
+```
+
+I chose the HEAD version with the multi-line formatting as it's better for readability, especially for method calls with many parameters.

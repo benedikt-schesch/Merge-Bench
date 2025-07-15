@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+I'll preserve the snippet with the conflict since the intent is ambiguous. Here's the snippet:
+
+```java
+    static class Decimal128Serializer extends JsonSerializer<Decimal128> {
+
+        public void serialize(Decimal128 decimal, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            if (jsonGenerator instanceof MongoBsonGenerator) {
+                ((MongoBsonGenerator) jsonGenerator).writeDecima128(decimal);
+<<<<<<< HEAD
+            } else if (jsonGenerator instanceof TokenBuffer) {
+=======
+            } else {
+>>>>>>> bdcc9aaa22f9470ce4d424736aabbc49c4857931
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeFieldName("$numberDecimal");
+                jsonGenerator.writeString(decimal.bigDecimalValue().toString());
+                jsonGenerator.writeEndObject();
+<<<<<<< HEAD
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll resolve the merge conflict by analyzing the intent and semantics of both sides.
+
+**Analysis of Intent:**
+- On the `HEAD` side, the `Deferred` type is used without generics, implying a raw type or a context where the specific type parameter is not critical or is inferred.
+- On the merge commit `d543609051366758e579ad168361daadd74cdf7f` side, `Deferred<?>` is used, explicitly indicating a wildcard type, which is a more modern and type-safe approach to handling generics in Java, allowing flexibility while still adhering to type safety.
+
+**Resolution Intent:**
+- The intent on both sides appears to be the same: to represent a `Deferred` object that the application can wait on before retrying a failed RPC. The difference lies in the use of generics for better type safety on the merge commit side.
+- Resolving in favor of `Deferred<?>` aligns with Java best practices for type safety and is likely the intended modernization of the code.
+
+Here is the resolved code snippet with full context preserved as provided:
+
+```java
+
+  /** The RPC that was failed with this exception.  */
+  private final HBaseRpc rpc;
+
+  /** A deferred one can wait on before retrying the failed RPC.  */
+  private final Deferred<?> deferred;
+
+  /**
+   * Constructor.
+   * @param msg A message explaining why the application has to throttle.
+   * @param cause The exception that requires the application to throttle
+
+```

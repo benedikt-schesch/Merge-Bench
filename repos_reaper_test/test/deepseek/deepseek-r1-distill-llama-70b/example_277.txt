@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict in the code snippet represents a semantic decision about which `MultiQueryPackager` instance (`fromPkgr` or `toPkgr`) should receive the added `Packager` objects. The correct resolution depends on the intended behavior of transferring packagers between instances.
+
+```java
+        int pkCount = 0;
+        if (fromPkgr instanceof MultiQueryPackager) {
+            List<Packager> pkgs = ((MultiQueryPackager) fromPkgr)
+                    .getPackagers();
+            for (Packager p : pkgs) {
+                ((MultiQueryPackager) toPkgr).addPackager(p);
+                pkCount++;
+            }
+            toPkgr.addIsKeyWrappedList(((MultiQueryPackager) fromPkgr)
+                            .getIsKeyWrappedList());
+            addShiftedKeyInfoIndex(initial, current,
+```

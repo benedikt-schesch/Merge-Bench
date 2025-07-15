@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, the HEAD version contains additional code to reset the `isAdvertising` flag when the Bluetooth adapter is turning off, followed by closing the `gattServer` (with a comment explaining the null check). The incoming change (094cb482) only has the `gattServer` close logic without the advertising reset or comments.
+
+The HEAD version appears to be more comprehensive by handling the advertising state, so I'll resolve in favor of that while preserving all the context.
+
+```java
+
+            if (initPeripheralCallback != null) initPeripheralCallback.sendPluginResult(pluginResult);
+
+            break;
+          case BluetoothAdapter.STATE_TURNING_OFF:
+            // Reset isAdvertising when adapter is turning off
+            if (isAdvertising) isAdvertising = false;
+
+            // Make sure gattServer is not null (in case this triggers when it is null)
+            if (gattServer != null) gattServer.close();
+            break;
+          case BluetoothAdapter.STATE_ON:
+
+            addProperty(returnObj, keyStatus, statusEnabled);
+
+
+```

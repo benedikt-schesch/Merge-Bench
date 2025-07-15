@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict is between using `this.mBitmapTexture` and `this.mBitmapTextureAtlas` when creating a `SpriteGroup`. Both changes suggest an intent to use a texture for the sprite group, but with different texture sources.
+
+Since the intent is ambiguous between using a single texture vs an atlas, and I don't have enough context to determine which is correct, I'll leave the conflict unresolved:
+
+```java
+				new DelayModifier(2),
+				new AlphaModifier(1.5f, 1, 0),
+				new AlphaModifier(1.5f, 0, 1)
+		);
+
+<<<<<<< HEAD
+		final SpriteGroup spriteGroup = new SpriteGroup(this.mBitmapTexture, SPRITE_COUNT);
+=======
+		final SpriteGroup spriteGroup = new SpriteGroup(this.mBitmapTextureAtlas, SPRITE_COUNT);
+>>>>>>> 91801fdd7714064242fef90013824ede2bbcbe9d
+		for(int i = 0; i < SPRITE_COUNT; i++) {
+			final Sprite face = new Sprite((CAMERA_WIDTH - 32) * this.mRandom.nextFloat(), (CAMERA_HEIGHT - 32) * this.mRandom.nextFloat(), this.mFaceTextureRegion);
+			face.registerEntityModifier(faceEntityModifier.clone());
+
+			spriteGroup.attachChild(face);
+```

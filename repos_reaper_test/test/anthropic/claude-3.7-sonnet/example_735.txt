@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I notice the HEAD version has a formula for calculating orientation, while the incoming commit (c92375...) has commented out a different formula. Since the incoming version is commented out, it seems the intention was to either remove or disable that calculation approach. The HEAD version is actively using a formula, so I'll keep that active line.
+
+```java
+
+        // Rotate the pictures accordingly (display is kept at 90 degrees)
+        Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        Camera.getCameraInfo(mCurrentFacing, info);
+        orientation = (orientation + 45) / 90 * 90;
+        int rotation = 0;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            rotation = (info.orientation - orientation + 360) % 360;
+        } else {  // back-facing camera
+            rotation = (info.orientation + orientation) % 360;
+
+```

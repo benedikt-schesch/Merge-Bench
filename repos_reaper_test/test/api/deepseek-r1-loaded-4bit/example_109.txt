@@ -1,0 +1,21 @@
+<think>
+Okay, let's look at this merge conflict. The problem is in the import statements. On the HEAD side, they're importing specific classes from org.fest.test: Employee and Name. On the other branch, they're using a wildcard import for org.fest.test.*. 
+
+The goal is to resolve this without causing issues. Both sides probably added different classes from the same package. Using the wildcard would cover both, but maybe the HEAD side wants explicit imports. But in Java, it's common to use wildcards for the same package unless there's a style preference against it.
+
+Wait, but if one side uses specific imports and the other uses the wildcard, merging them would require choosing between the two. However, the wildcard import includes all classes from the package, so adding the wildcard would make the explicit imports redundant. But maybe the wildcard was added later, and the explicit ones are from an earlier change. Alternatively, perhaps the other branch added more classes from org.fest.test, hence the wildcard.
+
+Semantically, both want to import necessary classes from org.fest.test. The conflict arises because one uses explicit imports and the other a wildcard. The correct resolution would be to use the wildcard since it includes all classes, including Employee and Name. So replacing the two explicit imports with the wildcard would satisfy both changes. That way, any existing or new classes from that package are included. So the resolved code should have the wildcard import, removing the explicit ones.</think>
+```java
+import static org.mockito.Mockito.*;
+
+import java.util.*;
+
+import org.fest.assertions.internal.PropertySupport;
+import org.fest.test.*;
+import org.junit.*;
+
+/**
+ * Tests for <code>{@link Properties#from(Object[])}</code>.
+ * 
+```

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the resolved merge conflict. After analyzing the intent and semantics, both sides of the merge are trying to achieve the same goal: asserting that the `scheme` object is an instance of the `Wifi` class using the `instanceOf` matcher. The difference is purely stylistic, with one side having a commented-out alternative. I'll resolve it by keeping the active assertion from both sides and removing the commented-out line for clarity, as it doesn't add value in the merged result.
+
+Below is the entire snippet with the conflict resolved, preserving the context and spacing as provided:
+
+```java
+	@Test
+	public void parseWifi() throws Exception {
+		Object scheme = createParser().parse("WIFI:S:some weird SSID;T:WPA;P:aintNoSecret;H:true;");
+		assertNotNull(scheme);
+		assertThat(scheme, instanceOf(Wifi.class));
+		Wifi wifi = (Wifi) scheme;
+		assertEquals("some weird SSID", wifi.getSsid());
+		assertEquals("WPA", wifi.getAuthentication());
+		assertEquals("aintNoSecret", wifi.getPsk());
+		assertTrue(wifi.isHidden());
+```

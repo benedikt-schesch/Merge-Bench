@@ -1,0 +1,31 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the changes from both branches.
+
+In the HEAD version, they're converting the args list to a String array using toArray(new String[0]). Then they create an Object array wrappedArgs with size 1 and assign the first element to argArr. 
+
+In the other branch (1488b22), they directly assign args to wrappedArgs[0] without converting it to a String array. Wait, but args is probably a List<String> or similar, since in HEAD they're calling toArray on it. 
+
+The constructor being called is getConstructor(String[].class), which expects a single parameter of type String[]. So when creating the Object array wrappedArgs, the first element should be a String array. 
+
+In the HEAD branch, they correctly convert args to a String array. The other branch is passing args directly, which might be a List, leading to a type mismatch. That would cause a runtime error because the constructor expects a String array, not a List. 
+
+So the correct approach is to use the HEAD version, converting args to a String array. The other branch's change is incorrect because it doesn't convert the list to an array. Therefore, the resolution should keep the HEAD code. 
+
+Wait, but maybe the other branch's args is already a String array? Let me check the context. The code in HEAD has args.toArray, which suggests args is a collection, like a List<String>. So converting it to a String array is necessary. The other branch is trying to pass args directly, which would be a List, not a String array. That's a problem. 
+
+Therefore, the correct resolution is to take the HEAD version. The conflict markers should be removed, keeping the code that converts args to a String array and wraps it correctly.</think>
+```java
+        }
+        catch(NoSuchMethodException nme) {
+            // Second channce. Try with var arg constructor
+            try {
+                Constructor c = objClass.getConstructor(String[].class);
+                String[] argArr = args.toArray(new String[0]) ;
+                Object[] wrappedArgs = new Object[1] ;
+                wrappedArgs[0] = argArr ;
+                ret =  c.newInstance(wrappedArgs);
+            }
+            catch(Throwable e){
+                // bad luck
+                StringBuilder sb = new StringBuilder();
+```

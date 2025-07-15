@@ -1,0 +1,106 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. So, looking at the code snippet, there's a conflict between the HEAD version and the other branch. The HEAD adds a run() method with some parser configurations, while the other branch removes that code.
+
+First, I need to understand what both sides are doing. The original code has an if block where they initialize the parser. Then in HEAD, there's a closing brace for the method, followed by a new run() method that sets the parser to interactive and starts parsing. The other branch (1488b22) doesn't have the run() method; it just closes the if block and the method, then has the setConsoleReader method.
+
+Wait, maybe the conflict is about where the run() method is placed. The HEAD adds the run() method between the closing brace of the if statement and the setConsoleReader method. The other branch doesn't have that run() method at all. So the question is: should the run() method be included or not?
+
+But maybe the two changes are compatible. Perhaps the run() method was added in one branch and the setConsoleReader in another. If that's the case, the correct resolution would be to keep both methods. But in the conflict markers, the HEAD adds the run() method, and the other branch doesn't have it. So the conflict is that one side adds it, and the other side doesn't. Wait, no—the conflict is between the code after the if block. Let me look again.
+
+The code before the conflict is:
+
+        if (in != null)
+        {
+            parser = new GruntParser(in);
+            parser.setParams(pig);    
+        }
+<<<<<<< HEAD
+    }
+
+    public void run() {
+    parser.setInteractive(true);
+    parser.parseContOnError();
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+
+    public void setConsoleReader(ConsoleReader c)
+    {
+        parser.setConsoleReader(c);
+
+So, the HEAD version adds the run() method between the closing brace of the if statement and the closing brace of the enclosing method (maybe the constructor?), followed by the setConsoleReader method. The other branch just closes the if block and then the method, then the setConsoleReader.
+
+Wait, the indentation is a bit confusing. Let me check the structure. The code starts with an if block, then in HEAD, there's a closing brace (which might be ending the method that contains the if statement), then a run() method is defined. The other branch doesn't have that run() method; instead, it just closes the method after the if block.
+
+So perhaps the conflict is in a method that's being modified. Let me think: the code before the conflict is inside a method (maybe a constructor or an init method) that has the if (in != null) block. The HEAD adds a run() method right after the if block, but inside the same class. However, the other branch might have a different structure, perhaps the run() method was added in one branch and not in the other.
+
+Wait, but in the conflict markers, the HEAD adds the run() method between two closing braces. Let me count the braces. The original code has:
+
+if (in != null) { ... } which is closed. Then in HEAD, there's another closing brace }, then the run() method, then another closing brace } for the class or the enclosing method. The other branch just has the closing brace } after the if block.
+
+Hmm, maybe the enclosing structure is a method. Let's say the code is inside a method like initializeParser(), and in HEAD, after the if block, they close the method, then define a new run() method. But the other branch doesn't have that run() method. So the conflict arises because one branch adds a new method (run()) while the other doesn't.
+
+But in the code after the conflict, there's another method setConsoleReader. So the run() method is being added between the closing of the previous method and the setConsoleReader method.
+
+So the correct resolution would be to keep both the run() method from HEAD and the setConsoleReader from both branches. Because the other branch (1488b22) might not have the run() method, but the setConsoleReader is present in both. So merging would require including the run() method and the setConsoleReader.
+
+Wait, but in the conflict, the code from HEAD includes the run() method, and the other side doesn't. So when merging, if we want to incorporate both changes, we should include the run() method. Because the other branch (1488b22) doesn't have any code there except the closing brace. So the conflict is between adding the run() method or not.
+
+If the intent is that the run() method is a new addition in one branch and the other branch doesn't touch that part, then the correct resolution is to keep the run() method. Because the other branch's change (1488b22) might be adding the setConsoleReader method, which is present in both versions. Wait, looking at the code after the conflict markers, both sides have the setConsoleReader method. So the conflict is only about whether to include the run() method between the two closing braces.
+
+Wait, the code after the conflict in both cases is:
+
+    }
+
+    public void setConsoleReader(ConsoleReader c)
+    {
+        parser.setConsoleReader(c);
+
+So, the HEAD version has:
+
+        if (in != null)
+        {
+            ...
+        }
+    }
+
+    public void run() {
+        ...
+    }
+
+    public void setConsoleReader(...) {
+        ...
+    }
+
+While the other branch has:
+
+        if (in != null)
+        {
+            ...
+        }
+    }
+
+    public void setConsoleReader(...) {
+        ...
+    }
+
+So the conflict is whether to include the run() method between the closing of the previous method (the one containing the if block) and the setConsoleReader method. The resolution should be to include the run() method from HEAD, as the other branch doesn't remove it; it's just that in their version, the run() method wasn't present. So if both changes are to be merged, the run() method should be kept.
+
+Therefore, the resolved code should include the run() method from HEAD, followed by the setConsoleReader method, which is present in both branches. There's no semantic conflict here because adding a new method (run()) doesn't interfere with the setConsoleReader method. So the correct merge is to take the run() method from HEAD and keep the setConsoleReader from both.</think>
+```java
+        if (in != null)
+        {
+            parser = new GruntParser(in);
+            parser.setParams(pig);    
+        }
+    }
+
+    public void run() {
+    parser.setInteractive(true);
+    parser.parseContOnError();
+    }
+
+    public void setConsoleReader(ConsoleReader c)
+    {
+        parser.setConsoleReader(c);
+```

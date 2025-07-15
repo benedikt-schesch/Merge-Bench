@@ -1,0 +1,22 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in the JavaDoc comment of the BaseFacebookClient class. The HEAD version says it's a base class containing data and functionality from DefaultFacebookClient. The other branch, a17acec, says it's common to both DefaultFacebookClient and DefaultLegacyFacebookClient. 
+
+I need to understand the intent here. The HEAD version probably was written when only DefaultFacebookClient existed. Then, the other branch added a new class, DefaultLegacyFacebookClient, and updated the comment to reflect that the base class is shared between both. 
+
+The correct resolution would be to include both classes in the comment because that's the more recent change and it's providing a more accurate description of the base class's purpose. The conflict arises because the two branches made different updates. Since the a17acec change adds another client, the merged comment should mention both.
+
+So, combining them by taking the a17acec version makes sense. The comment should state that the base class contains common data and functionality for both clients. Therefore, the resolved line would be the one from the a17acec branch, as it's more inclusive and up-to-date.</think>
+```java
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+/**
+ * Base class that contains data and functionality common to {@link DefaultFacebookClient} and
+ * {@link DefaultLegacyFacebookClient}.
+ * 
+ * @author <a href="http://restfb.com">Mark Allen</a>
+ * @since 1.5
+ */
+abstract class BaseFacebookClient {
+```

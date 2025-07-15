@@ -1,0 +1,32 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java imports. Let me look at the two sides.
+
+The HEAD version has an import for ISO8601Util, while the other branch (e2ba470) imports GenericController. Both are from the same package br.com.caelum.vraptor. 
+
+I should check if these two imports are both necessary. Maybe both classes are used in different parts of the code. Since they're different classes, the correct resolution is to include both imports. The conflict markers need to be removed, and both import statements should be kept. 
+
+Wait, but sometimes when merging, if both branches added different imports, you just keep both. So in this case, the conflict is because both sides added an import line in the same place. The solution is to take both imports, placing one after the other, maintaining alphabetical order if that's important. Let me check the order. 
+
+Looking at the existing imports, the ones before the conflict are CalendarDeserializer, then the conflicting lines. ISO8601Util comes first alphabetically compared to GenericController. So the correct order would be ISO8601Util followed by GenericController. 
+
+So the resolved code should have both imports without the conflict markers. The spacing should be preserved as per the original. So the final imports after CalendarDeserializer would be:
+
+import br.com.caelum.vraptor.util.ISO8601Util;
+import br.com.caelum.vraptor.view.GenericController;
+
+That way, both necessary imports are included, and the merge conflict is resolved.</think>
+```java
+import br.com.caelum.vraptor.resource.DefaultResourceClass;
+import br.com.caelum.vraptor.resource.DefaultResourceMethod;
+import br.com.caelum.vraptor.resource.ResourceClass;
+import br.com.caelum.vraptor.resource.ResourceMethod;
+import br.com.caelum.vraptor.serialization.gson.adapters.CalendarDeserializer;
+import br.com.caelum.vraptor.util.ISO8601Util;
+import br.com.caelum.vraptor.view.GenericController;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+```

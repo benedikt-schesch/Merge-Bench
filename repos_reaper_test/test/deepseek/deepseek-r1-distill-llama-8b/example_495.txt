@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The merge conflict is between using `mBitmapTexture` and `mBitmapTextureAtlas`. The right side (91801fdd7714064242fef90013824ede2bbcbe9d) replaces `mBitmapTexture` with `mBitmapTextureAtlas` in the texture loading call. This suggests the developer intended to use an texture atlas for better texture management.
+
+The left side (HEAD) loads `mBitmapTexture`, while the right side loads `mBitmapTextureAtlas`. Given that `mBitmapTextureAtlas` is a more efficient way to manage multiple textures, it's likely the intended change. There's no apparent dependency on `mBitmapTexture` after this line, so the conflict can be resolved by merging the right side.
+
+```java
+					ModPlayerExample.this.startPlayingMod();
+				}
+			});
+		}
+
+<<<<<<< HEAD
+		this.mEngine.getTextureManager().loadTexture(this.mBitmapTexture);
+=======
+		this.mEngine.getTextureManager().loadTexture(this.mBitmapTextureAtlas);
+>>>>>>> 91801fdd7714064242fef90013824ede2bbcbe9d
+	}
+
+		@Override
+		public Scene onLoadScene() {
+			this.mEngine.registerUpdateHandler(new FPSLogger());
+```

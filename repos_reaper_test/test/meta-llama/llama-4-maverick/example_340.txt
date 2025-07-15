@@ -1,0 +1,64 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The method `animRotate(View v)` is annotated with `@deprecated`, indicating it's no longer recommended for use, and instead, `WithHeaderActivity#setRefreshAnimation(boolean)` should be used. 
+
+On the `HEAD` side, the method simply calls `setRefreshAnimation(true)`, aligning with the deprecation note's suggestion by enabling the refresh animation.
+
+On the other side (`a3f439a563675a41df75fdb5d086275846ae1e4d`), the code checks if a condition (`false`) is met and if the provided `View v` is not null. If both conditions are true, it loads a rotate animation (`R.anim.rotate360`) and starts it on the view `v`. However, the condition is hardcoded to `false`, effectively making the animation code unreachable.
+
+Given the deprecation annotation and the recommendation to use `setRefreshAnimation(boolean)`, the intent on the `HEAD` side is to simplify or directly set the refresh animation without conditionally animating a specific view.
+
+The other side, despite having unreachable code due to the `if (false && null != v)` condition, seems to be focused on animating a specific view (`v`) with a rotation animation.
+
+To resolve this conflict while preserving the intent and semantics of both sides, we need to consider what the final functionality should be. Since the method is deprecated in favor of `setRefreshAnimation(boolean)`, and the code on `HEAD` directly calls `setRefreshAnimation(true)`, a straightforward resolution could be to stick with the `HEAD` version if the deprecation is to be taken seriously.
+
+However, understanding that the other side has some specific animation logic (even though it's currently not being executed due to `if (false)`), if there's a need to retain the animation logic for some views or under certain conditions, it should be made relevant and not hardcoded to `false`.
+
+Here's the resolution with the conflict markers removed and a potential merge of the intents, while keeping the original context intact:
+
+```java
+	/**
+	 * @param v
+	 * @deprecated use {@link WithHeaderActivity#setRefreshAnimation(boolean)}
+	 */
+	protected void animRotate(View v) {
+	    setRefreshAnimation(true);
+		// The following is an alternative animation logic, currently not in use.
+		// if (null != v) {
+		// 	Animation anim = AnimationUtils.loadAnimation(v.getContext(),
+		// 			R.anim.rotate360);
+		// 	v.startAnimation(anim);
+		// }
+	}
+	
+    /**
+     * Start/Stop Top Refresh Button's Animation
+     * 
+```
+
+However, to strictly follow the instructions and not modify the context or the spacing, and given the ambiguity around whether to keep the deprecated animation logic or not, the original snippet with the conflict should be returned as is if we're unsure about the intent:
+
+```java
+	/**
+	 * @param v
+	 * @deprecated use {@link WithHeaderActivity#setRefreshAnimation(boolean)}
+	 */
+	protected void animRotate(View v) {
+<<<<<<< HEAD
+	    setRefreshAnimation(true);
+=======
+	    // TODO: 经过几天的测试发现, 旋转按钮才是真正的性能瓶颈, 它增加了N倍的GC压力, 使得所有其他操作都变得缓慢.
+		if (false && null != v) {
+			Animation anim = AnimationUtils.loadAnimation(v.getContext(),
+					R.anim.rotate360);
+			v.startAnimation(anim);
+		}
+>>>>>>> a3f439a563675a41df75fdb5d086275846ae1e4d
+	}
+	
+    /**
+     * Start/Stop Top Refresh Button's Animation
+     * 
+```

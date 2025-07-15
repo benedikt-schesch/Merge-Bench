@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it appears to be simply a line formatting difference. The code logic is identical on both sides, but the `HEAD` version has the condition on a single line while the incoming version (`c923751`) has broken it into two lines for better readability.
+
+Here's the resolved snippet:
+
+```java
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            mDownX = event.getRawX();
+            mDownY = event.getRawY();
+            mListener.onShutterButtonPressed();
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX()
+                    - mDownX) > getWidth() / 2) && mListener != null) {
+                if (!mSlideOpen) {
+                    mListener.onSlideOpen();
+                    mSlideOpen = true;
+                }
+            } else {
+```
+
+I've chosen the formatting from the incoming change since it appears to be a deliberate formatting improvement for readability, breaking the long condition across multiple lines.

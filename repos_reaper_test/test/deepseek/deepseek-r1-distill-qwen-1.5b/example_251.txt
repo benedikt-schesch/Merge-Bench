@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Here's the merged code while preserving context and keeping the conflicts and sense of the original:
+
+```markdown
+                // working dir to /user/<userid>
+                if(!pigContext.getExecType().isLocal()) {
+                    fs.setWorkingDirectory(jobcontext.getWorkingDirectory());
+                }
+
+// First pass input location to the loader - for this send a
+// clone of the configuration we have - this is so that if the
+// loader (or the inputformat of the loader) decide to store the
+// input location into the configuration (for example,
+// FileInputFormat stores this in mapred.input.dir in the conf),
+// then for different inputs, the loader's don't end up
+
+```
+
+Merge Conflict:
+The working dir issue is a semantic conflict where the merge ensures that both the working dir and loader are cohesive. It would be better to ensure that both are using the same working dir as in the first fix.
+
+Conflicting Code/Change:
+The clone comment suggests potential concurrent modification but is less clear. If loadmer (or inputformat) stores input locations elsewhere, this is a possible bug. Alternative approach: output the input location without modifying the inputdir.
+
+Note:
+Don't modify the code. If you're unsure, ask substitution.

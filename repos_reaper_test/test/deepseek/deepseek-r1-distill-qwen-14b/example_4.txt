@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict involves different approaches to creating a Gson instance based on the protocol version. Both sides aim to serialize the response correctly, but one uses a conditional for legacy support. Without knowing if 1.7.2 support is needed, it's better to preserve the existing logic.
+
+```java
+                Callback<ProxyPingEvent> callback = new Callback<ProxyPingEvent>()
+                {
+                    @Override
+                    public void done(ProxyPingEvent pingResult, Throwable error)
+                    {
+<<<<<<< HEAD
+                        BungeeCord.getInstance().getConnectionThrottle().unthrottle( getAddress().getAddress() );
+                        Gson gson = handshake.getProtocolVersion() == ProtocolConstants.MINECRAFT_1_7_2 ? BungeeCord.getInstance().gsonLegacy : BungeeCord.getInstance().gson;
+=======
+                        Gson gson = BungeeCord.getInstance().gson;
+>>>>>>> 80b3135a93f0e23489cc19086e31feb12ff51798
+                        unsafe.sendPacket( new StatusResponse( gson.toJson( pingResult.getResponse() ) ) );
+                    }
+                };
+
+                bungee.getPluginManager().callEvent( new ProxyPingEvent( InitialHandler.this, result, callback ) );
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```java
+            boolean skipMissingFiles = parser.getOptionValue(skipMissingOpt) != null;
+            if(skipMissingFiles) {
+                options = options | CSSURLEmbedder.SKIP_MISSING_OPTION;
+            }
+            
+            CSSURLEmbedder embedder;
+            // Both versions intend to initialize embedder, but differ in constructor argument.
+            // To resolve: If `maxurilength` and `maximagesize` are both needed, but one side only uses `uriLength`,
+            // it's likely `maxurilength` replaced `uriLength` for greater flexibility. 
+            // Semantically, let's pass both if available (assuming backwards compat in constructor).
+            // If not sure, preserve the conflict for now:
+<<<<<<< HEAD
+            CSSURLEmbedder embedder = new CSSURLEmbedder(in, options, verbose, maxurilength, maximagesize);            
+=======
+            CSSURLEmbedder embedder = new CSSURLEmbedder(in, options, verbose, uriLength);
+>>>>>>> 790b69a0bd40e3ab536f9c6568748f981b3d525e
+            embedder.setMHTMLRoot(mhtmlRoot);
+            
+            //close in case writing to the same file
+            in.close(); in = null;
+            
+```

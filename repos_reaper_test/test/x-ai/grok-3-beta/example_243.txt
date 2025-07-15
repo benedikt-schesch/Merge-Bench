@@ -1,0 +1,51 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict, preserved in its original form including context and spacing, followed by my analysis and resolution.
+
+```java
+        // splits.
+        NoopFilterRemover fRem = new NoopFilterRemover(plan);
+        fRem.visit();
+
+        boolean isMultiQuery =
+<<<<<<< HEAD
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+=======
+                "true".equalsIgnoreCase(pc.getProperties().getProperty("opt.multiquery","true"));
+>>>>>>> 1cb2531c41db7942eca2b75f500cfe7e4a8cad81
+
+        if (isMultiQuery) {
+            // reduces the number of MROpers in the MR plan generated
+            // by multi-query (multi-store) script.
+            MultiQueryOptimizer mqOptimizer = new MultiQueryOptimizer(plan, pc.inIllustrator);
+```
+
+### Analysis and Resolution
+
+**Intent and Semantics:**
+- The conflict revolves around how the property for multi-query optimization is accessed in the configuration.
+- On the `HEAD` side, the property is accessed using a constant `PigConfiguration.OPT_MULTIQUERY` with a default value of `"true"`.
+- On the other side (`1cb2531c41db7942eca2b75f500cfe7e4a8cad81`), the property is accessed using a hardcoded string `"opt.multiquery"` with a default value of `"true"`.
+- Both sides aim to achieve the same functionality: checking if multi-query optimization is enabled by reading a configuration property and defaulting to `true` if the property is not set.
+- The key difference is in the way the property key is defined (constant vs. hardcoded string). Using a constant (as in `HEAD`) is generally preferred as it avoids typos, improves maintainability, and ensures consistency across the codebase.
+
+**Resolution:**
+Since the intent of both sides is identical (to determine if multi-query optimization is enabled), and the `HEAD` version uses a more robust and maintainable approach with a constant, I will resolve the conflict by adopting the `HEAD` version. The hardcoded string in the other branch is likely a legacy or less standardized way of accessing the property.
+
+**Resolved Code Snippet:**
+
+```java
+        // splits.
+        NoopFilterRemover fRem = new NoopFilterRemover(plan);
+        fRem.visit();
+
+        boolean isMultiQuery =
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+        if (isMultiQuery) {
+            // reduces the number of MROpers in the MR plan generated
+            // by multi-query (multi-store) script.
+            MultiQueryOptimizer mqOptimizer = new MultiQueryOptimizer(plan, pc.inIllustrator);
+```
+
+This resolution preserves the semantic intent of checking for multi-query optimization while using the better practice of referencing a configuration constant. If there is a specific reason to use the hardcoded string (e.g., compatibility with older configurations), further context or documentation would be needed, but based on the given information, the `HEAD` version appears to be the more appropriate choice.

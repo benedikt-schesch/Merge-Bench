@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The merge conflict is about code formatting in the method signature. Both sides have the same functionality, just different line breaks. I'll preserve the version from HEAD as it's more concise.
+
+```java
+     * is based and merge it with the Conf supplied
+     *
+     * package level access so that this is not publicly used elsewhere
+     * @throws IOException
+     */
+    static void mergeSplitSpecificConf(LoadFunc loadFunc, PigSplit pigSplit, Configuration originalConf)
+    throws IOException {
+        // set up conf with entries from input specific conf
+        Job job = new Job(originalConf);
+        loadFunc.setLocation(getLoadLocation(pigSplit.getInputIndex(),
+                originalConf), job);
+        // The above setLocation call could write to the conf within
+```

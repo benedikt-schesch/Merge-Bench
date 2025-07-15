@@ -1,0 +1,31 @@
+<think>
+Okay, let's take a look at this merge conflict. The code is in Java, part of an animation end listener. Both sides are trying to set up an animate() chain with similar parameters but formatted differently.
+
+In the HEAD version, the line is more compact: translationYBy(-getHeight()*1.5f) is all on one line, and the method calls are chained without line breaks. The other side (from commit c923751) breaks the translationYBy, setStartDelay, setDuration, and setListener into separate lines, possibly for readability or to adhere to a code style guide.
+
+The key is to see if the changes are purely formatting or if there's a semantic difference. Both versions set the same properties: alpha, scaleY, scaleX, translationYBy, start delay, duration, and a listener. The parameters are identical in values, so the conflict is likely about code formatting.
+
+Since the intent is the same, the resolution should combine both changes without altering functionality. The main difference is line breaks and formatting. To resolve, we can adopt the more readable formatting from the second version while ensuring all method calls are correctly chained.
+
+Looking at the setListener part: HEAD has it inline, while the other side breaks it into a new line. The second version's formatting for setListener with the new lines might improve readability, especially if the listener has multiple methods. However, both are valid.
+
+The correct approach is to merge the formatting changes without losing any method calls. The parameters are the same, so combining the line breaks for better readability while preserving the order and parameters from both sides.
+
+So, the resolved code should have the translationYBy on a separate line as in the second version, and the setStartDelay, setDuration, and setListener each on their own lines, but ensuring that all method calls are properly chained. The listener's anonymous class structure is the same in both, so that part can stay as is.
+
+Therefore, the conflict can be resolved by taking the formatting from both versions where appropriate, ensuring that the code remains syntactically correct and maintains the intended animation properties.</think>
+```java
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                // Second step: fade out and scale and slide
+                animate().alpha(0.0f).scaleY(0.7f).scaleX(0.7f).translationYBy(
+                        -getHeight()*1.5f).setStartDelay(100).setDuration(
+                        FADE_OUT_DURATION_MS).setListener(
+                        new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+
+                    }
+```

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the key is to determine which resource (`mBitmapTexture` or `mBitmapTextureAtlas`) should be used. The context suggests that the `mBitmapTextureAtlas` is the correct choice, likely for better texture management.
+
+```java
+				this.draw(faceSprite1);
+				this.draw(faceSprite2);
+			}
+		};
+		
+		// Using mBitmapTextureAtlas, which is the correct choice
+		final SpriteBatch staticSpriteBatch = new SpriteBatch(this.mBitmapTextureAtlas, 2);
+		staticSpriteBatch.draw(this.mFaceTextureRegion, -50, 0, this.mFaceTextureRegion.getWidth(), this.mFaceTextureRegion.getHeight(), 2, 2);
+		staticSpriteBatch.draw(this.mFaceTextureRegion, 50, 0, this.mFaceTextureRegion.getWidth(), this.mFaceTextureRegion.getHeight(), 45);
+		staticSpriteBatch.submit();
+
+		dynamicSpriteBatch.setPosition(centerX, centerY - 50);
+```

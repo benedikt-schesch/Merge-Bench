@@ -1,0 +1,47 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the Java imports between the HEAD and the other branch. The HEAD version imports Vector3 from org.spout.math.vector, while the other branch imports Vector3 from org.spout.api.math and also adds an import for Chunk from org.spout.api.geo.cuboid.
+
+Hmm, the goal is to resolve this conflict by understanding the intent of both sides. The main conflict here is the import statement for Vector3. The other branch added an import for Chunk, which isn't present in HEAD. So maybe both changes are valid. The Vector3 import paths are different, so that's a problem. Why would they be different?
+
+Maybe one branch updated the package structure for Vector3, moving it from org.spout.api.math to org.spout.math.vector, while the other branch added a necessary import for Chunk. So the correct resolution would be to keep both imports but ensure the correct Vector3 path. Wait, but you can't have two different imports for the same class. That would cause an error.
+
+Wait, but the conflict is in the import lines. So in HEAD, the import is org.spout.math.vector.Vector3, and in the other branch, it's org.spout.api.math.Vector3, plus the Chunk import. So the user has to decide which Vector3 import is correct. If one branch is outdated, maybe the correct one is the HEAD version. Or maybe the other branch is correct. Without more context, it's hard to tell. But perhaps the HEAD is a newer change where Vector3 was moved to a different package, and the other branch added a necessary Chunk import. So the correct resolution is to keep the Chunk import from the other branch and use the Vector3 import from HEAD, but wait, they can't both be there. Wait, no—the other branch's import for Vector3 is conflicting. So perhaps the correct approach is to take both the Chunk import from the other branch and the Vector3 import from HEAD, since the HEAD's version is the one that's being kept. So the resolved code would have both the Chunk import and the Vector3 from the HEAD. Wait, but in the conflict, the HEAD doesn't have the Chunk import. So the other branch adds it. So merging would require including the Chunk import and resolving the Vector3 import correctly.
+
+Wait, the original code in HEAD has only the Vector3 import from math.vector. The other branch adds the Chunk import and also changes the Vector3 import to api.math. That's conflicting. So the conflict is between two changes: one adding Chunk and changing Vector3's import, and the other (HEAD) keeping Vector3's import as math.vector.
+
+If the correct Vector3 import is the one from HEAD (math.vector), then we should keep that and also include the Chunk import from the other branch. Because the other branch's change to the Vector3 import is conflicting, but the Chunk import is an additional line. So the resolution would be to have both imports: the Chunk from the other branch and the Vector3 from HEAD. But how to structure that in the code?
+
+Looking at the original conflict:
+
+<<<<<<< HEAD
+import org.spout.math.vector.Vector3;
+=======
+import org.spout.api.geo.cuboid.Chunk;
+import org.spout.api.math.Vector3;
+>>>>>>> cc0703054530b4eeda07a2b1b619ed34e1e7d201
+
+So in HEAD, there's only one import line for Vector3 from math.vector. In the other branch, there are two imports: Chunk and Vector3 from api.math. To resolve, we need to include the Chunk import and decide which Vector3 import is correct. If the correct one is the HEAD version, then the resolved code should have:
+
+import org.spout.api.geo.cuboid.Chunk;
+import org.spout.math.vector.Vector3;
+
+But that would require combining both lines. However, the conflict is between the two versions. So the correct way is to take both the Chunk import from the other branch and the Vector3 import from HEAD. Therefore, the resolved code would have both lines. But how to arrange them? The order might not matter here. So the merge would include the Chunk import and the Vector3 import from HEAD. That way, both changes are incorporated: the addition of Chunk and the correct Vector3 import. So the resolved code would look like:
+
+import org.spout.api.geo.cuboid.Chunk;
+import org.spout.math.vector.Vector3;
+
+Thus, the conflict is resolved by keeping both imports, with the Chunk added and Vector3 from HEAD. So the final answer would combine these.</think>
+```java
+ * License and see <http://spout.in/licensev1> for the full license, including
+ * the MIT license.
+ */
+package org.spout.api.util.cuboid;
+
+import org.spout.api.geo.cuboid.Chunk;
+import org.spout.math.vector.Vector3;
+
+/**
+ * This class implements a Cuboid common methods for a one dimensional array Cuboid Buffer
+ *
+ * Elements are stored in column order and each column is +1 on the Z dimension relative to the previous one.
+```

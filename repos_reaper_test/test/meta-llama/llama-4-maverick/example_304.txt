@@ -1,0 +1,75 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the given code snippet and understand the intent behind both the conflicting changes.
+
+The code snippet is written in Java and appears to be part of a test class, judging by the presence of `@Test` annotation on one of the methods. The specific test we're looking at seems to be verifying the deserialization of an object, specifically a `Dog` object, and checking its properties.
+
+The conflict arises in the initialization of a `Calendar` object named `birthday`, which is used to assert that the `birthday` property of the deserialized `Dog` object is correctly set.
+
+On one side of the conflict (`HEAD`), the `birthday` is set to a specific date and time (`2013-07-23 17:14:14`) in the `GMT-0300` timezone.
+
+```java
+Calendar birthday = new GregorianCalendar(2013, 6, 23, 17, 14, 14);
+birthday.setTimeZone(TimeZone.getTimeZone("GMT-0300"));
+```
+
+On the other side (`97d4f628bf2675efd7c06c6636b473b06d0e080b`), it's set to a different date (`2011-04-04`, assuming the month is correctly represented as `03` for April, given that months are 0-indexed in Java's `Calendar` API) without specifying the time, and the timezone is set to `America/Sao_Paulo`.
+
+```java
+Calendar birthday = new GregorianCalendar(2011, 03, 04);//04/04/2011
+birthday.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+```
+
+First, let's correct a potential issue in the conflicting code: In Java, months are 0-indexed, meaning January is 0 and December is 11. So, `03` represents April, not March, and `6` represents July. The comment `//04/04/2011` suggests an intention to represent April 4th, 2011, which is correctly done with `2011, 03, 04`.
+
+To resolve the conflict, we need to understand the intent behind setting `birthday` in both cases. Both versions are trying to set the `birthday` of the `Dog` object to a specific date, but they differ in the date, time, and timezone used.
+
+Without additional context on why both changes exist or what the expected behavior should be, the most straightforward resolution would be to choose one based on the most relevant or recent change (often the one on the branch being merged, but not always).
+
+However, since the test is asserting a very specific state (`dog.birthday` being equal to `birthday`), and assuming both changes are valid in different contexts, we should consider if there's a way to reconcile or if one change is more relevant.
+
+Let's directly examine the code given and resolve based on provided changes.
+
+Given that there's no clear indication that one change is more correct than the other without understanding the specific requirements or context (like whether the time and timezone are critical or just the date), a simple resolution isn't directly apparent.
+
+```java
+		assertThat(deserialized[0], is(instanceOf(Dog.class)));
+		Dog dog = (Dog) deserialized[0];
+		assertThat(dog.name, is("Brutus"));
+		assertThat(dog.age, is(7));
+
+<<<<<<< HEAD
+		Calendar birthday = new GregorianCalendar(2013, 6, 23, 17, 14, 14);
+		birthday.setTimeZone(TimeZone.getTimeZone("GMT-0300"));
+=======
+		Calendar birthday = new GregorianCalendar(2011, 03, 04);//04/04/2011
+		birthday.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+>>>>>>> 97d4f628bf2675efd7c06c6636b473b06d0e080b
+		assertThat(dog.birthday, is(birthday));
+	}
+
+	@Test
+	public void shouldHonorRequestHeaderAcceptCharset() throws Exception {
+```
+
+Since the intent behind both changes seems to be setting the `birthday` but with different specifics, and without more information on which is the "correct" `birthday` for the test, I will return the original snippet with the conflict as is.
+
+```java
+		assertThat(deserialized[0], is(instanceOf(Dog.class)));
+		Dog dog = (Dog) deserialized[0];
+		assertThat(dog.name, is("Brutus"));
+		assertThat(dog.age, is(7));
+
+<<<<<<< HEAD
+		Calendar birthday = new GregorianCalendar(2013, 6, 23, 17, 14, 14);
+		birthday.setTimeZone(TimeZone.getTimeZone("GMT-0300"));
+=======
+		Calendar birthday = new GregorianCalendar(2011, 03, 04);//04/04/2011
+		birthday.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+>>>>>>> 97d4f628bf2675efd7c06c6636b473b06d0e080b
+		assertThat(dog.birthday, is(birthday));
+	}
+
+	@Test
+	public void shouldHonorRequestHeaderAcceptCharset() throws Exception {
+```

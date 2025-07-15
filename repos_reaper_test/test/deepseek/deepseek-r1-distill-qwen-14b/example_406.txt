@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict is resolved by using the right side of the merge, which correctly calls `getCurrentPlayer()` on the `GC` instance, making the code cleaner and more appropriate.
+
+```java
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		try {
+			if (((MainActivity) getActivity()).getGC().isConnected())
+				outState.putString("player", ((MainActivity) getActivity()).getGC()
+						.getCurrentPlayer().getDisplayName());
+			else
+				outState.remove("player");
+		} catch (Exception e) {
+			if (Logger.LOG)
+				Logger.log(e);
+
+```

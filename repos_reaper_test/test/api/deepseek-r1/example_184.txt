@@ -1,0 +1,19 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is between using StringBuilder and StringBuffer in Java. The HEAD version uses StringBuilder, while the other branch uses StringBuffer. 
+
+I remember that StringBuilder is not thread-safe but faster, whereas StringBuffer is thread-safe but slower. Since this code is inside a method, probably in a single-threaded context, using StringBuilder makes more sense for performance. The intention of both changes is to build a string efficiently. 
+
+The code around it doesn't show any synchronization, so it's safe to go with StringBuilder. The rest of the code is the same. So resolving the conflict by choosing HEAD's version.</think>
+```java
+            return;
+
+        case STRING: {
+            // Gather up all the remaining arguments into a string and pass them into
+            // grunt.
+            StringBuilder sb = new StringBuilder();
+            String remainders[] = opts.getRemainingArgs();
+            for (int i = 0; i < remainders.length; i++) {
+                if (i != 0) sb.append(' ');
+                sb.append(remainders[i]);
+            }
+```

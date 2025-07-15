@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+						+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+						+ "\tBecause of these missing grants/ownerships, the functionality is not identical to the export you just imported!\n\n"
+						+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+						+ "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+						+ "###############################################################################"
+				);
+				publishWarningMessage(title, text);
+			}
+```

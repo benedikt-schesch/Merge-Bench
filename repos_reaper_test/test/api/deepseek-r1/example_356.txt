@@ -1,0 +1,25 @@
+<think>
+Okay, let's tackle this merge conflict. The conflict is in the JavaDoc comment of the ApacheHttpTransport class. The HEAD version says "HTTP low-level transport based on the Apache HTTP Client library." while the other branch says "HTTP transport based on the Apache HTTP Client library."
+
+First, I need to understand the intent of both changes. The HEAD version adds the word "low-level" which might be emphasizing that this transport is a lower-level implementation detail. The other branch simplifies it to just "HTTP transport". 
+
+Looking at the surrounding context, the rest of the comment talks about default settings, including the client connection manager. The use of "low-level" might be redundant if the class name already implies it's part of the Apache HTTP client, which is a lower-level library compared to higher-level abstractions. Alternatively, maybe the HEAD version wanted to clarify that this is a low-level transport, whereas the other branch found that unnecessary.
+
+If both changes are trying to describe the class accurately, perhaps "HTTP transport" is sufficient since the package name (apache) already indicates it's using Apache HTTP Client. However, if the distinction between low-level and high-level is important in the project's context, keeping "low-level" might be necessary. But without more context, it's hard to say. Since both are similar and the difference is just the adjective, maybe combining them or choosing the more concise one is better. Alternatively, check if there's a standard in the project for such descriptions.
+
+Since the user asks to resolve based on intent and semantics, and if both are correct but just different phrasing, perhaps the more descriptive one (HEAD) is acceptable. But maybe the other branch's change was a simplification. Since the conflict is in the comment, and both are valid, but the branch name (01a6cc5) might be more recent or from a refactor (package change from com.google.api.client.apache to com.google.api.client.http.apache), perhaps the latter's comment is part of a larger refactor and should be kept. Wait, looking at the file paths: HEAD is at google-api-client/src/com/google/api/client/apache/ApacheHttpTransport.java, while the other is at google-api-client/src/main/java/com/google/api/client/http/apache/ApacheHttpTransport.java. The package structure changed from ...apache to ...http.apache, which might indicate a restructuring where the comment was adjusted. The other branch's comment might be the updated one as part of moving the class to a different package. Therefore, the correct resolution would be to take the version from the branch 01a6cc5, which is "HTTP transport based on the Apache HTTP Client library."
+
+So, the resolved comment should be the one from the other branch, as it's part of a package move and likely the intended updated comment.</think>
+```java
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+/**
+ * HTTP transport based on the Apache HTTP Client library.
+ * <p>
+ * Default settings:
+ * </p>
+ * <ul>
+ * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to determine which method call correctly retrieves the JSON data. The `getJsonObject` method is more appropriate when expecting a JSON object, ensuring proper data handling.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    String picJson = rawPicture.getJsonObject("data").toString();
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+  }
+
+  @JsonMappingCompleted
+  protected void graphApi26LikesFallback() {
+```
+
+The conflict was resolved by selecting `rawPicture.getJsonObject("data")` as it correctly retrieves the JSON object, aligning with the intent to parse structured data into `ProfilePictureSource`.

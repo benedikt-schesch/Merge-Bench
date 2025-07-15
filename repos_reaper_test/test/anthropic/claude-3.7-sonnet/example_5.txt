@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I need to resolve the merge conflict in the provided Java code. Let me analyze the intent of both versions.
+
+On the HEAD side, we see code handling `nameTagVisibility`, then conditionally handling `collisionRule` for protocol version 1.9 or higher, followed by setting `color`.
+
+On the other branch, we only see code handling `collisionRule` directly.
+
+The conflict appears to be about organizing conditional logic around protocol versions. The correct merge should preserve both the nameTagVisibility handling and the color setting while also handling collisionRule appropriately.
+
+Here's the resolved code:
+
+```java
+            prefix = readString( buf );
+            suffix = readString( buf );
+            friendlyFire = buf.readByte();
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+            {
+                nameTagVisibility = readString( buf );
+                collisionRule = readString( buf );
+                color = buf.readByte();
+            }
+        }
+        if ( mode == 0 || mode == 3 || mode == 4 )
+        {
+            int len = ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 ) ? readVarInt( buf ) : buf.readShort();
+```
+
+I removed the nested conditional for 1.9 since the other branch suggests that `collisionRule` should be read for all 1.8+ protocols without the additional 1.9 check. This resolution preserves both the handling of all fields while simplifying the version check logic.

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll return the snippet as provided in markdown code syntax without modifying the context or spacing. After examining the merge conflict, I can see that the conflict revolves around the type of `accessToken`. One side uses `AccessToken` and the other uses `OAuthConsumerToken`. Without additional context on which type is correct or intended in the broader application architecture, I cannot definitively resolve this conflict based on semantics or intent.
+
+Here is the unchanged snippet with the conflict preserved:
+
+```java
+		Account account = (Account) principal;
+		List<AccessToken> accessTokens = jdbcTemplate.query(SELECT_TOKEN_SQL, new RowMapper<AccessToken>() {
+			public AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccessToken(rs.getString("accessToken"), rs.getString("secret"), rs.getString("provider"));
+			}
+<<<<<<< HEAD
+				}, account.getId(), resourceId);
+		AccessToken accessToken = null;
+=======
+		}, account.getId(), resourceId);
+		OAuthConsumerToken accessToken = null;
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+		if (accessTokens.size() > 0) {
+			accessToken = accessTokens.get(0);
+		}
+		return accessToken;
+	}
+```
+
+**Explanation:** The conflict involves a type mismatch for the `accessToken` variable. The `HEAD` version declares it as `AccessToken`, which matches the type of objects in the `accessTokens` list. The other side (`12df1c5d0ecdb9e47b22b81db0329cc0f17054d6`) declares it as `OAuthConsumerToken`, which appears inconsistent with the list type unless there's an implicit conversion or a different design intent not visible in this snippet. Resolving this requires understanding the expected type in the surrounding codebase or the intent behind using `OAuthConsumerToken`. Without that information, I am unable to propose a resolution and have preserved the conflict as is. If you can provide additional context or clarify the intended type or purpose of `accessToken`, I can assist further.

@@ -1,0 +1,23 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is between using Arrays.asList and Collections.singletonList. 
+
+The HEAD version uses Arrays.asList, which creates a fixed-size list backed by an array. If the argument is a single element, it makes a list with that element. The other side, from commit 5adedd2, uses Collections.singletonList, which creates an immutable list with exactly one element.
+
+I need to figure out which one is more appropriate here. The context shows that they're adding a list of face-down cards. Since faceDownCards is being decremented in a loop, each iteration adds one face-down card. So each call to WhiteCard.getFaceDownCardClientData() returns a single element, and they want to add a list containing that single element.
+
+Collections.singletonList is more efficient here because it's designed for a single element and returns an immutable list, which is safe if the code doesn't need to modify the list later. Arrays.asList would create a list that's mutable in size (though the elements can't be changed if it's a singleton). However, in practice, both would work, but singletonList is more semantically correct for a single-element list and might have better performance.
+
+The comment above mentions handling multiple blank cards, but the current loop is for faceDownCards--, which seems to handle each card individually. So each iteration adds a list with one face-down card. Therefore, using singletonList makes sense here. The conflict arises because one branch changed it to a more efficient method. Since the code in the 'while' loop is decrementing faceDownCards each time, each iteration adds one card. Hence, the correct resolution is to use Collections.singletonList as in the incoming branch.</think>
+```java
+          cardData.add(getWhiteCardData(playedCards.getCards(player)));
+          faceDownCards--;
+        }
+        // TODO make this figure out how many blank cards in each spot, for multi-play cards
+        while (faceDownCards-- > 0) {
+          cardData.add(Collections.singletonList(WhiteCard.getFaceDownCardClientData()));
+        }
+        return cardData;
+      }
+    }
+  }
+```

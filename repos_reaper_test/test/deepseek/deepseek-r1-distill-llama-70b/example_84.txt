@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+In this case, the conflict is between using `textParts.size()` and `textParts.length()`. The `JSONArray` class in Java typically uses the `length()` method rather than `size()`, so the change to use `length()` is more appropriate.
+
+Here is the resolved code snippet:
+
+```java
+    return StringEscapeUtils.escapeXml11(text);
+  }
+
+  public static String formatWhiteCard(final JSONArray textParts) {
+    // The white cards should only ever have one element in text, but let's be safe.
+    final List<String> strs = new ArrayList<>(textParts.length());
+    for (final Object o : textParts) {
+      final String cardCastString = (String) o;
+      if (cardCastString.isEmpty()) {
+        // skip blank segments
+        continue;
+```

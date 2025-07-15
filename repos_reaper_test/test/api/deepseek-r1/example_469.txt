@@ -1,0 +1,32 @@
+<think>
+Okay, let's look at this merge conflict. The method getTranscoder is creating a KryoTranscoder instance, but there are two different versions. In HEAD, they're using manager.getContainer().getLoader().getClassLoader() and adding a defaultSerializerFactory parameter. The other branch uses classLoader directly and doesn't have that parameter.
+
+First, I need to understand the intent of both changes. The HEAD side introduces a new parameter for the default serializer factory, which probably adds configuration flexibility. The other branch simplifies the classloader usage by passing classLoader directly instead of retrieving it from the manager.
+
+To resolve this, I should check if both changes can be combined. The classLoader parameter in the method is passed, so using it directly makes sense and might be a correct refactor. The defaultSerializerFactory is an additional parameter added in HEAD. So the resolved code should include both the classLoader from the branch and the defaultSerializerFactory from HEAD.
+
+Looking at the constructor parameters, the HEAD version has 6 arguments: classLoader, customConverters, copyCollections, initialBuffer, maxBuffer, and defaultFactory. The other branch has 5 parameters, missing the defaultFactory. So merging both would require including all six parameters, using classLoader from the branch and adding the defaultSerializerFactory from HEAD.
+
+Therefore, the correct merged line would be:
+
+_transcoder = new KryoTranscoder( classLoader, _customConverterClassNames, _copyCollectionsForSerialization, initialBufferSize, maxBufferSize, defaultSerializerFactory );
+
+This way, we use the classLoader parameter as intended in one branch and include the new defaultSerializerFactory from the other. Also, ensure that the variable defaultSerializerFactory is declared, which it is in the HEAD's code with the getSysPropValue call. So the merged code should have that line as well.
+
+So the conflict is resolvable by taking both changes into account, combining the parameters. There's no ambiguity here because the parameters don't overlap except for the classLoader, which is correctly handled by using the parameter from the method.</think>
+```java
+     */
+    private KryoTranscoder getTranscoder( final ClassLoader classLoader ) {
+        if ( _transcoder == null ) {
+            final int initialBufferSize = getSysPropValue( PROP_INIT_BUFFER_SIZE, KryoTranscoder.DEFAULT_INITIAL_BUFFER_SIZE );
+            final int maxBufferSize = getSysPropValue( PROP_ENV_MAX_BUFFER_SIZE, KryoTranscoder.DEFAULT_MAX_BUFFER_SIZE );
+            final String defaultSerializerFactory = getSysPropValue( PROP_ENV_DEFAULT_FACTORY, KryoTranscoder.DEFAULT_SERIALIZER_FACTORY_CLASS );
+            _transcoder = new KryoTranscoder( classLoader,
+                    _customConverterClassNames, _copyCollectionsForSerialization, initialBufferSize, maxBufferSize,
+                    defaultSerializerFactory );
+        }
+        return _transcoder;
+    }
+
+    private int getSysPropValue( final String propName, final int defaultValue ) {
+```

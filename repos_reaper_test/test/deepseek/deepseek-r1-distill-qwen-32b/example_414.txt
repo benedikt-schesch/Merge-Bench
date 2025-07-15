@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The code conflict involves two equivalent ways to assert the exit status. Both lines check for an error exit, with one using an enum method and the other a hardcoded value. The resolution keeps the enum method for better maintainability.
+
+```java
+    @Test
+    void shouldTellUserThatTemplateOptionRequiresInitOption() throws Exception {
+
+        String[] args = {"-t", "groovy-mte"};
+
+        assertExitWithStatus(SystemExit.CONFIGURATION_ERROR.getStatus(), ()->Main.main(args));
+
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
+
+        LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+        assertThat(loggingEvent.getMessage()).isEqualTo("Error: Missing required argument(s): --init");
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet:
+
+```java
+    public boolean mustGenerateObjectId(Object pojo) {
+        for (BeanPropertyDefinition def : beanDescription(pojo.getClass()).findProperties()) {
+            if (idSelector.isId(def)) {
+                AnnotatedMember accessor = def.getAccessor();
+                accessor.fixAccess(true);
+                return idSelector.isObjectId(def) && accessor.getValue(pojo) == null;
+            }
+        }
+        return false;
+    }
+
+```
+
+I kept the version from HEAD, as it appears the method was refactored to use an `idSelector` object rather than a direct method call to `isObjectId`. This maintains the consistent use of the `idSelector` object which is also used earlier in the method in the `idSelector.isId(def)` call.

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+The conflict is in the method name of a test case. Both sides are testing group count functionality, but the HEAD version uses a simpler name while the other version specifies "WithMultipleFields". Given the context of testing with null flags and group keys, the more descriptive name from the other branch better captures the intent of testing multiple fields.
+
+```java
+    Boolean[] nullFlags = new Boolean[]{ false, true};
+
+    MiniCluster cluster = MiniCluster.buildCluster();
+    @Test
+    public void testGroupCountWithMultipleFields() throws Throwable {
+        File tmpFile = File.createTempFile("test", "txt");
+        for (int k = 0; k < nullFlags.length; k++) {
+            System.err.println("Running testGroupCountWithMultipleFields with nullFlags set to " + nullFlags[k]);
+            // flag to indicate if both the keys forming
+            // the group key are null
+```

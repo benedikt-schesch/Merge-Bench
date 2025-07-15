@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict arises because one branch (HEAD) has no code in this specific location (or removed whatever was there), while the other branch (`790b69a...`) adds a new constructor.
+
+**Intent of HEAD:** To have no specific constructor code at this location.
+**Intent of 790b69a...:** To add an overloaded constructor `CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength)`. This constructor is similar to the existing one immediately preceding the conflict, but omits the `maxImageSize` parameter. This is a common pattern for providing convenience constructors.
+
+**Resolution:**
+The most semantically sound resolution is to include the new constructor from branch `790b69a...`. This adds functionality (a new way to instantiate the class) without directly conflicting with any alternative implementation logic from `HEAD` in this specific block, as `HEAD` contributes nothing here. This constructor allows creating an instance without specifying `maxImageSize`, which might then rely on a default value or be set later.
+
+```java
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+    //--------------------------------------------------------------------------
+    // Get/Set verbose flag
+    //--------------------------------------------------------------------------    
+    
+    public boolean getVerbose(){
+
+```

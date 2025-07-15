@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+To resolve the semantic merge conflict, I need to analyze the intent behind both sides of the merge.
+
+The `buildGetRequest` method returns a new `MockLowLevelHttpRequest` without any parameters. This suggests it's creating a request object for GET requests. The `buildHeadRequest` method initially checks if the class supports HEAD requests. However, the intent might be to also create a request object for HEAD requests with the provided URL.
+
+The correct resolution is to ensure both methods consistently create request objects with the provided URL by passing it as a parameter to the constructor, while maintaining the conditional logic for HEAD requests.
+
+```java
+  }
+
+  @Override
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+    return new MockLowLevelHttpRequest(url);
+  }
+
+  @Override
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
+    if (!supportsHead()) {
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+```

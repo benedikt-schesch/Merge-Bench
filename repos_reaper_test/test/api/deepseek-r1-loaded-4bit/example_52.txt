@@ -1,0 +1,21 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is a Java method that creates a HashMap. The conflict is between the HEAD version, which uses the explicit type parameters `<GamePlayerInfo, Object>`, and the other branch which uses the diamond operator `<>`. 
+
+First, I need to understand the intent of both changes. The HEAD version is specifying the generic types explicitly when creating the HashMap. The other branch is using the diamond operator, which was introduced in Java 7 to allow the compiler to infer the type arguments from the context, making the code cleaner.
+
+Since both versions are initializing a HashMap for the same playerInfo variable, which is declared as `Map<GamePlayerInfo, Object>`, the diamond operator should be safe here. The compiler can infer the types from the left-hand side declaration. Using `<>` reduces redundancy without changing the semantics. 
+
+There's no functional difference between the two versions; they both create the same type of map. The diamond operator is just a syntactic improvement. Therefore, resolving the conflict by choosing the diamond operator from the other branch makes sense. It's a straightforward resolution without any ambiguity.</think>
+```java
+   *
+   * @param player The player for whom to get status.
+   * @return Information for {@code player}: Name, score, status.
+   */
+  public Map<GamePlayerInfo, Object> getPlayerInfo(final Player player) {
+    final Map<GamePlayerInfo, Object> playerInfo = new HashMap<>();
+    // TODO make sure this can't happen in the first place
+    if (player == null) {
+      return playerInfo;
+    }
+    playerInfo.put(GamePlayerInfo.NAME, player.getUser().getNickname());
+```

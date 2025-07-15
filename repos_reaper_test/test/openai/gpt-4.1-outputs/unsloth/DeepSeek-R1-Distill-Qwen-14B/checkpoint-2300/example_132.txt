@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+```java
+        if (dtzStr != null && dtzStr.length() > 0) {
+            // ensure that the internal timezone is uniformly in UTC offset style
+            DateTimeZone.setDefault(DateTimeZone.forOffsetMillis(DateTimeZone.forID(dtzStr).getOffset(null)));
+        }
+
+        // Combine both potential sources for "aggregate.warning"
+        boolean aggregateWarning = false;
+        String aggrWarnFromPigContext = pigContext.getProperties().getProperty("aggregate.warning");
+        if ("true".equalsIgnoreCase(aggrWarnFromPigContext)) {
+            aggregateWarning = true;
+        } else if ("true".equalsIgnoreCase(conf.get("aggregate.warning"))) {
+            aggregateWarning = true;
+        }
+        PigStatusReporter pigStatusReporter = PigStatusReporter.getInstance();
+        pigStatusReporter.setContext(new TaskContext<FetchContext>(new FetchContext()));
+        PigHadoopLogger pigHadoopLogger = PigHadoopLogger.getInstance();
+        pigHadoopLogger.setReporter(pigStatusReporter);
+        pigHadoopLogger.setAggregate(aggregateWarning);
+
+```

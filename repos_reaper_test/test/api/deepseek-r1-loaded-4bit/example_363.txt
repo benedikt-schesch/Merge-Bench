@@ -1,0 +1,37 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java method where there's a for-loop iterating over entries from either DataUtil.mapOf or Data.mapOf. The HEAD version uses DataUtil.mapOf(parameters), while the other branch uses Data.mapOf(parameters). 
+
+First, I need to understand the intent behind both changes. Both sides are trying to convert the parameters object into a map of entries. The difference is the class they're using: DataUtil versus Data. Maybe one branch refactored the method from DataUtil to Data, or vice versa. 
+
+I should check if these are two different classes or if one was a rename. If DataUtil and Data are separate classes, then this is a genuine conflict where the correct method depends on which version is intended. But if one branch renamed DataUtil to Data, then they're the same and we should pick the renamed version.
+
+Assuming that DataUtil and Data are different, perhaps Data.mapOf is a new method introduced in one branch, while the other branch uses DataUtil. If both methods exist and serve the same purpose, the resolver needs to determine which one is correct. However, without more context, it's hard to tell. 
+
+If the user expects a semantic merge, maybe both changes are compatible. For example, if DataUtil.mapOf is a deprecated method replaced by Data.mapOf, then the correct resolution is to use Data.mapOf. Alternatively, if the parameters' handling was moved from DataUtil to Data in one branch, that's the right choice.
+
+Since the user asked to resolve based on intent and semantics, and if both sides aim to convert parameters to a map but use different utility classes, it's ambiguous. But perhaps one is more up-to-date. For instance, if the HEAD version is older and the other branch is a newer refactor, we should go with Data.mapOf.
+
+However, without knowing the project's structure, it's risky to assume. The safest approach if unsure is to leave the conflict as is. But the user wants a resolution if possible. 
+
+Alternatively, maybe DataUtil and Data are the same class, and one was a typo or refactor. If DataUtil was renamed to Data, then the conflict is resolved by choosing the new name. But again, without context, it's a guess.
+
+Since the conflict is between DataUtil and Data, and the method names are the same (mapOf), it's possible that one branch refactored the utility class name. If the user's current project uses Data instead of DataUtil, then the correct choice is the latter version. But if DataUtil is the correct class, then HEAD is right.
+
+In many cases, during refactoring, classes might be renamed. If the branch f1253614bee8 is introducing a new Data class that replaces DataUtil, then using Data.mapOf is correct. Alternatively, if HEAD is the main branch where DataUtil is the standard, then that's correct.
+
+Since the user wants a resolution based on semantics, and if both changes are intended to achieve the same thing (converting parameters to a map), the correct resolution would be to pick the most appropriate class based on project conventions. However, without that information, it's ambiguous. 
+
+But given that the conflict is straightforward (only the class name differs), and assuming that one branch updated the class name, the merge should take the change from the branch, replacing DataUtil with Data. Therefore, the resolved code would use Data.mapOf.</think>
+```java
+  public static GoogleUrl create(String encodedServerUrl, String pathTemplate, Object parameters)
+      throws IllegalArgumentException {
+    GoogleUrl url = new GoogleUrl(encodedServerUrl);
+
+    HashMap<String, Object> requestMap = new HashMap<String, Object>();
+    for (Map.Entry<String, Object> entry : Data.mapOf(parameters).entrySet()) {
+      Object value = entry.getValue();
+      if (value != null) {
+        requestMap.put(entry.getKey(), value);
+      }
+    }
+```

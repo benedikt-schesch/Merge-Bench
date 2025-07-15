@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+                    ListRow row = findListRow(category);
+
+                    // if found add this video
+                    // if not, create a new row and add it
+                    if (row != null) {
+                        ((SortedObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedObjectAdapter listRowAdapter = new SortedObjectAdapter(
+                                videoNameComparator, mCardPresenter);
+                        listRowAdapter.add(video);
+
+                        HeaderItem header = new HeaderItem(0, category, null);
+                        mAdapter.add(0, new ListRow(header, listRowAdapter));
+                    }
+```

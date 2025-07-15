@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+       * error ourselves.
+       *
+       * Per Antonello Naccarato, sometimes FB will return an empty JSON array instead of an empty string. Look for that
+       * here.
+       */
+      if ((rawValue.isArray() || rawValue instanceof JsonArray)) {
+        if ((rawValue.isArray() && rawValue.asArray().size() == 0) ||
+            (rawValue instanceof JsonArray && ((JsonArray) rawValue).length() == 0)) {
+          if (MAPPER_LOGGER.isTraceEnabled()) {
+            MAPPER_LOGGER.trace(format("Coercing an empty JSON array to an empty string for %s", fieldWithAnnotation));
+          }
+
+          return "";
+```

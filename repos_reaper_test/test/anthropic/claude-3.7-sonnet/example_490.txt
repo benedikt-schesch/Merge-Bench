@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+After analyzing the merge conflict, I see that the change is related to the type of texture being used for the font. Let's resolve it:
+
+```java
+	}
+
+	@Override
+	public void onLoadResources() {
+		/* The font. */
+		this.mFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+
+		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.WHITE);
+
+		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
+		this.mEngine.getFontManager().loadFont(this.mFont);
+
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The code snippet has a merge conflict between two versions of the test method. Both versions perform similar assertions but use different JUnit assertion methods. The `VERSION_1_0` version uses `assertWith()` while `a17acec0655b8...` uses `assertEquals()`.
+
+To resolve this, it's appropriate to keep the version that aligns with the project's testing conventions. If the project typically uses `assertEquals()`, the `a17acec0655b8...` lines should be kept. 
+
+```java
+  @Test
+  public void checkV1_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+      jsonFromClasspath("v1_0/connection-user-friends"), User.class);
+    assertEquals(null, con.getTotalCount());
+    assertNotNull(con.getNextPageUrl());
+    assertTrue(con.hasNext());
+  }
+
+  @Test
+  public void checkV2_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+```

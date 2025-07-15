@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict preserved. The conflict involves the `@BeforeEach` vs `@Before` annotations and the way `projects` is initialized:
+
+```java
+	private List<ProjectFacade> projects;
+	private CoreRegistry coreRegistry;
+	private ProjectSet projectSet;
+	private EclipseWorkspace workspace;
+
+<<<<<<< HEAD
+	@BeforeEach
+	void inContext() throws CoreException {
+		projects = newArrayList();
+=======
+	@Before
+	public void inContext() throws CoreException {
+		projects = new ArrayList<>();
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+		projectSet = mock(ProjectSet.class);
+		projects.add(new ProjectFacade(project));
+		coreRegistry = mock(CoreRegistry.class);
+		CoreFactory coreFactory = new CoreFactory(null);
+		workspace = new EclipseWorkspace(projectSet, coreRegistry, coreFactory, new SystemClassPathJarLocator());
+```

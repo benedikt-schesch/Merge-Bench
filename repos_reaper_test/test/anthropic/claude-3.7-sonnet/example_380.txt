@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that there's a conflict in a test case called "Locked: Try Long Data". The two versions differ in how they specify the expected behavior:
+
+1. HEAD includes a reference URL and expects `ConfigUriBeacon.INSUFFICIENT_AUTHORIZATION` as the result
+2. The other branch removes the reference URL but uses `TestData.VALID_LENGTH_AUTHORIZATION_ERRORS` as the expected result
+
+Since this involves authorization testing logic and both sides are trying to test similar behavior but with different error constants, I'll merge them, maintaining the reference URL (which seems like useful documentation) and using both error specifications if they represent different concepts.
+
+```java
+                  BluetoothGatt.GATT_SUCCESS)
+      );
+      specUriBeaconTestsBuilder.add(
+          new Builder()
+              .name("Locked: Try Long Data")
+              .reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")
+              .write(ProtocolV2.DATA, TestData.LONG_URI, TestData.VALID_LENGTH_AUTHORIZATION_ERRORS)
+      );
+      specUriBeaconTestsBuilder.add(
+          new Builder()
+              .name("Locked: Try Short Flags")
+              .reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")
+
+```

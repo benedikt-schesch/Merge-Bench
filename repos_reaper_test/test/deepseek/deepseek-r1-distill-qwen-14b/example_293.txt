@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The code snippet includes a merge conflict where two different approaches are taken for determining whether an object ID should be generated. The key difference lies in the method used to check if the property is an object ID: `idSelector.isObjectId(def)` versus `isObjectId(def)`. 
+
+The intent of the method `mustGenerateObjectId` is to return `true` if the object ID needs to be generated, which typically occurs when the current value is `null`. The correct method to determine if the property is an object ID is `isObjectId(def)`, indicating that this method is likely part of the current class, not `idSelector`.
+
+```java
+    public boolean mustGenerateObjectId(Object pojo) {
+        for (BeanPropertyDefinition def : beanDescription(pojo.getClass()).findProperties()) {
+            if (idSelector.isId(def)) {
+                AnnotatedMember accessor = def.getAccessor();
+                accessor.fixAccess(true);
+<<<<<<< HEAD
+                return idSelector.isObjectId(def) && accessor.getValue(pojo) == null;
+=======
+                return isObjectId(def) && accessor.getValue(pojo) == null;
+>>>>>>> c417ada53c003bd4dbb38959f4581fa161b47d43
+            }
+        }
+        return false;
+    }
+```

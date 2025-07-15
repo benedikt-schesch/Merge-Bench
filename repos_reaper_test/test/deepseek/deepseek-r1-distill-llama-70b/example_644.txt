@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict is between two different assertion statements that achieve the same goal of verifying the content type is "image/png". The choice between them depends on the preferred assertion style:
+
+- `assertThat` with `hasContentType()` is using Hamcrest matchers and is more descriptive
+- `assertEquals` is the standard JUnit assertion
+
+Here is the resolved code:
+
+```java
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+    BinaryAttachment att = BinaryAttachment.with("example.png", attachmentData.getBytes());
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_html() {
+    String attachmentData = "this is a short string";
+```

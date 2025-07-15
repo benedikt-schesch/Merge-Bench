@@ -1,0 +1,47 @@
+<think>
+Okay, let's tackle this merge conflict. The code snippet is in Java, and the conflict is between the HEAD and another branch (06e8633). The conflict is in the import statements. 
+
+Looking at the HEAD side, the imports are:
+- java.util.Comparator
+- org.junit.Before
+- org.junit.Rule
+Then the other side adds two more imports from org.fest.assertions.internal: Failures and LongArrays. 
+
+The goal is to resolve the conflict by combining both sets of imports without duplication. Since the HEAD doesn't have the two internal FEST imports, and the other branch adds them, the correct resolution would be to include all necessary imports. 
+
+Check if there are any duplicates or ordering issues. The existing imports from org.junit are separate from the org.fest ones. The other branch's additions are new imports, so they should be added after the existing ones but before the org.fest.test and others. Wait, looking at the original code, after the conflict markers, the other imports from org.fest are already present.
+
+In the original code, after the conflict, the imports continue with org.fest.test.ExpectedException, etc. So the correct way is to include both the HEAD's imports and the added ones from the other branch. The LongArrays and Failures are internal classes, but if both branches are adding necessary imports, they should be merged.
+
+So the resolved code should have all the imports from both sides, ordered appropriately. Typically, imports are ordered alphabetically, but the existing order might have the org.junit imports first, followed by org.fest. So inserting the two new internal FEST imports after the org.junit imports but before the org.fest.test import.
+
+Wait, in the original code, the HEAD has only the org.junit imports, and the other branch adds the two FEST internal imports. Then the existing code after the conflict has the org.fest.test and others. So merging the two FEST internal imports into the HEAD's section would place them after the org.junit imports but before the org.fest.test ones. That makes sense.
+
+So the resolved imports would be:
+
+import java.util.Comparator;
+
+import org.junit.Before;
+import org.junit.Rule;
+
+import org.fest.assertions.internal.Failures;
+import org.fest.assertions.internal.LongArrays;
+import org.fest.test.ExpectedException;
+import org.fest.assertions.util.AbsValueComparator;
+import org.fest.util.ComparatorBasedComparisonStrategy;
+import org.fest.util.StandardComparisonStrategy;
+
+But need to check the original spacing. The original code has line breaks between some imports. The HEAD has a line break after the java.util.Comparator import, then the two org.junit imports. The other branch adds the two FEST internal imports. Then after the conflict, the rest of the FEST imports are present. So the correct merge would be to include all the imports from both branches, maintaining the existing line breaks where appropriate. The original spacing between the java.util.Comparator and org.junit imports is preserved, and the new FEST internal imports are added in between the org.junit and the other FEST imports. So the merged code would have the two new imports after the org.junit ones, followed by the existing FEST imports. That should resolve the conflict without any issues.</think>
+```java
+import java.util.Comparator;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.fest.assertions.internal.Failures;
+import org.fest.assertions.internal.LongArrays;
+import org.fest.test.ExpectedException;
+import org.fest.assertions.util.AbsValueComparator;
+import org.fest.util.ComparatorBasedComparisonStrategy;
+import org.fest.util.StandardComparisonStrategy;
+
+```

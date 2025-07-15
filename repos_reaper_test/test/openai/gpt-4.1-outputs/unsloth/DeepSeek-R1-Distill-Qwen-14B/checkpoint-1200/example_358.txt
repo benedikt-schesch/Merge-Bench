@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+  public final String getContentType() {
+    return contentType;
+  }
+
+  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
+    // Both sides intend to use a method to get a parser for the response and then parse and close with the dataClass and null
+    // The difference lies in which parser method and parameters are used
+    // We need to merge the logic such that the most up-to-date and reusable method is used
+    return parserForResponse(jsonFactory, response).parseAndClose(dataClass, null);
+  }
+
+  /**
+   * Returns a JSON parser to use for parsing the given HTTP response.
+   * <p>
+```

@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+The original code snippet contains a merge conflict in the import statements, specifically the line that has diverged between two commits. The HEAD has introduced:
+```java
+import android.content.DialogInterface.OnClickListener;
+```
+while the other branch has introduced:
+```java
+import android.content.Intent;
+```
+
+### Intent & Context Analysis:
+- Both imports (`OnClickListener` and `Intent`) belong to different Android framework classes (`DialogInterface.OnClickListener` being part of `DialogInterface`, and `Intent` being a core component for inter-component communication).
+- The rest of the import block and the following code context do not provide enough usage clues to eliminate either class outright.
+- Merge conflict resolution, in the absence of usage context, must assume that both imports may be needed if they were added by divergent branches.
+
+### Resolution Strategy:
+Because the intent and semantic purpose of both imports cannot be determined to be mutually exclusive based on available context, and the merge policy states to prioritize preserving all potentially valid code when ambiguity exists, both imports should be preserved in the final output.
+
+---
+
+### Resolved Snippet:
+
+```java
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.bluetooth.le.ScanResult;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
+```

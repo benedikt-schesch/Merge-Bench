@@ -1,0 +1,38 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict. The task is to resolve the conflict by understanding the intent of both sides. 
+
+Looking at the code, the conflict is in the imports section. The HEAD version adds imports for URI, Map, and a static import for HttpHelper.getAsStream. The other side, from commit 1fc925c, removes those lines. 
+
+So, what's the intent here? The HEAD side likely added those imports because they're needed for new code that uses URI, Map, and the static method getAsStream. The other side might have removed them because perhaps those imports weren't used anymore in their branch, or maybe they were refactoring.
+
+But wait, when resolving merge conflicts, we need to ensure that all necessary imports are present. If both branches made changes to imports, we should combine them. However, in this case, the conflict is between adding some imports (HEAD) and not having them (the other branch). 
+
+The correct approach would be to keep both sets of imports if they're needed. But since the conflict is only in the lines between <<<<<<< HEAD and =======, the other side (>>>>>>>) doesn't have those imports. So, the resolution would be to keep the HEAD's imports because they add necessary classes and a static import. The other branch's version removes them, but maybe that's because their code didn't need them. However, if the final code requires those imports, they should stay. 
+
+Since the user instructions say to think about the semantics and intent, if both changes are valid but from different contexts, we might need to keep both. But in this case, the conflict is about adding vs. removing. If the HEAD adds them and the other side doesn't, resolving by keeping the HEAD's additions makes sense unless they cause duplicates or errors. 
+
+Looking at the imports: java.net.URI and java.util.Map are standard, and the static import is specific. If the code in the HEAD requires these, they should be kept. The other branch's version might have removed them if they weren't used, but without more context, it's safer to keep them if they're necessary for the code to compile. 
+
+Therefore, the resolved code should include all the imports from HEAD, as removing them could lead to compilation errors if the code relies on them. The other branch's deletion might be incorrect in the merged context. So, the correct resolution is to accept the HEAD's changes, keeping the added imports.</think>
+```java
+import org.structr.core.property.Property;
+import org.structr.core.property.StringProperty;
+import org.structr.rest.common.HttpHelper;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Map;
+
+import static org.structr.rest.common.HttpHelper.getAsStream;
+
+/**
+ *
+ *
+ */
+```
+
+I've resolved the conflict by keeping both the core imports from the HEAD branch (`java.net.URI`, `java.util.Map`) and the static import `getAsStream`, while preserving the essential structure. The removed imports in the other branch didn't appear to conflict with these additions semantically. Both sets of imports serve different purposes:
+- The HEAD imports are for HTTP/URI handling and collection utilities
+- The static import provides direct access to stream helper functionality
+
+These appear complementary rather than conflicting when considering the broader context of a REST helper class.

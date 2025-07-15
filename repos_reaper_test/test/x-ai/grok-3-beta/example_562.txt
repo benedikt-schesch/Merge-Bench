@@ -1,0 +1,57 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict, preserved exactly as given, followed by my analysis and resolution based on the semantic intent of both sides of the merge.
+
+```java
+
+  @Test
+  public void checkV1_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+      jsonFromClasspath("v1_0/connection-user-friends"), User.class);
+<<<<<<< HEAD
+    assertThat(con.getTotalCount()).isNull();
+    assertThat(con.getNextPageUrl()).isNotNull();
+    assertThat(con.hasNext()).isTrue();
+=======
+    assertEquals(null, con.getTotalCount());
+    assertNotNull(con.getNextPageUrl());
+    assertTrue(con.hasNext());
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  @Test
+  public void checkV2_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+
+```
+
+### Analysis and Resolution
+
+**Intent and Semantics:**
+- **HEAD (Left Side):** Uses Hamcrest matchers (`assertThat`) for assertions, which is a more expressive and flexible way to write test assertions. The intent here appears to be maintaining a consistent testing style using Hamcrest for readability and detailed failure messages. The assertions check that `getTotalCount()` is null, `getNextPageUrl()` is not null, and `hasNext()` is true.
+- **Right Side (a17acec):** Uses traditional JUnit assertions (`assertEquals`, `assertNotNull`, `assertTrue`). The intent seems to be sticking to a simpler or more standard JUnit assertion style, possibly for consistency with other parts of the codebase or personal/team preference. The assertions check the same conditions as the HEAD side.
+
+**Semantic Equivalence:** Both sides are semantically equivalent in terms of the conditions being tested. The difference lies purely in the style of assertion (Hamcrest vs. JUnit built-in assertions). There is no functional or logical conflict in what is being verified.
+
+**Resolution Strategy:** Since the choice between Hamcrest and JUnit assertions is a matter of style rather than functionality, the resolution should prioritize consistency with the broader codebase or team guidelines. However, without access to the rest of the codebase or explicit style guidelines, I will lean toward the HEAD side (Hamcrest) as it is often considered more readable and is likely the more recent change in the current branch. If the project predominantly uses JUnit assertions, the right side should be chosen instead.
+
+**Resolved Code Snippet:**
+
+```java
+
+  @Test
+  public void checkV1_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+      jsonFromClasspath("v1_0/connection-user-friends"), User.class);
+    assertThat(con.getTotalCount()).isNull();
+    assertThat(con.getNextPageUrl()).isNotNull();
+    assertThat(con.hasNext()).isTrue();
+  }
+
+  @Test
+  public void checkV2_0() {
+    Connection<User> con = new Connection<User>(new DefaultFacebookClient(Version.LATEST),
+
+```
+
+**Note:** If there is a clear style guide or preference in the project for JUnit assertions over Hamcrest, the resolution should be adjusted to use the right side's assertions (`assertEquals`, `assertNotNull`, `assertTrue`). If ambiguity persists about the preferred style, I recommend discussing with the team or reviewing other test files for consistency.

@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I will consider the semantic intent of both changes.
+
+*   **HEAD** introduces the import `com.restfb.JsonMapper;`. This suggests that the `JsonMapper` class itself is being used directly in the code changes made in HEAD (e.g., creating an instance of `JsonMapper`, calling its static methods, or using it as a type for a variable or parameter).
+*   **Branch `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`** effectively removes this import (or it was never present and HEAD is adding it). This implies that in this branch's version of the file, the `JsonMapper` class was not directly referenced by its simple name.
+
+We already have the import `com.restfb.JsonMapper.JsonMappingCompleted;`. This means a member (likely a static nested class, interface, or annotation) named `JsonMappingCompleted` from the `JsonMapper` class is being used. The presence of this import signifies a direct relationship with `JsonMapper`.
+
+Given that:
+1.  `JsonMappingCompleted` is a member of `JsonMapper`.
+2.  Explicitly importing `JsonMapper` when one of its members is already being imported is a common and often good practice for clarity and consistency, especially if `JsonMapper` itself is also used.
+3.  The change in `HEAD` is an explicit addition of the import. It's more likely that this was done because `JsonMapper` is now being used directly in the changes associated with `HEAD`.
+4.  Adding an import that might be technically redundant (if `JsonMapper` is not directly used as a type name but only its member `JsonMappingCompleted` is) is generally harmless and safer than removing an import that is required, which would lead to a compilation error.
+
+Therefore, the most semantically sound resolution is to include the import for `com.restfb.JsonMapper;`, aligning with the intent of `HEAD` and ensuring that `JsonMapper` can be used directly if needed by the changes in that branch. This also maintains a clear import structure for related classes.
+
+```java
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import static com.restfb.util.DateUtils.toDateFromShortFormat;
+import static java.util.Collections.unmodifiableList;
+
+import com.restfb.Facebook;
+import com.restfb.JsonMapper;
+import com.restfb.JsonMapper.JsonMappingCompleted;
+import com.restfb.json.JsonObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+```

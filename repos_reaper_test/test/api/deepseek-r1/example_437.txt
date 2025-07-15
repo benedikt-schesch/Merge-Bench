@@ -1,0 +1,36 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is between two sets of method calls after showing a Toast message. The HEAD version uses refreshSubCategories() followed by mAdapter.notifyArrayItemRangeChanged(), while the other branch uses rebuildSubCategories() and reloadAdapters(). Both sides end with updateRecommendations(). 
+
+First, I need to understand what each side is doing. The HEAD's refreshSubCategories might be updating the subcategories data, then notifying the adapter of changes starting from position 0 for all items. The other branch's rebuildSubCategories could be reconstructing the subcategories from scratch, and reloadAdapters() might be reinitializing or refreshing multiple adapters. 
+
+The goal is to merge these without losing functionality. If rebuildSubCategories() is a more thorough update than refresh, maybe it's better to use that. Then, reloadAdapters() might encompass notifying the adapter of changes, making mAdapter.notify... redundant. Alternatively, maybe both steps are necessary.
+
+But without knowing the exact implementations of these methods, it's hard to be certain. If reloadAdapters() already includes the notification for the adapter, then keeping the rebuild and reload would be correct. However, if the HEAD's approach is more efficient by only refreshing and notifying specific changes, that might be preferable.
+
+Since the conflict is semantic, the correct resolution depends on the intent of both branches. If both methods are meant to update the data and refresh the UI, perhaps the combination is needed. But that could cause duplication. Alternatively, maybe one replaces the other.
+
+If unsure, it's safer to keep both or check if one is a replacement. But given the information here, the safest approach without more context is to combine both methods if they serve different purposes. However, that might not be correct. Alternatively, maybe the methods are conflicting but achieve the same goal through different paths.
+
+Wait, maybe rebuildSubCategories is a more comprehensive method that includes refreshing, making refreshSubCategories redundant. Similarly, reloadAdapters might include notifying the adapter, so mAdapter.notify... is redundant. In that case, the correct resolution would be to use rebuild and reloadAdapters, removing the older methods. But if the two branches are adding separate functionalities, both might be needed.
+
+Alternatively, perhaps the two branches are different refactorings of the same code. If HEAD's refresh is replaced by rebuild in the other branch, then the correct code is the rebuild and reloadAdapters. But without knowing the method implementations, it's ambiguous.
+
+Since the user said to resolve based on intent and semantics, and if unsure, leave the conflict. But here, maybe the methods are doing similar things. Let me think: reloadAdapters() could be a helper that calls notifyArrayItemRangeChanged on all relevant adapters, including mAdapter. So if the other branch replaced specific adapter notifications with a general reload, then using reloadAdapters() is better. Similarly, rebuildSubCategories might be a more accurate method name than refresh. 
+
+Therefore, the resolved code would take the changes from the incoming branch (rebuild and reloadAdapters), as they might be refactored methods that encompass the previous calls. So the conflict is resolved by choosing the second option.</think>
+```java
+                        if (getActivity() == null) return;
+
+                        Toast.makeText(getActivity(), getString(R.string.update_complete),
+                                Toast.LENGTH_SHORT).show();
+
+                        rebuildSubCategories();
+
+                        reloadAdapters();
+
+                        updateRecommendations();
+                    }
+
+                    @Override
+
+```

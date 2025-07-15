@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to consider the intent of both code blocks. The HEAD version includes error handling where an error is returned, and the other commit adds cleanup by removing a callback and checking if `callbackContext` is null. 
+
+The correct approach is to ensure both functionalities are preserved. Thus, after handling the error, we perform cleanup and then check for `callbackContext` being null.
+
+Here is the resolved code:
+
+```java
+          callbackContext.error(returnObj);
+        }
+        return;
+      }
+
+      RemoveCallback(characteristicUuid, connection, operationWrite);
+
+      //If no callback, just return
+      if (callbackContext == null) {
+        return;
+      }
+```

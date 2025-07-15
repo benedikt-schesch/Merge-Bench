@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that one side added an additional conditional block checking if the `uriString.length()` is greater than `maxUriLength` with a slightly different warning message ("characters" instead of "bytes"), while the other side removed this code.
+
+However, this is redundant with the identical condition that's already present in the code directly above the conflict. The conflict is actually a duplicate check with a slightly different error message.
+
+Here's the resolved code:
+
+```java
+                        if (maxUriLength > 0 && uriString.length() > maxUriLength){
+                            if (verbose){
+                                System.err.println("[WARNING] File " + newUrl + " creates a data URI larger than " + maxUriLength + " bytes. Skipping.");
+                            }      
+                            builder.append(url);
+                        } else {
+
+                            /*
+                             * Determine what to do. Eventually, you should be able to
+                             * have both a data URI and MHTML in the same file.
+
+```

@@ -1,0 +1,38 @@
+<think>
+Okay, let me look at this merge conflict. The conflict is in the Java code between the HEAD version and the branch version. The conflicting lines are for the AUTO_LINK_HASHTAGS pattern.
+
+First, I'll compare the two versions. The HEAD version has:
+Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "])(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+
+The other version (from b83625b) has:
+Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+)(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE);
+
+So the differences are:
+1. The first group in the regex: HEAD uses "])(#", the other side uses "]+)(#". So the HEAD has a single character exclusion, while the other adds a "+" quantifier, meaning one or more of those characters.
+2. The flags: HEAD includes both CASE_INSENSITIVE and UNICODE_CASE, while the other only has CASE_INSENSITIVE.
+
+Now, thinking about the intent. The AUTO_LINK_HASHTAGS pattern is for matching hashtags. The first group is the "before" part, which should match characters that are not part of the hashtag. Using "+" makes sense here because it allows multiple invalid characters before the hashtag, which is more correct. For example, if there are multiple non-allowed characters, the "+" ensures they're all skipped, whereas without it, only one is skipped, which might not be intended.
+
+Regarding the flags: CASE_INSENSITIVE alone handles ASCII case insensitivity, but UNICODE_CASE adds support for Unicode characters. If the project requires hashtags to be case-insensitive in a Unicode context (like accented characters), then both flags are needed. However, if the other branch removed UNICODE_CASE, maybe there was a reason, like avoiding unexpected behavior. But without more context, it's safer to include both flags to preserve Unicode case insensitivity, as the HEAD version does.
+
+So combining both changes: use the "+" in the regex from the branch and keep the flags from HEAD. That way, we get the correct quantifier and the desired case handling.
+
+Then, check the surrounding lines. The HEAD version has SCREEN_NAME_MATCH_END, which the other branch doesn't touch. The other branch adds HASHTAG_MATCH_END. Both constants are present in the final code, so they should coexist.
+
+So the resolved code should include SCREEN_NAME_MATCH_END from HEAD, the corrected AUTO_LINK_HASHTAGS with "+" and both flags, and HASHTAG_MATCH_END from the other branch. The constants after (GROUP_BEFORE, etc.) are the same in both, so no conflict there.</think>
+```java
+
+
+  /* Begin public constants */
+  public static final Pattern AT_SIGNS = Pattern.compile("[" + AT_SIGNS_CHARS + "]");
+
+  public static final Pattern SCREEN_NAME_MATCH_END = Pattern.compile("^(?:[" + AT_SIGNS_CHARS + LATIN_ACCENTS_CHARS + "]|://)");
+
+  public static final Pattern AUTO_LINK_HASHTAGS = Pattern.compile("(^|[^&/" + HASHTAG_ALPHA_NUMERIC_CHARS + "]+)(#|\uFF03)(" + HASHTAG_ALPHA_NUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHA_NUMERIC + "*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+  public static final int AUTO_LINK_HASHTAGS_GROUP_BEFORE = 1;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_HASH = 2;
+  public static final int AUTO_LINK_HASHTAGS_GROUP_TAG = 3;
+  public static final Pattern HASHTAG_MATCH_END = Pattern.compile("^(?:[#＃]|://)");
+
+
+```

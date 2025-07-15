@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it seems like both sides are trying to prepare arguments for a constructor that takes a `String[]`. 
+
+The HEAD version converts `args` from a collection to a `String[]` using `toArray()` and then wraps it in an `Object[]` array.
+
+The other version (1488b22c) skips the conversion step and directly puts `args` into the wrapper array.
+
+Since `args` appears to be a collection of strings, and the constructor expects a `String[]`, the HEAD version with the explicit conversion to array is likely correct. If `args` were already a `String[]`, both approaches would work, but the explicit conversion ensures type safety.
+
+Here's the resolved code:
+
+```java
+        }
+        catch(NoSuchMethodException nme) {
+            // Second channce. Try with var arg constructor
+            try {
+                Constructor c = objClass.getConstructor(String[].class);
+                String[] argArr = args.toArray(new String[0]) ;
+                Object[] wrappedArgs = new Object[1] ;
+                wrappedArgs[0] = argArr ;
+                ret =  c.newInstance(wrappedArgs);
+            }
+            catch(Throwable e){
+                // bad luck
+                StringBuilder sb = new StringBuilder();
+```

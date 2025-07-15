@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict based on the intent and semantics of both sides.
+
+### Analysis of the Conflict
+- **HEAD (Left side)**: The method declaration uses `void` as the return type and names the method `shouldFireAnEvent`. The method body uses `prepateCore` (likely a typo for `prepareCore`) with parameters `projectAUri()` and `10`.
+- **Incoming Change (Right side)**: The method declaration uses `public void` as the return type and visibility modifier, and names the method `shouldFireAnEvent`. The method body uses `prepareCore` (correct spelling) with the same parameters `projectAUri()` and `10`.
+- **Intent**: Both sides are clearly trying to define a test method to verify event firing behavior. The key differences are:
+  - Visibility modifier (`public` on the right side, implied default on the left).
+  - Spelling of the method `prepateCore` vs. `prepareCore` (likely a typo on the left).
+- **Resolution**: The intent is the same on both sides—defining a test method for event firing. The right side has the correct spelling of `prepareCore` and explicitly states `public` visibility, which aligns with typical test method conventions in frameworks like JUnit. Hence, adopting the right side (with `public` and corrected spelling) seems to be the semantically correct choice.
+
+### Resolved Code Snippet
+```java
+		assertStatusIs(noTestsRun());
+		verify(coreRegistry).addCore(eq(projectAUri), any(InfinitestCore.class));
+	}
+
+	@Test
+	public void shouldFireAnEvent() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 10);
+
+		workspace.addUpdateListeners(new UpdateListener() {
+			@Override
+			public void projectsUpdated() {
+				updates++;
+```

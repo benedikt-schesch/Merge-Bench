@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The code has a merge conflict in the `setUp()` method where `PigServer` is being initialized with different arguments. The left side uses a constructor taking `MAPREDUCE` and `cluster.getProperties()`, while the right side uses `ExecType.MAPREDUCE` for better type safety and clarity.
+
+The PigServer constructor taking `ExecType` provides more context about the execution type, which is more precise than the generic `MAPREDUCE`. This helps in avoiding issues related to type mismatches or misinterpretation. Therefore, the line from the right branch (including the commit hash) should be kept as it's more intentional and explicit.
+
+```java
+    private PigServer pig;
+    
+    @Before
+    @Override
+    protected void setUp() throws Exception {
+        pig = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+
+    @Test
+    public void testBigGroupAll() throws Throwable {
+        // ...
+```

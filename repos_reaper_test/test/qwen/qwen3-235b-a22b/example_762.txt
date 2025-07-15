@@ -1,0 +1,53 @@
+<think>
+No reasoning found</think>
+The merge conflict in the provided constructor for `DeleteRequest` occurs due to a difference in the fourth argument — `null` vs. `DELETE_FAMILY_MARKER`. To resolve this conflict semantically, we need to understand the intent and design of the API.
+
+---
+
+### Contextual Intent
+
+The constructor is designed as:
+
+```java
+public DeleteRequest(final byte[] table, final byte[] key, final byte[] family)
+```
+
+Its purpose is to delete a **column family**, not a specific cell. The fourth argument — `final byte[] qualifier` — is expected in the full constructor (i.e., `this(...)` call), and whether this is set to `null` or a special value like `DELETE_FAMILY_MARKER` determines the semantics of the delete operation.
+
+---
+
+### Semantic Interpretation
+
+- **Passing `null`**:
+  - Indicates the absence of a qualifier, which in many data APIs (e.g., HBase) is valid to signify that the delete applies to all qualifiers (i.e., an entire column family).
+  
+- **Passing `DELETE_FAMILY_MARKER`**:
+  - May be a special byte array intentionally used to *explicitly signal* that the operation is on a **column family**, not a cell. This is a safer pattern in cases where `null` could be inadvertently passed for reasons unrelated to family deletion.
+
+The choice between the two hinges on API design and how `DeleteRequest` is supposed to interpret the qualifier parameter in family-level deletes.
+
+---
+
+### Resolution
+
+Given the method's documentation indicates this is for **family-level deletion**, and assuming that `DELETE_FAMILY_MARKER` is explicitly designed to indicate such operations, using `DELETE_FAMILY_MARKER` ensures clarity and avoids ambiguity. This implies an intentional, semantic flag to distinguish family deletions from NULL-qualified cell deletions.
+
+Thus, the **correct resolution** is selecting the branch that uses `DELETE_FAMILY_MARKER`.
+
+---
+
+### Resolved Snippet
+
+```java
+>>>>>>> 2d0abace41a98eccdcd180deee15181c7238898d
+   */
+  public DeleteRequest(final byte[] table,
+                       final byte[] key,
+                       final byte[] family) {
+    this(table, key, family, DELETE_FAMILY_MARKER, RowLock.NO_LOCK);
+  }
+
+  /**
+   * Constructor to delete a specific cell.
+   * <strong>These byte arrays will NOT be copied.</strong>
+```

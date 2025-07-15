@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+To resolve the semantic conflict, I analyzed the code and deduced that both branches need to be preserved with the latest logic, ensuring both action types are handled appropriately. The resolved code includes both cases in the same conditional structure.
+
+```java
+        public void run() {
+          writeAction(args, callbackContext);
+        }
+      });
+      return true;
+    }
+    else if ("writeQ".equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          writeQAction(args, callbackContext);
+        }
+      });
+>>>>>>> 2efc89dde2658f518e6b6ca936296c207e08d65c
+```
+
+The code now preserves all the changes, maintaining both intuitive synchronous and asynchronous operations for the respective action types.
+
+```java
+        public void run() {
+          writeAction(args, callbackContext);
+        }
+      });
+      return true;
+    } else if ("writeQ".equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          writeQAction(args, callbackContext);
+        }
+      });
+    }
+```

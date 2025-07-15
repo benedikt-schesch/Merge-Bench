@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the conflict unresolved since the intent behind the two different method calls (`add` vs `put`) for the `JsonObject` is ambiguous without additional context about the library or framework being used. Both methods might be semantically similar (adding a key-value pair to a JSON object), but the exact behavior or reason for the change is unclear. It could be a library update, a stylistic preference, or a functional difference. Therefore, I will preserve the original conflict as is.
+
+```java
+
+  @Test
+  public void postImageToUserFeedWithMessageAndPrivacy() {
+    byte[] imageAsBytes = fetchBytesFromImage();
+    JsonObject privacy = new JsonObject();
+<<<<<<< HEAD
+    privacy.add("value", "SELF");
+=======
+    privacy.put("value", "SELF");
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    DefaultFacebookClient client =
+        new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_2_7);
+    JsonObject obj = client.publish("me/photos", JsonObject.class,
+      BinaryAttachment.with("test.png", imageAsBytes, "image/png"), Parameter.with("privacy", privacy));
+    assertNotNull(obj);
+
+```

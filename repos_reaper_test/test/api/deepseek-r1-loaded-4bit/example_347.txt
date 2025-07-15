@@ -1,0 +1,16 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the XML string for the lastChangeExpected variable. The HEAD version has "metadata-1-0/RCS/" while the other branch has "metadata-1-0//RCS/". The double slash seems like a typo. The correct namespace probably should have a single slash. Also, checking the surrounding code, the rest of the XML elements are consistent. So resolving it by picking the HEAD version since the other one might have an extra slash by mistake.</think>
+```java
+
+        assertEquals(renderingControlLastChange.toString(), "");
+        mp.setMute(true);
+        Thread.sleep(500);
+        lastChangeExpected =
+                "<Event xmlns=\"urn:schemas-upnp-org:metadata-1-0/RCS/\">" +
+                        "<InstanceID val=\"0\">" +
+                        "<Volume channel=\"Master\" val=\"0\"/>" +
+                        "<Mute channel=\"Master\" val=\"1\"/>" +
+                        "</InstanceID>" +
+                "</Event>";
+
+```

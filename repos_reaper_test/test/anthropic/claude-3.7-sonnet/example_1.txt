@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to set the "version" field but with different naming conventions:
+1. HEAD is using a custom server name from the config plus the game version
+2. The other branch is using a hardcoded "BungeeCord" prefix plus the game version
+
+Since the HEAD version uses a configuration value for the server name rather than a hardcoded string, it seems like this is an intentional customization feature that should be preserved.
+
+```java
+
+                data.put( "hostname", listener.getMotd() );
+                data.put( "gametype", "SMP" );
+                // Start Extra Info
+                data.put( "game_id", "MINECRAFT" );
+                data.put( "version", bungee.getConfig().getCustomServerName() + " " + bungee.getGameVersion() );
+                data.put( "plugins", "" );
+                // End Extra Info
+                data.put( "map", "BungeeCord_Proxy" );
+                data.put( "numplayers", Integer.toString( bungee.getOnlineCount() ) );
+                data.put( "maxplayers", Integer.toString( listener.getMaxPlayers() ) );
+
+```

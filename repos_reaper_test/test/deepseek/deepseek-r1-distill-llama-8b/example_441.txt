@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Since the two versions of `focusOnField` have different method signatures and one includes an additional parameter for `initialFieldValue`, they are not directly mergeable. Without more context on the intended behavior, it's ambiguous how to resolve the conflict. Return the same snippet as is.
+
+```java
+        securityCodeText.setOnFocusChangeListener(l);
+        zipCodeText.setOnFocusChangeListener(l);
+    }
+
+    public void focusOnField(final CreditEntryFieldBase field) {
+<<<<<<< HEAD
+        if (this.textHelper != null) {
+            this.textHelper.setText(field.getHelperText());
+        }
+=======
+        focusOnField(field, null);
+    }
+=======
+    public void focusOnField(final CreditEntryFieldBase field, String initialFieldValue) {
+        field.requestFocus();
+        if(!scrolling) {
+            scrolling = true;
+>>>>>>> 23596e40a6165aa475ca6c20af17496809559474
+```

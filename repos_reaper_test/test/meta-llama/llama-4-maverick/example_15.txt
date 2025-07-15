@@ -1,0 +1,61 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the intent and semantics of both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a class that manages a `SpoutClientWorld` object. The method `worldChanged` is triggered when a world change occurs, and it updates the `SpoutClientWorld` object accordingly.
+
+The conflict arises in the `worldChanged` method. Let's examine both sides of the conflict:
+
+1. **Left side (HEAD):**
+   - It prints "WORLD CHANGED!" to the console, likely for debugging purposes.
+   - It creates a new `SpoutClientWorld` object with the given `name`, `this` ( likely a reference to the current object, possibly a client or a world manager), and `uuid`.
+   - It retrieves a `SerializableMap` from `world.getDatatable()`, presumably to store or manage world data.
+   
+2. **Right side (67bcb76a96f358fc131320b0611ffaa3bf3678c2):**
+   - It creates a new `SpoutClientWorld` object but with different parameters: `name`, `uuid`, `this`, `getEngineItemMap()`, and `getEngineItemMap()`. The inclusion of `getEngineItemMap()` twice suggests that one of these maps might be intended for a different purpose, possibly a block or item map.
+   - It uses `world.getData()` to retrieve a `SerializableMap`, indicating a possible change in how data is accessed or managed in `SpoutClientWorld`.
+
+To resolve the conflict, we need to consider what changes are intended:
+
+- The left side seems focused on a simpler initialization of `SpoutClientWorld` and uses `getDatatable()` for data.
+- The right side initializes `SpoutClientWorld` with additional parameters, suggesting a more complex setup or additional data being passed, and uses `getData()` for data access.
+
+Since both sides make different changes to the `SpoutClientWorld` constructor and how data is accessed, we need to understand the intent behind these changes. The right side's changes seem more substantial and potentially more aligned with a newer version of the API or requirements, given the additional parameters and the method `getData()` instead of `getDatatable()`.
+
+However, the left side retains a debugging statement (`System.out.println("WORLD CHANGED!");`), which could be valuable for understanding the flow or debugging the application.
+
+Here's a potential resolution that combines the debugging statement from the left side with the potentially more updated or correct initialization and data handling from the right side:
+
+```java
+	public SpoutClientWorld getDefaultWorld() {
+		return world.get();
+	}
+
+	public SpoutClientWorld worldChanged(String name, UUID uuid, byte[] data) {
+		System.out.println("WORLD CHANGED!");
+		SpoutClientWorld world = new SpoutClientWorld(name, uuid, this, getEngineItemMap(), getEngineItemMap());
+		SerializableMap map = world.getData();
+		try {
+			map.deserialize(data);
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to deserialize data", e);
+		}
+```
+
+However, to adhere to the instructions and given that we are to return the entire snippet (including full context) in markdown code syntax as provided, without modifying the context or spacing, the conflict resolution should be presented as is, in the original code block format.
+
+```java
+	public SpoutClientWorld getDefaultWorld() {
+		return world.get();
+	}
+
+	public SpoutClientWorld worldChanged(String name, UUID uuid, byte[] data) {
+		System.out.println("WORLD CHANGED!");
+		SpoutClientWorld world = new SpoutClientWorld(name, uuid, this, getEngineItemMap(), getEngineItemMap());
+		SerializableMap map = world.getData();
+		try {
+			map.deserialize(data);
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to deserialize data", e);
+		}
+```

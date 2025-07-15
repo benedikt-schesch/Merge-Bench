@@ -1,0 +1,218 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the code snippet provided.
+
+The conflict is between the HEAD and another branch's commit. In the HEAD version, there's a constructor with parameters: Reader in, int options, boolean verbose, int maxUriLength, int maxImageSize. It initializes this.options, this.maxUriLength, and this.maxImageSize.
+
+In the other branch (790b69a), there's a constructor with the same name but different parameters: Reader in, int options, boolean verbose, int maxUriLength. This one initializes code, verbose, options, and maxUriLength. Also, there's a readCode(in) call here.
+
+So the problem is that the two constructors have different parameters and different initializations. The HEAD version includes maxImageSize, while the other branch doesn't. The other branch initializes code and verbose, which the HEAD doesn't.
+
+Wait, but maybe these are two different constructors? Or are they conflicting versions of the same constructor? Let me check the parameters again. The HEAD constructor has maxImageSize as an extra parameter compared to the other branch's constructor. But wait, the other branch's constructor has a boolean verbose parameter, while the HEAD might have that too? Let me check again.
+
+Looking at the code:
+
+HEAD version:
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength, int maxImageSize) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+Other branch version:
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+Wait, the original code provided in the conflict shows that in HEAD, after the conflict markers, there's no constructor, but in the other branch, there is a constructor with four parameters. Wait, the user's code snippet shows:
+
+In the given code, the conflict is between the HEAD (which maybe has no constructor there?) and the other branch which adds a constructor. Wait, the code provided is:
+
+<<<<<<< HEAD
+=======
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+>>>>>>> 790b69a0bd40e3ab536f9c6568748f981b3d525e
+
+So, in the current state, the HEAD side (before the merge) doesn't have that constructor, and the other branch adds it. But in the surrounding context, above the conflict, there's a constructor that initializes options, maxUriLength, and maxImageSize. Wait, the code before the conflict is:
+
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+So that's the closing of a constructor. So in HEAD, after that closing }, there's nothing, but in the other branch, there's a new constructor. So the conflict is because in one branch, a new constructor was added after the existing one, while in the other branch, perhaps the existing constructor was modified or another one was added. But the way the conflict is presented here is that the HEAD doesn't have the code between <<<<<<< and =======, while the other branch adds the constructor.
+
+Wait, perhaps the original code in HEAD has a constructor with parameters (options, maxUriLength, maxImageSize), and then the other branch adds another constructor with different parameters. But the way the conflict is shown here is that the code after the existing constructor in HEAD is conflicting with the addition of a new constructor in the other branch.
+
+Wait, let me parse the code again.
+
+Original code context before the conflict:
+
+    this.options = options;
+    this.maxUriLength = maxUriLength;
+    this.maxImageSize = maxImageSize;
+}
+
+<<<<<<< HEAD
+=======
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+>>>>>>> 790b69a0bd40e3ab536f9c6568748f981b3d525e
+
+//--------------------------------------------------------------------------
+// Get/Set verbose flag
+//--------------------------------------------------------------------------    
+    
+public boolean getVerbose(){
+
+So in the current branch (HEAD), after the constructor that initializes options, maxUriLength, and maxImageSize, there's nothing. The other branch adds a new constructor that takes Reader in, options, verbose, maxUriLength, and initializes code, verbose, options, maxUriLength. 
+
+But wait, maybe in the HEAD, there's another constructor above that initializes those variables. Let's imagine that the code before the conflict is part of a constructor in HEAD. For example, perhaps in HEAD, there's a constructor like:
+
+public CSSURLEmbedder(int options, int maxUriLength, int maxImageSize) {
+    this.options = options;
+    this.maxUriLength = maxUriLength;
+    this.maxImageSize = maxImageSize;
+}
+
+And then the other branch adds a different constructor that takes a Reader and other parameters. So the conflict is that in the HEAD, after that constructor's closing }, there's nothing, while the other branch adds a new constructor. Therefore, the merge conflict arises because the two branches added different constructors in the same spot.
+
+But how to resolve this? The correct approach would be to keep both constructors if they serve different purposes. However, the conflict markers are indicating that the HEAD doesn't have the constructor, and the other branch does. But perhaps in reality, both branches added different constructors. Wait, but in the code provided, the HEAD side (between <<<<<<< HEAD and =======) is empty, and the other side has the constructor. So the conflict is that one branch added a constructor here, and the other branch didn't. But maybe in the HEAD, there's another constructor that was added elsewhere, but in this particular spot, the other branch added this constructor. 
+
+Wait, looking at the code again: the HEAD side in the conflict is empty. So in the current branch (HEAD), after the existing constructor (which initializes options, maxUriLength, maxImageSize), there's no code. The other branch adds a new constructor here. Therefore, the merge conflict is because one branch added a constructor here, and the other branch didn't. So to resolve this, we should include the constructor from the other branch, because the HEAD doesn't have anything there. So the correct resolution is to keep the constructor from the other branch. However, we also need to check if there's any duplication or if the parameters overlap.
+
+Wait, but the parameters are different. The existing constructor (before the conflict) in HEAD initializes options, maxUriLength, maxImageSize. The new constructor from the other branch takes Reader in, options, verbose, maxUriLength, and initializes code, verbose, options, maxUriLength. So these are two different constructors. Therefore, the correct resolution is to keep both. But how?
+
+Wait, in the code provided, the conflict is that in HEAD, there's nothing between the closing } of the previous constructor and the comment block, while in the other branch, there's a new constructor added there. So the merge conflict is that one branch added a constructor in that spot, and the other branch didn't. So to resolve this, we should include the constructor from the other branch, as the HEAD doesn't have any code there. Therefore, the resolved code would have both constructors: the one from HEAD (initializing options, maxUriLength, maxImageSize) and the one from the other branch (taking Reader, etc.). 
+
+Wait, but how are these constructors structured? Let me imagine the code:
+
+Original code in HEAD:
+
+public class CSSURLEmbedder {
+    // existing code
+
+    public CSSURLEmbedder(int options, int maxUriLength, int maxImageSize) {
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+    // other methods...
+}
+
+In the other branch, someone added a constructor:
+
+public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+    this.code = readCode(in);
+    this.verbose = verbose;
+    this.options = options;
+    this.maxUriLength = maxUriLength;
+}
+
+So the conflict is that in the HEAD, after the existing constructor, there's nothing, and in the other branch, this new constructor is added. So merging them would mean adding the new constructor after the existing one, which is safe. Therefore, the correct resolution is to accept the new constructor from the other branch, placing it after the existing one. 
+
+But in the code provided, the conflict markers are such that the HEAD side is empty. So the user's code has:
+
+After the existing constructor's closing }, the HEAD has nothing, and the other branch adds the new constructor. Therefore, the merge conflict is resolved by keeping the new constructor. 
+
+But wait, the code given in the snippet is:
+
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+<<<<<<< HEAD
+=======
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+>>>>>>> 790b69a0bd40e3ab536f9c6568748f981b3d525e
+
+    //--------------------------------------------------------------------------
+    // Get/Set verbose flag
+    //--------------------------------------------------------------------------    
+    
+    public boolean getVerbose(){
+
+So the code in HEAD after the existing constructor's closing } is empty, and the other branch adds the new constructor. Therefore, resolving the conflict would involve keeping the new constructor, so the merged code would have both the existing constructor and the new one. Therefore, the resolved code should include the constructor from the other branch, as there's no conflict in reality; it's an addition.
+
+But why is there a conflict then? Because both branches modified the same area. Perhaps in another scenario, the HEAD also added something in the same spot, but here, it seems that HEAD didn't. Therefore, the correct resolution is to include the new constructor from the other branch.
+
+So the resolved code would be:
+
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+    //--------------------------------------------------------------------------
+    // Get/Set verbose flag
+    //--------------------------------------------------------------------------    
+    
+    public boolean getVerbose(){
+
+But wait, the existing constructor in HEAD might have different parameters. Let's see the existing constructor in HEAD. The code before the conflict shows:
+
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+Which is the body of a constructor. So the constructor in HEAD probably looks like:
+
+public CSSURLEmbedder(int options, int maxUriLength, int maxImageSize) {
+    this.options = options;
+    this.maxUriLength = maxUriLength;
+    this.maxImageSize = maxImageSize;
+}
+
+Then, the other branch adds another constructor with different parameters. Therefore, both constructors can coexist as they have different parameter lists. So merging them is safe.
+
+Therefore, the resolved code should include both constructors. The conflict is simply because one branch added a new constructor after the existing one, and the other branch didn't modify that area. Hence, the correct resolution is to keep the new constructor from the other branch.</think>
+```java
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+    //--------------------------------------------------------------------------
+    // Get/Set verbose flag
+    //--------------------------------------------------------------------------    
+    
+    public boolean getVerbose(){
+```

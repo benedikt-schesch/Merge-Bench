@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+
+    @Override
+    public void renderDocument(final TemplateModel model, final String templateName, final Writer writer) throws RenderingException {
+        try {
+            Template template = templateCfg.getTemplate(templateName);
+            template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db, config), writer);
+        } catch (IOException | TemplateException e) {
+            throw new RenderingException(e);
+        }
+    }
+
+    /**
+```

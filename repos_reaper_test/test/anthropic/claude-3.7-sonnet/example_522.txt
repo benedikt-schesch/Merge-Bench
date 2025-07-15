@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I need to reconcile two versions of the `CSSURLEmbedder` constructor call.
+
+The HEAD version uses `maxurilength` and `maximagesize` parameters, while the incoming change (790b69a) uses just `uriLength`. 
+
+Examining the parameter names, it appears `maxurilength` and `uriLength` are likely the same parameter with slightly different naming. The HEAD version also adds an additional `maximagesize` parameter.
+
+Here's the resolved code:
+
+```java
+            boolean skipMissingFiles = parser.getOptionValue(skipMissingOpt) != null;
+            if(skipMissingFiles) {
+                options = options | CSSURLEmbedder.SKIP_MISSING_OPTION;
+            }
+            
+            CSSURLEmbedder embedder = new CSSURLEmbedder(in, options, verbose, maxurilength, maximagesize);            
+            embedder.setMHTMLRoot(mhtmlRoot);
+            
+            //close in case writing to the same file
+            in.close(); in = null;
+            
+```
+
+I've chosen the HEAD version because it includes an additional parameter (`maximagesize`) that would be lost if we went with the other version. The `maxurilength` parameter in HEAD likely serves the same function as `uriLength` in the incoming change.

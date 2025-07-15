@@ -1,0 +1,63 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict included, preserved exactly as given with the original spacing and context. I have also analyzed the intent and semantics of both sides of the merge conflict and provided a resolution.
+
+### Code Snippet with Merge Conflict (Preserved as Is)
+
+```java
+	 * @param cluster a reference to the minicluster
+	 * @param localFileName the pathname of local file
+	 * @param fileNameOnCluster the name with which the file should be created on the minicluster
+	 * @throws IOException
+	 */
+<<<<<<< HEAD
+     static public void copyFromLocalToCluster(MiniGenericCluster cluster,
+        String localFileName, String fileNameOnCluster) throws IOException {
+=======
+	static public void copyFromLocalToCluster(MiniCluster cluster, String localFileName, String fileNameOnCluster) throws IOException {
+        if(Util.WINDOWS){
+            localFileName = localFileName.replace('\\','/');
+            fileNameOnCluster = fileNameOnCluster.replace('\\','/');
+        }
+>>>>>>> 8923da8cd49c041d99fd5996ddf807f54915c79e
+        PigServer ps = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+        String script = getMkDirCommandForHadoop2_0(fileNameOnCluster) + "fs -put " + localFileName + " " + fileNameOnCluster;
+
+	    GruntParser parser = new GruntParser(new StringReader(script));
+        parser.setInteractive(false);
+```
+
+### Analysis and Resolution
+
+**Intent and Semantics Analysis:**
+- **HEAD Side (Left Side):** The `HEAD` version uses `MiniGenericCluster` as the type for the `cluster` parameter and does not include any additional logic for handling file paths. The intent seems to be maintaining a specific type for the cluster parameter, possibly aligning with a broader refactoring or type hierarchy in the codebase.
+- **Branch Side (Right Side, Commit `8923da8`):** The branch version uses `MiniCluster` as the type for the `cluster` parameter and includes additional logic to handle file path separators for Windows environments by replacing backslashes (`\`) with forward slashes (`/`). The intent here is to improve compatibility with Windows systems by normalizing file paths.
+
+**Conflict Source:** The conflict arises due to differences in the method signature (specifically, the type of the `cluster` parameter) and the additional Windows-specific logic introduced in the branch.
+
+**Resolution Strategy:** 
+- The type of the `cluster` parameter needs to be resolved. Without additional context about the codebase, it's unclear whether `MiniGenericCluster` or `MiniCluster` is the correct type. However, since `MiniCluster` is likely a more general or updated type (based on naming conventions and common refactoring patterns), I will lean toward adopting it unless `MiniGenericCluster` is explicitly required.
+- The Windows path normalization logic is a valuable addition and does not conflict semantically with the rest of the method's purpose. It should be retained.
+- The rest of the method body outside the conflict area appears consistent and can be kept as is.
+
+**Resolved Code Snippet:**
+
+```java
+	 * @param cluster a reference to the minicluster
+	 * @param localFileName the pathname of local file
+	 * @param fileNameOnCluster the name with which the file should be created on the minicluster
+	 * @throws IOException
+	 */
+	static public void copyFromLocalToCluster(MiniCluster cluster, String localFileName, String fileNameOnCluster) throws IOException {
+        if(Util.WINDOWS){
+            localFileName = localFileName.replace('\\','/');
+            fileNameOnCluster = fileNameOnCluster.replace('\\','/');
+        }
+        PigServer ps = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+        String script = getMkDirCommandForHadoop2_0(fileNameOnCluster) + "fs -put " + localFileName + " " + fileNameOnCluster;
+
+	    GruntParser parser = new GruntParser(new StringReader(script));
+        parser.setInteractive(false);
+```
+
+**Note:** If `MiniGenericCluster` is the intended type due to specific requirements in the codebase (e.g., it being a subclass or a more specific abstraction), the type should be adjusted back to `MiniGenericCluster`. Without further context, I have prioritized the branch's type (`MiniCluster`) and its additional logic for Windows compatibility. If there are additional concerns or ambiguity in other parts of the codebase, please provide more context for a definitive resolution.

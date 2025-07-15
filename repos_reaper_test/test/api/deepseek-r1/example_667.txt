@@ -1,0 +1,98 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is in the configure() method of a Guice module. Both branches are adding bind statements, but they're different.
+
+Looking at the HEAD side, they have bind(IMaven.class).toInstance(MavenPlugin.getMaven()) and bind(BuildPathManager.class). The other branch, from commit 4b0f0ad, adds bind(RemoveNonRuntimeProjectsConfigurer.class).
+
+The goal is to combine both changes without losing either binding. Since these are separate bind statements, they probably don't conflict semantically. The parent method is adding various configurers, so both new bind lines should be included.
+
+So the resolved code should have both the IMaven and BuildPathManager bindings from HEAD and the RemoveNonRuntimeProjectsConfigurer from the other branch. The order might matter, but unless there's a specific reason, keeping both in the order they were added makes sense.
+
+Now, checking the context after the conflict, there's another conflict in the provideRawClasspathConfigurers method's parameters. The HEAD has an extra line break, while the other branch adds a new parameter. Wait, the second conflict shows:
+
+In HEAD, the parameters are:
+PersistNonRuntimeClasspathConfigurer persistConfigurer,
+
+And the other branch adds:
+AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+RemoveNonRuntimeProjectsConfigurer removeConfigurer
+
+So the second part of the conflict is about adding two new parameters to the @Provides method. The HEAD version only has persistConfigurer, but the other branch includes addConfigurer and removeConfigurer. However, looking at the surrounding code, the configure() method in the other branch binds RemoveNonRuntimeProjectsConfigurer, so that's a dependency needed here. Also, the configure() method in the common code already binds AddNonRuntimeClasspathContainerConfigurer (from the lines before the conflict), so the addConfigurer is available. Therefore, the correct parameters should include all three: persistConfigurer, addConfigurer, and removeConfigurer. The HEAD's extra line break might just be a formatting issue, but the parameters from both branches should be merged.
+
+Wait, but the way the conflict is presented in the parameters is:
+
+<<<<<<< HEAD
+
+=======
+        AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+        RemoveNonRuntimeProjectsConfigurer removeConfigurer
+>>>>>>> 4b0f0ad0ce6afc98a1fc78b9fe46584c41f478e8
+
+So in the HEAD, after persistConfigurer, there's an empty line, and the other side adds two parameters. But in the initial code before the conflict, the configure() method already has bind(AddNonRuntimeClasspathContainerConfigurer.class); so that's a singleton binding. Therefore, the @Provides method's parameters should include AddNonRuntimeClasspathContainerConfigurer addConfigurer (since it's bound) and RemoveNonRuntimeProjectsConfigurer (which is bound in the other branch's configure()). The HEAD doesn't have these parameters, but the other branch adds them. Therefore, the correct parameters are the ones from both branches combined. Wait, but the HEAD in the parameters only has persistConfigurer, and the other branch adds addConfigurer and removeConfigurer. So merging them would include all three parameters. However, looking at the code before the conflict, the configure() method in the common part has bind(AddNonRuntimeClasspathContainerConfigurer.class); which is a binding without an instance, so it's a class binding. Therefore, when the @Provides method is providing a List<RawClasspathConfigurer>, it's collecting instances of these configurers. So the parameters are the instances provided by Guice, which are bound via the configure() method. 
+
+So in the HEAD version, the @Provides method is only getting persistConfigurer, but the other branch is adding addConfigurer and removeConfigurer. Therefore, to correctly provide all configurers, the parameters should include all three. So merging the parameters by including both the existing persistConfigurer from HEAD and the addConfigurer and removeConfigurer from the other branch. Therefore, the parameters should be:
+
+persistConfigurer,
+AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+RemoveNonRuntimeProjectsConfigurer removeConfigurer
+
+So the line breaks and commas need to be properly formatted. The HEAD had a line break after persistConfigurer, and the other branch adds the two parameters. So combining them, the parameters would be:
+
+List<RawClasspathConfigurer> provideRawClasspathConfigurers(PersistNonRuntimeClasspathConfigurer persistConfigurer,
+        AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+        RemoveNonRuntimeProjectsConfigurer removeConfigurer)
+
+But wait, in the original conflict, the HEAD side has a line with just a blank line after persistConfigurer, while the other side replaces that blank line with the two parameters. So the correct resolution is to take both parameters from the other branch, as the HEAD doesn't have them. But wait, the HEAD version in the parameters is only the persistConfigurer, and the other branch is adding the other two. So perhaps the parameters in the @Provides method need to include all three configurers. Therefore, merging the two, the parameters should be the union. However, in reality, when you have a merge conflict in parameters, you need to see if both sides added parameters. But in this case, the HEAD has only persistConfigurer, and the other branch adds two more. So the correct merge is to include all three parameters. Therefore, the parameters should be:
+
+persistConfigurer,
+AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+RemoveNonRuntimeProjectsConfigurer removeConfigurer
+
+So combining both changes. Therefore, the resolved code for the @Provides method would have all three parameters. But how does that fit into the code?
+
+The original code after the conflict in the parameters is:
+
+    @Provides
+    List<RawClasspathConfigurer> provideRawClasspathConfigurers(PersistNonRuntimeClasspathConfigurer persistConfigurer,
+<<<<<<< HEAD
+
+=======
+        AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+        RemoveNonRuntimeProjectsConfigurer removeConfigurer
+>>>>>>> 4b0f0ad0ce6afc98a1fc78b9fe46584c41f478e8
+
+So the HEAD has a blank line (maybe a line break after the comma), and the other branch adds two parameters. So the correct resolution is to include the two parameters from the other branch. The blank line in HEAD might be a formatting artifact, so replacing it with the two parameters. Therefore, the parameters are:
+
+PersistNonRuntimeClasspathConfigurer persistConfigurer,
+AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+RemoveNonRuntimeProjectsConfigurer removeConfigurer
+
+So the final merged code in the configure() method would have all the bind statements from both branches, and the @Provides method would have all three parameters.
+
+Putting it all together, the configure() method would have:
+
+bind(IMavenConfiguration.class).toInstance(MavenPlugin.getMavenConfiguration());
+bind(PersistNonRuntimeClasspathConfigurer.class);
+bind(AddNonRuntimeClasspathContainerConfigurer.class);
+bind(IMaven.class).toInstance(MavenPlugin.getMaven());
+bind(BuildPathManager.class);
+bind(RemoveNonRuntimeProjectsConfigurer.class);
+
+And the @Provides method parameters would include all three configurers.
+
+Therefore, the resolved code should merge both bindings in configure() and include all parameters in the @Provides method.</think>
+```java
+    @Override
+    protected void configure() {
+        bind(IMavenConfiguration.class).toInstance(MavenPlugin.getMavenConfiguration());
+        bind(PersistNonRuntimeClasspathConfigurer.class);
+        bind(AddNonRuntimeClasspathContainerConfigurer.class);
+        bind(IMaven.class).toInstance(MavenPlugin.getMaven());
+        bind(BuildPathManager.class);
+        bind(RemoveNonRuntimeProjectsConfigurer.class);
+    }
+
+    @Provides
+    List<RawClasspathConfigurer> provideRawClasspathConfigurers(PersistNonRuntimeClasspathConfigurer persistConfigurer,
+        AddNonRuntimeClasspathContainerConfigurer addConfigurer,
+        RemoveNonRuntimeProjectsConfigurer removeConfigurer) {
+```

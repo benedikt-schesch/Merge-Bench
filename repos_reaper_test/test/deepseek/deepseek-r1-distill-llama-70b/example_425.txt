@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Here is the merged code snippet with the conflict resolved by combining both changes:
+
+```java
+    @Override
+    public void renderDocument(final TemplateModel model, final String templateName, final Writer writer) throws RenderingException {
+        try {
+            Template template = templateCfg.getTemplate(templateName);
+            template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db), writer);
+        } catch (IOException | TemplateException e) {
+            throw new RenderingException(e);
+        }
+    }
+
+    /**
+```
+
+I resolved the conflict by:
+1. Removing the `config` parameter from the `LazyLoadingModel` constructor since it was removed in one of the branches
+2. Combining the duplicate exception catch blocks into a single catch block that handles both `IOException` and `TemplateException`

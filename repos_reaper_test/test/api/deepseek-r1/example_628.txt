@@ -1,0 +1,21 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in the imports section of a Java test class. The HEAD version has an import for FacebookGraphException and DefaultFacebookExceptionGenerator, along with AssertJson. The other branch, a17acec, adds an import for JSONException from org.json.
+
+First, I need to understand why the conflict happened. Both branches are adding different imports. The HEAD side has some RestFB-related exceptions and a test utility. The other branch is adding JSONException, which might be needed for handling JSON parsing errors in tests.
+
+Since these imports are in different packages and don't conflict with each other, the correct resolution would be to include both. The order of imports might matter, but in Java, it's common to group imports from different packages alphabetically or by source. However, the original order in each branch is HEAD's imports first, then the JSONException. So combining them without reordering would be safe.
+
+I should check if there are any duplicates or if one import is already included in the other. But FacebookGraphException and DefaultFacebookExceptionGenerator are from com.restfb, while JSONException is from org.json. They are separate, so both should stay.
+
+Therefore, the resolved code should include all three imports: the two from HEAD and the one from the other branch. The conflict markers should be removed, and the imports arranged in the order they appear, maintaining the original spacing as per the user's request.</think>
+```java
+import com.restfb.exception.FacebookGraphException;
+import com.restfb.exception.generator.DefaultFacebookExceptionGenerator;
+import com.restfb.testutils.AssertJson;
+import org.json.JSONException;
+import org.junit.Test;
+
+public class StatusExceptionTest extends AbstractJsonMapperTests {
+
+  @Test
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict appears to be about whether to add debug output for the parameters being passed to createDemuxPlan(). One side (HEAD) doesn't have the debug output while the other side adds System.out.println() with the parameters. Since both versions have the same core logic but differ only in the debug output, we can preserve the debug output since it doesn't affect the runtime behavior but provides additional insight for debugging purposes. Here is the resolved code:
+
+```java
+    private PhysicalPlan createDemuxPlan(boolean sameKeyType, boolean isCombiner)
+        throws VisitorException {
+        PODemux demux = getDemux(isCombiner);
+        POPackage pkg = getMultiQueryPackage(sameKeyType, isCombiner);
+        
+        System.out.println("createDemuxPlan: sameKeyType=" + sameKeyType + ", isCombiner=" + isCombiner + ", Plan=" + pl + ".");
+        PhysicalPlan pl = new PhysicalPlan();
+        pl.add(pkg);
+        try {
+            pl.addAsLeaf(demux);
+        } catch (PlanException e) {
+```

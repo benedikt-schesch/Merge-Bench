@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+		assertEquals(1, updates);
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+	}
+
+	@Test
+	public void shouldUpdateCoreOnAutoBuild() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 10);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(findingTests(0, projects.size(), 0));
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+```

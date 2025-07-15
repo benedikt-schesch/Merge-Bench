@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+I'll analyze the intent behind both sides of this merge conflict. 
+
+- **HEAD side**: This side does not introduce any new database-related code, maintaining the existing structure with `mDb` as the only database adapter.
+- **Incoming side (de460f053e7948460b81e71a410d665d956db90a)**: This side introduces a new `DatabaseHelper` instance named `mDb2`, likely indicating an intent to support an additional database or migration to a different database helper.
+
+Since the conflict introduces a new variable (`mDb2`) without interfering with the existing `mDb`, the safest resolution is to accept the incoming change, as it appears to be an intentional addition rather than a replacement. I'll include the new line from the incoming side in the resolved snippet.
+
+Here's the entire snippet with the conflict resolved:
+
+```java
+    mContext = this.getApplicationContext();
+    mImageManager = new ImageManager(this);
+    mApi = new Weibo();
+    mDb = new TwitterDbAdapter(this);
+    mDb.open();
+    mDb2 = new DatabaseHelper(this); // Init Database
+    
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);        
+    String username = preferences.getString(Preferences.USERNAME_KEY, "");
+    String password = preferences.getString(Preferences.PASSWORD_KEY, "");
+```

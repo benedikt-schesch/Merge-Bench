@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the intent of both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a class definition for `Thumbnail`, which extends `AbstractFacebookType`. The conflict arises in the declaration of `serialVersionUID`, a field used for serialization purposes in Java.
+
+On one side of the merge (`HEAD`), the code includes a declaration for `serialVersionUID` with a value of `1L`. This suggests that the developers working on this branch intended to explicitly define the version UID for the `Thumbnail` class.
+
+On the other side of the merge (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`), there is no declaration for `serialVersionUID`. This could imply that either the developers did not see a need to explicitly define it, or they were relying on the default serialization behavior.
+
+The intent behind including `serialVersionUID` is typically to control the versioning of the class for serialization purposes. By defining it explicitly, developers can manage how changes to the class affect its serialized form.
+
+To resolve the conflict, we need to understand whether the explicit definition of `serialVersionUID` is necessary or if its absence is acceptable. Given that `AbstractFacebookType` likely implements `Serializable` (since `Thumbnail` extends it and has a `serialVersionUID`), and considering best practices for serialization, explicitly defining `serialVersionUID` is generally a good practice. It helps in controlling the serialization version, which can be crucial for maintaining compatibility across different versions of the class.
+
+Since there's no indication that the absence of `serialVersionUID` on one side was due to a deliberate decision to remove or not use it (and given that `HEAD` has made an explicit choice to include it), the most straightforward resolution is to preserve the explicit declaration of `serialVersionUID` as it was in `HEAD`. This approach maintains explicit control over the serialization version.
+
+Therefore, the resolved code snippet, returned in markdown code syntax without modifying the context or spacing, is:
+
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class Thumbnail extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The name of the thumbnail
+     */
+    @Getter
+    @Setter
+```

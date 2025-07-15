@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+```java
+            ListRow row = findListRow(getString(R.string.unmatched));
+
+            // if found add this video
+            // if not, create a new row and add it
+            if (row != null) {
+                // Preserve compatibility with SortedArrayObjectAdapter and SortedObjectAdapter
+                Object adapter = row.getAdapter();
+                if (adapter instanceof SortedArrayObjectAdapter) {
+                    ((SortedArrayObjectAdapter) adapter).add(video);
+                } else if (adapter instanceof SortedObjectAdapter) {
+                    ((SortedObjectAdapter) adapter).add(video);
+                }
+            } else {
+                // Try to use whichever adapter class is available (prefer new, fallback to old)
+                SortedObjectAdapter listRowAdapter;
+                try {
+                    listRowAdapter = new SortedObjectAdapter(
+                        videoNameComparator, mCardPresenter);
+                } catch (NoClassDefFoundError e) {
+                    // Fallback in case SortedObjectAdapter isn't available
+                    listRowAdapter = (SortedArrayObjectAdapter)(Object)new SortedArrayObjectAdapter(
+                        videoNameComparator, mCardPresenter);
+                }
+                listRowAdapter.add(video);
+
+                HeaderItem header = new HeaderItem(0, getString(R.string.unmatched), null);
+                int index = mAdapter.size() > 1 ? mAdapter.size() - 1 : 0;
+```

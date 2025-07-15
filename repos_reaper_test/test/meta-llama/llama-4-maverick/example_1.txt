@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The code snippet appears to be part of a larger Java application, presumably a Minecraft server proxy like BungeeCord, given the class and method references. The snippet is constructing a data map that seems to be used for reporting or querying information about the server status.
+
+The merge conflict arises on the line where the "version" key is being populated in the `data` map.
+
+- The local version (`HEAD`) is using `bungee.getConfig().getCustomServerName() + " " + bungee.getGameVersion()` for the "version" value. This implies that the local changes are utilizing a custom server name configured within BungeeCord, concatenated with the game version.
+  
+- The incoming version (`28bb88fc98a694b34aa16ca4372362235fc7cf48`) is using `"BungeeCord " + bungee.getGameVersion()`. This suggests that the incoming changes are simply prefixing the game version with "BungeeCord ", indicating the proxy software and its version.
+
+Given these observations, both versions are attempting to provide a "version" string that includes some form of identifier for the proxy software and the game version. The main difference lies in whether to use a custom server name (if configured) or a static "BungeeCord" identifier.
+
+To resolve this conflict, we should consider the intent behind using `bungee.getConfig().getCustomServerName()` versus `"BungeeCord "`. If the custom server name is a significant configuration option that should be reflected in the "version" field when available, then the local change makes more sense. However, if the intent is to simply identify the proxy software as BungeeCord, then the incoming change is more straightforward.
+
+Since the conflict involves a choice between a potentially customized value and a hardcoded string, and without more context on the preferred behavior or the significance of `getCustomServerName()`, a direct resolution might not be clear-cut.
+
+However, considering the semantics and potential intent:
+- If `getCustomServerName()` is not set or is set to a default value like "BungeeCord", the difference might be minimal.
+- Using `bungee.getConfig().getCustomServerName()` allows for customization, which could be a desired feature.
+
+Let's resolve the conflict by choosing the local version (`HEAD`) as it provides more flexibility with the custom server name, assuming that's a desired feature.
+
+Here is the resolved snippet in markdown code syntax:
+
+```java
+
+                data.put( "hostname", listener.getMotd() );
+                data.put( "gametype", "SMP" );
+                // Start Extra Info
+                data.put( "game_id", "MINECRAFT" );
+                data.put( "version", bungee.getConfig().getCustomServerName() + " " + bungee.getGameVersion() );
+                data.put( "plugins", "" );
+                // End Extra Info
+                data.put( "map", "BungeeCord_Proxy" );
+                data.put( "numplayers", Integer.toString( bungee.getOnlineCount() ) );
+                data.put( "maxplayers", Integer.toString( listener.getMaxPlayers() ) );
+
+```

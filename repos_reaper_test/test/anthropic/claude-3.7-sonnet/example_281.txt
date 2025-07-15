@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I need to determine which variable name is correct based on the context. The conflict is about which variable (`myKey` vs `keyWritable`) to use to get an index value.
+
+Without more context about which variable is defined and used elsewhere in the code, this is ambiguous. However, because the rest of the code seems to expect the index value to be used directly, I'll resolve this based on which variable appears to be defined in the current context.
+
+```java
+    public Result getNext() throws ExecException {
+        if (bags == null) {
+            return new Result(POStatus.STATUS_EOP, null);
+        }
+
+        byte origIndex = keyWritable.getIndex();
+
+        int index = (int)origIndex;
+        index &= idxPart;
+
+        if (index >= packagers.size() || index < 0) {
+
+```
+
+I've chosen the newer version (from 88ae4a5) using `keyWritable` as it's likely this reflects a variable renaming or refactoring that occurred in the codebase. Without more context, this is my best assessment of the intended semantic change.

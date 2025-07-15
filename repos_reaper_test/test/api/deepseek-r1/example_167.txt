@@ -1,0 +1,23 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in the Java imports. The HEAD version is importing org.apache.pig.PigServer.ExecType, while the other side is importing org.apache.pig.ExecType. 
+
+I need to determine which import is correct. Maybe the package structure for ExecType changed between versions. In some versions of Apache Pig, ExecType might have been moved from PigServer to a top-level package. So if one branch is using an older version where ExecType is inside PigServer, and the other is using a newer version where it's directly under org.apache.pig, then the correct import depends on which version the project is using now.
+
+I should check the context. The surrounding code includes imports from org.apache.pig.backend and org.apache.pig.backend.hadoop, which suggests that the code is related to Pig's backend. If the other classes are from a newer version where ExecType is in the top-level package, then the correct import would be org.apache.pig.ExecType. 
+
+Also, looking at Apache Pig's documentation, I recall that ExecType was indeed moved out of PigServer into its own enum in later versions. So the change from PigServer.ExecType to just ExecType is likely a correct refactoring. Therefore, the right import is org.apache.pig.ExecType, which is the one from the branch that's not HEAD. 
+
+So the merge conflict should be resolved by choosing the import from the incoming change (the one in the lower part of the conflict). Therefore, the resolved code should have the import statement from the second part, removing the HEAD version's import.</think>
+```java
+import java.util.Properties ;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.ContainerDescriptor;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.hadoop.datastorage.HDataStorage;
+```

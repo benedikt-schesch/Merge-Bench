@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+  @Override
+  public void channelConnected(final ChannelHandlerContext ctx,
+                               final ChannelStateEvent e) {
+    final Channel chan = e.getChannel();
+    final ChannelBuffer header;
+<<<<<<< HEAD
+    if (System.getProperty("org.hbase.async.cdh3b3") != null) {
+=======
+    if (!hbase_client.has_root) {
+      header = header095();
+      Channels.write(chan, header);
+      becomeReady(chan, SERVER_VERSION_095_OR_ABOVE);
+      return;
+    } else if (System.getProperty("org.hbase.async.cdh3b3") != null) {
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+      header = headerCDH3b3();
+    } else {
+      header = header090();
+    }
+    helloRpc(chan, header);
+```

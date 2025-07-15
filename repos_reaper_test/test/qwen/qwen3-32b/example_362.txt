@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with the conflict resolved. Both approaches aim to construct a GET request to the same URL while attaching the `AuthKeyValueParser`. The resolution retains the usage of `GenericUrl` and the `createRequestFactory()` method to build the request (from the other branch), while ensuring the parser is explicitly added to the request. This aligns with the intent of maintaining compatibility with the library's recommended practices (e.g., using `GenericUrl` and modular request factories).
+
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public TokenInfoResponse requestTokenInfo() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+    return request.execute().parseAs(TokenInfoResponse.class);
+  }
+
+  /** Updates the authorization headers. */
+  private void updateAuthorizationHeaders() {
+```

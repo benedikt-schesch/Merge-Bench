@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The code snippet appears to be part of a larger method responsible for deserializing or processing some data, likely related to a user's session or authentication information, given the presence of terms like `principalData` and `deserializePrincipal`.
+
+The conflict arises between two different versions of a line of code within a conditional block that checks if `principalDataLength > 0`. The condition itself and the surrounding code are not part of the conflict.
+
+1. The `HEAD` version (typically the local or current branch being worked on) uses `result.setPrincipal(deserializePrincipal(principalData, manager))`.
+2. The other version (from the commit `6c5fb5474dc66d5ab104a5546f43f05b75a4aaa2`) uses `result.setPrincipalInternal(deserializePrincipal(principalData, realm))`.
+
+Let's analyze the differences:
+- The method called on `result` differs: `setPrincipal` vs `setPrincipalInternal`. This suggests a possible change in how the principal is being set, potentially indicating `setPrincipalInternal` is a new or different method that might be used for internal setting or has different implications (e.g., visibility, validation, or processing).
+- The second argument passed to `deserializePrincipal` differs: `manager` vs `realm`. This indicates a change in the object being passed to `deserializePrincipal`, which could imply a different context or requirement for deserialization.
+
+To resolve this conflict, we need to understand the intent behind both changes:
+1. Is `setPrincipalInternal` a replacement or alternative for `setPrincipal`, and does it serve a different purpose?
+2. What is the difference between `manager` and `realm` in this context, and which one is appropriate for `deserializePrincipal`?
+
+Without additional context about the purposes of `setPrincipal` vs `setPrincipalInternal` and the roles of `manager` and `realm`, it's challenging to definitively resolve the conflict.
+
+However, if we consider the possibility that both changes are valid and represent different aspects of the code's evolution (e.g., using a more appropriate method for setting the principal and passing the correct context object to `deserializePrincipal`), a potential resolution could involve synthesizing these changes. But, we need to be cautious and ensure that such a synthesis aligns with the overall intent and functionality.
+
+Given the information and the need to preserve the original context and spacing, if we were to directly resolve or keep the conflict as is due to ambiguity, the output would be:
+
+```java
+        final int currentIdx = 44 + idLength + 2;
+        final short principalDataLength = (short) decodeNum( data, currentIdx, 2 );
+        if ( principalDataLength > 0 ) {
+            final byte[] principalData = new byte[principalDataLength];
+            System.arraycopy( data, currentIdx + 2, principalData, 0, principalDataLength );
+<<<<<<< HEAD
+            result.setPrincipal( deserializePrincipal( principalData, manager ) );
+=======
+            result.setPrincipalInternal( deserializePrincipal( principalData, realm ) );
+>>>>>>> 6c5fb5474dc66d5ab104a5546f43f05b75a4aaa2
+        }
+
+        final byte[] attributesData = new byte[ data.length - sessionFieldsDataLength ];
+        System.arraycopy( data, sessionFieldsDataLength, attributesData, 0, data.length - sessionFieldsDataLength );
+
+```

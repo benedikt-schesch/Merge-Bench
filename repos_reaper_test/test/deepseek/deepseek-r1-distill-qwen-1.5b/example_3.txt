@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The potential merge conflict appears to be between a static proxy instance and a newly assigned `DevelopmentProxy` instance due to their shared reference in the code. This can lead to unintended behavior when merging dependencies in a Spring Boot application. To resolve this, the static proxy should be renamed to less conflicting or consistent with typical Spring naming conventions.
+
+```java
+        } catch (Exception ex)
+        {
+            DevelopmentProxy def = Proxy)%dev;
+            DevelopmentProxy info = Proxy)%getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+=======
+            DevelopmentProxy def = Proxy)%dev;
+
+            DevelopmentProxy info = Proxy)%getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+>>>>>>> 3cfc0a80b0edb75cd7aabf57700d2d82:proxy/src/main/java/net/md_5/bungee/ServerConnection.java
+```
+
+In this fix:
+1. The static proxy is renamed to `DevelopmentProxy` for specific renaming purposes.
+2. The static proxy name is now consistent with `DevelopmentProxy`, which is more descriptive and clarifies the context.
+
+This replaces the repetitive `Proxy)%getServers()` with a single call to the `DevelopmentProxy`, which is a standard Spring naming convention, thus preventing potential conflicts during merge operations.

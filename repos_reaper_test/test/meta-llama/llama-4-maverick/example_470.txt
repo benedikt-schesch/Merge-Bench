@@ -1,0 +1,60 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a test class for a memcached session management system. The conflict arises in the `testConfigurationFormatMemcachedNodesFeature44` method, which tests the configuration and functionality related to memcached nodes.
+
+### Understanding the Conflict
+
+The conflict is between two versions of the code:
+
+1. The version from `HEAD` (the current branch being worked on), which is located in `MemcachedSessionServiceTest.java`.
+2. The version from the commit `4f2b3548a3427b3390027e8c087c6dce35a40f6c`, which is located in `MemcachedBackupSessionManagerTest.java`.
+
+The conflicting lines are within the `testConfigurationFormatMemcachedNodesFeature44` method.
+
+### Analyzing the Changes
+
+- The `HEAD` version uses `_service` for setting memcached nodes and starting the internal service, and it checks the node IDs obtained from `_service`.
+- The other version (from `4f2b3548a3427b3390027e8c087c6dce35a40f6c`) uses `_manager` instead of `_service` for similar operations.
+
+### Resolving the Conflict
+
+To resolve the conflict, we need to understand the intent behind both versions. The `HEAD` version is testing `_service`, presumably an instance of `MemcachedSessionService`, while the other version is testing `_manager`, which could be an instance of `MemcachedBackupSessionManager`.
+
+Both versions are testing the functionality of setting memcached nodes and verifying the node IDs after starting the internal service. The main difference is the object being tested (`_service` vs. `_manager`) and the method invocation on it.
+
+### Semantic Resolution
+
+The conflict seems to arise because the same test method is being modified in two different classes (`MemcachedSessionServiceTest.java` and `MemcachedBackupSessionManagerTest.java`) in different ways. 
+
+Upon closer inspection, it appears that both changes are testing similar functionality but on potentially different objects (`_service` and `_manager`). The test is checking if setting memcached nodes and starting the service results in the correct node IDs being retrieved.
+
+Given the information, a straightforward resolution isn't directly apparent without understanding the specific intent behind the changes in both branches. However, we can make an educated guess:
+
+If `_service` and `_manager` are both being used in their respective test classes to test similar functionality, the changes might be reflecting a refactoring or a change in how the test is structured.
+
+### Returning the Snippet
+
+Since the intent behind both sides of the merge isn't entirely clear without more context (such as the definitions of `_service` and `_manager`, and their respective classes), and without knowing whether one change supersedes the other or if they serve different purposes, the safest approach is to return the original snippet with the conflict.
+
+```java
+    @Nonnull
+    protected abstract SessionManager createSessionManager();
+
+    @Test
+    public void testConfigurationFormatMemcachedNodesFeature44() throws LifecycleException {
+<<<<<<< HEAD:core/src/test/java/de/javakaffee/web/msm/MemcachedSessionServiceTest.java
+        _service.setMemcachedNodes( "n1:127.0.0.1:11211" );
+        _service.startInternal(_memcachedMock);
+        Assert.assertEquals( _service.getNodeIds(), Arrays.asList( "n1" ) );
+=======
+        _manager.setMemcachedNodes( "127.0.0.1:11211" );
+        _manager.startInternal(_memcachedMock);
+        Assert.assertEquals( _manager.getNodeIds(), Arrays.asList( "n1" ) );
+>>>>>>> 4f2b3548a3427b3390027e8c087c6dce35a40f6c:core/src/test/java/de/javakaffee/web/msm/MemcachedBackupSessionManagerTest.java
+
+        _service.setMemcachedNodes( "n1:127.0.0.1:11211 n2:127.0.0.1:11212" );
+        _service.startInternal(_memcachedMock);
+        Assert.assertEquals( _service.getNodeIds(), Arrays.asList( "n1", "n2" ) );
+```

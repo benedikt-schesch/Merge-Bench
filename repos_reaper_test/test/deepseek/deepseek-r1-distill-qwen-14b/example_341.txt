@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to stem from two different approaches to initializing components in the code. On one side, the code initializes sound and preference managers before calling `initDronekit()`, while on the other, the `initDronekit()` method is added without these initializations. 
+
+Considering the intent, both initializations seem necessary: one handles app services, and the other drone functionality. However, without further context on which initializations should come first or if one supersedes the other, it's safest to retain both to avoid functionality loss.
+
+```java
+        if(BuildConfig.ENABLE_CRASHLYTICS) {
+            Fabric.with(context, new Crashlytics());
+        }
+    }
+
+    soundManager = new SoundManager(context);
+
+    dpPrefs = DroidPlannerPrefs.getInstance(context);
+    lbm = LocalBroadcastManager.getInstance(context);
+
+    private void initDronekit(){
+        Context context = getApplicationContext();
+        
+        controlTower = new ControlTower(context);
+        drone = new Drone(context);
+        missionProxy = new MissionProxy(context, this(drone));
+    }
+```

@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+I notice that both sides of the merge are achieving the same goal but using slightly different syntax. The left side checks if `rawValue` is an instance of `JsonArray` and then checks its length, while the right side uses the `isArray()` method and `size()`.
+
+After considering the intent of both changes, I believe the left side (HEAD) is clearer and more maintainable since it explicitly checks for `JsonArray` and uses its `length()` method, which is more conventional in this context.
+
+Here's the resolved code:
+
+```java
+       * error ourselves.
+       *
+       * Per Antonello Naccarato, sometimes FB will return an empty JSON array instead of an empty string. Look for that
+       * here.
+       */
+      if (rawValue instanceof JsonArray) {
+        if (((JsonArray) rawValue).length() == 0) {
+          if (MAPPER_LOGGER.isTraceEnabled()) {
+            MAPPER_LOGGER.trace(format("Coercing an empty JSON array to an empty string for %s", fieldWithAnnotation));
+          }
+
+          return "";
+=======
+      if (rawValue.isArray()) {
+        if (rawValue.asArray().size() == 0) {
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+```
+
+The final code uses the `instanceof` check with `JsonArray` for clarity and explicitly accesses the array's length for empty checks.
+
+```java
+       * error ourselves.
+       *
+       * Per Antonello Naccarato, sometimes FB will return an empty JSON array instead of an empty string. Look for that
+       * here.
+       */
+      if (rawValue instanceof JsonArray) {
+        if (((JsonArray) rawValue).length() == 0) {
+          if (MAPPER_LOGGER.isTraceEnabled()) {
+            MAPPER_LOGGER.trace(format("Coercing an empty JSON array to an empty string for %s", fieldWithAnnotation));
+          }
+
+          return "";
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears that someone is adding two new lines to set properties for `Comment.Attachment.methods` and `Comment.Comments.methods`. The intent seems clear - these are additional property settings that have been added in the incoming change. There's no conflicting change on the HEAD side that might interfere with this addition.
+
+Here's the resolved code:
+
+```java
+    props.setProperty("CategorizedFacebookType.methods",
+      joinMethods(fetchMethodsFromClass(CategorizedFacebookType.class)));
+    props.setProperty("Category.methods", joinMethods(fetchMethodsFromClass(Category.class)));
+    props.setProperty("Checkin.methods", joinMethods(fetchMethodsFromClass(Checkin.class)));
+    props.setProperty("Comment.methods", joinMethods(fetchMethodsFromClass(Comment.class)));
+    props.setProperty("Comment.Attachment.methods", joinMethods(fetchMethodsFromClass(StoryAttachment.class)));
+    props.setProperty("Comment.Comments.methods", joinMethods(fetchMethodsFromClass(Comment.Comments.class)));
+    props.setProperty("Conversation.methods", joinMethods(fetchMethodsFromClass(Conversation.class)));
+    props.setProperty("Conversation.Tag.methods", joinMethods(fetchMethodsFromClass(Conversation.Tag.class)));
+    props.setProperty("DeAuth.methods", joinMethods(fetchMethodsFromClass(DeAuth.class)));
+    props.setProperty("Event.methods", joinMethods(fetchMethodsFromClass(Event.class)));
+    props.setProperty("Event.Category.methods", joinMethods(fetchMethodsFromClass(Event.Category.class)));
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict is between using `BitmapTexture` and `BitmapTextureAtlas` for `mFontTexture`. Both sides aim to create a font texture, but `BitmapTextureAtlas` (changed later) is more suitable forfonts due to better handling of multiple textures.
+
+```java
+	@Override
+	public void onLoadResources() {
+<<<<<<< HEAD
+		this.mFontTexture = new BitmapTexture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+=======
+		this.mFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+>>>>>>> 91801fdd7714064242fef90013824ede2bbcbe9d
+
+		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 48, true, Color.BLACK);
+
+		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
+		this.mEngine.getFontManager().loadFont(this.mFont);
+	}
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises because one side creates a `MockLowLevelHttpRequest` without the URL, while the other includes it. Given that the URL is essential for the request and consistency with `buildGetRequest`, the correct resolution is to include the URL.
+
+```java
+    return new MockLowLevelHttpRequest(url);
+  }
+
+  @Override
+  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+<<<<<<< HEAD
+    return new MockLowLevelHttpRequest();
+=======
+    return new MockLowLevelHttpRequest(url);
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+  }
+
+  @Override
+  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
+<<<<<<< HEAD
+
+  }
+```

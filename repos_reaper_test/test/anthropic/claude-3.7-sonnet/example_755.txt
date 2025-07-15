@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, both sides are trying to get references to two text elements - one for the crypto password edit field and one for the password text field. The key differences are:
+
+1. Variable types: HEAD uses `TextView` while the other branch uses `EditText` (which is a subclass of TextView)
+2. How they get the views: HEAD uses `getActivity()` and `getDialog()`, while the other branch uses `callingActivity` and `view`
+
+Given that `EditText` is more specific and that the code setting up the dialog is using `EditText` (as seen in the line above the conflict), the second version seems more accurate. Also, `callingActivity` and `view` seem to be properly defined variables that the code is using throughout.
+
+Here's the resolved code:
+
+```java
+        ((EditText) view.findViewById(R.id.passwordText)).setTypeface(monoTypeface);
+
+        builder.setPositiveButton(getResources().getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText edit = (EditText) callingActivity.findViewById(R.id.crypto_password_edit);
+                EditText generate = (EditText) view.findViewById(R.id.passwordText);
+                edit.append(generate.getText());
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+```

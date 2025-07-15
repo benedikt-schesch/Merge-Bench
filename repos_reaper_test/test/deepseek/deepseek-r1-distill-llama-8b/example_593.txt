@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The user has provided a merge conflict in a Java snippet. The left side has a catch clause catching `ParseException` and throwing an `IllegalArgumentException`, while the right side catches `JsonException` and throws a more specific error message.
+
+To resolve this, I'll keep the right side's catch block because it catches a more specific exception (`JsonException`) and provides a more informative error message, which is better for error handling.
+
+```java
+        throw new IllegalArgumentException(
+          "Provided queries must have non-blank keys and values. You provided: " + queries);
+      }
+
+      try {
+<<<<<<< HEAD
+        jsonObject.add(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (ParseException e) {
+=======
+        jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (JsonException e) {
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+        // Shouldn't happen unless bizarre input is provided
+        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
+      }
+    }
+```

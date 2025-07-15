@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that one side adds a `Session session;` declaration with indentation, while the other side removes it but has the same declaration right after the conflict (with different spacing). Since both sides essentially want to have a `Session session;` field, I'll resolve it by keeping the declaration from after the conflict.
+
+```java
+ *
+ */
+public class SSHSocketImplFactory implements SocketImplFactory, Logger {
+    
+    private static final Log log = LogFactory.getLog(SSHSocketImplFactory.class);
+
+    Session session;
+
+    public static SSHSocketImplFactory getFactory() throws JSchException, IOException {
+        return getFactory(System.getProperty("ssh.gateway"));
+
+```

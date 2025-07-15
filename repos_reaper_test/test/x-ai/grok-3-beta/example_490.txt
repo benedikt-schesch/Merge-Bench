@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by analyzing the intent of both changes.
+
+From a semantic perspective:
+- The `HEAD` branch uses `BitmapTexture` for initializing `mFontTexture`.
+- The other branch (`91801fdd...`) uses `BitmapTextureAtlas` for the same purpose.
+- Both aim to create a texture object for font rendering with identical parameters (dimensions 256x256 and texture options `BILINEAR_PREMULTIPLYALPHA`).
+- `BitmapTextureAtlas` is likely the more modern or correct class to use for this purpose in the given framework (possibly AndEngine), as it is designed to handle texture atlases which are commonly used for fonts to improve performance.
+
+Given that `BitmapTextureAtlas` is more specialized for this use case (handling multiple textures or sprites in a single atlas), the intent seems to favor the change from the incoming branch. The rest of the code (loading the texture and font into the engine) remains compatible with this choice.
+
+Below is the resolved code snippet with the full context preserved exactly as provided:
+
+```java
+	}
+
+	@Override
+	public void onLoadResources() {
+		/* The font. */
+		this.mFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+
+		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.WHITE);
+
+		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
+		this.mEngine.getFontManager().loadFont(this.mFont);
+```

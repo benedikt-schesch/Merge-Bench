@@ -1,0 +1,36 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the testHelloWorld method. The HEAD version has the toast message as '沃草泥马', while the other branch uses '东北人都是活雷锋'. 
+
+First, I need to understand the intent of both changes. The method is part of a test case, so the message is probably just a test string. The main issue is whether the different messages are intentional or accidental. 
+
+Looking at the surrounding code, both versions are calling runScript with a Log.d and a toast. The difference is the Chinese text in the toast. Maybe one is a correction or a different test case. However, without more context, it's hard to tell which one is correct. 
+
+Since the user said to resolve based on semantics and intent, and if unsure, leave the conflict. Since the messages are different and there's no obvious reason to pick one over the other, it's ambiguous. Therefore, the conflict remains unresolved.</think>
+```java
+
+    protected abstract void helpSetUp() throws Exception;
+    public abstract void runScript(final String js) throws Exception;
+
+    @SmallTest
+<<<<<<< HEAD:app/src/main/java/com/iwebpp/nodeandroid/test/ActivityInstrumentationTestCase.java
+    public void testHelloWorld() throws Exception {
+        runScript("Log.d('RhinoTest', 'Helloworld, js');" + "toast('沃草泥马');");
+=======
+    public void testHelloWorld()
+    {
+        runScript("Log.d('RhinoTest', 'Helloworld, js');" + "toast('东北人都是活雷锋');");
+>>>>>>> c68495f4cd53abab9be74ed6ac6d02cd0248e662:app/src/main/java/com/iwebpp/nodeandroid/test/MainActivityInstrumentationTestCase.java
+    }
+
+    /** TODO use TextUtils#concat */
+    /**
+     *
+
+``` 
+
+The conflict remains unresolved because:
+1. Different toast message contents suggest potential localization differences or different test intentions
+2. Slight formatting differences in method declaration (line breaks)
+3. File location/name differences (ActivityInstrumentationTestCase.java vs MainActivityInstrumentationTestCase.java) that might indicate structural changes
+
+Without additional context about the intended test message or file structure reorganization, this conflict requires human judgment to resolve.

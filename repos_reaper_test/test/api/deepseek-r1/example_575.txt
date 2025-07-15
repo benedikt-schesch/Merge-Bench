@@ -1,0 +1,24 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is between the HEAD version, which uses jsonHelper.getStringFrom(rawValue), and the other branch that uses rawValue.toString(). 
+
+Hmm, what's the intent here? The comment above mentions converting a raw value into a string, especially for cases where a numeric type needs to be shoved into a string field. The HEAD version uses a helper method, which might handle some parsing or conversion safely. The other branch just calls toString(), which could be risky if rawValue isn't already a string or a type with a meaningful toString(). 
+
+The user's note says that using toString() might lead to unexpected results. So maybe the HEAD version is more robust, ensuring that even if rawValue is a number or another type, it's properly converted to a string using the helper's method. The other branch's approach is simpler but might not handle all cases correctly, like if rawValue is a JSON number and needs to be parsed as a string without quotes.
+
+Wait, the jsonHelper.getStringFrom method probably handles extracting the string value from a JSON element correctly, whereas toString() on a raw JSON element might not give the desired result. For example, if rawValue is a JSON number, toString() would return the number as a string, which is correct. But if it's a string in JSON, the helper might strip the quotes, whereas toString() might include them or not, depending on how the JSON is parsed.
+
+But without knowing the exact implementation of jsonHelper.getStringFrom, it's a bit ambiguous. However, the comment in the code warns against using toString(), suggesting that the original authors considered it and preferred the helper method for safety. Therefore, resolving the conflict by keeping the HEAD version makes sense to maintain the intended safety checks.</think>
+```java
+       * This is useful if, for example, you've got a @Facebook-annotated string field that you'd like to have a numeric
+       * type shoved into.
+       *
+       * User beware: this will turn *anything* into a string, which might lead to results you don't expect.
+       */
+      return jsonHelper.getStringFrom(rawValue);
+    }
+
+    if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
+      return jsonHelper.getIntegerFrom(rawValue);
+    }
+
+```

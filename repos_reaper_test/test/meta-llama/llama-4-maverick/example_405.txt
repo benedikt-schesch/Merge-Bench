@@ -1,0 +1,53 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the code changes on both sides of the conflict.
+
+The conflict is in this line:
+```java
+account.setSummary(getString(R.string.signed_in, savedInstanceState == null ? Games.Players.getCurrentPlayer(((MainActivity) getActivity()).getGC())
+					.getDisplayName() : savedInstanceState.getString("player")));
+```
+versus
+```java
+account.setSummary(getString(
+					R.string.signed_in,
+					savedInstanceState == null ? ((MainActivity) getActivity()).getGC()
+							.getCurrentPlayer().getDisplayName() : savedInstanceState
+							.getString("player")));
+```
+
+Both versions are trying to achieve the same intent: setting the summary of the `account` object with a string indicating that the user is signed in, along with the player's display name. The display name is retrieved either from the current player in the `GamesClient` (when `savedInstanceState` is `null`) or from the `savedInstanceState` bundle.
+
+The difference lies in how they access the current player's display name. 
+
+1. The left-hand side (HEAD) uses `Games.Players.getCurrentPlayer(((MainActivity) getActivity()).getGC()).getDisplayName()`.
+2. The right-hand side uses `((MainActivity) getActivity()).getGC().getCurrentPlayer().getDisplayName()`.
+
+Both methods aim to get the current player's display name but through slightly different approaches. The first directly uses `Games.Players.getCurrentPlayer` to get the current player, while the second assumes `getGC().getCurrentPlayer()` returns the current player.
+
+To resolve this, we need to understand if both methods are semantically equivalent or if one is preferred over the other.
+
+Upon closer inspection, both methods seem to achieve the same result, which is to get the display name of the current player. However, the right-hand side version is more straightforward and directly calls `getCurrentPlayer()` on the `GamesClient` instance, which is slightly more concise and potentially more efficient as it avoids the static method call `Games.Players.getCurrentPlayer`.
+
+Given that both versions are semantically similar and assuming that `getGC().getCurrentPlayer()` is a valid and equivalent way to get the current player, we can resolve the conflict by choosing the version that is either more efficient, more readable, or aligns with the project's coding standards.
+
+The right-hand side version is more readable due to its formatting and directly accessing `getCurrentPlayer()` on the `GamesClient` instance.
+
+Here's the resolved code snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+		// change for example), then the fragment's onCreate is called before
+		// the new GamesClient is setup. In this case, just use the player name
+		// saved in the savedInstanceState bundle
+		if ((savedInstanceState == null && ((MainActivity) getActivity()).getGC().isConnected())
+				|| (savedInstanceState != null && savedInstanceState.containsKey("player"))) {
+			account.setSummary(getString(
+					R.string.signed_in,
+					savedInstanceState == null ? ((MainActivity) getActivity()).getGC()
+							.getCurrentPlayer().getDisplayName() : savedInstanceState
+							.getString("player")));
+		}
+
+		final SharedPreferences prefs = getActivity().getSharedPreferences("pedometer",
+				Context.MODE_MULTI_PROCESS);
+```

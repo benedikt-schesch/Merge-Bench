@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll analyze this merge conflict and resolve it based on the intent of both sides.
+
+Looking at the conflict:
+- HEAD is adding a `defaultSerializerFactory` parameter to the `KryoTranscoder` constructor
+- The other branch (83d9289...) is changing the first parameter from `manager.getContainer().getLoader().getClassLoader()` to `classLoader`
+
+The best resolution is to combine both changes by using the `classLoader` parameter while also including the new `defaultSerializerFactory` parameter.
+
+Here's the resolved code:
+
+```java
+     */
+    private KryoTranscoder getTranscoder( final ClassLoader classLoader ) {
+        if ( _transcoder == null ) {
+            final int initialBufferSize = getSysPropValue( PROP_INIT_BUFFER_SIZE, KryoTranscoder.DEFAULT_INITIAL_BUFFER_SIZE );
+            final int maxBufferSize = getSysPropValue( PROP_ENV_MAX_BUFFER_SIZE, KryoTranscoder.DEFAULT_MAX_BUFFER_SIZE );
+            final String defaultSerializerFactory = getSysPropValue( PROP_ENV_DEFAULT_FACTORY, KryoTranscoder.DEFAULT_SERIALIZER_FACTORY_CLASS );
+            _transcoder = new KryoTranscoder( classLoader,
+                    _customConverterClassNames, _copyCollectionsForSerialization, initialBufferSize, maxBufferSize,
+                    defaultSerializerFactory );
+        }
+        return _transcoder;
+    }
+
+    private int getSysPropValue( final String propName, final int defaultValue ) {
+```

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the intent of both sides of the merge.
+
+The code snippet is written in Java and defines an interface named `ABActivityViewer`. The comments above the interface declaration explain that this interface is part of the MVP (Model-View-Presenter) pattern's View layer, related to UI, and that Activities implementing this interface will contain a reference to a Presenter. When certain events occur, such as a button click, the interface methods will be used to call the corresponding methods in the Presenter layer.
+
+The merge conflict occurs because the two branches being merged have different definitions for the `ABActivityViewer` interface.
+
+1. The version from the `HEAD` (typically the current branch being worked on) defines the interface as `public interface ABActivityViewer {`.
+
+2. The version being merged into the current branch (`a4d77b017980dbe4d731dc090d4cd8cd3c2d9364`) defines the interface as `public interface ABActivityViewer extends TaskController {`, indicating that `ABActivityViewer` should extend another interface named `TaskController`.
+
+To resolve this conflict, we need to understand the intent behind both changes.
+
+- The `HEAD` version keeps the interface simple and focused on its original definition related to the MVP pattern's View layer.
+
+- The version from `a4d77b017980dbe4d731dc090d4cd8cd3c2d9364` extends the interface to include the methods or functionalities defined in `TaskController`, suggesting an additional responsibility or capability for `ABActivityViewer`, possibly related to task control.
+
+Without knowing the specifics of `TaskController` and its implications, the safest resolution that maintains both intents (if they are not conflicting) would be to extend `ABActivityViewer` with `TaskController` as done in the merged version. However, this should be done with the understanding that `ABActivityViewer` now inherits all the methods from `TaskController` and must implement them.
+
+Here is the resolved code snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+ * Date: 7/17/14.
+ * <p/>
+ * MVP的View层，UI相关，Activity需要实现该interface
+ * 它会包含一个Presenter的引用，当有事件发生（比如按钮点击后），会调用Presenter层的方法
+ */
+public interface ABActivityViewer extends TaskController{
+
+    /**
+     * 显示Toast信息
+     *
+     * @param message
+```

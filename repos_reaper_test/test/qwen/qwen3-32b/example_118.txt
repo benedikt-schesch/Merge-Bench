@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with the merge conflict resolved by combining both changes:
+
+```java
+    private boolean fromPaginated;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        loadArguments();
+        if (autoStart()) {
+            executeRequest();
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+```
+
+**Resolution justification**:  
+Both branches needed `loadArguments()` in `onCreate()`. The conflict arose because one branch added the `autoStart()` check logic after the other branch had already added `loadArguments()`. The intent was clear: call `loadArguments()` and then conditionally execute a request if `autoStart()` is true. The merge keeps both changes in order of semantic dependency.

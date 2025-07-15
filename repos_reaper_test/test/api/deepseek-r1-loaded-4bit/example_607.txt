@@ -1,0 +1,28 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at what's happening here. The conflict is in the Engagement class, which extends AbstractFacebookType. In the HEAD version, there's a line declaring a serialVersionUID, while the other branch (a17acec) removes it.
+
+First, I should recall what serialVersionUID is used for. In Java, when a class implements Serializable, the serialVersionUID is used during deserialization to verify compatibility. If it's not explicitly declared, the JVM generates one based on class details. If the class changes (like adding/removing fields), the generated UID changes, which can cause InvalidClassException.
+
+Now, looking at the code, the Engagement class is part of a library (since tag is 1.10.0). If the original code in HEAD had the serialVersionUID, removing it could cause issues if instances were serialized and then deserialized after the change. But maybe the other branch removed it because they think it's unnecessary or want the JVM to manage it.
+
+However, the conflict is only about the presence of serialVersionUID. Both sides have the same Javadoc comment for the like count method. The key is to determine if keeping or removing the serialVersionUID is correct.
+
+If the Engagement class is intended to be serializable, explicitly declaring serialVersionUID is good practice for versioning control. If the other branch removed it, maybe they didn't consider serialization needs. Alternatively, maybe the class doesn't need serialization, so the field is redundant.
+
+But without more context, it's safer to assume that the original declaration in HEAD was intentional. The other branch's removal might be an oversight. So the correct resolution would be to keep the serialVersionUID declaration. Therefore, the merge should accept the HEAD version and discard the conflicting change from the other branch.</think>
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class Engagement extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Number of people who like this.
+     * 
+     * @return Number of people who like this
+     */
+``` 
+
+The conflict is resolved by keeping the serialVersionUID field from HEAD since it's important for serialization compatibility in versioned classes. The removal in the other branch would be dangerous for persistent storage if this class is intended to be serialized. Both versions agree on the documentation structure, so we preserve the explicit version UID declaration.

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+I will return the original snippet with the conflict since the intent is ambiguous. Both versions (VERSION_2_2 and VERSION_2_5) appear to be attempting to use the Facebook API version, but without additional context about which version is required by the project or the specific feature being tested, I cannot definitively resolve this conflict.
+
+```java
+
+  @Test
+  public void postImageToPagePhotosWithMessage() {
+    byte[] imageAsBytes = fetchBytesFromImage();
+    DefaultFacebookClient client =
+<<<<<<< HEAD
+        new DefaultFacebookClient(getTestSettings().getPageAccessToken(), Version.VERSION_2_5);
+=======
+        new DefaultFacebookClient(getTestSettings().getPageAccessToken(), Version.VERSION_2_2);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    JsonObject obj = client.publish(getTestSettings().getPageId() + "/photos", JsonObject.class,
+      BinaryAttachment.with("test.png", imageAsBytes, "image/png"), Parameter.with("message", "TestImage"),
+      Parameter.with("no_story", "true"));
+    assertNotNull(obj);
+  }
+
+```

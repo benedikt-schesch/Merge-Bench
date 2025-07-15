@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see there's a difference in the `deserializeObject` method call. One version includes `rpcid` as a parameter, while the other doesn't. To resolve this properly, I'll need to understand which approach is correct semantically.
+
+Since I don't have enough context to determine which implementation is correct (whether `deserializeObject` should take the `rpcid` parameter or not), I'll provide the snippet with the conflict preserved:
+
+```java
+    if ((flags & HBaseRpc.RPC_ERROR) != 0) {
+      return deserializeException(buf, rpc);
+    }
+    try {
+<<<<<<< HEAD
+      return deserializeObject(buf, rpcid, rpc);
+=======
+      return deserializeObject(buf, rpc);
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    } catch (IllegalArgumentException e) {  // The RPC didn't look good to us.
+      return new InvalidResponseException(e.getMessage(), e);
+    }
+  }
+
+```

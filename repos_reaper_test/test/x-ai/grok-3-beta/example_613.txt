@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I'll analyze this merge conflict semantically. Based on the surrounding context, it appears that the code is part of a test checking properties of a `Comments` object associated with a rating. The conflict is about a line of code that checks if the user can comment.
+
+Looking at the intent:
+- On the `HEAD` side, there is a test assertion `assertTrue(comments.getCanComment());` which verifies that commenting is allowed.
+- On the other branch side (a17acec), this line is removed or missing, which might imply that the test for `canComment` was intentionally removed or not added.
+
+Since the surrounding context includes similar assertions for permissions like `canLike` on the `Likes` object, it seems logical that the intent on the `HEAD` side was to ensure a complete test coverage for permissions. The removal on the other side might be accidental or due to incomplete implementation. Given that, I'll resolve the conflict by keeping the assertion from `HEAD` to maintain consistency in testing permissions.
+
+Here is the resolved snippet with the full context preserved exactly as provided:
+
+```java
+
+    assertNotNull(exampleRating.getComments());
+    Comments comments = exampleRating.getComments();
+    assertEquals("chronological", comments.getOrder());
+    assertEquals(1L, comments.getTotalCount().longValue());
+    assertTrue(comments.getCanComment());
+
+    assertNotNull(exampleRating.getLikes());
+    Likes likes = exampleRating.getLikes();
+    assertEquals(0L, likes.getTotalCount().longValue());
+    assertTrue(likes.getCanLike());
+
+```

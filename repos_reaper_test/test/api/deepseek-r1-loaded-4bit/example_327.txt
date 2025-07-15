@@ -1,0 +1,28 @@
+<think>
+Okay, I need to resolve this merge conflict. Let me look at the code snippet carefully. The conflict is in the `refresh` method where the line assigning `mUsers` has two versions. The HEAD version has `(ArrayList<User>)users.clone();` and the other branch has `(ArrayList<User>) users.clone();`. The only difference is the space between the cast and the `users.clone()`. 
+
+Hmm, so one side added a space after the cast, and the other doesn't. This seems like a trivial formatting difference. Since both versions are essentially the same semantically—both are cloning the users list and casting it to ArrayList<User>—the intent is identical. The conflict arises from a minor code style variation.
+
+In Java, spacing around casts is a matter of style. Some coding standards might require a space after the closing parenthesis of a cast, while others might not. Since there's no functional difference here, the correct resolution is to pick one of the versions. However, since the user wants a semantic resolution, I should ensure that the code works as intended. Both versions do the same thing, so either is acceptable. 
+
+But since the user asked to resolve the conflict, I should remove the conflict markers and choose one of the versions. However, the problem statement says if the intent is ambiguous, return the same snippet with the conflict. In this case, the intent isn't ambiguous; it's just a formatting difference. So I can safely resolve it by picking either version. 
+
+But wait, the user might have a specific style preference. Since there's no way to know, maybe the best approach is to follow standard Java conventions. Typically, a space is included after the cast. For example, `(Type) variable` is more common than `(Type)variable`. So the version from the other branch (with the space) might be the correct one. 
+
+Therefore, I'll resolve the conflict by keeping the version with the space. That way, the code remains consistent with common Java style guides. The rest of the context remains unchanged, and the conflict markers are removed. The `notifyDataSetChanged();` line is the same in both branches, so no issues there. The surrounding methods `refresh()` and the return statement above are unaffected. 
+
+So the resolved code will have the line `mUsers = (ArrayList<User>) users.clone();` without any conflict markers. The rest of the code remains as provided. I need to make sure not to alter any other parts of the context, preserving spacing and structure. That should resolve the merge conflict correctly.</think>
+```java
+				});
+		return view;
+	}
+
+	public void refresh(ArrayList<User> users) {
+		mUsers = (ArrayList<User>) users.clone();
+		notifyDataSetChanged();
+	}
+
+	@Override
+	public void refresh() {
+
+```

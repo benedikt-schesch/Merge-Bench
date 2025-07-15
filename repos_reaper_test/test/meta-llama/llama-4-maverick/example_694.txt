@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the provided code snippet and understand the intent behind the changes made in both branches.
+
+The code snippet is written in Java and appears to be part of a larger method or class responsible for generating HTML attributes based on certain actions or conditions defined in an `ActionMapping` class or similar. The snippet is dealing with handling different cases related to "failure notifications" in a structured way.
+
+The conflict arises in the `switch` statement, specifically between the cases for "fire-event" and "inline-text-message". 
+
+1. The `HEAD` version (local changes) includes a case for "inline-text-message" where it retrieves a property named "failureNotificationsDelay" from `triggeredAction` and appends it as a data attribute (`data-structr-failure-notifications-delay`) to an output string (`out`).
+
+2. The version from `d72e83e2638205c5015a1f9cb06ac4df592921c5` (incoming changes) does not include this "inline-text-message" case; it directly breaks after handling the "fire-event" case.
+
+To resolve this conflict semantically, we need to understand whether the "inline-text-message" handling is necessary and if it conflicts with the intent of the changes brought in by the other branch.
+
+Given that there's no clear indication that the "inline-text-message" case is redundant or that it directly conflicts with the changes from the other branch, and assuming that both changes are intended to be part of the functionality, the resolution involves deciding whether to keep the "inline-text-message" case.
+
+Since there's no information suggesting that the "inline-text-message" case is incorrect or unnecessary, and it seems to serve a distinct purpose (handling a different type of action), the most straightforward resolution would be to include it in the final merged code.
+
+However, the conflict resolution should be done with the understanding that the surrounding code and the rest of the project context are not visible here. 
+
+Thus, here is the resolved snippet in markdown code syntax, preserving the original context and spacing:
+
+```java
+					out.append(" data-structr-failure-notifications-custom-dialog-element=\"").append(generateDataAttributesForIdList(renderContext, triggeredAction, ActionMapping.failureNotificationElements)).append("\"");
+					break;
+
+				case "fire-event":
+					out.append(" data-structr-failure-notifications-event=\"").append(triggeredAction.getProperty(ActionMapping.failureNotificationsEventProperty)).append("\"");
+					break;
+
+				case "inline-text-message":
+					final Integer delay = triggeredAction.getProperty(StructrApp.key(ActionMapping.class, "failureNotificationsDelay"));
+					out.append(" data-structr-failure-notifications-delay=\"").append(delay.toString()).append("\"");
+					break;
+
+				default:
+					break;
+```

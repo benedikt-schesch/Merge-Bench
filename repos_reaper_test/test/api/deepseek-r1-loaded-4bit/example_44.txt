@@ -1,0 +1,73 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the method signature of broadcastToPlayers. The HEAD version has the parameters split into two lines, with each parameter on its own line. The other branch, 5adedd2, has both parameters on the same line. 
+
+I need to figure out the intent here. Both versions are syntactically correct Java. The difference is just formatting—line breaks in parameters. Maybe one side preferred a longer line, while the other wanted to break it into multiple lines for readability or style guide compliance.
+
+Since the conflict is purely about formatting and not about the functionality, the resolution should maintain the correct method signature without affecting behavior. The semantic intent of both branches is the same: declare a method with two parameters. 
+
+The merged code should adopt one of the styles. But since the user wants to preserve the surrounding context as is, I should check if there's a consistent style in the surrounding code. If the rest of the code has parameters on the same line when possible, then the merged version should follow that. Alternatively, if other methods split parameters into multiple lines, then the HEAD version is better.
+
+But the user's instruction says to preserve the context if the intent is ambiguous. Since the conflict is purely stylistic and there's no functional difference, and without more context on the project's coding style, it's safe to choose either. However, in merge conflicts, sometimes the later commit (the one being merged in) might have the correct style. Alternatively, the HEAD version could be the current branch's change.
+
+Wait, the user says to think about the intent and semantics. Both sides are trying to declare the same method. The only difference is formatting. So, the correct resolution is to pick one, but since the user hasn't provided more context on the project's style, perhaps the best approach is to remove the conflict markers and choose the version that's more readable. 
+
+Alternatively, maybe the HEAD version splits the parameters for better readability, especially if the line length is long. The other version combines them into one line. Since Java allows both, and without further info, it's safe to choose the version without the line break, as it's more concise. Or maybe the project uses a line break when parameters exceed a certain length. 
+
+Looking at the parameters: the first is 'final MessageType type', the second is 'final HashMap<ReturnableData, Object> masterData'. The second parameter is longer. If the line length is an issue, splitting them into separate lines makes sense to avoid exceeding line length limits. But the merged version in the other branch has them on the same line. 
+
+But since the user's instruction is to resolve the conflict by considering the intent, and both are the same, perhaps the resolution is to take one of the versions. Since the user hasn't specified, maybe the correct approach is to keep the version from one of the branches. However, since the user wants the conflict resolved only if the intent is clear. If the intent is the same, then resolve by choosing either, but if unsure, leave the conflict. 
+
+But in this case, the conflict is purely stylistic, so the correct resolution is to pick one. Since the user is asking for a semantic merge, perhaps the answer is to remove the conflict markers and choose the version that's more standard. Alternatively, check if there's any other difference, but in this case, the only difference is the line break in the parameters. 
+
+In Java, it's common to either have all parameters on one line or split them if they're too long. Here, the second parameter is a HashMap with generics, which might make the line long. So splitting into two lines could be for line length reasons. But the other branch might have a different line length setting or style. 
+
+Since the user hasn't provided surrounding context beyond this snippet, but the method after the conflict is on the same line, perhaps the project prefers parameters on the same line when possible. But without knowing, it's ambiguous. 
+
+Wait, the user says if unsure, return the same snippet with the conflict. However, in this case, the conflict is purely formatting. So maybe the correct approach is to choose the version that's more readable or standard. 
+
+Alternatively, perhaps the correct resolution is to combine both, but that's not possible. So the answer would be to pick one of the versions. But how? 
+
+Since the user's instruction is to resolve the conflict by considering the semantics and intent. Both versions are semantically identical. Therefore, the conflict can be resolved by choosing either version. 
+
+In such cases, maybe the merged result would take the most recent change, but since we don't have that info, perhaps the resolver should pick the one that's more consistent with the rest of the code. But without the rest of the code, it's hard to tell. 
+
+Therefore, since the intent is the same and the conflict is purely formatting, the correct resolution is to pick either version. The user might prefer the version without the line break, as it's more concise. Or the version with the line break for readability. 
+
+But the user's instruction is to make sure not to modify the context and preserve spacing. Wait, the user says: "make sure you do not modify the context at all and preserve the spacing as is". Wait, no: the instruction says to return the entire snippet with the conflict resolved if possible, preserving the spacing. But the conflict is between two versions of the same line. So the correct approach is to choose one of the two versions, removing the conflict markers. 
+
+In the absence of further information, perhaps the resolver should choose the version that's more standard. In Java, it's common to have parameters on separate lines if the line is too long. The HEAD version splits them, while the other branch doesn't. If the line length is over the project's limit, HEAD is correct. Otherwise, the other branch. 
+
+But without knowing, it's ambiguous. Therefore, the conflict can be resolved by either. However, since the user is asking to resolve it, but if unsure, leave the conflict. 
+
+Wait, the user says: "If you are not sure on how to resolve the conflict or if the intent is ambiguous, please return the same snippet with the conflict." 
+
+In this case, the intent is not ambiguous; both versions are trying to declare the same method with the same parameters, just different formatting. Therefore, the intent is clear, and the conflict can be resolved by choosing either version. 
+
+But how to choose? Since the resolver is supposed to be an expert, perhaps they would choose the version that's more readable or follows standard Java conventions. 
+
+Alternatively, perhaps the resolver would take the version from the incoming branch (5adedd2) because it's more concise, but that's a guess. 
+
+Alternatively, in merge conflicts, sometimes the two changes are in different parts, but here it's the same line. The resolver should pick one. 
+
+Given that the user wants the context preserved and the conflict resolved, the correct approach is to pick one of the versions. 
+
+In practice, the resolver might choose the version without the line break (the 5adedd2 version) because it's more compact, but that's subjective. 
+
+Therefore, the resolved code would be:
+
+  public void broadcastToPlayers(final MessageType type, final HashMap<ReturnableData, Object> masterData) {
+
+removing the conflict markers.</think>
+```java
+   *
+   * @param type       Type of message to broadcast. This determines the order the messages are returned by
+   *                   priority.
+   * @param masterData Message data to broadcast.
+   */
+  public void broadcastToPlayers(final MessageType type, final HashMap<ReturnableData, Object> masterData) {
+    connectedUsers.broadcastToList(playersToUsers(), type, masterData);
+  }
+
+  /**
+   * Sends updated player information about a specific player to all players in the game.
+```

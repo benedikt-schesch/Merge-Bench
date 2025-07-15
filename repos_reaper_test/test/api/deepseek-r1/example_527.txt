@@ -1,0 +1,25 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the code snippet carefully. The conflict is around the comment for the SCENE_SET case. The HEAD version adds a comment saying that offset+1 is an incrementing number, while the other branch doesn't have that comment. 
+
+Wait, looking at the code after the conflict: the code extracts sceneId from offset + 3 and time from offset + 2. The HEAD comment is about offset+1 being an incrementing number. But in both versions, the code is using offset+3 and offset+2. The comment in HEAD refers to offset+1, which isn't used in the following lines. 
+
+So the comment might be explaining what's at offset+1, even though it's not used here. The other branch doesn't have that comment. Maybe the comment was added in one branch but not the other. Since the code itself isn't conflicting, just the presence of the comment, the intent is to keep the comment explaining offset+1.
+
+But wait, does the comment make sense here? If the code is using offset+3 and offset+2, then the comment about offset+1 might be relevant if that part of the payload is being handled elsewhere. The conflict is in the same switch case, so maybe the comment is correct but was added in one branch and not the other. 
+
+Since the code after the conflict is the same in both branches (both set sceneId from offset+3 and time from offset+2), the comment in HEAD is additional information. The merge should probably keep the comment because it's providing context about offset+1, even if it's not used in the subsequent lines. There's no semantic conflict here; it's just adding a comment. So the resolved code should include the comment from HEAD and the code from both branches, which are actually the same except for the comment.
+
+Therefore, the correct resolution is to keep the comment and the rest of the code as is.</think>
+```java
+    public void handleApplicationCommandRequest(SerialMessage serialMessage, int offset, int endpoint) {
+        logger.debug("NODE {}: Received central scene command (v{})", this.getNode().getNodeId(), this.getVersion());
+        int command = serialMessage.getMessagePayloadByte(offset);
+        switch (command) {
+            case SCENE_SET:
+                // offset+1 is an incrementing number
+                int sceneId = serialMessage.getMessagePayloadByte(offset + 3);
+                int time = serialMessage.getMessagePayloadByte(offset + 2);
+                if (time > 127) {
+                    // Values of 128 and above are in minutes (128 = 1 minute)
+                    time = (time - 127) * 60;
+```

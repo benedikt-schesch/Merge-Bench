@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this conflict, the only difference appears to be whitespace/indentation. The HEAD version has less indentation for the assignment operation while the 1cb2531c version has more indentation for better code alignment.
+
+Here's the resolved snippet:
+
+```java
+     * @throws IOException on failure
+     */
+    @SuppressWarnings("unchecked")
+    static void passLoadSignature(LoadFunc loadFunc, int inputIndex,
+            Configuration conf) throws IOException {
+        List<String> inpSignatureLists = 
+                (ArrayList<String>)ObjectSerializer.deserialize(
+                        conf.get("pig.inpSignatures"));
+        // signature can be null for intermediate jobs where it will not
+        // be required to be passed down
+        if(inpSignatureLists.get(inputIndex) != null) {
+            loadFunc.setUDFContextSignature(inpSignatureLists.get(inputIndex));
+            conf.set("pig.loader.signature", inpSignatureLists.get(inputIndex));
+```
+
+I chose the version with more indentation (from 1cb2531c) as it improves code readability with better alignment of the nested parentheses.

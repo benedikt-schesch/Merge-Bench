@@ -1,0 +1,79 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the intent of both sides of the merge.
+
+The given Java method `unmarshall` is used to convert a `DBObject` into an object of a specified class `T`. The method uses a `DocumentStreamFactory` to create a `DocumentStream` from the `DBObject`, suggesting that the `DBObject` is being treated as a document ( possibly JSON or a similar format) that needs to be deserialized.
+
+On the `HEAD` side, the code attempts to read the value from the `DocumentStream` using a `mapper`. It passes the data, offset, and size of the stream to the `readValue` method along with the target class `clazz`. This suggests that the `mapper` is likely an instance of a class that can deserialize data from a stream or byte array into a Java object.
+
+On the other side of the merge (`4dad4b6f9ffd42aaf0a81bf4fc4026ac51e656d0`), the code uses a `reader` to read the value from a variable named `json`, with the type specified by `clazz`. The fact that it uses `reader.withType(clazz).readValue(json)` implies that `json` is the content that needs to be deserialized, and `reader` is capable of deserializing it into the desired type.
+
+However, upon closer inspection, there are a couple of issues:
+1. The variable `json` is not defined anywhere in the provided snippet on the `4dad4b6f9ffd42aaf0a81bf4fc4026ac51e656d0` side.
+2. The `HEAD` side uses `stream.getData()`, `stream.getOffset()`, and `stream.getSize()` to read from the `DocumentStream`, while the other side seems to directly use a `json` variable.
+
+To resolve the conflict, we need to understand the intent behind both versions. The `HEAD` version is directly working with the `DocumentStream` derived from the `DBObject`, while the other version seems to be working with a `json` content that is supposed to be deserialized.
+
+Since `json` is not defined in the provided snippet for the `4dad4b6f9ffd42aaf0a81bf4fc4026ac51e656d0` side, and assuming it should be derived from the `document` or `stream`, we can't directly merge without knowing how `json` is generated. 
+
+However, if we consider that `json` might be derived from the `document` or `stream` and is intended to be deserialized into the target class, we still need a clear definition or derivation of `json` to make an informed decision.
+
+Let's examine a possible resolution by assuming that both sides are trying to achieve deserialization of the `DBObject` into the target class, but through slightly different means.
+
+```java
+public <T> T unmarshall(DBObject document, Class<T> clazz) throws MarshallingException {
+
+    DocumentStream stream = DocumentStreamFactory.fromDBObject(document);
+    try {
+        // Assuming 'mapper' is similar to 'reader' in functionality and 'stream' can be used to get 'json' or directly deserialize
+        // For the sake of resolution, let's consider using 'mapper' or a similar deserialization mechanism directly on 'stream'
+        return mapper.readValue(stream.getData(), stream.getOffset(), stream.getSize(), clazz);
+    } catch (IOException e) {
+        String message = String.format("Unable to unmarshall result to %s from content %s", clazz, document.toString());
+        throw new MarshallingException(message, e);
+    }
+}
+
+public DBObject marshall(Object obj) throws MarshallingException {
+```
+
+Or, if we were to use the `reader` and assuming `json` is derived from `document` or `stream`:
+
+```java
+public <T> T unmarshall(DBObject document, Class<T> clazz) throws MarshallingException {
+
+    DocumentStream stream = DocumentStreamFactory.fromDBObject(document);
+    String json = new String(stream.getData(), stream.getOffset(), stream.getSize());
+    try {
+        return reader.withType(clazz).readValue(json);
+    } catch (Exception e) {
+        String message = String.format("Unable to unmarshall from json: %s to %s", json, clazz);
+        throw new MarshallingException(message, e);
+    }
+}
+
+public DBObject marshall(Object obj) throws MarshallingException {
+```
+
+Given the information and the need to preserve the original context and spacing, the original snippet with conflict is:
+```java
+
+    public <T> T unmarshall(DBObject document, Class<T> clazz) throws MarshallingException {
+
+        DocumentStream stream = DocumentStreamFactory.fromDBObject(document);
+        try {
+<<<<<<< HEAD
+            return mapper.readValue(stream.getData(), stream.getOffset(), stream.getSize(), clazz);
+        } catch (IOException e) {
+            String message = String.format("Unable to unmarshall result to %s from content %s", clazz, document.toString());
+=======
+            return reader.withType(clazz).readValue(json);
+        } catch (Exception e) {
+            String message = String.format("Unable to unmarshall from json: %s to %s", json, clazz);
+>>>>>>> 4dad4b6f9ffd42aaf0a81bf4fc4026ac51e656d0
+            throw new MarshallingException(message, e);
+        }
+    }
+
+    public DBObject marshall(Object obj) throws MarshallingException {
+```

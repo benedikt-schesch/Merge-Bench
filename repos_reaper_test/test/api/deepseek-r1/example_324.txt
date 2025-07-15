@@ -1,0 +1,28 @@
+<think>
+Okay, let's take a look at this merge conflict. The code has two conflicting changes between the HEAD and the other branch. The HEAD version defines a static final array mResourceMap, while the other branch adds a method setToastResource that initializes mToastEnabled and mToastResourcesMap. Then there's a method maybeShowToast that uses mToastEnabled and mToastResourcesMap.
+
+Hmm, the conflict is in the same part of the code. The HEAD has a static array, and the other branch introduces a method to set a non-static array. The variable names are different: mResourceMap vs mToastResourcesMap. Wait, maybe these are supposed to be the same variable? Or perhaps they're separate. Let me check the usage.
+
+In the maybeShowToast method, it's using mToastResourcesMap. The HEAD version's mResourceMap isn't referenced there. So the setToastResource method from the other branch is setting mToastResourcesMap, which is used later. The HEAD's array is static and might not be related. So perhaps these are two separate changes that can coexist. The HEAD's array is declared as a static final, while the other branch adds a method to set an instance variable. 
+
+So the correct resolution would be to keep both the static array and the new method. Since the conflict markers are around the two different blocks, we can just place both in the code. The HEAD's mResourceMap is a static initializer, and the other branch's setToastResource is an instance method. They don't interfere with each other. Therefore, the conflict can be resolved by including both sections without any overlap. Let me check the code structure. The HEAD's code is a declaration of mResourceMap, and the other branch's code is a method. So in the merged code, the method should come after the variable declaration. Wait, but in the conflict, the HEAD's code is replacing the method. So the original code before the conflict probably had one of them, and the other was added. But since they're separate, they can both exist. So the correct merge is to have both the static array and the method. Therefore, the resolved code should include both the variable declaration and the method, in the order they appear in their respective branches. Since the HEAD's code is above the other branch's code in the conflict, but in reality, they might be separate, we can place the method after the variable. Wait, looking at the code context, after the startActivity, there's a closing brace, then the conflict. So the HEAD adds the mResourceMap array there, while the other branch adds the setToastResource method. So merging them would mean having both the array and the method declared in the class. Since they're separate members, they can coexist. Therefore, the conflict is resolved by keeping both, in the order they appear. The HEAD's array comes first, then the method from the other branch. Then the maybeShowToast method uses the mToastResourcesMap, which is set by the method. So the static array from HEAD might not be used anymore, but perhaps it's a default. Or maybe there's a mistake in variable names. Wait, the HEAD's array is mResourceMap, and the other branch's is mToastResourcesMap. Are these supposed to be the same variable? If the intention was to replace the static array with a settable one, then the other branch's code would be replacing the HEAD's. But the variable names are different. That could be a problem. Maybe the other branch renamed the variable. Alternatively, maybe the HEAD's array is unused now. But without more context, it's hard to tell. However, the maybeShowToast uses mToastResourcesMap, which is set by the method from the other branch. The HEAD's mResourceMap isn't referenced. So perhaps the correct resolution is to keep both, but maybe the variable name in the HEAD is a typo. Alternatively, maybe the other branch's code is adding a way to set the resources dynamically, while the HEAD has a static array. If they are meant to be separate, then both can exist. But if the other branch's code is intended to replace the static array, then the conflict needs to be resolved by using the method and removing the static array. However, since the variable names are different, perhaps they're separate. Therefore, the correct resolution is to include both the static array and the method. So the merged code should have the mResourceMap declaration and the setToastResource method. Therefore, the conflict markers are removed, and both sections are kept in order.</think>
+```java
+        intent.setClass(mActivity, cls);
+        mActivity.startActivity(intent);
+
+    }
+
+    private static final int[] mResourceMap = new int[] {
+            R.drawable.point_right, R.drawable.point_center,
+            R.drawable.point_left };
+
+    public void setToastResource(int[] resourceIds) {
+        mToastEnabled = true;
+        mToastResourcesMap = resourceIds;
+    }
+
+    private void maybeShowToast(int whichActicity) {
+        if (mToastEnabled && whichActicity < mToastResourcesMap.length) {
+            final Toast myToast = new Toast(mActivity);
+            final ImageView myView = new ImageView(mActivity);
+```

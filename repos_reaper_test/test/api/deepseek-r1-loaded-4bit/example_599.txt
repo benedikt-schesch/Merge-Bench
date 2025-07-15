@@ -1,0 +1,27 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. So, looking at the code snippet, there's a conflict between the HEAD and the other branch (a17acec). The conflict is about the `serialVersionUID` field in the `PageRestaurantSpecialties` class.
+
+In the HEAD version, the class has a `private static final long serialVersionUID = 1L;` line, and then the other branch (a17acec) doesn't have that line. So, one side added the serialVersionUID, and the other side didn't. 
+
+I need to determine if keeping the serialVersionUID is necessary. In Java, when you implement Serializable, it's recommended to include a serialVersionUID to maintain version compatibility. If the class is intended to be serializable, then having the serialVersionUID is important. If the other branch removed it, maybe they thought it wasn't needed, but perhaps it was added for a reason in HEAD.
+
+Looking at the surrounding context, the class extends `AbstractFacebookType`. I should check if that parent class already defines a serialVersionUID. If it does, then maybe the child class doesn't need it. But if the parent doesn't, then the child should have it if they're serializable.
+
+But without knowing the parent class's code, I have to make an assumption. If the class is serializable, then including the serialVersionUID is a good practice. The HEAD branch added it, so maybe that was a fix. The other branch might have been developed without that line, perhaps before the serialVersionUID was added.
+
+The conflict is between adding the serialVersionUID and not having it. The semantic intent here is whether the class needs that field. Since the HEAD version includes it, and the other branch doesn't, the resolution would be to keep the serialVersionUID unless it's redundant. But without more info, it's safer to keep it because removing it could cause serialization issues.
+
+Therefore, the correct resolution is to keep the line from HEAD, so the merged code should include the `serialVersionUID` declaration.</think>
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class PageRestaurantSpecialties extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook
+    private Boolean breakfast;
+```

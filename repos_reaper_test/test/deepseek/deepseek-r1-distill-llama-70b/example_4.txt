@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to be around how the Gson instance is being initialized. One side (HEAD) uses a conditional to determine which Gson instance to use based on the protocol version, while the other side simply uses BungeeCord.getInstance().gson directly.
+
+The intent appears to be to send a JSON response back to the client, and both sides are trying to accomplish this using Gson. The difference is whether we need to handle different versions of the protocol with different Gson instances.
+
+Since we don't have enough context to know whether the conditional logic is still necessary or if the Gson handling has been unified, I will preserve the conflict:
+
+```java
+                Callback<ProxyPingEvent> callback = new Callback<ProxyPingEvent>()
+                {
+                    @Override
+                    public void done(ProxyPingEvent pingResult, Throwable error)
+                    {
+<<<<<<< HEAD
+                        BungeeCord.getInstance().getConnectionThrottle().unthrottle( getAddress().getAddress() );
+                        Gson gson = handshake.getProtocolVersion() == ProtocolConstants.MINECRAFT_1_7_2 ? BungeeCord.getInstance().gsonLegacy : BungeeCord.getInstance().gson;
+=======
+                        Gson gson = BungeeCord.getInstance().gson;
+>>>>>>> 80b3135a93f0e23489cc19086e31feb12ff51798
+                        unsafe.sendPacket( new StatusResponse( gson.toJson( pingResult.getResponse() ) ) );
+                    }
+                };
+
+                bungee.getPluginManager().callEvent( new ProxyPingEvent( InitialHandler.this, result, callback ) );
+```

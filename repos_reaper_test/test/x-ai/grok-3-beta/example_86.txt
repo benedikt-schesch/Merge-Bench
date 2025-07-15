@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in the provided code snippet and resolve it based on the intent and semantics of both sides.
+
+**Analysis of Intent:**
+- The `HEAD` version of the code includes parameters for `newMaxBlanks` and `newUseTimer`, along with `newCardSets` and `newPassword`. This suggests the intent is to update game settings with additional configurations such as blank card limits and timer settings.
+- The `4584f06e` version introduces `newMaxSpectators` while removing `newMaxBlanks`. It retains `newUseTimer`, `newCardSets`, and `newPassword`. The intent here seems to be focusing on spectator limits and possibly simplifying some settings.
+- Both sides aim to update game settings, but they prioritize different parameters. Since `newMaxSpectators` is assigned in the subsequent code (outside the conflict area) and appears in the alternate branch, it must be included. Meanwhile, `newMaxBlanks` and other parameters can be evaluated for inclusion based on their relevance to the broader intent of configurable game settings.
+
+**Resolution Strategy:**
+- Combine the parameters from both sides to preserve as much functionality as possible, ensuring that no intended feature is lost.
+- Include `newMaxSpectators` from the alternate branch since it's used in the code below.
+- Retain `newMaxBlanks` from `HEAD` as it appears to be a relevant setting that shouldn't be discarded without explicit intent to remove.
+- Maintain the order and structure of parameters for clarity.
+
+Here is the code snippet with the resolved conflict:
+
+```java
+  public String getPassword() {
+    return password;
+  }
+
+  public void updateGameSettings(final int newScoreGoal, final int newMaxPlayers,
+      final int newMaxSpectators,
+      final Set<CardSet> newCardSets, final int newMaxBlanks, final String newPassword,
+      final boolean newUseTimer) {
+    this.scoreGoal = newScoreGoal;
+    this.maxPlayers = newMaxPlayers;
+    this.maxSpectators = newMaxSpectators;
+    synchronized (this.cardSets) {
+      this.cardSets.clear();
+```

@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+Below is the provided code snippet with the merge conflict, preserved exactly as given, including all context and spacing. Following the snippet, I will explain my analysis of the merge conflict and provide a resolution based on the semantic intent of both sides.
+
+```java
+ * limitations under the License.
+ */
+
+package net.openhft.chronicle.map.impl.stage.query;
+
+<<<<<<< HEAD
+=======
+import net.openhft.chronicle.core.io.AbstractCloseable;
+import net.openhft.chronicle.core.io.Closeable;
+>>>>>>> b471a97a0d79b8743a4aea305aa001474127e1b1
+import net.openhft.chronicle.hash.impl.stage.hash.CheckOnEachPublicOperation;
+import net.openhft.chronicle.map.MapClosable;
+import net.openhft.chronicle.map.impl.stage.ret.UsingReturnValue;
+import net.openhft.sg.StageRef;
+import net.openhft.sg.Staged;
+```
+
+### Analysis of Merge Conflict
+- **HEAD (Left Side):** The `HEAD` version has no additional imports in the conflicted section. This suggests that the codebase at this point did not require or include the `AbstractCloseable` and `Closeable` classes from the `net.openhft.chronicle.core.io` package.
+- **Incoming Change (Right Side - commit `b471a97a0d79b8743a4aea305aa001474127e1b1`):** The incoming change adds two imports: `net.openhft.chronicle.core.io.AbstractCloseable` and `net.openhft.chronicle.core.io.Closeable`. This indicates that the code in this branch likely depends on these classes for functionality, possibly related to resource management or closing operations, given the names of the classes and the context of the package (`net.openhft.chronicle.map.impl.stage.query`).
+
+### Semantic Intent
+- **HEAD Intent:** Maintain the existing set of imports, which does not include `AbstractCloseable` or `Closeable`. This might imply that the current codebase does not yet require these classes or that they are not relevant in this context.
+- **Incoming Intent:** Introduce necessary dependencies for functionality related to closing resources or handling closeable objects, as evidenced by the addition of `AbstractCloseable` and `Closeable`. Given the package and class names in the surrounding context (e.g., `MapClosable`), it is likely that these imports are required for compatibility with interfaces or base classes related to resource management in the Chronicle Map library.
+
+### Resolution Rationale
+Since the incoming change adds imports that are likely needed for functionality (related to resource management in a map query context) and the `HEAD` side does not explicitly remove or conflict with these imports, the safest and most semantically correct resolution is to accept the incoming changes. Adding imports does not break existing code, and their presence suggests a deliberate intent to use these classes. If these imports turn out to be unused, modern IDEs or build tools can flag or remove them later.
+
+### Resolved Code Snippet
+Below is the resolved version of the code snippet, incorporating the incoming changes from the right side (`b471a97a0d79b8743a4aea305aa001474127e1b1`):
+
+```java
+ * limitations under the License.
+ */
+
+package net.openhft.chronicle.map.impl.stage.query;
+
+import net.openhft.chronicle.core.io.AbstractCloseable;
+import net.openhft.chronicle.core.io.Closeable;
+import net.openhft.chronicle.hash.impl.stage.hash.CheckOnEachPublicOperation;
+import net.openhft.chronicle.map.MapClosable;
+import net.openhft.chronicle.map.impl.stage.ret.UsingReturnValue;
+import net.openhft.sg.StageRef;
+import net.openhft.sg.Staged;
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict is resolved by using `context.getFs()` since it's the appropriate method to retrieve the filesystem, aligning with the `DataStorage` parameter.
+
+```java
+        }
+    }
+
+    public static boolean fileExists(String filename, PigContext context)
+            throws IOException {
+        return fileExists(filename, context.getFs());
+    }
+
+    public static boolean fileExists(String filename, DataStorage store)
+            throws IOException {
+        ElementDescriptor elem = store.asElement(filename);
+```

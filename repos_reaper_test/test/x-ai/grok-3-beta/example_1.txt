@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+Below is the snippet with the merge conflict preserved as provided, followed by my analysis and resolution of the conflict based on the intent and semantics of both sides.
+
+```java
+
+                data.put( "hostname", listener.getMotd() );
+                data.put( "gametype", "SMP" );
+                // Start Extra Info
+                data.put( "game_id", "MINECRAFT" );
+<<<<<<< HEAD
+                data.put( "version", bungee.getConfig().getCustomServerName() + " " + bungee.getGameVersion() );
+=======
+                data.put( "version", "BungeeCord " + bungee.getGameVersion() );
+>>>>>>> 28bb88fc98a694b34aa16ca4372362235fc7cf48
+                data.put( "plugins", "" );
+                // End Extra Info
+                data.put( "map", "BungeeCord_Proxy" );
+                data.put( "numplayers", Integer.toString( bungee.getOnlineCount() ) );
+                data.put( "maxplayers", Integer.toString( listener.getMaxPlayers() ) );
+
+```
+
+### Analysis and Resolution
+
+**Intent of Both Sides:**
+- **HEAD (Left Side):** The code on this side uses `bungee.getConfig().getCustomServerName() + " " + bungee.getGameVersion()` for the "version" field. The intent appears to be allowing a customizable server name (via a configuration) to be displayed alongside the game version. This suggests a focus on branding or personalization of the server identity in the version string.
+- **Commit 28bb88fc98a (Right Side):** The code on this side uses `"BungeeCord " + bungee.getGameVersion()` for the "version" field. The intent here is to explicitly identify the server as "BungeeCord" (a popular Minecraft proxy software) along with the game version, emphasizing the software being used.
+
+**Semantic Conflict:**
+The conflict arises in how the version string is formatted and what it represents. One side prioritizes customization (potentially for branding or specific server identity), while the other prioritizes a standardized identifier for BungeeCord.
+
+**Resolution Strategy:**
+Given that both intents are valid but serve slightly different purposes, the most semantic resolution would be to prioritize customization if available, while falling back to a default identifier like "BungeeCord" if no custom name is provided. This can be achieved by introducing a conditional check to use the custom server name if it exists and is non-empty, otherwise defaulting to "BungeeCord". This approach merges the intents of both sides: it allows for personalization while ensuring a meaningful default.
+
+**Resolved Code:**
+```java
+                data.put( "hostname", listener.getMotd() );
+                data.put( "gametype", "SMP" );
+                // Start Extra Info
+                data.put( "game_id", "MINECRAFT" );
+                String customName = bungee.getConfig().getCustomServerName();
+                String versionPrefix = (customName != null && !customName.isEmpty()) ? customName : "BungeeCord";
+                data.put( "version", versionPrefix + " " + bungee.getGameVersion() );
+                data.put( "plugins", "" );
+                // End Extra Info
+                data.put( "map", "BungeeCord_Proxy" );
+                data.put( "numplayers", Integer.toString( bungee.getOnlineCount() ) );
+                data.put( "maxplayers", Integer.toString( listener.getMaxPlayers() ) );
+```
+
+**Rationale:**
+- This resolution preserves the intent of HEAD by using a custom server name if configured, allowing for personalized branding.
+- It also respects the intent of the right side by falling back to "BungeeCord" if no custom name is set, ensuring the software identity is clear.
+- The solution avoids hardcoding either value exclusively and provides a flexible, semantic merge of both intents.

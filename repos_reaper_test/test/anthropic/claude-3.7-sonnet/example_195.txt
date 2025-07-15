@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see the issue is around the declaration of variables `className` and `funcSpec`. One side declares `className` and initializes `funcSpec` to null, while the other side declares both variables separately and explicitly sets both to null. Also, there's a difference in the type of `funcSpec` - one side treats it as a `String`, the other as a `FuncSpec`.
+
+Given the context, and seeing that `funcSpec` is later used and retrieved from `definedFunctions.get(alias)`, it seems more likely that `FuncSpec` is the correct type rather than `String`. I'll resolve the conflict accordingly:
+
+```java
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+    
+    
+    public Class getClassForAlias(String alias) throws IOException{
+        String className = null;
+        FuncSpec funcSpec = null;
+        if (definedFunctions != null) {
+            funcSpec = definedFunctions.get(alias);
+        }
+        if (funcSpec != null) {
+<<<<<<< HEAD
+```

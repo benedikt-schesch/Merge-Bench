@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Here's how I analyzed the merge conflict and resolved it:
+
+1. **Identified the intent**: Both sides aim to handle the Bluetooth adapter turning off by managing the GATT server.
+
+2. **Resolving the conflict**:
+   - The left side includes an additional line `isAdvertising = false` which was missing on the right side.
+   - The right side already has `gattServer.close()`.
+   
+3. **Consolidated the actions** in a single block to maintain both functionalities without duplication.
+
+**Resolved Code:**
+
+```java
+            if (initPeripheralCallback != null) initPeripheralCallback.sendPluginResult(pluginResult);
+
+            break;
+          case BluetoothAdapter.STATE_TURNING_OFF:
+            if (isAdvertising) {
+                isAdvertising = false;
+            }
+
+            if (gattServer != null) {
+                gattServer.close();
+            }
+            break;
+          case BluetoothAdapter.STATE_ON:
+
+            addProperty(returnObj, keyStatus, statusEnabled);
+```

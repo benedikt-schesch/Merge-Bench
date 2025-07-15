@@ -1,0 +1,151 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java code snippet related to camera orientation. The HEAD version has a line that calculates orientation as (orientation + 45) / 90 * 90, while the other branch (c923751...) has that line commented out and a different calculation. 
+
+First, I need to understand what both changes are trying to achieve. The original line in HEAD seems to be adjusting the orientation by adding 45, then doing integer division by 90 and multiplying back by 90. This effectively rounds the orientation to the nearest 90 degrees, but with a 45-degree offset to handle cases where the orientation is halfway between two multiples of 90. For example, if orientation is 45, adding 45 makes it 90, which then becomes 90. If it's 40, adding 45 gives 85, divided by 90 is 0, multiplied by 90 is 0, which might not be intended. Wait, maybe the purpose is to snap the orientation to the nearest 90 degrees, but the formula might not be correct.
+
+The other branch comments out that line and instead uses (360 - orientation + 45) / 90 * 90. But that line is commented out. Wait, no—the conflict shows that in the HEAD version, the line is active, and in the other branch, the same line is commented and replaced with a different calculation. Wait, no: the HEAD has the line orientation = (orientation + 45) / 90 * 90; and the other branch has that line commented, replacing it with //orientation = (360 - orientation + 45) / 90 * 90;. But actually, looking at the code, the conflict is between the two versions of the line. The HEAD version is using (orientation +45)..., and the other branch is using (360 - orientation +45)..., but commented out. Wait, no—the code in the conflict is:
+
+<<<<<<< HEAD
+        orientation = (orientation + 45) / 90 * 90;
+=======
+        //orientation = (360 - orientation + 45) / 90 * 90;
+>>>>>>> c923751...
+
+So, in the HEAD, the line is active, while in the other branch, it's commented and replaced with a different formula. But the other branch's line is commented out. That's confusing. Maybe the intention was to adjust the orientation calculation but then comment it out for some reason. Alternatively, perhaps the other branch was testing a different formula but decided to comment it out and leave it as a note.
+
+But the surrounding code after the conflict is about calculating the rotation based on front or back camera. Let me think about the purpose of the orientation adjustment. The comment says "Rotate the pictures accordingly (display is kept at 90 degrees)". So the orientation is being adjusted to account for the device's rotation relative to the camera's sensor.
+
+In camera programming, the orientation often needs to be adjusted based on the device's rotation and the camera's facing (front or back). The standard approach is to calculate the rotation based on the device's orientation and the camera's info.orientation.
+
+The line in conflict is modifying the 'orientation' variable before it's used in the rotation calculation. The HEAD version adds 45, divides by 90, multiplies by 90—this effectively rounds to the nearest 90 degrees. For example, if the orientation is 40, adding 45 gives 85, divided by 90 is 0 (integer division), multiplied by 90 is 0. If it's 50, 50+45=95, 95/90=1, so 90. That rounds to the nearest 90, but with a threshold at 45. So 44 would round down, 45 rounds up. But maybe the correct approach is to use the standard method for snapping to the nearest multiple, but perhaps the original code had a reason for this.
+
+The other branch's code is (360 - orientation +45)/90*90, which is equivalent to ( -orientation + 405 ) /90*90. That would invert the orientation (since 360 - orientation is like flipping it) and then add 45. But why would they do that? Maybe this was an attempt to correct for a mirroring effect on front-facing cameras. But since the code is commented out, perhaps the developer was experimenting but didn't finalize it.
+
+Alternatively, maybe the commented line was a mistake, and the correct approach is to use the HEAD version. However, the comment in the other branch's code suggests that maybe they tried a different formula but decided to comment it out, perhaps reverting to a previous version or another approach.
+
+Wait, looking at the code after the conflict, there's a calculation for rotation based on front or back camera. For front-facing, it's (info.orientation - orientation + 360) % 360; for back-facing, it's (info.orientation + orientation) % 360. 
+
+The orientation variable here is likely the device's orientation, and info.orientation is the camera's natural orientation. The standard formula for the rotation is that for front-facing cameras, the rotation is (info.orientation - degrees) % 360, and for back-facing, it's (info.orientation + degrees) % 360. But perhaps the degrees here is the device's rotation, which needs to be adjusted based on the display's orientation.
+
+But the conflict is about adjusting the orientation variable before using it in these calculations. The HEAD version rounds it to the nearest 90 degrees, while the other branch tried a different approach but commented it out.
+
+Wait, but in the other branch's version, the line is commented out. So perhaps the correct resolution is to keep the HEAD's line, as the other branch was experimenting but didn't finalize the change. Alternatively, maybe the other branch intended to remove that line, hence commenting it out, but that's conflicting with the HEAD's active line.
+
+Alternatively, maybe the line should be removed entirely. But why would the other branch comment it out? Maybe they found that adjusting the orientation in that way was incorrect, so they commented it out to disable it. But the HEAD version has it active. So the conflict is between keeping the line active (HEAD) versus commenting it out and replacing it with another formula (other branch). However, the other branch's line is commented, which could mean they intended to remove the adjustment, but perhaps they were testing and left it commented.
+
+But the comment in the other branch's code is //orientation = ..., which suggests they are disabling that line. So the conflict is between having the line active in HEAD and commented out in the other branch. To resolve this, we need to determine whether the line should be active or not.
+
+Looking at the surrounding code, after the conflict, the rotation is calculated based on the orientation. If the orientation is adjusted to the nearest 90 degrees, that might be necessary for some reason. But maybe the adjustment is incorrect and the other branch realized that, hence commenting it out. Alternatively, maybe the adjustment is needed in HEAD but not in the other branch.
+
+Alternatively, perhaps the correct approach is to not adjust the orientation here, hence the other branch's comment, but the HEAD has it active. To resolve, we need to decide which change is correct.
+
+Alternatively, maybe the adjustment is necessary, but the formula in HEAD is incorrect, and the other branch tried a different formula but didn't finalize it. For example, the HEAD formula rounds to the nearest 90, but perhaps the orientation should be inverted for front-facing cameras. The other branch's formula uses 360 - orientation, which would invert it, but then adds 45. However, that line is commented out, so it's unclear.
+
+Alternatively, maybe both changes are trying to achieve the same thing but in different ways. For example, the HEAD's line is active, and the other branch commented it out and tried a different approach but didn't finish. Since the other branch's line is commented, maybe the correct resolution is to keep the HEAD's line, but perhaps there's a mistake.
+
+But without more context, it's hard to be certain. However, the user asked to resolve the conflict based on intent and semantics. If both sides are trying to adjust the orientation, but in different ways, and one is commented, perhaps the correct resolution is to keep the active line from HEAD, as the other branch's change was incomplete or experimental.
+
+Alternatively, maybe the line should be removed entirely. But the other branch's code comments it out, which suggests that they wanted to disable it. So the conflict is between keeping the line active (HEAD) versus disabling it (other branch). So which is correct?
+
+If the line in HEAD is necessary, but the other branch found it problematic and commented it out, then perhaps the correct resolution is to remove the line. But why would the other branch comment it out? Maybe they realized that adjusting the orientation here is incorrect, so the line should not be there. But without knowing the broader context, it's challenging.
+
+Alternatively, perhaps the line was added in HEAD but was found to be incorrect in the other branch. The conflicting change is between adding that line and commenting it out. The resolution would be to either keep it or remove it. 
+
+Another approach is to look at the code after the conflict. The rotation calculation uses the orientation variable. If the orientation is adjusted in the line in conflict, that affects the rotation. For example, if the device's orientation is 45 degrees, adding 45 makes it 90, which is then used in the rotation calculation. Without that adjustment, the orientation would be 45. Depending on the camera facing, the rotation would be computed differently.
+
+But perhaps the adjustment is necessary to round the orientation to the nearest 90 degrees, as the display is kept at 90 degrees (as per the comment). So the device's orientation might be in any degree, but the code needs to snap it to the nearest 90 to match the display's orientation. 
+
+In that case, the line in HEAD is correct. The other branch's version tried a different formula (360 - orientation + 45) but commented it out, which might mean that they were testing a different approach but didn't finalize it. Therefore, the correct resolution is to keep the HEAD's line and discard the other branch's commented line.
+
+Alternatively, perhaps the other branch's line is a correction. Let's compute the difference. Suppose orientation is 270. HEAD's formula: (270 +45)/90 *90 = 315/90=3.5, integer division gives 3, *90=270. The other branch's formula: (360 -270 +45)/90 *90 = (135)/90=1.5 → 1*90=90. So the other branch's formula would adjust 270 to 90, while HEAD's keeps it at 270. Which is correct?
+
+But without knowing the exact purpose of this adjustment, it's hard to tell. The comment says "Rotate the pictures accordingly (display is kept at 90 degrees)". So maybe the display is rotated 90 degrees, so the image needs to be adjusted to match. The formula in HEAD rounds the orientation to the nearest 90, but perhaps the other branch's formula was trying to invert the orientation (360 - orientation) for front-facing cameras, then add 45. But since it's commented, it's unclear.
+
+Alternatively, maybe the line should not be there at all. For example, perhaps the orientation should not be adjusted here, and the other branch commented it out to remove it, while HEAD added it. In that case, resolving the conflict would require deciding whether to keep the line or not.
+
+But given that the other branch's code has the line commented out, and the HEAD has it active, the conflict is between active and commented. If the other branch's intention was to remove the line, then the resolution is to remove it. However, if the other branch was just experimenting, then keeping the HEAD's line is better.
+
+But since the user said to think in terms of intent and semantics, maybe both changes are trying to adjust the orientation but in different ways. The HEAD's line is active, the other branch's is commented. Since the other branch's line is commented, perhaps they intended to disable it. Therefore, the correct resolution is to remove the line, i.e., take the other branch's version, which comments it out, but the HEAD's version has it active. So the conflict is between keeping the line active (HEAD) or commented (other branch).
+
+But why would the other branch comment it out? Maybe they found that the line was causing issues and decided to disable it. If that's the case, then resolving the conflict would involve keeping the line commented out, thus removing the adjustment. However, the other branch's line is not just commenting out but replacing the formula. Wait, no: the other branch's line is the same line but commented and with a different formula. So the conflict is:
+
+HEAD: orientation = (orientation +45)/90*90;
+
+Other branch: //orientation = (360 - orientation +45)/90*90;
+
+So the conflict is between these two lines. The resolution would need to choose one or the other, or perhaps a combination.
+
+But since the other branch's line is a comment, perhaps they intended to remove the adjustment. Therefore, the correct resolution is to remove the line entirely. But that's not possible here, since the conflict is between two different lines. Alternatively, maybe the line should be kept as in HEAD, but the other branch's change is to comment it out. So the resolution would be to take HEAD's version, keeping the line active, or take the other branch's version, commenting it out.
+
+But without knowing which is correct, it's ambiguous. The user says if unsure, leave the conflict. However, the assistant is supposed to resolve it if possible.
+
+Another angle: the line in HEAD may be causing a bug, and the other branch's comment is a fix. Or vice versa.
+
+Alternatively, perhaps the correct approach is to adjust the orientation based on the camera facing. For example, front-facing cameras might need a different adjustment. But the code after the conflict does handle front and back cameras differently. The rotation calculation uses the (possibly adjusted) orientation. 
+
+If the orientation adjustment is intended to snap the device's orientation to the nearest 90 degrees, then the line in HEAD is correct. But if the other branch's formula is better for some reason, but they commented it out for testing, then maybe we should keep the HEAD's line.
+
+Alternatively, perhaps the line should not be there at all. For example, the orientation should not be adjusted in this way. The other branch's commented line suggests that maybe they realized that this adjustment is unnecessary or incorrect. But without more context, it's hard to say.
+
+In the absence of clear intent, the safest resolution is to keep the line from HEAD, as it's active, and the other branch's change is a commented-out line which may not be intended for merging. However, another possibility is that the other branch intended to comment out the line, thus removing the adjustment, and the correct resolution is to comment it out.
+
+But the conflict is between the two lines. So how to resolve this? If the other branch's change is to comment out the line and replace it with a different formula (but commented), perhaps the intended resolution is to remove the line entirely. However, that's not what either side has. Alternatively, perhaps the correct code doesn't need this line, so the other branch's version is correct.
+
+Another approach: look at the calculation for rotation. For front-facing, it's (info.orientation - orientation + 360) % 360. For back-facing, it's (info.orientation + orientation) % 360. If the orientation is adjusted to the nearest 90 degrees, that would affect the rotation. But perhaps this adjustment is necessary to align with the display's 90-degree orientation.
+
+But if the display is kept at 90 degrees, then the device's orientation should be adjusted to match. For example, if the device is rotated 45 degrees, the display is still at 90, so the camera preview needs to be adjusted. The formula in HEAD snaps the orientation to the nearest 90 degrees, which could be correct.
+
+Alternatively, the other branch's formula (360 - orientation +45) /90*90 could be trying to invert the orientation (for front-facing cameras?), but since it's commented out, it's unclear.
+
+Given the ambiguity, but assuming that the HEAD's line is part of a correct implementation and the other branch's commented line is an incomplete change, the resolution would be to keep the HEAD's line. However, if the other branch's intention was to remove this adjustment, then the line should be commented out or removed.
+
+But since the other branch's line is commented, perhaps they intended to disable it. Therefore, the conflict resolution would be to accept the other branch's change, commenting out the line. However, the user's instruction says to think about the intent and semantics. If both changes are trying to adjust the orientation but in different ways, but the other branch's line is commented, it's possible that they intended to remove the adjustment. Therefore, the correct resolution is to comment out the line as per the other branch.
+
+But why would the other branch comment it out? Maybe they found that adjusting the orientation here is incorrect. So the correct code would not have this line. Therefore, resolving the conflict by taking the other branch's version (commenting out the line) would be correct.
+
+However, the other branch's line is not just commenting out but also changing the formula. But since it's commented, it's effectively removing the active line. Therefore, the conflict is between keeping the line active (HEAD) or commented (other branch).
+
+If the correct code should have this line, then keep HEAD's version. If not, take the other branch's.
+
+But without knowing the correct logic, it's hard to decide. But perhaps the line in HEAD is necessary to round the orientation to the nearest 90 degrees, which is required for the rotation calculation. Therefore, keeping the line active.
+
+Alternatively, maybe the line is redundant because the rotation calculation already handles the orientation correctly without needing to snap it to 90 degrees.
+
+This is a tough call. Given the ambiguity, but following the user's instruction to resolve if possible, perhaps the best approach is to keep the line from HEAD, as it's active and the other branch's change is commented, possibly indicating an incomplete change. Alternatively, if the other branch's intention was to remove the line, then commenting it out is correct.
+
+But given that the line in HEAD is active and the other branch's is commented, the conflict is between two active changes. Therefore, the resolution would be to keep the HEAD's line and discard the other branch's commented line. But that's not possible, as the conflict is between two different lines.
+
+Alternatively, perhaps the line should be adjusted to combine both intents. But how?
+
+Wait, the other branch's line is commented out. So in their version, the line is a comment. The HEAD's version has it active. So the conflict is between having the line active or commented. To resolve, we need to choose which is correct.
+
+If the line should be active, keep HEAD. If it should be commented, take the other branch.
+
+But how to determine which is correct. Let's think about the calculation. The code is adjusting the orientation before using it in the rotation calculation. The rotation calculation for front-facing is (info.orientation - orientation + 360) % 360. If the orientation is not adjusted, then for example, if the device is rotated 45 degrees, the calculation would use 45. But if it's adjusted to 90, the calculation uses 90. Which is correct?
+
+Assuming that the display is kept at 90 degrees, the image needs to be rotated in 90-degree increments. Therefore, the orientation should be snapped to the nearest 90 degrees. Hence, the line in HEAD is correct. Therefore, the resolution is to keep the HEAD's line.
+
+However, the other branch's line is commented out. If they intended to remove this adjustment, then maybe the line should be removed. But why would they comment it out instead of deleting it? Perhaps they were testing and wanted to keep the code for reference.
+
+In that case, the correct resolution is to keep the line active as in HEAD, since the other branch's change is not a definitive removal but a commented-out line.
+
+Alternatively, maybe the other branch's comment indicates that the line is incorrect and should be removed. Therefore, the resolution is to remove the line, i.e., take the other branch's version.
+
+But without more context, it's hard to know. Given the user's instruction to resolve if possible, and considering that the line in HEAD may be necessary for correct orientation snapping, I think the best approach is to keep the line from HEAD. Therefore, the resolved code would have the active line:
+
+orientation = (orientation + 45) / 90 * 90;
+
+And discard the other branch's commented line. Therefore, the conflict is resolved by choosing HEAD's version.</think>
+```java
+
+        // Rotate the pictures accordingly (display is kept at 90 degrees)
+        Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        Camera.getCameraInfo(mCurrentFacing, info);
+        orientation = (orientation + 45) / 90 * 90;
+        int rotation = 0;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            rotation = (info.orientation - orientation + 360) % 360;
+        } else {  // back-facing camera
+            rotation = (info.orientation + orientation) % 360;
+```

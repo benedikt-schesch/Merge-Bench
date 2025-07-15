@@ -1,0 +1,60 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved as is, including the full context and original spacing. I will also provide an analysis of the intent and semantics behind both sides of the merge conflict and propose a resolution.
+
+```java
+package net.glxn.qrgen.core.scheme;
+
+<<<<<<< HEAD
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+=======
+import net.glxn.qrgen.core.scheme.Girocode.Encoding;
+import org.junit.Test;
+>>>>>>> 7d8e78a2b152062a876d6f8f0f8bde7550278ed0
+
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+```
+
+### Analysis of Intent and Semantics
+
+- **HEAD Side**: The imports include several static assertions from JUnit (`assertEquals`, `assertNotNull`) and Hamcrest matchers (`instanceOf`, `assertThat`). This suggests that the code in this branch likely involves unit testing with both JUnit and Hamcrest for assertions and matchers. The intent seems to be setting up a test class with detailed assertion capabilities.
+
+- **Incoming Side (7d8e78a2)**: The imports include a specific class `Girocode.Encoding` from the same package and the `org.junit.Test` annotation. This suggests that the code in this branch is also related to unit testing, specifically tied to the `Girocode` class or functionality, and it explicitly imports the `Test` annotation, indicating a focus on defining test methods.
+
+- **Common Intent**: Both sides appear to be working on a test class within the `net.glxn.qrgen.core.scheme` package, likely for testing QR code generation or related functionality. The difference lies in the specific testing frameworks or components each side emphasizes (JUnit/Hamcrest assertions vs. explicit Test annotation and Girocode-specific imports).
+
+- **Potential Ambiguity**: Without the full context of the class body, it is unclear whether both sets of imports are necessary or if one side omits imports that are still required. However, since both are related to testing and reference components within the same library, it is reasonable to assume that combining the imports would preserve the intent of both sides.
+
+### Proposed Resolution
+
+Given that both sides are likely contributing to a test class and the imports do not conflict (they cover different aspects of testing), the semantic merge would be to include all imports from both sides. This ensures that the test class has access to the necessary assertion methods, matchers, test annotations, and specific classes like `Girocode.Encoding`.
+
+Here is the resolved snippet:
+
+```java
+package net.glxn.qrgen.core.scheme;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import net.glxn.qrgen.core.scheme.Girocode.Encoding;
+import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+```
+
+### Reasoning
+
+- Combining the imports ensures that all testing utilities and specific domain classes are available, avoiding the risk of missing dependencies that either branch might rely on.
+- There is no overlap or conflict between the imported elements, so merging them preserves the intent of both sides.
+- If future code inspection reveals that some imports are unused, they can be removed via an IDE or build tool optimization, but for semantic merge purposes, inclusivity is safer.
+
+If you have additional context or disagree with this resolution, please provide further details, and I can revisist the merge. For now, the resolved snippet above is my recommendation based on the provided information.

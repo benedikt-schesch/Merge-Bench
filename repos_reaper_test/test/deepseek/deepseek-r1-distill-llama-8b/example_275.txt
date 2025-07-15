@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the code should include the conditional block to add the shifted index only when necessary. This ensures that index alignment is handled correctly without introducing unintended changes in other scenarios.
+
+```java
+    private void mergeOneReducePlanWithIndex(PhysicalPlan from,
+            PhysicalPlan to, int initial, int current, byte mapKeyType) throws VisitorException {
+        POPackage pk = (POPackage)from.getRoots().get(0);
+        from.remove(pk);
+        Packager fromPkgr = pk.getPkgr();
+        
+        if (!(fromPkgr instanceof MultiQueryPackager)) {
+            // XXX the index of the original keyInfo map is always 0,
+            // we need to shift the index so that the lookups works
+            // with the new indexed key
+            addShiftedKeyInfoIndex(initial, fromPkgr);
+        }
+```

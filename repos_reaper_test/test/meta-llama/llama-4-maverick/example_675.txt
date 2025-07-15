@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the context and the intent of both sides of the merge.
+
+The given Java code snippet appears to be part of a method that retrieves an access token for a specific account and resource. The method queries a database using `jdbcTemplate` to fetch access tokens associated with the given account ID and resource ID. It then returns the first access token found, or `null` if no tokens are found.
+
+The conflict arises in the declaration of the `accessToken` variable. The two versions of the code differ in the type of this variable:
+
+1. The version from `HEAD` (the local branch being merged) declares `accessToken` as `AccessToken`.
+2. The version from `12df1c5d0ecdb9e47b22b81db0329cc0f17054d6` (the branch being merged into the local branch) declares `accessToken` as `OAuthConsumerToken`.
+
+To resolve this conflict, we need to understand the intent behind these different types and whether they are compatible or if one is a replacement for the other.
+
+Given that `AccessToken` and `OAuthConsumerToken` are different types, there are a few possibilities:
+- They could be related (e.g., one is a subclass of the other, or they implement a common interface), in which case the correct type to use would depend on the hierarchy or interfaces they implement.
+- They could represent different concepts or data structures, potentially with some overlap in their usage or purpose.
+
+Without more context about these types (e.g., their definitions, how they're used elsewhere in the codebase), it's challenging to determine the correct resolution.
+
+However, we can observe that both types seem to be used in a similar context (i.e., representing an access token). If `OAuthConsumerToken` is a new or updated type intended to replace `AccessToken`, or if it's used in a different but compatible way, then the correct resolution might involve choosing `OAuthConsumerToken`. Conversely, if `AccessToken` is the established type and there's a reason to stick with it, that would be the other choice.
+
+Since the intent is not explicitly clear without additional context, and assuming that both types are not interchangeable without further information, the conflict should be left as is to be resolved by a developer who understands the specific requirements and context of the code.
+
+Therefore, the code snippet should be returned unchanged, with the conflict markers preserved.
+
+```java
+		Account account = (Account) principal;
+		List<AccessToken> accessTokens = jdbcTemplate.query(SELECT_TOKEN_SQL, new RowMapper<AccessToken>() {
+			public AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccessToken(rs.getString("accessToken"), rs.getString("secret"), rs.getString("provider"));
+			}
+<<<<<<< HEAD
+				}, account.getId(), resourceId);
+		AccessToken accessToken = null;
+=======
+		}, account.getId(), resourceId);
+		OAuthConsumerToken accessToken = null;
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+		if (accessTokens.size() > 0) {
+			accessToken = accessTokens.get(0);
+		}
+		return accessToken;
+	}
+
+```

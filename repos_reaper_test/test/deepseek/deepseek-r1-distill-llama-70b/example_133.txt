@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict is resolved by accepting the change to make `sJobConfInternal` final, as it aligns with good practice for ThreadLocal variables that shouldn't be reassigned.
+
+```java
+     * <pre>UdfContext.getUdfContext().getJobConf()</pre>
+     */
+    @Deprecated
+    public static Configuration sJobConf = null;
+
+    public static final ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();
+
+    public static class Map extends PigMapBase {
+
+        @Override
+        public void collect(Context oc, Tuple tuple)
+```

@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to determine whether `myKey` or `keyWritable` should be used. Here's how you can approach it:
+
+1. **Understand the Context**: Determine where `myKey` and `keyWritable` are defined and used elsewhere in the code.
+2. **Trace Variable Usage**: Follow the variables to see which one is the correct key being processed in this context.
+3. **Compare Branch Histories**: Look at the commit history to see why `keyWritable` was introduced and if it's intended to replace `myKey`.
+4. **Test Both Versions**: If possible, test the code with each variable to see which one works as expected without causing errors.
+
+Without additional context, it's ambiguous which variable is correct. Therefore, the conflict remains unresolved, and you'll need to choose based on your knowledge of the codebase.
+
+```java
+        Packager pkgr = packagers.get(index);
+
+        // check to see if we need to unwrap the key. The keys may be
+        // wrapped inside a tuple by LocalRearrange operator when jobs
+        // with different map key types are merged
+<<<<<<< HEAD
+        PigNullableWritable curKey = myKey;
+        if (!sameMapKeyType && !inCombiner && isKeyWrapped.get(index)) {
+            Tuple tup = (Tuple)myKey.getValueAsPigType();
+=======
+        PigNullableWritable curKey = keyWritable;
+        if (!sameMapKeyType && !inCombiner && isKeyWrapped.get(index)) {
+            Tuple tup = (Tuple) keyWritable.getValueAsPigType();
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+            curKey = HDataType.getWritableComparableTypes(tup.get(0),
+                    pkgr.getKeyType());
+            curKey.setIndex(origIndex);
+        }
+```

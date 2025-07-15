@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+After carefully analyzing both versions of the code and their semantic intent, here is the resolved snippet that reflects the correct merge resolution. The resolution incorporates the array-based assignment introduced in one branch while preserving the correct method call parameter from the other, which includes the `node`. This ensures that the `argument` is correctly calculated based on the `node` context and then assigned to the `arguments` array as required by the array-based logic.
+
+```java
+        for (Port port : inputs) {
+            Object argument;
+            if (argumentMap.containsKey(port)) {
+                argument = argumentMap.get(port);
+            } else if (port.hasValueRange()) {
+                argument = getPortValue(node, port);
+            } else {
+                // The port expects a list but nothing is connected. Evaluate with an empty list.
+                argument = ImmutableList.of();
+            }
+            arguments[i] = argument;
+```

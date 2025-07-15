@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Here is the code snippet as provided, preserving all context and spacing:
+
+```java
+            ListRow row = findListRow(getString(R.string.unmatched));
+
+            // if found add this video
+            // if not, create a new row and add it
+            if (row != null) {
+<<<<<<< HEAD
+                ((SortedArrayObjectAdapter) row.getAdapter()).add(video);
+            } else {
+                SortedArrayObjectAdapter listRowAdapter = new SortedArrayObjectAdapter(
+=======
+                ((SortedObjectAdapter) row.getAdapter()).add(video);
+            } else {
+                SortedObjectAdapter listRowAdapter = new SortedObjectAdapter(
+>>>>>>> 308db82053c3707c95c8a180e78ac06043dff2a5
+                        videoNameComparator, mCardPresenter);
+                listRowAdapter.add(video);
+
+                HeaderItem header = new HeaderItem(0, getString(R.string.unmatched), null);
+                int index = mAdapter.size() > 1 ? mAdapter.size() - 1 : 0;
+```
+
+**Analysis:**  
+The conflict arises from differing types of adapters (`SortedArrayObjectAdapter` vs `SortedObjectAdapter`). Both branches are semantically implementing the same logic — finding/matching a list row and adding an object to the appropriate adapter. The intent is ambiguous: one side may be refactoring to an alternative adapter implementation while the other preserves existing functionality. The code as-is requires manual verification of which adapter class integrates correctly with the rest of the system (e.g., compatibility with the `videoNameComparator`, `mCardPresenter`, and downstream usage of the `HeaderItem`).

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises in the `buildGetRequest` method where one side passes the `url` to the constructor, while the other does not. Both sides likely aim to create a `LowLevelHttpRequest`, but with different levels of parameterization.
+
+```java
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+  }
+
+  @Override
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+<<<<<<< HEAD
+    return new MockLowLevelHttpRequest();
+=======
+    return new MockLowLevelHttpRequest(url);
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+  }
+
+  @Override
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
+    if (!supportsHead()) {
+
+```
+
+*The right side passes the `url` to ensure the request is correctly initialized for the specified resource, making it the more appropriate choice.*

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+When examining the merge conflict, the main difference is the order of method calls. The left side chains `getCurrentPlayer()` and `getDisplayName()`, while the right does it in a single line. The right is more readable and direct. 
+
+Assuming both aim to get the same value, the right side is better. Thus, it's safe to merge it from the right branch.
+
+```java
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		try {
+			if (((MainActivity) getActivity()).getGC().isConnected()) {
+				outState.putString("player", ((MainActivity) getActivity()).getGC()
+						.getCurrentPlayer().getDisplayName());
+			} else {
+				outState.remove("player");
+			}
+		} catch (Exception e) {
+			if (Logger.LOG)
+				Logger.log(e);
+		}
+```

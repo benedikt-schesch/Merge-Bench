@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict in the `storeToken` method. The `<<<<<<< HEAD` section uses `token.getProviderId()` without any condition, while the `=======` section includes a condition to check if `token.isAccessToken()` and uses `token.getResourceId()` instead.
+
+To resolve this, the code should decide whether to always store the token or only access tokens and use the correct resource ID.
+
+As the intent is ambiguous, the merge conflict is preserved:
+
+```java
+	}
+
+	public void storeToken(String resourceId, Object principal, AccessToken token) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+<<<<<<< HEAD
+
+		jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getProviderId(), token.getValue(),
+					token.getSecret());
+=======
+		if (token.isAccessToken()) {
+			jdbcTemplate.update(INSERT_TOKEN_SQL, account.getId(), token.getResourceId(), token.getValue(), token.getSecret());
+		}
+>>>>>>> 12df1c5d0ecdb9e47b22b81db0329cc0f17054d6
+	}
+
+	public void removeToken(String resourceId, Object principal) {
+		assertThatPrincipalIsAnAccount(principal);
+		Account account = (Account) principal;
+```

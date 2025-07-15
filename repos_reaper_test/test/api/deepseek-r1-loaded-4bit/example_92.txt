@@ -1,0 +1,127 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. So, looking at the code snippet provided, there's a conflict in the handle method of a Java class. The HEAD version has a certain implementation, and the other branch (ed08e37) adds some lines.
+
+First, I need to understand what each side is doing. The conflict markers show that both versions are modifying the same part of the code. The HEAD version has the method parameters on the same line, while the other branch adds a line that puts AjaxResponse.GAME_CHAT_ENABLED into the ret map. Also, the other branch initializes the HashMap with explicit type parameters, which is a bit older style, whereas HEAD uses the diamond operator.
+
+Wait, the HEAD version uses new HashMap<>(); which is Java 7+ diamond operator, and the other branch uses new HashMap<ReturnableData, Object>(); which is explicit. But in the merged code, we probably want to keep the diamond operator if both changes are compatible. However, the main conflict is the addition of the GAME_CHAT_ENABLED line in the other branch.
+
+Looking at the context, after the conflict, both branches add different entries to the ret map. The HEAD side doesn't have the GAME_CHAT_ENABLED line, while the other branch does. But in the code after the conflict, both versions have the line ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);. Wait, no—the HEAD version's code after the conflict is only the line with GLOBAL_CHAT_ENABLED, while the other branch adds GAME_CHAT_ENABLED before that.
+
+So the conflict is because one branch added GAME_CHAT_ENABLED and the other didn't. To resolve this, we need to include both lines if they are intended to be there. But looking at the code, the HEAD version might have removed that line, or maybe the other branch added it. Wait, in the code provided, the HEAD version (before the conflict) doesn't have the GAME_CHAT_ENABLED line, and the other branch does. So the correct resolution would be to keep both changes. Therefore, in the merged code, the ret map should have both GAME_CHAT_ENABLED and GLOBAL_CHAT_ENABLED entries.
+
+Additionally, the parameter alignment is slightly different. The HEAD has the parameters aligned with two spaces, while the other branch uses four. But in Java, parameter alignment isn't syntactically important, so we can choose either, but it's better to follow the project's style. Since the user hasn't specified, maybe we can align them as per the HEAD version, but actually, looking at the code, the other branch's parameter indentation is different. Wait, the HEAD version has:
+
+public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+
+The other branch has:
+
+public Map<ReturnableData, Object> handle(final RequestWrapper request,
+      final HttpSession session) {
+
+So the HEAD has more indentation on the second line, while the other branch uses less. To resolve this, perhaps the HEAD's indentation is preferred for alignment. But again, without project guidelines, maybe just accept the HEAD's indentation. However, the conflict is about the parameters, but the actual content change is the addition of the GAME_CHAT line.
+
+Wait, but the parameter alignment isn't conflicting. The conflict markers are around the method body. Wait, looking again:
+
+The conflict starts at the method declaration. The HEAD has:
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+
+The other branch has:
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+      final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<ReturnableData, Object>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+
+So the method parameters are split into two lines, with different indentation. The HEAD's second parameter is indented more, while the other branch's is less. Then, inside the method, the other branch initializes the HashMap with explicit types and adds the GAME_CHAT line, which is missing in HEAD.
+
+So the conflict is between the parameter indentation and the added line. To resolve, we need to keep both the parameter indentation from one side and the added line from the other. Wait, but the conflict markers are around the entire method body. So the user is showing that the method's parameters and the code inside the method are conflicting.
+
+Wait, the conflict is between the parameters and the initial lines of the method. The HEAD version's parameters are split into two lines with a certain indentation, and the method body starts with creating the HashMap using the diamond operator. The other branch's version has parameters split with less indentation, initializes the HashMap with explicit type parameters, and adds the GAME_CHAT line.
+
+To resolve this, we need to merge both changes. The parameters' indentation could be taken from either side. However, in Java, parameter indentation is a matter of style. If the HEAD's indentation is the project's standard, we should keep that. Alternatively, if the other branch's indentation is acceptable, maybe align with that. But since the user hasn't specified, perhaps keep the HEAD's indentation for parameters but include the added line from the other branch.
+
+Wait, but the conflict is between the two versions. The parameters are part of the conflict. Let me re-express the conflict:
+
+<<<<<<< HEAD
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+=======
+      final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<ReturnableData, Object>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+
+So the HEAD has the session parameter indented more, uses the diamond operator, and doesn't have the GAME_CHAT line. The other branch has the session parameter indented less, uses explicit type parameters, and adds the GAME_CHAT line.
+
+The correct resolution would be to take both the GAME_CHAT line and the GLOBAL_CHAT line. But the GLOBAL_CHAT line is present in both versions. Wait, looking at the code after the conflict:
+
+After the merge markers, the code continues with:
+
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned."),
+              request.getRemoteAddr()));
+
+So in the HEAD version, after creating the HashMap, they put GLOBAL_CHAT_ENABLED. In the other branch, they put GAME_CHAT_ENABLED first, then GLOBAL_CHAT_ENABLED. Therefore, the merged code should include both lines in the order from the other branch: GAME first, then GLOBAL.
+
+So the correct resolution would be to take the session parameter's indentation from either side, use the diamond operator (since that's the more modern approach), and include both ret.put lines.
+
+But the other branch's code initializes the HashMap with explicit types. The HEAD uses the diamond operator. So in the merged code, we should use the diamond operator as per HEAD, and include the GAME_CHAT line from the other branch.
+
+Additionally, the parameter indentation: which one to choose? The HEAD's session parameter is indented more, perhaps to align with the first parameter's line. The other branch's session parameter is indented less. Let's look at the original code structure. The method declaration is split into two lines. The HEAD indents the second parameter to align under the first. For example:
+
+public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+
+This is a common Java style where continuation lines are indented 8 spaces or so. The other branch's version:
+
+public Map<ReturnableData, Object> handle(final RequestWrapper request,
+      final HttpSession session) {
+
+Here, the second line is indented maybe 6 spaces. This could be a matter of project style. Since the user hasn't specified, but the HEAD is likely the current branch's version, perhaps we should keep the HEAD's indentation for the parameters, then apply the changes from both branches.
+
+So merging:
+
+- Keep the HEAD's parameter indentation.
+- Use the diamond operator from HEAD.
+- Add the GAME_CHAT_ENABLED line from the other branch.
+- Then the GLOBAL_CHAT line, which is present in both.
+
+So the resolved code would be:
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned.",
+              request.getRemoteAddr()));
+
+This way, both the GAME and GLOBAL chat flags are added. The parameter indentation is from HEAD, the HashMap uses diamond operator, and the added line from the other branch is included.
+
+Therefore, the merged code should include both ret.put lines, with GAME_CHAT first. The conflict is resolved by taking both changes.</think>
+```java
+    this.userPermalinkFormatString = userPermalinkFormatString;
+  }
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned."),
+              request.getRemoteAddr()));
+```

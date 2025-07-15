@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to analyze the intent and semantics of both sides of the merge. 
+
+The conflict arises from the import statements where the `HEAD` version is using static imports from `org.assertj.core.api.Assertions` for assertions, whereas the other version (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`) is using static imports from `org.junit.Assert` for assertions.
+
+The `HEAD` version is using AssertJ, a fluent assertions library, for its assertions. This is evident from the import of `org.assertj.core.api.Assertions`. AssertJ is often used for more readable and fluent assertions.
+
+On the other hand, the other version is using JUnit's built-in assertions (`org.junit.Assert`).
+
+To resolve this conflict, we need to understand the context of the test class and the assertions used within it. However, based on the given snippet alone, both versions seem to be setting up for different assertion styles.
+
+Since both sides are importing `HTTP_OK` from `java.net.HttpURLConnection`, which is not in conflict, and the conflict is only about the assertion imports, we can consider a resolution based on the assertion library being used.
+
+Let's consider the possibilities:
+
+1. **Using AssertJ**: If the test class is using AssertJ for its assertions, then the `HEAD` version's imports are appropriate. The conflicting lines should be resolved in favor of `HEAD`.
+
+2. **Using JUnit Assertions**: If the test class is using JUnit's assertions, then the other version's imports are correct. The conflict should be resolved in favor of `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`.
+
+However, without knowing the specific assertions used in the test class or the project's preference for assertion libraries, the safest resolution is to leave the conflict as is or to choose one based on additional context not provided.
+
+Given the information and sticking strictly to the task:
+
+```java
+ * THE SOFTWARE.
+ */
+package com.restfb;
+
+import static java.net.HttpURLConnection.HTTP_OK;
+<<<<<<< HEAD
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+=======
+import static org.junit.Assert.*;
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+
+import com.restfb.exception.FacebookJsonMappingException;
+import com.restfb.types.FacebookType;
+import com.restfb.types.User;
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+        // splits.
+        NoopFilterRemover fRem = new NoopFilterRemover(plan);
+        fRem.visit();
+
+        boolean isMultiQuery =
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true")) ||
+            "true".equalsIgnoreCase(pc.getProperties().getProperty("opt.multiquery","true"));
+
+        if (isMultiQuery) {
+            // reduces the number of MROpers in the MR plan generated
+            // by multi-query (multi-store) script.
+            MultiQueryOptimizer mqOptimizer = new MultiQueryOptimizer(plan, pc.inIllustrator);
+
+```

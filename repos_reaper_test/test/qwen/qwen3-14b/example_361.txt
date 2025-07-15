@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public String exchangeForSessionToken() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+<<<<<<< HEAD
+    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
+    HttpRequest request = authSubTransport.buildGetRequest();
+    request.setUrl("https://www.google.com/accounts/AuthSubSessionToken");
+=======
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubSessionToken"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+    SessionTokenResponse sessionTokenResponse =
+        request.execute().parseAs(SessionTokenResponse.class);
+    String sessionToken = sessionTokenResponse.sessionToken;
+    setToken(sessionToken);
+    return sessionToken;
+
+```

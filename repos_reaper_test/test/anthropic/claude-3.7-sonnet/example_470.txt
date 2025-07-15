@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, the main difference is using `_service` vs `_manager` for the first part of the test method. The HEAD version uses `_service` consistently throughout the method, while the incoming change uses `_manager` for the first part.
+
+Since the second part of the method (after the conflict) continues to use `_service`, the most consistent resolution is to maintain `_service` throughout the entire method.
+
+Here's the resolved snippet:
+
+```java
+    @Nonnull
+    protected abstract SessionManager createSessionManager();
+
+    @Test
+    public void testConfigurationFormatMemcachedNodesFeature44() throws LifecycleException {
+        _service.setMemcachedNodes( "n1:127.0.0.1:11211" );
+        _service.startInternal(_memcachedMock);
+        Assert.assertEquals( _service.getNodeIds(), Arrays.asList( "n1" ) );
+
+        _service.setMemcachedNodes( "n1:127.0.0.1:11211 n2:127.0.0.1:11212" );
+        _service.startInternal(_memcachedMock);
+        Assert.assertEquals( _service.getNodeIds(), Arrays.asList( "n1", "n2" ) );
+
+```

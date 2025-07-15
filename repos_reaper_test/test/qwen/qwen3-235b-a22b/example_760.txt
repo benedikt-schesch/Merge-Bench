@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differing changes to the import section of the Java file. One version (`HEAD`) does not introduce any additional imports at this location, while the other version (`b471a97a0d79b8743a4aea305aa001474127e1b1`) explicitly adds two import statements:
+
+```java
+import net.openhft.chronicle.core.io.AbstractCloseable;
+import net.openhft.chronicle.core.io.Closeable;
+```
+
+---
+
+To resolve this conflict based on semantic intent:
+
+- Imports are often introduced to support types used in the implementation of a class.
+- Without seeing the body of the code or class, we cannot definitively determine whether these imports are required or were simply added by mistake.
+- If the class or any of the stages in this package implement or extend `AbstractCloseable` or `Closeable`, then the imports would be strictly necessary.
+- However, if the class does not actually reference these types, then keeping these imports would be unnecessary and potentially misleading.
+
+---
+
+Since this code snippet contains no further class definition or usage context that clarifies whether these imports are needed, the **intent of either change is ambiguous based on this information alone**.
+
+As per the instruction provided, **where uncertainty or ambiguity in intent exists, the conflict marker must be preserved as-is without modification**.
+
+---
+
+Here is the original snippet, preserved exactly with no context or spacing changes:
+
+```java
+ * limitations under the License.
+ */
+
+package net.openhft.chronicle.map.impl.stage.query;
+
+<<<<<<< HEAD
+=======
+import net.openhft.chronicle.core.io.AbstractCloseable;
+import net.openhft.chronicle.core.io.Closeable;
+>>>>>>> b471a97a0d79b8743a4aea305aa001474127e1b1
+import net.openhft.chronicle.hash.impl.stage.hash.CheckOnEachPublicOperation;
+import net.openhft.chronicle.map.MapClosable;
+import net.openhft.chronicle.map.impl.stage.ret.UsingReturnValue;
+import net.openhft.sg.StageRef;
+import net.openhft.sg.Staged;
+```

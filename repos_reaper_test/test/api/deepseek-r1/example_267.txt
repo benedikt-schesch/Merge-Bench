@@ -1,0 +1,22 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java method createDataBag. Both sides are trying to set the bagType variable based on a configuration value. The HEAD version has the line indented with more spaces, while the other branch (88ae4a5) has it with fewer. 
+
+Hmm, the code is checking if PigMapReduce.sJobConfInternal.get() is not null, then retrieves a property. The only difference here is the indentation level. In Java, indentation doesn't affect the code's functionality; it's just for readability. So the semantic intent of both changes is the same—they both want to get the "pig.cachedbag.type" from the configuration.
+
+Since the conflict is purely about whitespace, I should resolve it by choosing one of the indentation styles. But looking at the surrounding code, the method uses 4 spaces for indentation. The HEAD version has an extra indentation, making it 8 spaces, while the other branch uses 4 spaces. Wait, let me check the context.
+
+The surrounding lines: the if block is indented with 4 spaces. The HEAD version has the line inside the if block indented with 8 spaces, which is inconsistent. The other branch uses 4 spaces, which aligns with the if statement's indentation. So the correct indentation should be 4 spaces inside the if block. Therefore, the version from the other branch (88ae4a5) has the correct indentation. The conflict is due to a formatting difference, and the correct resolution is to use the properly indented line.</think>
+```java
+    }
+
+    private DataBag createDataBag(int numBags) {
+        String bagType = null;
+        if (PigMapReduce.sJobConfInternal.get() != null) {
+            bagType = PigMapReduce.sJobConfInternal.get().get("pig.cachedbag.type");
+        }
+
+        if (bagType != null && bagType.equalsIgnoreCase("default")) {
+            return new NonSpillableDataBag();
+        }
+        return new InternalCachedBag(numBags);
+```

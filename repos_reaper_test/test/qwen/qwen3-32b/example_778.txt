@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict in the `GetRequest maxVersions` method likely revolves around how the `versions` field is encoded. The **HEAD** side sets it directly, implying the field holds only the version count as a numeric value. The **other branch** (d543609...) applies a bitwise operation to preserve an existing flag (`EXIST_FLAG`) in the higher bits while updating the version count in the lower bits. This suggests the `versions` field is intended to store both a numeric version count (e.g., in lower bits) and a flag (e.g., in higher bits) as a composite value. Without clarification on whether `versions` is meant to be a standalone integer or part of a bitmask, the intent is ambiguous. Below is the unresolved snippet with conflict markers preserved:
+
+```java
+  public GetRequest maxVersions(final int versions) {
+    if (versions <= 0) {
+      throw new IllegalArgumentException("Need a strictly positive number: "
+                                         + versions);
+    }
+<<<<<<< HEAD
+    this.versions = versions;
+=======
+    this.versions = (versions << 1) | (this.versions & EXIST_FLAG);
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    return this;
+  }
+
+  /**
+   * Returns the maximum number of versions to return for each cell scanned.
+```

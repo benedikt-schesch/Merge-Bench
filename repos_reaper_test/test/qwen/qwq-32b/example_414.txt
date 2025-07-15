@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+    @Test
+    void shouldTellUserThatTemplateOptionRequiresInitOption() throws Exception {
+
+        String[] args = {"-t", "groovy-mte"};
+
+        assertExitWithStatus(SystemExit.CONFIGURATION_ERROR.getStatus(), ()->Main.main(args));
+
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
+
+        LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+        assertThat(loggingEvent.getMessage()).isEqualTo("Error: Missing required argument(s): --init");
+
+    }
+```

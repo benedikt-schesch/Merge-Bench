@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first analyze the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a test class, given the presence of `@Test` and the usage of mocking (`when`, `verify`) and test-related assertions (`assertStatusIs`). 
+
+The conflict arises between two different versions of a test method: `shouldSetAppropriateStatusIfNoTestsWereRun`. 
+
+- The version from `HEAD` (the local branch being merged) has a method with a `void` return type and is declared to throw `CoreException`. It also contains a call to `prepateCore(projectAUri(), 0)`, which seems to be a typo and should likely be `prepareCore`.
+- The version from `ee249315695b6123b42f6cb1b6ab1489e37eb586` (the branch being merged into the local branch) has a method with a `public void` return type, also throwing `CoreException`, and correctly calls `prepareCore(projectAUri(), 0)`.
+
+The main differences are:
+1. Access modifier (`public` is explicit in the incoming change but implicit in the current `HEAD` version, as methods are `public` by default in Java when no modifier is specified).
+2. Spelling correction in `prepareCore`.
+
+To resolve this conflict semantically, we must consider the intent behind both changes. Both versions aim to test the behavior of `InfinitestCore` when no tests are run. The correction of `prepateCore` to `prepareCore` is a clear bug fix, improving the code's correctness. The addition of the `public` access modifier is not necessary but is not harmful either, as it makes the method's access explicit.
+
+Given this analysis, the most sensible resolution is to take the version from `ee249315695b6123b42f6cb1b6ab1489e37eb586`, as it includes the correction of the typo (`prepateCore` to `prepareCore`), and there's no significant semantic difference introduced by making the method `public` explicitly.
+
+Here is the resolved snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+		when(coreRegistry.getCore(projectAUri)).thenReturn(core);
+		return core;
+	}
+
+	@Test
+	public void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 0);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(noTestsRun());
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+
+```

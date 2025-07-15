@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a change where the initialization of `readOnce` and its loop are removed. Both approaches have different implications:
+
+1. **Keeping the initialization (HEAD)**:
+   - Initializes `readOnce` properly for the new number of inputs.
+   - Ensures all entries start as `false` when `numInputs` changes.
+
+2. **Removing the initialization (new change)**:
+   - Relies on `readOnce` being initialized elsewhere, which might not handle changes to `numInputs` correctly.
+
+Since the purpose of `readOnce` is to track whether each input has been read, and the array needs to be correctly sized and initialized every time `numInputs` changes, the original code (HEAD) is correct.
+
+```java
+    }
+
+    public void setNumInps(int numInps) {
+        this.numInputs = numInps;
+        pkgr.setNumInputs(numInps);
+        readOnce = new boolean[numInputs];
+        for (int i = 0; i < numInputs; i++)
+            readOnce[i] = false;
+    }
+
+    /**
+     * From the inputs, constructs the output tuple for this co-group in the
+     * required format which is (key, {bag of tuples from input 1}, {bag of
+```

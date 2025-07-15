@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict appears in the way the `playersCopy` array is initialized. Both changes aim to create an array copy of the `players` list, but they use different approaches:
+- The first approach (`players.size()`) explicitly specifies the size of the array.
+- The second approach (`new Player[0]`) relies on Java's `toArray` method to create an array of the appropriate size.
+
+Both approaches accomplish the same goal, just in slightly different ways. Since the intent is the same, I'll suggest using the more concise approach with `new Player[0]`.
+
+Here's the resolved code:
+
+```java
+  /**
+   * @return A list of all {@code User}s in this game.
+   */
+  private List<User> playersToUsers() {
+    final List<User> users;
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    users = new ArrayList<>(playersCopy.length);
+    for (final Player player : playersCopy) {
+      users.add(player.getUser());
+    }
+    synchronized (spectators) {
+      users.addAll(spectators);
+    }
+    return users;
+  }
+```

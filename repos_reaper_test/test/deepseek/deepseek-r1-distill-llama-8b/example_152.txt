@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, the right-hand side (with myPig as the second parameter) is chosen as it likely provides the correctbehavior and additional necessary settings. The left version may lack these settings, so the correct approach is to take the right version.
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "dump b;"
+                          + "store b into '/tmp/output1';\n";
+
+<<<<<<< HEAD
+            GruntParser parser = new GruntParser(new StringReader(script));
+=======
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+>>>>>>> 2125666c1941d4a88c08ab87ebf92ee46be4f0ea
+```

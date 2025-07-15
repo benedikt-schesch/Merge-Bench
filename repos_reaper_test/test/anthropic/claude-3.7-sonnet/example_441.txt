@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict for you:
+
+```java
+        securityCodeText.setOnFocusChangeListener(l);
+        zipCodeText.setOnFocusChangeListener(l);
+    }
+
+    public void focusOnField(final CreditEntryFieldBase field) {
+        if (this.textHelper != null) {
+            this.textHelper.setText(field.getHelperText());
+        }
+        focusOnField(field, null);
+    }
+
+    public void focusOnField(final CreditEntryFieldBase field, String initialFieldValue) {
+        field.requestFocus();
+        if(!scrolling) {
+            scrolling = true;
+
+```
+
+The resolution combines both changes. The HEAD version was setting the helper text when focusing on a field. The incoming change was overloading the method to add support for an initial field value. The resolved version keeps the helper text functionality and also calls the overloaded method with a null initial value, preserving both intents.

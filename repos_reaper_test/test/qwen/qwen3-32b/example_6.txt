@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Here's the resolved merge conflict based on the observed intent of both code branches:
+
+```java
+            writeString( prefix, buf );
+            writeString( suffix, buf );
+            buf.writeByte( friendlyFire );
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+            {
+                writeString( nameTagVisibility, buf );
+                writeString( collisionRule, buf );
+                // Note: The 'color' writeByte maintained in HEAD is omitted in the other branch
+            }
+        }
+        if ( mode == 0 || mode == 4 )
+        {
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+```
+
+Resolution explanation:
+1. Both sides agree to include both `writeString( nameTagVisibility, buf )` and `writeString( collisionRule, buf )` under the Minecraft 1.8+ check
+2. The 1.9-specific conditional for `collisionRule` from HEAD was removed as the other branch directly added it under 1.8
+3. The `buf.writeByte( color )` line from HEAD was omitted since it was deleted in the other branch
+4. There appears to be a minor disagreement about the valid `mode` values (HEAD shows `0 || 3 || 4`, other branch shows `0 || 4`) - since this isn't part of the direct conflict block, we've preserved the original spacing but the mode condition might require manual verification

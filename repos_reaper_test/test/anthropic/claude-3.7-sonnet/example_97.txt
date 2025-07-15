@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that both sides are constructing a `Game` object, but the right side (`ed08e371`) includes two additional parameters: `falseProvider` and `gameOptionsProvider`. This suggests the `Game` constructor was updated to accept more parameters.
+
+Here's the resolved code:
+
+```java
+  public void setUp() {
+    cuMock = createMock(ConnectedUsers.class);
+    gmMock = createMock(GameManager.class);
+    metricsMock = createMock(Metrics.class);
+    game = new Game(0, cuMock, gmMock, timer, null, null, null, metricsMock, falseProvider,
+        formatProvider, falseProvider, formatProvider, falseProvider, gameOptionsProvider);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testRemovePlayer() throws IllegalStateException, TooManyPlayersException {
+
+```
+
+I've resolved in favor of the newer version from `ed08e371` since it appears to include an updated constructor signature with additional parameters that would be required for the class to compile correctly.

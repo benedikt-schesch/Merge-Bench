@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'll analyze this merge conflict by considering the intent and semantics of both sides of the merge.
+
+**Analysis of the Conflict:**
+
+- **HEAD (Left Side):** This version includes an additional parameter `config` in the `LazyLoadingModel` constructor, along with separate `catch` blocks for `IOException` and `TemplateException`. The intent seems to be supporting additional configuration or customization during model processing.
+- **1b5691ad (Right Side):** This version omits the `config` parameter in the `LazyLoadingModel` constructor and uses a multi-catch block (`IOException | TemplateException`) for more concise exception handling. The intent appears to be simplifying the code and adhering to a cleaner exception handling style without the additional `config` parameter.
+
+**Resolution Intent:**
+The key semantic difference is the presence of the `config` parameter in HEAD. Since this parameter is likely crucial for functionality or customization in the `LazyLoadingModel`, it should be retained. However, the concise multi-catch block from the right side is a stylistic improvement that doesn’t affect functionality. Therefore, I’ll resolve the conflict by combining the `config` parameter from HEAD with the multi-catch syntax from the right side for cleaner code, ensuring both intents are respected.
+
+Here is the snippet with the resolved conflict:
+
+```java
+
+    @Override
+    public void renderDocument(final TemplateModel model, final String templateName, final Writer writer) throws RenderingException {
+        try {
+            Template template = templateCfg.getTemplate(templateName);
+            template.process(new LazyLoadingModel(templateCfg.getObjectWrapper(), model, db, config), writer);
+        } catch (IOException | TemplateException e) {
+            throw new RenderingException(e);
+        }
+    }
+
+    /**
+
+```

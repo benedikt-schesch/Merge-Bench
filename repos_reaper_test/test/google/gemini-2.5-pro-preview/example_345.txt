@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+The conflict arises because one branch (HEAD) has updated the method `getDirectory` to include a `Sort sort` parameter and started implementing its logic, implying the method is actively being developed and used. The other branch (`fe1b8ab...`) has modified the same method (with its older signature, without the `Sort sort` parameter) to throw a `RuntimeException`, marking it as obsolete and advising removal of its calls.
+
+The crucial piece of information is the codeblock *after* the conflict markers:
+```java
+		final ArrayList<FileLocation> dirs = new ArrayList<FileLocation>();
+		final JsonNode jsonDirs = mConnection.getJson(
+				manager,
+				"Files.GetDirectory",
+				sort(obj().p("media", "files").p("directory", path),
+```
+This subsequent code, particularly the `sort(...)` call which presumably uses the `sort` parameter, is compatible with HEAD's version of the method signature that introduces `Sort sort`. If the `fe1b8ab` version were chosen (which has the older signature and throws an exception), this subsequent code would be problematic:
+1.  The `sort` parameter would not be defined, leading to a compilation error.
+2.  The code would be unreachable if placed after the `throw new RuntimeException(...)`.
+3.  The `/*` from `fe1b8ab` would leave a dangling unterminated comment if not handled.
+
+Therefore, the most semantically coherent resolution is to adopt HEAD's changes, which continue the development and usage of this method with enhanced sorting capabilities. This presumes that the new feature (sorting) is desired and supersedes the obsolescence of the older form of the method for this specific, updated signature.
+
+The resolved code will use HEAD's signature and the subsequent shared method body.
+
+```java
+	 *            Offset (0 for none)
+	 * @param limit
+	 *            Limit (0 for none)
+	 * @return
+	 */
+	public ArrayList<FileLocation> getDirectory(INotifiableManager manager,
+			String path, DirectoryMask mask, int offset, int limit,
+			final int mMediaType, Sort sort) {
+		final ArrayList<FileLocation> dirs = new ArrayList<FileLocation>();
+		final JsonNode jsonDirs = mConnection.getJson(
+				manager,
+				"Files.GetDirectory",
+				sort(obj().p("media", "files").p("directory", path),
+
+```

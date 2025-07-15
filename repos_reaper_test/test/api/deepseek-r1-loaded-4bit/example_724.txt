@@ -1,0 +1,41 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the `isEquals` method. Both versions are trying to check if two objects are equal, handling nulls properly. 
+
+In the HEAD version, the method is written with an if statement: if obj1 is not null, return obj1.equals(obj2), else check if obj2 is null. That's a standard way to handle nulls safely.
+
+The other branch's version uses a ternary operator: if a is null, then check if b is null, else a.equals(b). This is more concise but does the same thing logically.
+
+So both implementations achieve the same semantic result. The difference is in syntax and variable names. The parameters are named obj1/obj2 in HEAD and a/b in the other branch. The functionality is identical.
+
+To resolve, we can choose either version. Since the ternary version is more concise and equally correct, maybe that's preferable. But we should also consider variable names for clarity. If the project prefers descriptive names, obj1 and obj2 might be better. Alternatively, a and b are shorter but still clear in context.
+
+Wait, the method is called isEquals, which is a boolean check. Both versions correctly handle nulls. The ternary version is more succinct. However, the parameter names differ. Let me check if the parameter names are important. If the other branch's version uses a and b, but the HEAD uses obj1 and obj2, we need to pick one. Since the code after the conflict uses parameter names a and b in the merged version, but the HEAD uses obj1 and obj2. Wait, no—the conflict is between the two versions. So the merge conflict shows that in HEAD, the parameters are obj1 and obj2, and in the other branch, they're a and b. So the conflict is about both the implementation and the parameter names.
+
+But semantically, the parameter names don't affect the functionality. However, choosing one over the other is necessary. The question is, which one to pick? If both branches are changing the parameter names and the implementation, we need to decide which one to keep.
+
+Alternatively, maybe the parameter names can be standardized. But since the user wants us to resolve based on intent and semantics, perhaps the parameter names are less important as long as the logic is correct. But in Java, parameter names are part of the method signature for readability, though not for overloading.
+
+In this case, both versions are correct. The ternary version is more concise, so perhaps that's better. So the resolved method would use the ternary approach with parameters a and b, as in the other branch. Alternatively, maybe the HEAD version's parameter names are better because they're more descriptive. But without knowing the project's naming conventions, it's hard to say. However, the ternary version is more efficient in terms of code clarity.
+
+So the resolution would be to take the version from the other branch (41bc030) because it's more concise and achieves the same result. Therefore, the conflict is resolved by keeping that version and discarding the HEAD's version. So the final method would be:
+
+public static boolean isEquals(Object a, Object b) {
+    return (a == null) ? (b == null) : a.equals(b);
+}
+
+This maintains the intended behavior and uses a concise syntax. The parameter names a and b are acceptable, and the logic is equivalent to the HEAD's version but written more succinctly.</think>
+```java
+
+    public static boolean isLeast(int[] objs, int count) {
+        return null != objs && objs.length >= count;
+    }
+
+    public static boolean isEquals(Object a, Object b) {
+        return (a == null) ? (b == null) : a.equals(b);
+    }
+
+    public static String trim(CharSequence charSequence) {
+        return null == charSequence ? null : charSequence.toString().trim();
+    }
+
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The left side creates a GruntParser with only a StringReader, while the right side includes an additional parameter `myPig`. To determine the correct approach, we need to understand the context where both files diverged. If the right side's version of the file uses `myPig` elsewhere, passing it here ensures proper configuration for parsing, so the right version should be kept.
+
+```java
+                      + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                      + "b = filter a by uid > 5;"
+                      + "dump b;"
+                      + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+>>>>>>> 2125666c1941d4a88c08ab87ebf92ee46be4f0ea
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+```

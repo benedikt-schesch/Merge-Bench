@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I analyzed the intent and semantics of both sides. Both sides add the same entry to the `data` map, but the left side is redundant because the `if` condition ensures `roundPermalinkFormatProvider.get()` is only called if `showRoundLinkProvider` is true. The right side reflects the intended use, as it includes the same content in a cleaner format using `String.format()`. Thus, the right side should replace the left side to maintain code conciseness and readability.
+
+```java
+    data.put(LongPollResponse.EVENT, LongPollResponse.GAME_ROUND_COMPLETE.toString());
+    data.put(LongPollResponse.ROUND_WINNER, cardPlayer.getUser().getNickname());
+    data.put(LongPollResponse.WINNING_CARD, clientCardId);
+    data.put(LongPollResponse.INTERMISSION, ROUND_INTERMISSION);
+    if (showRoundLinkProvider.get()) {
+      data.put(LongPollResponse.ROUND_PERMALINK,
+          String.format(roundPermalinkFormatProvider.get(), roundId));
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+    }
+    broadcastToPlayers(MessageType.GAME_EVENT, data);
+
+    notifyPlayerInfoChange(getJudge());
+    notifyPlayerInfoChange(cardPlayer);
+```

@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The provided code snippet contains a merge conflict. The conflict is marked by `<<<<<<< HEAD` and `=======`, indicating that different changes were made to the same part of the code in two different branches.
+
+In this case, the line:
+```java
+// offset+1 is an incrementing number
+```
+from the `HEAD` branch is conflicting with an empty line (or no line) from the other branch.
+
+Given the surrounding context, both sides might have intended to document something about the payload structure, but the specific comment about `offset+1` might not be accurate or necessary given the code that follows.
+
+If the comment is accurate and useful, it should be kept. If it's not, it can be safely removed.
+
+Since the intent isn't fully clear, the conflict is preserved as is.
+
+Here's the entire snippet with the conflict preserved:
+
+```java
+    public void handleApplicationCommandRequest(SerialMessage serialMessage, int offset, int endpoint) {
+        logger.debug("NODE {}: Received central scene command (v{})", this.getNode().getNodeId(), this.getVersion());
+        int command = serialMessage.getMessagePayloadByte(offset);
+        switch (command) {
+            case SCENE_SET:
+<<<<<<< HEAD
+                // offset+1 is an incrementing number
+=======
+>>>>>>> 452b23374e752524bf93a83d45a22011448f5945
+                int sceneId = serialMessage.getMessagePayloadByte(offset + 3);
+                int time = serialMessage.getMessagePayloadByte(offset + 2);
+                if (time > 127) {
+                    // Values of 128 and above are in minutes (128 = 1 minute)
+                    time = (time - 127) * 60;
+```

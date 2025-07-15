@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it seems one side is adding the `@Beta` annotation to the `isMtls()` method while the other side is removing it. I'll resolve this by preserving the annotation since removing it might break compatibility for users who are aware of its beta status.
+
+```java
+  public boolean supportsMethod(String method) {
+    return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
+  }
+
+  @Override
+  @Beta
+  public boolean isMtls() {
+    return this.isMtls;
+  }
+
+  @Override
+
+```

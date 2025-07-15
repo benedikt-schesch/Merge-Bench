@@ -1,0 +1,56 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the logger.info statement. Both versions are trying to log similar information but have some differences. 
+
+In the HEAD version, the variables used are customDecksIds and options.cardSetIds. The message includes "max players" split into two lines with a concatenated string. The parameters passed are options.cardSetIds, customDecksIds, then the options fields.
+
+In the other branch (5adedd2), the variables are cardcastDeckIds instead of customDecksIds. The string is concatenated with "max players" as a single part. The parameters passed are options.cardSetIds, cardcastDeckIds, followed by the same options fields.
+
+Hmm. The main difference is the variable names: customDecksIds vs cardcastDeckIds. Which one is correct? Well, Cardcast is a specific service, so maybe cardcastDeckIds refers to decks from Cardcast. The HEAD version uses customDecksIds, which might be a different name for the same thing or a different variable. 
+
+Looking at the surrounding code, in the synchronized block, they mention options.cardSetIds. But in the log message, the HEAD uses options.cardSetIds as the first parameter, then customDecksIds. The other branch uses options.cardSetIds and cardcastDeckIds. 
+
+Wait, maybe the variables were renamed. Perhaps in one branch, the variable was changed from customDecksIds to cardcastDeckIds for clarity. If the second branch is more recent or correct, then cardcastDeckIds is the right variable. Alternatively, maybe the log message parameters were swapped.
+
+Wait, let's check the format string. The format is: "Starting game %d with card sets %s, Cardcast %s, ...". So the first %s after card sets is options.cardSetIds, and the Cardcast part is either customDecksIds or cardcastDeckIds. The term "Cardcast" in the log message suggests that the corresponding variable should be the Cardcast deck IDs. So if the variable cardcastDeckIds holds the Cardcast deck IDs, then that's correct. The HEAD version uses customDecksIds, which might be a misnomer.
+
+Therefore, the correct variable is cardcastDeckIds from the other branch. So the resolved line should use cardcastDeckIds. Also, the string concatenation in the HEAD is split into two lines, while the other branch has it as a single line. But the actual string is the same when concatenated. So we can take the HEAD's formatting for the string (split into two lines for readability) but replace customDecksIds with cardcastDeckIds.
+
+Wait, looking at the HEAD's code: the string is split into two lines with a + operator. The other branch has "max players" as part of the same string. Wait, in the HEAD, it's written as:
+
+"Starting game %d with card sets %s, Cardcast %s, %d blanks, %d "
++ "max players, %d max spectators, %d score limit, players %s, unique %s."
+
+So the first part ends with "%d " and the next part starts with "max players...". When concatenated, it becomes "%d max players...", which makes sense. The other branch has "max players" as part of the same string. So both are correct in terms of the resulting string, but the HEAD version splits it for line length. Since Java allows splitting strings with +, both are valid, but the HEAD's formatting is better for readability.
+
+So the resolution would be to take the HEAD's string formatting (split into two lines) but use cardcastDeckIds instead of customDecksIds. Also, check the parameters passed to the logger.info. The HEAD has:
+
+options.cardSetIds, customDecksIds, options.blanksInDeck, options.playerLimit,...
+
+The other branch has:
+
+options.cardSetIds, cardcastDeckIds, options.blanksInDeck, options.playerLimit,...
+
+So the correct variable is cardcastDeckIds. Therefore, the resolved line should be:
+
+logger.info(String.format("Starting game %d with card sets %s, Cardcast %s, %d blanks, %d "
+                + "max players, %d max spectators, %d score limit, players %s, unique %s.",
+            id, options.cardSetIds, cardcastDeckIds, options.blanksInDeck, options.playerLimit,
+            options.spectatorLimit, options.scoreGoal, players, currentUniqueId));
+
+That way, we preserve the string formatting from HEAD and the correct variable from the other branch. So the merge conflict is resolved by combining both changes.</think>
+```java
+      } else {
+        started = false;
+      }
+      if (started) {
+        currentUniqueId = uniqueIdProvider.get();
+        logger.info(String.format("Starting game %d with card sets %s, Cardcast %s, %d blanks, %d "
+                + "max players, %d max spectators, %d score limit, players %s, unique %s.",
+            id, options.cardSetIds, cardcastDeckIds, options.blanksInDeck, options.playerLimit,
+            options.spectatorLimit, options.scoreGoal, players, currentUniqueId));
+        // do this stuff outside the players lock; they will lock players again later for much less
+        // time, and not at the same time as trying to lock users, which has caused deadlocks
+        final List<CardSet> cardSets;
+        synchronized (options.cardSetIds) {
+          cardSets = loadCardSets(session);
+```

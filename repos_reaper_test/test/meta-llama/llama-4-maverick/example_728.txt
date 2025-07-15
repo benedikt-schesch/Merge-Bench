@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's analyze the context and the changes introduced by both sides of the merge.
+
+The given code snippet is in Java and appears to be part of an Android application, specifically dealing with animations and view properties. The conflict arises between two commits: `HEAD` (the current branch) and `d28bc96faf3c28942720eaef1a486d601352d2d5`.
+
+1. **Changes in `HEAD`**: The code in `HEAD` introduces a change related to setting the padding of a view (`this.setPadding(pad, pad, pad, pad);`). It retrieves a dimension pixel size from resources (`R.dimen.widget_container_padding`) and applies it as padding to the view.
+
+2. **Changes in `d28bc96faf3c28942720eaef1a486d601352d2d5`**: The incoming change initializes `mRootAnimator` with `mRootView.animate()` and then proceeds to set an animation listener on `mRootAnimator` if it is not null.
+
+The conflict occurs because both changes modify the same section of code, and Git cannot automatically merge them.
+
+To resolve this conflict, we need to understand the intent behind both changes. The code in `HEAD` is adjusting the padding of a view, which is likely related to its layout or visual appearance. The change from `d28bc96faf3c28942720eaef1a486d601352d2d5` is related to animating the view (`mRootView`) and setting up an animation listener.
+
+Since both changes seem to serve different purposes (one is related to view padding and the other to view animation), they can potentially be combined.
+
+Here's the resolution:
+```java
+            setAlpha(0.0f);
+            setScaleX(WIDGET_FADE_SCALE);
+            setScaleY(WIDGET_FADE_SCALE);
+            setVisibility(View.VISIBLE);
+
+            // Set padding
+            int pad = getResources().getDimensionPixelSize(R.dimen.widget_container_padding);
+            this.setPadding(pad, pad, pad, pad);
+
+            mRootAnimator = mRootView.animate();
+
+            if (mRootAnimator != null) {
+                mRootAnimator.setListener(new AnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(Animator arg0) {
+```

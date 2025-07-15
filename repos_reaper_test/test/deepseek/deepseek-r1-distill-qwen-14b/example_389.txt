@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+The conflict appears in the `shouldNotUpdateIfClassesAreNotChanged` test method. Both sides aim to verify that no update occurs when classes are unchanged, but they use different approaches.
+
+- The left side uses `assertDoesNotThrow` to ensure no exception is thrown.
+- The right side uses `verifyNoInteractions(workspace)` to confirm no interactions with the workspace.
+
+The right approach is more precise, ensuring that the processor doesn't perform any unintended operations.
+
+Here is the merged code with the right side implementation:
+
+```java
+
+		verifyNoInteractions(workspace);		
+	}
+
+	@Test
+	void shouldNotUpdateIfClassesAreNotChanged() throws CoreException {
+		processor.processEvent(emptyEvent());
+
+		verifyNoInteractions(workspace);
+	}
+
+	@Test
+	void shouldRespondToPostBuildEvents() {
+		IResourceChangeEvent event = new ResourceChangeEvent(this, POST_BUILD, AUTO_BUILD, null);
+```
+
+```java
+
+		verifyNoInteractions(workspace);		
+	}
+
+	@Test
+<<<<<<< HEAD
+	void shouldNotUpdateIfClassesAreNotChanged() throws CoreException {
+		assertDoesNotThrow(() -> processor.processEvent(emptyEvent()));
+=======
+	public void shouldNotUpdateIfClassesAreNotChanged() throws CoreException {
+		processor.processEvent(emptyEvent());
+
+		verifyNoInteractions(workspace);
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+	}
+
+	@Test
+	void shouldRespondToPostBuildEvents() {
+		IResourceChangeEvent event = new ResourceChangeEvent(this, POST_BUILD, AUTO_BUILD, null);
+```

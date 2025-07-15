@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict appears to be the addition of an `@Override` annotation and the `skip` method itself in one branch versus the other. The `read` method remains the same in both branches.
+
+The `skip` method is a standard method in InputStream implementations, so it should be included.
+
+Here is the resolved snippet:
+
+```java
+    public int read(byte b[], int off, int len) throws IOException {
+        int read = in.read(b, off, len);
+        pos += read;
+        return read;
+    }
+    @Override
+    public long skip(long n) throws IOException {
+        long rc = in.skip(n);
+        pos += rc;
+        return rc;
+    }
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll provide the snippet with the conflict resolved based on the semantic intent of both sides. Both sides are attempting to save the current player's display name into the `Bundle` when a connection to the game client exists. The difference is in the API usage to access the current player.
+
+Looking at the semantics:
+- The `HEAD` version uses `Games.Players.getCurrentPlayer()` which appears to be an older or different API call.
+- The `467f0adf` version uses a more direct `getCurrentPlayer()` method on the game client object, which is likely a newer or refactored API.
+
+Since both aim to achieve the same result (getting the current player's display name), I'll resolve this by choosing the more modern or direct approach from the `467f0adf` branch, assuming it reflects an updated API.
+
+Here is the resolved snippet with full context preserved:
+
+```java
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		try {
+			if (((MainActivity) getActivity()).getGC().isConnected())
+				outState.putString("player", ((MainActivity) getActivity()).getGC()
+						.getCurrentPlayer().getDisplayName());
+			else
+				outState.remove("player");
+		} catch (Exception e) {
+			if (Logger.LOG)
+				Logger.log(e);
+		}
+```

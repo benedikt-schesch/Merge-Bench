@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that one side (HEAD) doesn't have a return value documentation for the `fileSize` method, while the other side (1488b22) adds that documentation. Since adding more complete documentation is almost always beneficial and doesn't change functionality, I'll resolve by including the added return documentation.
+
+```java
+    }
+
+    /**
+     * Returns the length of a file in bytes which exists in the HDFS (accounts for replication).
+     * @param filename
+     * @return length of the file in bytes
+     * @throws IOException
+     */
+    public long fileSize(String filename) throws IOException {
+        DataStorage dfs = pigContext.getDfs();
+        ElementDescriptor elem = dfs.asElement(filename);
+
+```

@@ -1,0 +1,30 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. So, the conflict is in the Java test method checkV2_6_fanCount. The two versions are changing the second assertEquals line.
+
+Looking at the HEAD version, it's using page.getLikesCount().longValue() and the other branch is using page.getLikes().longValue(). The surrounding context might help. The test is about fan count, but the method names suggest that in V2_6, maybe the field was renamed from likes to likesCount, or vice versa.
+
+Wait, there's another test below called checkV2_5_fanCount which uses "page-with-likes" in the JSON path. Maybe in V2_5, the JSON key was "likes", and in V2_6 it's "likesCount". So the Page class might have different getters for different versions.
+
+But the test method names are checkV2_6_fanCount and checkV2_5_fanCount. So for V2_6, perhaps both fanCount and likesCount are being checked, while in V2_5, it's using likes. Wait, but in the test for V2_6, the first assert is on getFanCount(), which is 3L. Then the conflict is between getLikesCount() and getLikes(). 
+
+If the test is for V2_6, maybe the correct method is getLikesCount(), as that's the HEAD version. Alternatively, maybe the branch version is correct because the JSON for V2_6 might have a "likes" field. But without knowing the actual structure of the Page class and the JSON, it's hard to tell.
+
+But the commit messages or the context might give clues. The test data for V2_6 is "page-with-fancount", and for V2_5 it's "page-with-likes". So maybe in V2_6, the JSON structure changed to have "fan_count" and "likes_count", so the getters would be getFanCount() and getLikesCount(). Whereas in V2_5, the JSON has "likes", so the getter is getLikes().
+
+In that case, the HEAD version (getLikesCount()) is correct for V2_6, and the other branch's getLikes() is for V2_5. But the conflict is in the V2_6 test. So the correct line should be assertEquals(3L, page.getLikesCount().longValue()); as per HEAD.
+
+Alternatively, maybe both fanCount and likes are being merged into the same field, but that's unclear. Since the test is checkV2_6_fanCount, but the assertion is on likesCount, perhaps both fanCount and likesCount are separate fields, and the test is verifying both. So the correct resolution is to keep the HEAD version. But maybe the test was updated in both branches, and the correct one depends on the intended fields. However, without more context, it's ambiguous. But since the method is checkV2_6_fanCount, maybe the likesCount is a new field in V2_6, replacing likes. So the HEAD version is correct. Therefore, resolve the conflict by choosing the HEAD version.</think>
+```java
+  @Test
+  public void checkV2_6_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonFromClasspath("v2_6/page-with-fancount"), Page.class);
+    assertNotNull(page);
+    assertEquals(3L, page.getFanCount().longValue());
+    assertEquals(3L, page.getLikesCount().longValue());
+  }
+
+  @Test
+  public void checkV2_5_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonFromClasspath("v2_5/page-with-likes"), Page.class);
+
+```

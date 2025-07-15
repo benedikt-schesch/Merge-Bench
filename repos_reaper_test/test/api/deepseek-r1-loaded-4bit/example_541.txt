@@ -1,0 +1,37 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is between the HEAD version and the branch f53ac04. The line in question is the declaration of logConnectFail. HEAD has "Connect failed" while the other side has "Connection failed". 
+
+I need to determine the intent behind both changes. Both messages are error logs for a failed connection. "Connect failed" is more concise, maybe using the verb form. "Connection failed" is a bit more descriptive, using the noun form. 
+
+Are these messages user-facing or for internal logging? If they're for logs, maybe the exact wording isn't critical as long as the meaning is clear. Both versions convey the same semantic meaning—that an attempt to connect failed. 
+
+Since there's no functional difference, it's a matter of choosing which message is more appropriate. If the project has a convention for log messages, that would guide the decision. For example, if other messages use "failed" with verbs (like "Scan failed to start"), then "Connect failed" might be consistent. But looking at the surrounding lines, there's "logScanStartFail" with "Scan failed to start", which uses the verb. However, "logPreviouslyConnected" uses "reconnect" and "close", which are verbs. 
+
+Wait, the existing messages: "logAlreadyScanning", "logScanStartFail", "logNotScanning" — these all use the -ing form or verbs. Then "logConnectFail" in HEAD is "Connect failed" (verb + past tense), whereas the other side is "Connection failed" (noun + past tense). 
+
+Alternatively, maybe "Connection failed" is more standard as an error message. For example, in user interfaces, "Connection failed" is a common phrase. But since these are log messages, maybe the team prefers brevity. 
+
+Since both changes are semantically equivalent and there's no clear indication of which is preferred, perhaps the best approach is to pick one. However, the user asked to resolve based on intent and semantics. If both sides are trying to convey the same error, then either message is acceptable. 
+
+Alternatively, maybe one of the branches is more up-to-date or the conflict arises from a typo fix. For example, maybe "Connect failed" was a typo and the correct message is "Connection failed". But without context, it's hard to tell. 
+
+Given that the user wants a semantic resolution, and both messages are correct, but perhaps "Connection failed" is slightly more standard, I might lean towards that. However, if the project's existing logs use the verb form, then "Connect failed" would be consistent. 
+
+Looking at the other variables: "logPreviouslyConnected", "logNeverConnected", "logIsNotConnected", etc. These use adjectives or past participles. "Connection failed" uses a noun, which might be inconsistent. "Connect failed" is a verb followed by an adjective, which might not be grammatically correct. Wait, "Connect failed" could be read as an imperative sentence, but perhaps it's intended as "Connect attempt failed". Hmm, maybe "Connection failed" is grammatically better.
+
+Alternatively, perhaps "Failed to connect" would be the most accurate, but that's not one of the options. Between the two, "Connection failed" is more correct grammatically. So, resolving in favor of the branch's change might be better. 
+
+Thus, the resolved line should be "private final String logConnectFail = "Connection failed";"</think>
+```java
+  private final String logAlreadyScanning = "Scanning already in progress";
+  private final String logScanStartFail = "Scan failed to start";
+  private final String logNotScanning = "Not scanning";
+  //Connection
+  private final String logPreviouslyConnected = "Device previously connected, reconnect or close for new device";
+  private final String logConnectFail = "Connection failed";
+  private final String logNeverConnected = "Never connected to device";
+  private final String logIsNotConnected = "Device isn't connected";
+  private final String logIsNotDisconnected = "Device isn't disconnected";
+  private final String logIsDisconnected = "Device is disconnected";
+  private final String logNoAddress = "No device address";
+```

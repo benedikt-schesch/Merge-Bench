@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Based on the analysis, both changes aim to check for an empty JSON array but use different type checks. The intended behavior remains consistent. I'll keep the more specific type check.
+
+```java
+       * error ourselves.
+       *
+       * Per Antonello Naccarato, sometimes FB will return an empty JSON array instead of an empty string. Look for that
+       * here.
+       */
+      if (rawValue instanceof JsonArray) {
+        if (((JsonArray) rawValue).length() == 0) {
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+          if (MAPPER_LOGGER.isTraceEnabled()) {
+            MAPPER_LOGGER.trace(format("Coercing an empty JSON array to an empty string for %s", fieldWithAnnotation));
+          }
+
+          return "";
+
+```

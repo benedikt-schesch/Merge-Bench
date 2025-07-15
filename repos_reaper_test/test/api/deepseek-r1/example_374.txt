@@ -1,0 +1,47 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The code snippet is in Java, and the conflict is around the `@Beta` annotation. 
+
+Looking at the HEAD version, there's an `@Beta` annotation above the method `public Builder trustCertificates(...)`. The other side, from commit 51762f2, doesn't have that annotation. 
+
+So the conflict is whether to keep the `@Beta` annotation or not. The `@Beta` annotation typically marks a feature as beta, meaning it's subject to change. If one branch added it and the other removed it, I need to determine which change to keep.
+
+But wait, maybe the HEAD version added the `@Beta` and the other branch is an older version without it. Alternatively, maybe one branch is adding it and the other is removing it. Without more context, it's hard to tell the intent. 
+
+The user instructions say to consider the intent and semantics of both sides. If both changes are valid but conflicting, and I'm not sure, I should leave the conflict as is. However, if the `@Beta` was added in one branch and the other branch didn't touch that line, maybe it's safe to keep the annotation. But if the other branch explicitly removed it, that's a conflict.
+
+Looking at the code, the HEAD has `@Beta` and the other side doesn't. The surrounding context is the same except for that line. If one branch added `@Beta` and the other didn't modify that line, then merging would keep the `@Beta`. But if the other branch actively removed it, that's a conflict.
+
+In the given code, the conflict markers show that the HEAD added `@Beta` and the other side (51762f2) removed it. So this is a true conflict: one side adds the annotation, the other removes it. 
+
+The user says if unsure or ambiguous, leave the conflict. Since I don't know why one side added or removed it, the safe approach is to leave the conflict as is. Unless there's a way to determine that both changes can be reconciled. 
+
+Alternatively, maybe `@Beta` was added in one branch, and the other branch is an older version that didn't have it. If the other branch's change doesn't touch that line, then merging would take the HEAD's addition. But in the conflict shown, the other side is removing the line. So it's a delete vs. add. 
+
+Hmm. Wait, the code in the conflict is:
+
+<<<<<<< HEAD
+    @Beta
+=======
+>>>>>>> 51762f221ec8ab38da03149c8012e63aec0433dc
+
+So the HEAD has `@Beta`, and the other side has nothing. That means in the other branch, the line with `@Beta` was removed. So the two changes are conflicting: one adds it, the other removes it.
+
+Unless there's a semantic reason to choose one over the other. For example, if `@Beta` was added in a feature branch, and the main branch removed it because it's no longer beta. But without context, I can't tell. 
+
+The user says if unsure, return the same snippet with the conflict. So in this case, since the intent is ambiguous, the conflict remains. Therefore, the correct resolution is to leave the conflict markers as they are because the intent isn't clear.</think>
+```java
+     *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
+     * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS. (use
+     *     for example {@link SecurityUtils#createMtlsKeyStore(InputStream)})
+     * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+     */
+<<<<<<< HEAD
+    @Beta
+=======
+>>>>>>> 51762f221ec8ab38da03149c8012e63aec0433dc
+    public Builder trustCertificates(
+        KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
+        throws GeneralSecurityException {
+      if (mtlsKeyStore != null && mtlsKeyStore.size() > 0) {
+        this.isMtls = true;
+```

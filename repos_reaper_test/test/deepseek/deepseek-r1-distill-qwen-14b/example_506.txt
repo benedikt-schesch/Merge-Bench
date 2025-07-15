@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we should include the texture loading line after the try-catch block to ensure both assets are properly initialized.
+
+```java
+		try {
+			this.mExplosionSound = SoundFactory.createSoundFromAsset(this.mEngine.getSoundManager(), this, "explosion.ogg");
+		} catch (final IOException e) {
+			Debug.e(e);
+		}
+		this.mEngine.getTextureManager().loadTexture(this.mBitmapTextureAtlas);
+
+	@Override
+	public Scene onLoadScene() {
+		this.mEngine.registerUpdateHandler(new FPSLogger());
+```

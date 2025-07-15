@@ -1,0 +1,28 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let's look at what's happening here.
+
+The HEAD side has added code that creates a ProgressDialog called bindingDialog. It sets the message, makes it non-cancelable, and shows it. Then the other side (from commit cff7c7e...) doesn't have that code. So the conflict is between adding the dialog or not.
+
+The key is to understand the intent. The HEAD commit is probably showing a progress dialog while binding to the service, which is a user-friendly feature. The other branch might have removed it, maybe thinking it's unnecessary, or perhaps it's an older version without the dialog.
+
+But since it's a merge conflict, we need to decide if both changes can coexist. The code after the conflict is setting 'registered' to true and enabling the action bar. The dialog code is between binding to the service and those lines. 
+
+If the dialog is part of the binding process, it's likely important feedback for the user. The other branch's code doesn't include it, so maybe that branch was developed before the dialog was added. The correct resolution would be to keep both the dialog and the 'registered' and action bar code. There's no semantic conflict here; the dialog setup is additional and doesn't interfere with the other lines. So the merged code should include the dialog creation and then proceed with setting registered and the action bar. Therefore, the conflict markers should be removed, keeping the HEAD code and the other branch's code in sequence. Wait, no—the other branch's code in the conflict is just removing the dialog. So the conflict is between adding the dialog (HEAD) and not having it (other branch). If both changes are meant to be kept, but since they're conflicting, the correct approach is to keep the dialog code because it's an addition that the other branch doesn't have. Unless the other branch intentionally removed it, but without context, we have to assume both changes are valid. However, in a merge, if one side adds code and the other doesn't touch that area, the addition should remain. But in this case, the conflict is because the other side removed the code. Wait, no—the conflict is between the HEAD adding the dialog and the other branch not having it. So when merging, if the other branch didn't modify that part, there wouldn't be a conflict. But here, the other branch is deleting the code that HEAD added. So perhaps the other branch's commit removed the dialog, and the current HEAD has it. The user is merging these two. The correct resolution depends on whether the dialog should be present. Since the user is asking for a semantic merge, considering the intent. If both sides' intents are to set up the service connection and then set registered and the action bar, but one adds a dialog in the middle, the merge should include the dialog because it's an enhancement. Unless the other branch explicitly removes it for a reason, but without that info, we should preserve the dialog. Therefore, the resolved code should include the dialog code from HEAD, followed by the 'registered' line from both branches. So the conflict is resolved by keeping the HEAD's additions and the other branch's lack of changes. Thus, the merged code includes the dialog.</think>
+```java
+
+            // bind to service
+            mServiceConnection = new OpenPgpServiceConnection(
+                    PgpHandler.this, providerPackageName, this);
+            mServiceConnection.bindToService();
+
+            bindingDialog = new ProgressDialog(this);
+            bindingDialog.setMessage(this.getResources().getString(R.string.okc_progress_text));
+            bindingDialog.setCancelable(false);
+            bindingDialog.show();
+
+            registered = true;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+```

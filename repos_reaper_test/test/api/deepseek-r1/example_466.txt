@@ -1,0 +1,47 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the two versions.
+
+The HEAD version has the method measureUser with parameters (TestUser user, ResultList recommendations, Context context). The other branch's version adds a new parameter int targetLength in the same position. So the method signatures are conflicting because one has targetLength and the other doesn't.
+
+Looking at the method body, the HEAD version calls goodItems.selectItems with context.universe, context.recommender, user. The other branch's version uses context.universe, user. So there's a difference in the arguments passed to selectItems.
+
+I need to figure out the intent here. The targetLength parameter was added in one branch, which might be necessary for some functionality. The other branch added context.recommender as an argument. Both changes seem important.
+
+To resolve, I should include the targetLength parameter in the method signature from the second branch. Then, for the selectItems call, check if context.recommender is needed. If both parameters are required, perhaps combine them. But wait, maybe the second branch removed context.recommender? Or maybe it's a mistake. If the second branch's version doesn't include recommender, but the first does, that's conflicting.
+
+Wait, the HEAD version has context.recommender, and the other branch doesn't. So one side added recommender, the other removed it? Or perhaps one branch is using a different overload of selectItems. Maybe the correct arguments are context.universe, user, and the context.recommender was a mistake in HEAD. Or maybe the other branch's version is correct without it. Without more context, it's hard to tell.
+
+Alternatively, maybe both parameters are needed. But how? If the method selectItems requires three arguments, then the second branch's code would be wrong. But if it's supposed to take two, then the HEAD added an extra parameter. This depends on the definition of selectItems.
+
+Assuming that both changes are intentional: adding targetLength to the method and changing the selectItems arguments. But how to merge them.
+
+The correct resolution would be to include the targetLength parameter in the method signature from the second branch, and reconcile the selectItems call. If the second branch removed context.recommender, then the merged code should use the arguments from the second branch. But if the HEAD added it correctly, then maybe keep it. But since the user provided both conflicting versions, I need to see which is correct.
+
+Alternatively, maybe the selectItems method in the second branch was updated to no longer require the recommender parameter. So the correct call is context.universe and user. Therefore, the merged method should have the targetLength parameter and the selectItems call without recommender.
+
+So the resolved method signature would be:
+
+public MetricResult measureUser(TestUser user, int targetLength, ResultList recommendations, Context context) {
+
+And the selectItems line would be:
+
+LongSet good = goodItems.selectItems(context.universe, user);
+
+Because that's what the second branch has. The HEAD added recommender, but maybe that's incorrect. Alternatively, perhaps the second branch removed it for a reason.
+
+Since the user hasn't provided more context, I have to make a best guess. The conflict is in both the method parameters and the selectItems arguments. To resolve, include the targetLength parameter from the second branch, and the selectItems call from the second branch as well. So the merged code would take the method signature with targetLength and the selectItems without context.recommender.</think>
+```java
+        return new AggregateResult(context).withSuffix(suffix);
+    }
+
+    @Nonnull
+    @Override
+    public MetricResult measureUser(TestUser user, int targetLength, ResultList recommendations, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, user);
+        if (good.isEmpty()) {
+            logger.warn("no good items for user {}", user.getUserId());
+        }
+
+        Integer rank = null;
+
+```

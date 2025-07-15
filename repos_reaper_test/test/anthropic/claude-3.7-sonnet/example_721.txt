@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Based on the merge conflict, I can see that one side is adding a log statement and the other side is removing it (or never had it). The conflict appears to be simple - it's about whether to include a logging statement before posting a message to the event bus.
+
+Here's the resolved snippet, preserving the context and spacing:
+
+```java
+                            @Override
+                            public void onFinished(Void result) {
+                                UiThread.getInstance().post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Logger.log(SmsSentReceiver.class.getSimpleName(), "Failed message deleted ");
+                                        App.bus.post(new ReloadMessagesEvent());
+                                    }
+                                });
+                            }
+
+```
+
+I chose to keep the logging statement since it provides additional debugging information that seems helpful for tracking what's happening when a message is deleted, and including it doesn't affect the functionality of posting the reload event.

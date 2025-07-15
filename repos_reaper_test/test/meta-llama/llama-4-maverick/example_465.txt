@@ -1,0 +1,46 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the intent and semantics of both sides of the merge.
+
+The original code snippet is in Java and appears to be part of a class that implements some metric or measurement functionality, possibly in the context of a recommender system. The method in question, `measureUser`, seems to be designed to measure some aspect of a user's interaction or outcome with a system, potentially based on a list of recommendations (`ResultList recs`) and the user's identity (`TestUser user`).
+
+The conflict arises in the method signature and the invocation of `goodItems.selectItems`. 
+
+1. The `HEAD` version (the local version) of the code has a method signature that includes `TestUser user, ResultList recs, Context context`. It uses `context.recommender` and `context.universe` when calling `goodItems.selectItems`.
+
+2. The `ae1b395ec63b1333c717fdac150e0860cf0326e0` version (the version being merged) changes the method signature to include an additional `int targetLength` parameter and modifies the call to `goodItems.selectItems` to use `user` directly instead of `context.recommender`.
+
+To resolve this conflict, we need to consider the intent behind both changes.
+
+- The change in the `HEAD` version maintains the original method signature and parameter usage, suggesting that the functionality is focused on using the `Context` object for determining the universe and recommender.
+
+- The `ae1b395ec63b1333c717fdac150e0860cf0326e0` version introduces a new parameter `targetLength` and alters the `goodItems.selectItems` call. The introduction of `targetLength` might imply that the measurement now depends on a specific target length, potentially related to the length of recommendations or another metric. The change in `goodItems.selectItems` call suggests a shift towards using `user` directly rather than `context.recommender`, potentially simplifying or altering the logic for selecting good items.
+
+Given these observations, the resolution depends on whether the introduction of `targetLength` and the change in `goodItems.selectItems` call are compatible with the intent of the `HEAD` version.
+
+Since there's no clear indication that the changes are conflicting in terms of compile-time errors or that one version is definitively more correct than the other without additional context, the most straightforward resolution would be to manually merge the changes if they are semantically compatible.
+
+However, without explicit knowledge of the intent or additional context about how `targetLength` is supposed to be used or how the change in `goodItems.selectItems` affects the functionality, the safest course of action is to return the original snippet with the conflict, as modifying it could potentially alter its intended behavior.
+
+Here is the snippet in markdown code syntax, unchanged:
+
+```java
+        return new AggregateResult(context).withSuffix(suffix);
+    }
+
+    @Nonnull
+    @Override
+<<<<<<< HEAD
+    public MetricResult measureUser(TestUser user, ResultList recs, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, context.recommender, user);
+=======
+    public MetricResult measureUser(TestUser user, int targetLength, ResultList recs, Context context) {
+        LongSet good = goodItems.selectItems(context.universe, user);
+>>>>>>> ae1b395ec63b1333c717fdac150e0860cf0326e0
+        if (good.isEmpty()) {
+            logger.warn("no good items for user {}", user.getUserId());
+            return new UserResult(0, false);
+        }
+
+
+```

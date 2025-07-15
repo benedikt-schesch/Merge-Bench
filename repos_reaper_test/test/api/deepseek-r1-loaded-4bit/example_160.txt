@@ -1,0 +1,61 @@
+<think>
+Okay, let's see. I need to resolve this merge conflict in the Java code. The conflict is in the Combine class, which extends Reducer. Both sides are adding some variables.
+
+Looking at HEAD, they have a non-static Log instance, initialized with getClass(). The other side, from commit f52ad1d, has a static Log, initialized with Combine.class. Also, they added a static boolean firstTime and a comment about HADOOP-3226.
+
+Hmm. The log variable: static vs instance. If the log is static, it's shared among all instances, which might be more efficient. But the original code in HEAD uses an instance variable. The conflict here is whether the log should be static or not.
+
+Wait, in Hadoop's Reducer, is it common to have static log variables? Maybe the second change is following a pattern where the log is static. Also, the comment mentions Combiners can be called multiple times, so maybe making the log static is intentional to avoid creating multiple log instances. But why was it changed from instance to static?
+
+Also, the other side adds a static firstTime flag. That's new. So the conflict is between adding the instance log plus whatever else was in HEAD versus adding a static log and the firstTime variable.
+
+But since the two changes are in the same class, maybe the correct resolution is to include both changes. Wait, the conflict markers show that in HEAD, the log is instance, and in the other branch, it's static and adds firstTime. So the conflict is between those two sections.
+
+So how to merge them? The log variable is declared differently. If we take the static version from the other branch, and also include the firstTime variable, but also check if there are any other changes in HEAD that might conflict. But in the given code snippet, the HEAD only has the log line, and the other branch has log and firstTime.
+
+So the correct resolution would be to keep both the static log and the firstTime variable from the other branch, and remove the instance log from HEAD. Because they are modifying the same lines. So the merged code should have the static log, the comment, the firstTime variable, and also the keyType and cp variables from both sides.
+
+Wait, looking at the code:
+
+HEAD has:
+        private final Log log = LogFactory.getLog(getClass());
+
+The other branch has:
+        private static final Log log = LogFactory.getLog(Combine.class);
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+So the conflict is between those two blocks. So the resolution would be to take the static log and the firstTime variable, because they are part of the same change. The comment explains why firstTime is needed. The HEAD's log is non-static, but the other side changes it to static and adds the firstTime.
+
+So the merged code should include the static log, the comment, and the firstTime variable. The keyType and cp are present in both versions, so they stay.
+
+Therefore, the resolved code would have:
+
+        private static final Log log = LogFactory.getLog(Combine.class);
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+        private byte keyType;
+
+        //The reduce plan
+        private PhysicalPlan cp;
+
+That way, both the static log and the firstTime are included, and the rest of the variables remain. The conflict is resolved by taking both changes from the other branch, since they are adding the static variables and the comment, while the HEAD's change was to have an instance log, which is overridden by the other branch's static log.</think>
+```java
+    public static JobContext sJobContext = null;
+
+    public static class Combine
+            extends Reducer<PigNullableWritable, NullableTuple, PigNullableWritable, Writable> {
+
+        private static final Log log = LogFactory.getLog(Combine.class);
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+        private byte keyType;
+
+        //The reduce plan
+        private PhysicalPlan cp;
+```

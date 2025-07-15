@@ -1,0 +1,22 @@
+<think>
+Okay, let's look at this merge conflict. The test method parseUrlCode() has a conflict in the assertThat line. The HEAD version has "instanceOf(Url.class)" without a space after the comma, while the other branch has it with a space. 
+
+Hmm, in Java, the spacing around commas in method arguments is mostly a style issue. Both versions are syntactically correct. The intent of both sides is the same: to check if 'scheme' is an instance of Url. 
+
+Since the difference is just whitespace, which doesn't affect functionality, the best resolution is to pick one. The version with the space after the comma is more conventional, as it's common to add a space after commas in arguments for readability. So I'll merge it by taking the version from the 7d8e78a branch.
+
+I need to make sure not to change anything else in the context. The rest of the code remains the same. So the resolved line should be assertThat(scheme, instanceOf(Url.class)); with the space.</think>
+```java
+
+	@Test
+	public void parseUrlCode() throws Exception {
+		Object scheme = createParser().parse("http://www.github.org/QRCode");
+		assertNotNull(scheme);
+		assertThat(scheme, instanceOf(Url.class));
+		Url urlCode = (Url) scheme;
+		assertEquals("http://www.github.org/QRCode", urlCode.getUrl());
+	}
+
+	@Test(expected = UnsupportedEncodingException.class)
+
+```

@@ -1,0 +1,52 @@
+<think>
+Okay, let's look at this merge conflict. The method is called maxVersions, and both sides are trying to set the 'versions' field, but in different ways. The HEAD version just assigns the parameter directly to this.versions. The other branch, from commit d543609, is doing a bitwise operation: shifting versions left by 1 and OR'ing with the existing EXIST_FLAG.
+
+Hmm, what's the intent here? The HEAD change seems straightforward—setting the max versions as given. The other branch is modifying the value with a bit shift and a flag. Maybe the EXIST_FLAG is a bitmask used elsewhere to track some state, like whether the versions were set. So, the conflicting branch isn't just setting the version count but also preserving some existing flag by combining it with the shifted version.
+
+But wait, the parameter is called 'versions', and if the user passes, say, 3, shifting left by 1 would make it 6. That might not make sense for a maxVersions parameter, which should probably be the actual number. Unless there's some internal representation where the version count is stored in higher bits, and the lower bit is a flag. For example, maybe the lowest bit is a flag indicating existence, and the actual version count is stored in the higher bits. So when setting maxVersions, they shift it left to make room for the flag, then combine with the existing flag.
+
+But the HEAD change doesn't do that. It just sets versions directly. So if the two branches are conflicting, we need to decide which approach is correct. If the EXIST_FLAG is part of the intended design (like some internal state management), then the correct code would be the bitwise operation. However, if the HEAD version is a correction to remove that bit manipulation and just use the value as-is, then the HEAD version is right.
+
+Without more context, it's hard to tell. But since the user is asking to resolve based on semantics and intent, we have to infer. The method is called maxVersions, which suggests that the parameter should be the actual number of versions. The bit shifting in the other branch might be an internal detail, perhaps to pack data into a single integer for storage efficiency. If that's the case, then the correct approach is to combine the new versions value with the existing flag. However, if the HEAD version is a fix to stop using such bitwise operations and instead store the version directly, then the HEAD is correct.
+
+But the problem is that we don't have the context of EXIST_FLAG. Suppose EXIST_FLAG is a bit that's part of the versions field. For example, versions is an int where the lower bit is a flag, and the higher bits are the actual version count. Then, when setting maxVersions, you need to shift the input by 1 to store it in the higher bits and preserve the existing flag. But in the HEAD version, they're overwriting the entire versions field, which would clobber the EXIST_FLAG.
+
+So if the other branch's approach is necessary to preserve the EXIST_FLAG, then that's the correct resolution. However, if the HEAD is a newer change that removes the use of EXIST_FLAG and just uses the version directly, then the HEAD is correct.
+
+But given that the conflict is in the same method, and the other branch's code is modifying the assignment with bit operations, while HEAD is straightforward assignment, perhaps the correct resolution is to use the bitwise operation to preserve the flag. Unless the flag is no longer needed in HEAD.
+
+Since the user hasn't provided more context about EXIST_FLAG, maybe the safest way is to preserve both intents. Wait, but how? If the HEAD is removing the flag handling, and the other branch is adding it, that's a conflict. But if both are modifying the same line, then we have to choose.
+
+Alternatively, maybe the EXIST_FLAG is part of a different feature. For example, in the other branch, when setting versions, they also set a flag to indicate existence. But the HEAD is simply setting the version count. If the two changes are incompatible, then a semantic conflict exists.
+
+But the user is asking to resolve it if possible. So, perhaps the correct approach is to combine both. But how? Let's think: the HEAD sets this.versions = versions, which is the straightforward approach. The other branch sets it to (versions <<1) | (existing EXIST_FLAG). If the EXIST_FLAG is a bit that's part of the versions variable, then the other branch is trying to preserve that flag while setting the version count. But if the HEAD is from a branch that doesn't use the flag anymore, then the assignment would overwrite it. So this is a conflict in intent.
+
+Since we can't be sure without more context, maybe the conflict can't be resolved automatically. But the user said to resolve if possible. Alternatively, perhaps the EXIST_FLAG is a mistake, or the bitwise operation is incorrect. Or maybe the versions variable is supposed to be shifted, and the HEAD is a bug. 
+
+Alternatively, maybe the other branch's code is incorrect. For example, shifting versions <<1 would multiply by 2, which might not be the intended behavior for maxVersions. If the user calls maxVersions(3), then versions would become 6, which is probably wrong. Unless there's a reason to store it shifted. So perhaps the other branch is wrong, and the HEAD is correct. But without knowing the purpose of EXIST_FLAG, it's hard to say.
+
+Since the user is an expert resolving conflicts based on semantics, maybe the correct approach is to preserve the bitwise operation from the other branch, assuming that the flag is important. However, the parameter validation in the method checks if versions <=0, which would not make sense if the stored value is shifted. For example, if versions is stored as (versions <<1), then the actual max versions would be half of that. But the parameter check is versions <=0, which suggests that the input must be positive. So, if the stored value is shifted, then when retrieving, it would be shifted back. But that complicates the API. 
+
+Alternatively, maybe the versions variable is being used to store both the max versions and some existence flag, using bitmasking. For instance, the lower bit is the existence flag, and the upper bits are the version count. So, when setting the version count, you shift it left by 1 (to make room for the flag) and then OR with the existing flag. But then, the version count stored is actually (versions <<1), so the actual max versions parameter is stored correctly. But when the user passes 3, it's stored as 6 in the upper bits. Then when retrieving, you shift right by 1 to get back 3. 
+
+But in the HEAD version, setting this.versions = versions would overwrite the entire variable, including the flag. So if the flag is needed, then the other branch's code is correct, and the HEAD is breaking that. Therefore, the merge should take the other branch's code. But this is a conflict between two different approaches. 
+
+If we assume that the EXIST_FLAG is part of the current state that needs to be preserved when setting the versions, then the correct line is the one from the other branch. Therefore, the resolved code should use the bitwise operation. However, if the HEAD is a newer change that removes the use of the flag, then it's a conflict. 
+
+Given that the user is asking for a semantic resolution, and assuming that both changes are valid but need to be combined, but how? If the EXIST_FLAG is part of the versions variable, then when setting maxVersions, you need to preserve the existing flag. Therefore, the correct code is to shift the input versions and OR with the existing flag. Hence, the merge should take the other branch's code. But the parameter check in the method is on the input versions, not the shifted value, which is correct because the user is passing the actual version count. 
+
+Therefore, the resolved code would use the line from the other branch. The HEAD version is incorrect because it would overwrite the flag. Therefore, the conflict is resolved by choosing the other branch's line.</think>
+```java
+  public GetRequest maxVersions(final int versions) {
+    if (versions <= 0) {
+      throw new IllegalArgumentException("Need a strictly positive number: "
+                                         + versions);
+    }
+    this.versions = (versions << 1) | (this.versions & EXIST_FLAG);
+    return this;
+  }
+
+  /**
+   * Returns the maximum number of versions to return for each cell scanned.
+
+```

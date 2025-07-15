@@ -1,0 +1,23 @@
+<think>
+Okay, let's see. The user wants me to resolve a merge conflict in this Java code snippet. The conflict is between the HEAD version and another branch's commit. The HEAD side has the line declaring the GetProtocolVersionRequest class as private final static. The other branch adds a Javadoc comment above that line explaining what the RPC is used for.
+
+So the conflict markers are around the comment. The HEAD doesn't have the comment, and the other branch adds it. Since the comment provides useful information about the purpose of the RPC, it's beneficial to include it. The class declaration line is the same in both versions except for the comment. So the correct resolution would be to keep the comment from the other branch and the class declaration from HEAD, removing the conflict markers.
+
+I need to make sure that the merged code includes both the comment and the class declaration without any markers. The context around the conflict should remain unchanged. There's no ambiguity here because the comment is an addition that doesn't conflict with the class declaration. So the resolved code will have the comment from the other branch followed by the class declaration from HEAD.</think>
+```java
+    'g', 'e', 't',
+    'P', 'r', 'o', 't', 'o', 'c', 'o', 'l',
+    'V', 'e', 'r', 's', 'i', 'o', 'n'
+  };
+
+  /**
+   * RPC used to discover the exact protocol version spoken by the server.
+   * Not exposed as part of the public API, and only used when talking to
+   * HBase 0.94.x and earlier.
+   */
+  private final static class GetProtocolVersionRequest extends HBaseRpc {
+
+    @Override
+    byte[] method(final byte unused_server_version) {
+      return GET_PROTOCOL_VERSION;
+```

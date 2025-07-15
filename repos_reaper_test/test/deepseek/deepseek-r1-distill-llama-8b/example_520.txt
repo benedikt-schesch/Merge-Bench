@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve the semantic conflict in the code, the correct approach is to ensure consistent use of `getPortValue` by passing both `node` and `port`, maintaining the intended functionality of evaluating the port's value properly.
+
+```java
+        for (Port port : inputs) {
+            Object argument;
+            if (argumentMap.containsKey(port)) {
+                argument = argumentMap.get(port);
+            } else if (port.hasValueRange()) {
+                argument = getPortValue(node, port);
+            } else {
+                // The port expects a list but nothing is connected. Evaluate with an empty list.
+                argument = ImmutableList.of();
+            }
+            arguments[i] = argument;
+```

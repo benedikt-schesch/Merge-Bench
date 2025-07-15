@@ -1,0 +1,26 @@
+<think>
+Okay, let's tackle this merge conflict. So, looking at the code, the conflict is between the HEAD version and the other branch. The method is supposed to create a temporary file, write some data to it, and return the file. 
+
+In the HEAD version, they create a PrintWriter directly from the file. The other branch adds f.deleteOnExit() and uses a more elaborate setup for the PrintWriter, specifying UTF-8 encoding. 
+
+First, I need to understand the intent of both changes. The HEAD side is straightforward, but maybe lacks encoding specification. The other branch ensures the file is deleted on exit, which is good practice for temp files, and sets the output stream with UTF-8, which is important for proper character handling. 
+
+So combining both changes makes sense. The deleteOnExit() should be included. Also, specifying the encoding is better practice to avoid platform-dependent issues. Therefore, the correct resolution is to take both changes: add deleteOnExit and use the OutputStreamWriter with UTF-8. The order in the code is important. The branch version has deleteOnExit before creating the PrintWriter, which is correct because you want to set the delete flag immediately after creating the file.
+
+So the resolved code should have both the deleteOnExit line and the PrintWriter with the specified encoding. The rest of the code (the loop and closing the writer) remains the same. There's no conflict in the loop or close parts, so they stay as is. 
+
+I should make sure that the merged code includes both changes without any conflict markers. So the final code after merging would have f.deleteOnExit(); and the PrintWriter initialized with the UTF-8 OutputStreamWriter. That way, both the automatic deletion and correct encoding are handled.</think>
+```java
+	static public File createInputFile(String tmpFilenamePrefix, 
+			                           String tmpFilenameSuffix, 
+			                           String[] inputData) 
+	throws IOException {
+		File f = File.createTempFile(tmpFilenamePrefix, tmpFilenameSuffix);
+        f.deleteOnExit();
+		PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"));
+		for (int i=0; i<inputData.length; i++){
+			pw.println(inputData[i]);
+		}
+		pw.close();
+		return f;
+```

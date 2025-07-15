@@ -1,0 +1,28 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java code snippet within a synchronized block. Both sides are modifying how the 'cards' list is initialized.
+
+In the HEAD version, the line is:
+final List<WhiteCard> cards = new ArrayList<WhiteCard>(newBlackCard.getDraw());
+And in the other branch (5adedd2), it's:
+final List<WhiteCard> cards = new ArrayList<>(newBlackCard.getDraw());
+
+I notice that the difference is the use of the diamond operator in the latter. Java 7 introduced the diamond operator to allow type inference, so ArrayList<> is equivalent to explicitly specifying the type parameter. Since both are creating an ArrayList of WhiteCard, the diamond operator is just a shorthand and doesn't change the semantics. So this part is a simple stylistic difference, and we can choose the diamond operator version as it's more modern and concise.
+
+Then, looking at the loop. Both versions have a loop that runs from 0 to newBlackCard.getDraw(), adding a white card each time. Wait, but in the initialization of the ArrayList, they're using newBlackCard.getDraw() as the initial capacity. The ArrayList constructor that takes an integer sets the initial capacity, not the size. So creating an ArrayList with an initial capacity and then adding elements in a loop doesn't affect the actual elements; the list starts empty. Therefore, both versions are creating an empty list with an initial capacity and then adding 'newBlackCard.getDraw()' elements. So the actual result is the same. 
+
+So the conflict is between using the explicit type parameter in the ArrayList vs the diamond operator. Since the diamond operator is correct here and the intended type is the same, we can safely resolve the conflict by choosing the version with the diamond operator. The loop part is the same in both branches, so no issue there.
+
+Therefore, the resolved code should use the diamond operator from the second branch and keep the loop as is. The surrounding context remains unchanged. The merge conflict markers are removed, and the correct line is selected.</think>
+```java
+      synchronized (players) {
+        for (final Player player : players) {
+          if (getJudge() == player) {
+            continue;
+          }
+          final List<WhiteCard> cards = new ArrayList<>(newBlackCard.getDraw());
+          for (int i = 0; i < newBlackCard.getDraw(); i++) {
+            cards.add(getNextWhiteCard());
+          }
+          player.getHand().addAll(cards);
+          sendCardsToPlayer(player, cards);
+```

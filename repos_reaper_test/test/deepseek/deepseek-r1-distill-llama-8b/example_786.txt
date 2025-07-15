@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The provided code snippet shows a merge conflict in a Java constructor. On one side, the constructor parameters are `(final String msg, final HBaseException cause, final HBaseRpc rpc, final Deferred deferred)`, while on the other, it's `(final String msg, final HBaseException cause, final Deferred<?> deferred)`. This discrepancy causes a signature mismatch, making both versions incompatible. The mutual intents are likely to assign the constructor parameters to instance variables correctly.
+
+```java
+   * @param deferred A deferred one can wait on before retrying the failed RPC.
+   */
+  PleaseThrottleException(final String msg,
+                          final HBaseException cause,
+                          final HBaseRpc rpc,
+                          final Deferred deferred) {
+>>>>>>> HEAD
+                          this.rpc = rpc;
+                          this.deferred = deferred;
+  }
+
+  PleaseThrottleException(final String msg,
+                          final HBaseException cause,
+                          final HBaseRpc rpc,
+                          final Deferred deferred) {
+<<<<<<< d543609051366758e579ad168361daadd74cdf7f
+                          final Deferred<?> deferred) {
+=======
+                          final Deferred<?> deferred) {
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    super(msg, cause);
+    this.rpc = rpc;
+    this.deferred = deferred;
+  }
+```

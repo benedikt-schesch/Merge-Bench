@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The merge conflict arises because there are two different implementations of the `store` method:
+
+1. The `HEAD` version returns `void` and calls another `store` method with three arguments.
+2. The merged commit changes the return type to `ExecJob` and makes the method return the result of the `store` call.
+
+Without additional context, it's unclear whether the method was intentionally modified to return an `ExecJob` or if this is an unintended change. The resolution depends on the intended functionality and whether the return value is used elsewhere in the code.
+
+Given the ambiguity, the conflict should be preserved to allow manual resolution by the developer.
+
+```java
+     * @param id The alias to store
+     * @param filename The file to which to store to
+     * @throws IOException
+     */
+
+<<<<<<< HEAD
+    public void store(String id, String filename) throws IOException {
+        store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+=======
+    public ExecJob store(String id, String filename) throws IOException {
+        return store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+        
+    /**
+     *  forces execution of query (and all queries from which it reads), in order to store result in file
+     */
+```

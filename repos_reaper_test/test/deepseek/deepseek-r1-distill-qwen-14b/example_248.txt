@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict where two versions of the same code are trying to be combined. Both versions are formatting the deserialization of `PIG_INPUTS` differently, but the functionality remains the same.
+
+The conflict can be resolved by choosing a consistent code style. Here's the merged code with the conflict resolved using the left side's formatting for consistency:
+
+```java
+        return (LoadFunc) PigContext.instantiateFuncFromSpec(loadFuncSpec);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String getLoadLocation(int inputIndex, Configuration conf) throws IOException {
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+        return inputs.get(inputIndex).getFileName();
+    }
+
+    /**
+     * Pass loader signature to LoadFunc and to InputFormat through
+```
+
+The conflict arises solely from formatting differences. The left side (HEAD) has the code without splitting the method call across multiple lines, making it more concise and aligned with the style of the surrounding code. Therefore, the left side's formatting is chosen for consistency and readability.

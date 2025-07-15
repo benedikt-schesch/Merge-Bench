@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Alright, let's break this down. We have a merge conflict in the Javadoc author section of a Java file. Both sides are trying to add or modify the author list. The key is to preserve all legitimate contributors without duplication.
+
+1. **Identify Changes**:
+   - **HEAD** adds two authors: Nicolas François and Mikhail Mazursky.
+   - **Other branch** only includes Nicolas François.
+
+2. **Determine Intent**:
+   - Both sides agree that Nicolas François is an author.
+   - HEAD includes an additional author, Mikhail Mazursky, which the other branch doesn't have.
+
+3. **Resolve Conflict**:
+   - Since the intent seems to be adding Mikhail in HEAD, we'll include both to ensure all contributors are credited.
+
+**Final Decision**: Merge both changes by including all authors.
+
+```java
+ * @author Yvonne Wang
+ * @author Alex Ruiz
+ * @author Mathieu Baechler
+ * @author Joel Costigliola
+ * @author Maciej Jaskowski
+ * @author Nicolas François 
+ * @author Mikhail Mazursky
+ */
+public abstract class AbstractIterableAssert<S extends AbstractIterableAssert<S, A>, A extends Iterable<?>> extends
+    AbstractAssert<S, A> implements ObjectEnumerableAssert<S> {
+
+  @VisibleForTesting Iterables iterables = Iterables.instance();
+```

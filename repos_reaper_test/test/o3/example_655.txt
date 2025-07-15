@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    List<T> dataList = new ArrayList<T>(jsonData.length());
+    for (int i = 0; i < jsonData.length(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+```

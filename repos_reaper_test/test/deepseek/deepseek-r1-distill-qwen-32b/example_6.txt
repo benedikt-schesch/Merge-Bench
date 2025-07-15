@@ -1,0 +1,51 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict in the Minecraft protocol handling code. The conflict is in the order of writing different fields to the buffer based on the protocol version.
+
+On the `HEAD` side, the code first writes the `nameTagVisibility` field, then checks if the protocol version is >= `ProtocolConstants.MINECRAFT_1_9` to write the `collisionRule`, and finally writes the `color` field.
+
+On the `80b3135a93f0e23489cc19086e31feb12ff51798` side, the code only writes the `collisionRule`.
+
+Looking at the intent, `nameTagVisibility` was introduced in Minecraft 1.8, `collisionRule` was introduced in 1.9, and `color` was also introduced in 1.8. 
+
+The correct merge should include all three fields in the correct order, with the 1.9 check only needed for `collisionRule`. Here's how to resolve it:
+
+```java
+            writeString( prefix, buf );
+            writeString( suffix, buf );
+            buf.writeByte( friendlyFire );
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+            {
+                writeString( nameTagVisibility, buf );
+                if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_9 )
+                {
+                    writeString( collisionRule, buf);
+                }
+                buf.writeByte( color );
+            }
+        }
+        if ( mode == 0 || mode == 3 || mode == 4 )
+        {
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+```
+
+I have resolved the conflict by taking the appropriate fields from both sides while maintaining the correct version checks.
+
+```java
+            writeString( prefix, buf );
+            writeString( suffix, buf );
+            buf.writeByte( friendlyFire );
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+            {
+                writeString( nameTagVisibility, buf );
+                if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_9 )
+                {
+                    writeString( collisionRule, buf);
+                }
+                buf.writeByte( color );
+            }
+        }
+        if ( mode == 0 || mode == 3 || mode == 4 )
+        {
+            if ( protocolVersion >= ProtocolConstants.MINECRAFT_1_8 )
+```

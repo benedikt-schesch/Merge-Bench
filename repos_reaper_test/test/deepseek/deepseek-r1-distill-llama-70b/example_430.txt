@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict appears to be about the type of adapter being used (SortedArrayObjectAdapter vs SortedObjectAdapter). Looking at the context, the intent is to add a video to either an existing row's adapter or create a new one. Since `video` appears to be a single object rather than an array, SortedObjectAdapter is the more appropriate choice. Here's the resolved version:
+
+```java
+                    ListRow row = findListRow(category);
+
+                    // if found add this video
+                    // if not, create a new row and add it
+                    if (row != null) {
+                        ((SortedObjectAdapter) row.getAdapter()).add(video);
+                    } else {
+                        SortedObjectAdapter listRowAdapter = new SortedObjectAdapter(
+                                videoNameComparator, mCardPresenter);
+                        listRowAdapter.add(video);
+
+                        HeaderItem header = new HeaderItem(0, category, null);
+                        mAdapter.add(0, new ListRow(header, listRowAdapter));
+```

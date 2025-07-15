@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises from the return type of `openScanner`. The original code returns `Deferred<Long>`, while the modified version returns `Deferred<Object>`. The method's Javadoc indicates the return type depends on the HBase version: `long` for 0.94 and before, or `Scanner.Response` for 0.95 and up.
+
+Returning `Deferred<Object>` allows the method to handle both return types, making it compatible with all HBase versions. This change better aligns the method signature with the documented behavior.
+
+```java
+   * Package-private access point for {@link Scanner}s to open themselves.
+   * @param scanner The scanner to open.
+   * @return A deferred scanner ID (long) if HBase 0.94 and before, or a
+   * deferred {@link Scanner.Response} if HBase 0.95 and up.
+   */
+<<<<<<< HEAD
+  Deferred<Long> openScanner(final Scanner scanner) {
+=======
+  Deferred<Object> openScanner(final Scanner scanner) {
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    num_scanners_opened.increment();
+    return sendRpcToRegion(scanner.getOpenRequest()).addCallbacks(
+      scanner_opened,
+      new Callback<Object, Object>() {
+        public Object call(final Object error) {
+```

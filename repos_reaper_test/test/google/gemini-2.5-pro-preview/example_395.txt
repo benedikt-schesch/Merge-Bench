@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to understand the intent behind the changes on both sides.
+
+**Left Side (HEAD):**
+1.  Test method signature: `void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException`
+    *   The method visibility is package-private (no explicit modifier). In JUnit 5, test methods are no longer required to be `public`. This change might be an intentional update to modern JUnit 5 conventions.
+2.  Method call: `InfinitestCore core = prepateCore(projectAUri(), 0);`
+    *   There is a typo: `prepateCore` instead of `prepareCore`. This is likely an unintentional error.
+
+**Right Side (ee249315695b6123b42f6cb1b6ab1489e37eb586):**
+1.  Test method signature: `public void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException`
+    *   The method visibility is `public`. This is the traditional visibility for JUnit tests and is still widely used.
+2.  Method call: `InfinitestCore core = prepareCore(projectAUri(), 0);`
+    *   The method name `prepareCore` is correctly spelled.
+
+**Semantic Resolution:**
+
+The primary goal is to have a correctly functioning test.
+1.  **Method Name Typo:** The typo `prepateCore` in HEAD is an error. The correct method name is `prepareCore` as seen in the right side. This part of the resolution is straightforward: use `prepareCore`.
+2.  **Test Method Visibility:**
+    *   HEAD's intent seems to be to use package-private visibility for test methods, which is a valid and common practice in JUnit 5.
+    *   The right side's intent is to use `public` visibility, which is also valid.
+
+To combine these intents semantically:
+*   We must fix the typo by using `prepareCore`.
+*   For the visibility, if we assume the change to package-private (HEAD) was a deliberate stylistic modernization and the typo was an accident, while the right side focused on fixing the typo (and perhaps maintained an older visibility style), a good semantic merge would combine the stylistic update from HEAD with the typo fix from the right side.
+
+Therefore, the resolved code would use package-private visibility (`void`) for the test method and the corrected method name (`prepareCore`).
+
+```java
+		when(coreRegistry.getCore(projectAUri)).thenReturn(core);
+		return core;
+	}
+
+	@Test
+	void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 0);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(noTestsRun());
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+
+```

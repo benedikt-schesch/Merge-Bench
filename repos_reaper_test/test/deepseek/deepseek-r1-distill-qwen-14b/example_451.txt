@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflicting changes involve modifying the method's access modifier and adding a new parameter. The resolution combines both changes.
+
+```java
+     * @param handler  handler where to receive the information
+     * @param len      Maximum length of metadata column
+     * @param rb       ResourceBundle for I18N
+     * @see Setter#asAnnotatedElement()
+     */
+protected void printOption(PrintWriter out, OptionHandler handler, int len, ResourceBundle rb) {
+=======
+private void printOption(PrintWriter out, OptionHandler handler, int len, ResourceBundle rb, OptionHandlerFilter filter) {
+>>>>>>> 1acff436c29ed9c0f9ce81ad845b3df7480dde83
+    	// Hiding options without usage information
+    	if (handler.option.usage() == null ||
+            handler.option.usage().length() == 0 ||
+            !filter.select(handler)) {
+    		return;
+```

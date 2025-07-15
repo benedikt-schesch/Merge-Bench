@@ -1,0 +1,43 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java class, specifically around the 'picture' field. On one side (HEAD), the field is of type ProfilePictureSource, and on the other side (a17acec), it's a String. Both sides also have a @Facebook("picture") annotated rawPicture field which is a JsonObject.
+
+Hmm, so the main issue here is the data type of the 'picture' field. The HEAD branch uses a custom type ProfilePictureSource, while the other branch uses a String. I need to figure out the intent behind both changes. 
+
+Maybe the HEAD branch introduced a more structured type to handle the picture data, parsing it into an object with possibly more fields or methods. The other branch might have kept it as a String for simplicity or because they needed the raw URL or JSON string. 
+
+But wait, both versions also have a rawPicture field of type JsonObject. That suggests that perhaps the HEAD version is using ProfilePictureSource to represent a parsed version of the picture data, while the other branch's String could be a direct string representation. However, having both 'picture' and 'rawPicture' might be intentional, perhaps for different purposes—like one being the processed object and the other the raw JSON.
+
+But if the conflict is between changing the type of 'picture' from String to ProfilePictureSource, merging them isn't straightforward. Since both sides are modifying the same line, it's a conflict that can't be automatically resolved without knowing the intended use. 
+
+Since the user asked to resolve it based on semantics and intent, and if I'm not sure, I should leave the conflict as is. But maybe there's a way to combine both. Wait, but they can't both exist at the same time unless the field is renamed. However, the code as is shows that both versions are changing the same field's type. 
+
+Alternatively, maybe the ProfilePictureSource is a better choice if the HEAD is enhancing the model, but the other branch might have a reason for using String. Without more context, it's hard to decide. Since the user said to return the same snippet with the conflict if unsure, I should leave the conflict markers because the intent is ambiguous here.</think>
+```java
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+   * @since 1.6.13
+   */
+  @Getter
+  @Setter
+<<<<<<< HEAD
+  private ProfilePictureSource picture;
+=======
+  private String picture;
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+
+  @Facebook("picture")
+  private JsonObject rawPicture;
+
+  /**
+```
+
+The conflict remains unresolved because:
+1. Both sides are modifying the same field's type with different semantic intentions
+2. ProfilePictureSource (HEAD) suggests object modeling vs String (other branch) suggests simple storage
+3. Both versions coexist with a `rawPicture` JsonObject field, but there's no clear indication which type should take precedence
+4. The relationship between `picture` and `rawPicture` fields is ambiguous without additional context
+
+A proper resolution would require understanding:
+- If these fields represent different API versions
+- How the picture data is used by downstream code
+- Whether ProfilePictureSource contains additional parsed metadata
+- If the String version needs to preserve raw JSON values

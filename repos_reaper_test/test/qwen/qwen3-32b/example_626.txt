@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+  @Test
+  public void postImageToUserFeedWithMessageAndPrivacy() {
+    byte[] imageAsBytes = fetchBytesFromImage();
+    JsonObject privacy = new JsonObject();
+<<<<<<< HEAD
+    privacy.add("value", "SELF");
+=======
+    privacy.put("value", "SELF");
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    DefaultFacebookClient client =
+        new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_2_7);
+    JsonObject obj = client.publish("me/photos", JsonObject.class,
+      BinaryAttachment.with("test.png", imageAsBytes, "image/png"), Parameter.with("privacy", privacy));
+    assertNotNull(obj);
+```

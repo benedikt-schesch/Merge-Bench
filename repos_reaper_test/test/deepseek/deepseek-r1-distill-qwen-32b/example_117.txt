@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Both sides of the merge are attempting to set `repoInfo.branch`, but they have different approaches:
+
+1. HEAD side is setting it to `selectedBranch.getName()` - the branch name
+2. The other side is setting it to `selectedBranch.getCommit().getSha()` - the commit SHA
+
+This appears to be a semantic conflict where one side wants to track the branch name while the other wants to track the commit identifier.
+
+Since the intent is ambiguous and I'm unsure which approach is correct, I'll return the original snippet with the conflict:
+
+```java
+  private void openCommits() {
+    if (selectedBranch != null) {
+      RepoInfo repoInfo = new RepoInfo();
+      repoInfo.owner = repo.getOwner().getLogin();
+      repoInfo.name = repo.name;
+<<<<<<< HEAD
+      repoInfo.branch = selectedBranch.getName();
+=======
+      repoInfo.branch = selectedBranch.getCommit().getSha();
+>>>>>>> 42bfc423b52bed1c5d64d35cc1100a32b48968d6
+      Intent intent = BranchCommitsActivity.createLauncherIntent(this, repoInfo);
+      startActivity(intent);
+    }
+  }
+```

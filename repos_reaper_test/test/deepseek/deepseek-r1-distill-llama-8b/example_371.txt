@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict arises because both branches set `contentOffset` under different conditions. The left side includes an `if` check, while the right does not. To resolve this, we'll merge by preserving the more specific condition from the left side.
+
+```java
+    if (metadata != null) {
+      content = new MultipartContent().setContentParts(Arrays.asList(metadata, mediaContent));
+      initiationRequestUrl.put("uploadType", "multipart");
+    } else {
+      initiationRequestUrl.put("uploadType", "media");
+      if (contentOffset != -1) {
+        initiationRequestUrl.put("contentOffset", String.valueOf(contentOffset));
+      }
+    }
+    HttpRequest request =
+        requestFactory.buildRequest(initiationRequestMethod, initiationRequestUrl, content);
+    request.getHeaders().putAll(initiationHeaders);
+    // We do not have to do anything special here if media content length is unspecified because
+```

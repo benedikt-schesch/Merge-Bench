@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The code snippet appears to have a logical error when creating the `ISOFormatInputStream`. 
+
+```java
+static public InputStream open(String fileSpec, PigContext pigContext) throws IOException {
+    fileSpec = checkDefaultPrefix(pigContext.getExecType(), fileSpec);
+    if (!fileSpec.startsWith(LOCAL_PREFIX)) {
+        init(pigContext);
+        return openDFSFile(init($fileSpec));
+    }
+    else {
+        fileSpec = fileSpec.substring(LOCAL_PREFIX.length());
+        return openDFSFile(Dfs.asElement(fileSpec, pigContext));
+    }
+}
+```
+
+Full context and merged conflicts included:
+
+```java
+static public InputStream open(String fileSpec, PigContext pigContext) throws IOException {
+    fileSpec = checkDefaultPrefix(pigContext.getExecType(), fileSpec);
+    
+    if (!fileSpec.startsWith(LOCAL_PREFIX)) {
+        init(pigContext);
+        return openDFSFile(init($fileSpec));
+    } else {
+        fileSpec = fileSpec.substring(LOCAL_PREFIX.length());
+        return openDFSFile(Dfs.asElement(fileSpec, pigContext));
+    }
+}
+```

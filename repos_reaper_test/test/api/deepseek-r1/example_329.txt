@@ -1,0 +1,20 @@
+<think>
+Okay, let's look at this merge conflict. The problem is in the if statement condition. The HEAD version checks if position is less than the adapter's count. The other branch adds a check that position is also greater than or equal to zero. 
+
+Hmm, why would they add that? Oh right, because array indices can't be negative. The original code might have a bug where position could be negative, leading to an exception. The other branch is fixing that by ensuring position is within valid bounds.
+
+So the correct resolution is to combine both conditions. The HEAD version doesn't check for negative positions, which could cause issues. The other branch's condition is more robust. Therefore, the resolved code should include both checks: position >=0 and position < count. That makes sense because you don't want a negative index, which would crash the app.
+
+I should make sure the merged code uses the combined condition. The rest of the code remains the same. No other changes are needed. The comments and logging lines stay as they are. So the conflict markers are removed, and the correct if statement is the one with both conditions.</think>
+```java
+	@Override
+	protected User getContextItemUser(int position) {
+		// position = position - 1;
+		Log.d(TAG, "list position:" + position);
+		// 加入footer跳过footer
+		if (position >= 0 && position < mUserListAdapter.getCount()) {
+			User item = (User) mUserListAdapter.getItem(position);
+			if (item == null) {
+				return null;
+			} else {
+```

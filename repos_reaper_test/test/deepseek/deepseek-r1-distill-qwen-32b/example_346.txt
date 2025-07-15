@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a difference in the namespace URI within an XML string. The `HEAD` version uses `"urn:schemas-upnp-org:metadata-1-0/RCS/"` while the other side uses `"urn:schemas-upnp-org:metadata-1-0//RCS/"`. The correct namespace should have a single slash, as per UPnP specifications, making the `HEAD` version accurate.
+
+Thus, the correct namespace URI is preserved.
+
+```java
+
+        assertEquals(renderingControlLastChange.toString(), "");
+        mp.setVolume(0.50);
+        Thread.sleep(500);
+        lastChangeExpected =
+                "<Event xmlns=\"urn:schemas-upnp-org:metadata-1-0/RCS/\">" +
+                        "<InstanceID val=\"0\">" +
+                        "<Volume channel=\"Master\" val=\"50\"/>" +
+                        "</InstanceID>" +
+                "</Event>";
+        assertEquals(renderingControlLastChange.toString(), lastChangeExpected);
+
+```

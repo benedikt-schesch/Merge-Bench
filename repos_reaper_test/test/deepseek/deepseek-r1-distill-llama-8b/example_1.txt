@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The user has provided a Java code snippet that shows a merge conflict between two different ways of setting the "version" field in a map. The left side of the conflict uses `bungee.getConfig().getCustomServerName()` to prepend to the game version, while the right side hardcodes the string "BungeeCord " followed by the game version.
+
+To resolve this, it's important to consider the intended functionality and purpose of the "version" field. If the intention is to capture both the server's custom name and the game version, the left side's approach might be appropriate. However, if the goal is to have a standardized version string without including the server name (perhaps the server name is stored elsewhere or isn't needed in this context), the right side might be preferable.
+
+Since the right side's version is shorter and more directly related to the game version, I will use that version string. If both parties are trying to achieve similar goals, a possible resolution is to combine the two:
+
+```java
+data.put("version", "BungeeCord " + bungee.getGameVersion() + " - " + bungee.getConfig().getCustomServerName());
+```
+
+However, if the version field should only contain the game version, the right side is more appropriate:
+
+```java
+data.put("version", "BungeeCord " + bungee.getGameVersion());
+```

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict based on the intent and semantics of both sides:
+
+- **HEAD**: This side includes imports for `RestfbAssertions.assertThat` and `org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown`. This suggests that the code in this branch is using AssertJ for assertions, which is a more modern and fluent assertion library often used for readable test code.
+- **a17acec0655b8058aaf4d336ba2a1352aa49e2fe**: This side imports `org.junit.Assert.*`, indicating a reliance on JUnit's built-in assertion methods, which are more traditional and widely used in older test frameworks.
+
+**Intent Analysis**: The conflict revolves around the choice of testing framework for assertions. HEAD aims to use AssertJ for potentially more readable and flexible assertions, while the other branch sticks to JUnit's assertion library, which might be more consistent with the existing codebase or project standards.
+
+Since the intent of both sides is to provide assertion mechanisms for testing, and without further context on project guidelines or preferences for testing frameworks, I will preserve the conflict as is to avoid making an assumption that might not align with the project's standards. If there is a clear project preference for one framework over the other, that should guide the resolution.
+
+Here is the unchanged snippet with the conflict preserved:
+
+```java
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.restfb;
+
+<<<<<<< HEAD
+import static com.restfb.testutils.RestfbAssertions.assertThat;
+import static com.restfb.util.StringUtils.fromInputStream;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+=======
+import static com.restfb.util.StringUtils.fromInputStream;
+import static org.junit.Assert.*;
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+
+import com.restfb.WebRequestor.Response;
+import com.restfb.exception.FacebookJsonMappingException;
+import com.restfb.exception.FacebookOAuthException;
+import com.restfb.exception.FacebookResponseContentException;
+```

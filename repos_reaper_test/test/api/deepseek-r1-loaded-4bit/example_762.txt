@@ -1,0 +1,40 @@
+<think>
+Okay, let me look at this merge conflict. The conflict is in the constructor of the DeleteRequest class. Both versions are calling the same constructor but with different arguments for the fourth parameter.
+
+In the HEAD version, the fourth argument is null. The other branch uses DELETE_FAMILY_MARKER. I need to figure out what each side is intending here. 
+
+The comment above the constructor says it's for deleting a specific cell. Wait, but the parameters here are table, key, family. So maybe this constructor is for deleting an entire family? Or a specific cell within a family? The comment mentions "delete a specific cell," but the parameters don't include a qualifier. That's confusing. 
+
+Wait, maybe the fourth parameter is the qualifier. If it's null, that might mean deleting the entire family. But the other branch uses DELETE_FAMILY_MARKER, which could be a constant indicating to delete the family. Maybe in one branch, the code was changed to use a marker instead of null for clarity or to handle some internal logic differently.
+
+So the intent of both branches is to delete a family. One does it by passing null, the other by using a specific marker. The question is which one is correct. If the constructor's other overload (the one being called here) expects a qualifier, then passing null would mean delete the entire family, while a specific qualifier would delete a specific cell. But the comment says this constructor is for deleting a specific cell, which would require a qualifier. Hmm, that's a contradiction.
+
+Wait, the comment says: "Constructor to delete a specific cell." But the parameters are table, key, family. To delete a specific cell, you need family, qualifier, and timestamp. So maybe this constructor is incomplete, or perhaps the comment is wrong. Alternatively, maybe the fourth parameter is the qualifier. If the HEAD version passes null as the qualifier, that would delete the entire family, but the comment says it's for a specific cell. That doesn't make sense. 
+
+Alternatively, maybe the other branch's change is correcting a bug where using null wasn't the right way to indicate a family delete, and using DELETE_FAMILY_MARKER is more explicit. But if the constructor is intended to delete a specific cell, then passing a marker for family deletion would be incorrect. 
+
+This is a bit ambiguous. Without more context on what the parameters of the called constructor represent, it's hard to tell. The called constructor's parameters are probably (table, key, family, qualifier, rowLock). So if qualifier is null, that means delete the entire family. If it's a marker, maybe that's another way to indicate the same thing. Or perhaps DELETE_FAMILY_MARKER is a specific byte array that the code interprets as deleting the family, whereas null might be treated differently. 
+
+If both changes are trying to achieve the same thing (delete the family), but using different markers, then we need to determine which one is correct. If the code elsewhere uses DELETE_FAMILY_MARKER to signify family deletion, then the branch's version is correct. If the code uses null for that purpose, then HEAD is correct. 
+
+Since I don't have the context of the rest of the code, I can't be certain. The conflict is between null and DELETE_FAMILY_MARKER. If the intent is to delete the family, maybe both are correct but different approaches. However, if the constructor is supposed to delete a specific cell, then neither is correct because the qualifier should be provided. But the comment says it's for a specific cell, which is conflicting with the parameters. 
+
+Given the ambiguity, the safest approach is to leave the conflict as is, since the intent isn't clear. Alternatively, if the DELETE_FAMILY_MARKER is a recent change meant to replace the use of null, then that should be chosen. But without knowing the project's conventions, it's hard to decide. Therefore, the conflict remains unresolved.</think>
+```java
+>>>>>>> 2d0abace41a98eccdcd180deee15181c7238898d
+   */
+  public DeleteRequest(final byte[] table,
+                       final byte[] key,
+                       final byte[] family) {
+<<<<<<< HEAD
+    this(table, key, family, null, RowLock.NO_LOCK);
+=======
+    this(table, key, family, DELETE_FAMILY_MARKER, RowLock.NO_LOCK);
+>>>>>>> 2d0abace41a98eccdcd180deee15181c7238898d
+  }
+
+  /**
+   * Constructor to delete a specific cell.
+   * <strong>These byte arrays will NOT be copied.</strong>
+
+```

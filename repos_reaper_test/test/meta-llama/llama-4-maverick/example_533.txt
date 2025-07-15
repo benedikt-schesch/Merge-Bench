@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's first understand the context and the changes made on both sides.
+
+The given code snippet is in Java and appears to be part of a class used for handling resources, possibly within an EPUB context given the mention of "epub" in the comment. The constructor `Resource(InputStream in, String href)` is being modified.
+
+The conflict arises from two different changes made to the line within the constructor:
+```java
+<<<<<<< HEAD
+		this(null, IOUtil.toByteArray(in),  href, MediatypeService.determineMediaType(href));
+=======
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+>>>>>>> 0d25a18153c4751a6a7e51055c740287d9c1186e
+```
+
+On the left side (`HEAD`), the code uses `IOUtil.toByteArray(in)`, while on the right side (`0d25a18153c4751a6a7e51055c740287d9c1186e`), it uses `IOUtils.toByteArray(in)`. The difference is in the utility class name: `IOUtil` vs `IOUtils`.
+
+The intent behind both changes seems to be converting the `InputStream` to a byte array. The difference lies in the utility class used for this conversion.
+
+Upon closer inspection, it appears that the change from `IOUtil` to `IOUtils` might be due to a difference in the utility library being used or referenced. `IOUtils` is a common class in Apache Commons IO for handling input/output operations, which includes a method `toByteArray(InputStream)`.
+
+To resolve the conflict, we need to determine which utility class is correct or intended to be used in the context of this project.
+
+Given that `IOUtils` is a more standard and widely recognized class (especially with Apache Commons IO), and without further context that `IOUtil` is a custom or otherwise specifically intended class, the change to `IOUtils` seems reasonable. However, the critical factor is whether `IOUtils` is available and correctly referenced in the project.
+
+Since there's no clear indication that `IOUtil` is incorrect or that `IOUtils` is the definitive choice based solely on the provided snippet, and assuming both could potentially be valid depending on the project's context, the resolution depends on the project's specific dependencies and conventions.
+
+However, considering the information given and typical practices, the most straightforward resolution, if `IOUtils` is the standard used elsewhere in the project or is known to be available, would be to use `IOUtils`. 
+
+Here is the resolved snippet in markdown code syntax:
+```java
+	 * 
+	 * @param in The Resource's contents
+	 * @param href The location of the resource within the epub. Example: "cover.jpg".
+	 */
+	public Resource(InputStream in, String href) throws IOException {
+		this(null, IOUtils.toByteArray(in), href, MediatypeService.determineMediaType(href));
+	}
+
+    /**
+     * Creates a Resource that tries to load the data, but falls back to lazy loading.
+     *
+```

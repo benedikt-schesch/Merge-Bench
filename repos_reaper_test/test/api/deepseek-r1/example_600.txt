@@ -1,0 +1,63 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The conflict is in a Java class called Settings, which is a subclass of AbstractFacebookType. The two sides of the conflict are HEAD and a17acec0655b8058aaf4d336ba2a1352aa49e2fe.
+
+Looking at the code, the HEAD version adds a static final serialVersionUID field with the value 1L. The other side (the a17acec commit) doesn't have that line. So the conflict is about whether to include the serialVersionUID or not.
+
+Now, I need to consider the intent of both changes. The serialVersionUID is used for serialization in Java. If the class is Serializable, which it probably is since it's extending AbstractFacebookType, then having an explicit serialVersionUID is a good practice to maintain compatibility between different versions. However, if the other side removed it, maybe they thought it wasn't necessary or wanted to rely on the default generated UID.
+
+But wait, the HEAD version added the serialVersionUID, and the other side didn't touch that part except for adding the @Getter, @Setter, and @Facebook annotations. The conflict arises because one branch added the serialVersionUID line, and the other branch doesn't have it. So when merging, we need to decide whether to keep that line.
+
+Since the HEAD version explicitly includes the serialVersionUID, and the other branch doesn't conflict with that except for the order or presence, maybe the correct resolution is to keep the serialVersionUID from HEAD and also include the annotations from both branches. Wait, looking at the code, the conflict markers are around the serialVersionUID line. The other side (a17acec) doesn't have that line, so in the merge, the question is whether to keep it or not.
+
+But in the provided code, the @Getter, @Setter, and @Facebook are present in both versions. Wait, no—looking again: in the HEAD, after the serialVersionUID, there are the @Getter, @Setter, and @Facebook annotations. In the other branch, those annotations are present but without the serialVersionUID. So the conflict is that one branch added the serialVersionUID line, and the other branch added the annotations but without that line.
+
+Wait, the code in the conflict is:
+
+<<<<<<< HEAD
+    private static final long serialVersionUID = 1L;
+
+=======
+>>>>>>> a17acec...
+    @Getter
+    @Setter
+    @Facebook
+    private String setting;
+
+So in the HEAD version, the serialVersionUID is declared, then the annotations follow. In the other branch, the serialVersionUID line is absent, and the annotations are present. But since the code after the conflict is the same (the annotations and the private String setting), the conflict is only about the presence of the serialVersionUID line.
+
+So the merge conflict is whether to include the serialVersionUID or not. To resolve this, we need to determine if both changes are compatible. If the other branch didn't remove the serialVersionUID but just didn't have it because it was added in HEAD, then maybe the correct resolution is to keep the serialVersionUID from HEAD and include the annotations, which are present in both.
+
+Wait, but looking at the code structure: in the HEAD, the serialVersionUID is between the class declaration and the annotations. The other branch doesn't have that line. So when merging, the conflict is that one side adds the line, and the other doesn't. If the other branch was developed in a context where the serialVersionUID wasn't present, but the HEAD adds it, then merging would require including it.
+
+Alternatively, perhaps the other branch (a17acec) removed the serialVersionUID, but that's unlikely because the conflict shows that the line was added in HEAD and absent in the other. So the correct resolution would be to keep the serialVersionUID from HEAD, since the other branch doesn't have any changes to that line—it just adds the annotations. Wait, no: the other branch's code doesn't include the serialVersionUID line at all. So if the HEAD added that line and the other branch didn't have it, then merging would result in keeping the line from HEAD. Because the other branch's version of the code doesn't have that line, but the HEAD does. So when you merge, the line from HEAD should be kept, and the annotations from both branches are already present.
+
+Wait, but in the code provided, the conflict is between the HEAD having the serialVersionUID line and the other branch not having it. So the correct resolution is to include the serialVersionUID line from HEAD, followed by the annotations and the field, which are the same in both branches.
+
+Therefore, the resolved code should include the serialVersionUID from HEAD and the annotations from both. Since the other branch doesn't have any conflicting changes except for the absence of the serialVersionUID, which was added in HEAD, the merge should retain the line from HEAD.
+
+So the resolved code would be:
+
+    public static class Settings extends AbstractFacebookType {
+
+        private static final long serialVersionUID = 1L;
+
+        @Getter
+        @Setter
+        @Facebook
+        private String setting;
+
+Because the annotations are the same in both versions, and the only difference is the presence of the serialVersionUID in HEAD. Therefore, the conflict is resolved by keeping that line.</think>
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class Settings extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook
+    private String setting;
+
+```

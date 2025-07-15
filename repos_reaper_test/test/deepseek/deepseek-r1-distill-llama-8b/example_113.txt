@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge involves conflicting import statements. To resolve this, the decision is to prefer the imports from the right side as they provide additional utility methods needed for the functionality. Here's how the conflicts are handled:
+
+1. **Import dari java.util.Collections** di sebelah kiri tidak digunakan lagi karena sudah ada import dari org.fest.util yang memberikan method yang sama atau lebih punya.
+2. **Import baru dari org.fest.util** yaitu asList, isEmpty, dan nonNullElements dimasukkan ke dalam daftar import.
+3. Method descriptorForProperty dan PropertyDescriptor diimpor karena mereka mungkin diperlukan untuk fungsi unik yang menggunakan introspection.
+
+```java
+ * Copyright @2010-2011 the original author or authors.
+ */
+package org.fest.assertions.internal;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static org.fest.util.Collections.isEmpty;
+import static org.fest.util.Collections.nonNullElements;
+import static org.fest.util.Introspection.descriptorForProperty;
+
+import static orgucene.util.notifier.Notifier;
+import java.beans.PropertyDescriptor;
+
+import java.util.List;
+```

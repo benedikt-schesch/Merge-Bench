@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the changes introduced by both sides of the merge.
+
+The code snippet is from a test setup method (`setUp`) in a Java test class. It initializes several mock objects using `createMock` and creates a new instance of the `Game` class, passing various parameters to its constructor.
+
+The conflict arises from the different number of parameters passed to the `Game` constructor in the two versions of the code.
+
+### Analyzing the Conflict
+
+1. **Left side of the conflict (`<<<<<<< HEAD`)**: The `Game` constructor is called with 10 parameters. The last four parameters are `falseProvider`, `formatProvider`, `falseProvider`, and `formatProvider`.
+
+2. **Right side of the conflict (`>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967`)**: The `Game` constructor is called with 11 parameters. The last five parameters are `formatProvider`, `falseProvider`, `formatProvider`, `falseProvider`, and `gameOptionsProvider`.
+
+### Understanding the Intent
+
+- The left side seems to be using a version of the `Game` constructor that accepts 10 parameters, with the last four being providers or formatters related to game settings or rules.
+- The right side is using a version that presumably accepts 11 parameters, adding an additional `gameOptionsProvider` at the end.
+
+### Resolving the Conflict
+
+To resolve this conflict, we need to understand the intent behind the `Game` constructor and the significance of the additional parameter on the right side (`gameOptionsProvider`).
+
+1. **Semantic Analysis**: The addition of `gameOptionsProvider` on the right side suggests that the `Game` class has been modified to accept additional game options, potentially making the game configuration more flexible.
+
+2. **Potential Resolution**: If the intent is to incorporate the `gameOptionsProvider` into the test setup (as suggested by the right side of the conflict), and assuming that the `Game` class constructor on the left side is outdated or not compatible with the current test requirements, we should align the test setup with the updated `Game` class constructor.
+
+However, without knowing the exact changes to the `Game` class and its constructor, we cannot be certain whether the left or the right side (or a different resolution altogether) is correct.
+
+### Return Snippet
+
+Given the potential ambiguity in resolving the conflict without further context on the `Game` class constructor and its parameters, the safest approach is to return the original snippet with the conflict, as modifying it without clear understanding might introduce incorrect assumptions.
+
+```java
+  public void setUp() {
+    cuMock = createMock(ConnectedUsers.class);
+    gmMock = createMock(GameManager.class);
+    metricsMock = createMock(Metrics.class);
+    game = new Game(0, cuMock, gmMock, timer, null, null, null, metricsMock, falseProvider,
+<<<<<<< HEAD
+            formatProvider, falseProvider, formatProvider);
+=======
+        formatProvider, falseProvider, formatProvider, falseProvider, gameOptionsProvider);
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testRemovePlayer() throws IllegalStateException, TooManyPlayersException {
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict appears in the `serialize` method where one side adds a version check that throws an exception, while the other allows the method to proceed. Due to the ambiguity in whether row locks are supported in newer versions, the conflict should remain unresolved for further discussion.
+
+```java
+    return size;
+  }
+
+  /** Serializes this request.  */
+  ChannelBuffer serialize(final byte server_version) {
+<<<<<<< HEAD
+=======
+    if (server_version >= RegionClient.SERVER_VERSION_095_OR_ABOVE) {
+      throw new UnsupportedOperationException("Row locks are not supported with"
+                                              + " this version of HBase ("
+                                              + server_version + ").");
+    }
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    final ChannelBuffer buf = newBuffer(server_version,
+                                        predictSerializedSize());
+    buf.writeInt(2);  // Number of parameters.
+
+    writeHBaseByteArray(buf, region.name());
+```

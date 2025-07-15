@@ -1,0 +1,56 @@
+<think>
+No reasoning found</think>
+Here is the code snippet with the merge conflict preserved as provided, along with my analysis of the intent and a proposed resolution based on semantics. The original context and spacing are maintained exactly as given.
+
+```java
+    }
+
+    @Test
+    public void parseAsciidocFileWithCustomAttribute() {
+
+<<<<<<< HEAD
+        config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES,"source-highlighter=prettify,testattribute=I Love Jbake");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+=======
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify,testattribute=I Love Jbake");
+        Map<String, Object> map = parser.processFile(asciidocWithSource);
+>>>>>>> d68ddea7554653e7928d220f68a3af13bfb30cdb
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("I Love Jbake")
+```
+
+### Analysis of Intent and Semantics
+- **Left Side (HEAD)**: Uses `JBakeProperty.ASCIIDOCTOR_ATTRIBUTES` as the property key for configuration and declares the result of `parser.processFile()` as `DocumentModel map`. The intent seems to be using a specific enum or constant class (`JBakeProperty`) for managing configuration keys, which suggests a structured or centralized way of handling property names. The return type `DocumentModel` might indicate a specific model class tailored for the application.
+- **Right Side (d68ddea7554653e7928d220f68a3af13bfb30cdb)**: Uses `ASCIIDOCTOR_ATTRIBUTES.getKey()` as the property key and declares the result as `Map<String, Object> map`. The intent here appears to be using a possibly different enum or constant mechanism for property keys (potentially more dynamic or flexible with `.getKey()`), and the return type `Map<String, Object>` suggests a more generic data structure, possibly for flexibility or a different design approach.
+
+### Conflict Resolution Rationale
+Both sides aim to set a configuration property for AsciiDoctor attributes and parse a file, asserting the results. The key differences are in how the property key is referenced and the type of the result variable.
+
+- **Property Key**: `JBakeProperty.ASCIIDOCTOR_ATTRIBUTES` vs. `ASCIIDOCTOR_ATTRIBUTES.getKey()` likely represent the same configuration setting but use different conventions or versions of the codebase's constant management. Without additional context on whether one approach is deprecated or preferred, I lean towards `JBakeProperty.ASCIIDOCTOR_ATTRIBUTES` as it seems more explicit and less prone to runtime errors (no method call involved). However, if `ASCIIDOCTOR_ATTRIBUTES.getKey()` is the newer or standard approach in the codebase, it should be adopted.
+- **Return Type**: `DocumentModel` vs. `Map<String, Object>` is more significant. Given that the assertions following the conflict (e.g., `map.getStatus()`, `map.getType()`) suggest a structured object with specific fields, `DocumentModel` is likely the intended type for this test, as it aligns with the domain model. Using `Map<String, Object>` might be more generic but risks losing type safety and clarity unless explicitly required by a newer design.
+
+### Proposed Resolution
+Since the assertions imply a structured model, and assuming `JBakeProperty` is a valid and current way to reference constants (without evidence to the contrary), I propose resolving the conflict as follows. However, if there is a broader context indicating a shift to `Map<String, Object>` or a different constant management style, this resolution should be adjusted.
+
+```java
+    }
+
+    @Test
+    public void parseAsciidocFileWithCustomAttribute() {
+
+        config.setProperty(JBakeProperty.ASCIIDOCTOR_ATTRIBUTES, "source-highlighter=prettify,testattribute=I Love Jbake");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("I Love Jbake")
+```
+
+### Caveat
+If the codebase has moved to using `ASCIIDOCTOR_ATTRIBUTES.getKey()` as the standard for property keys or if `Map<String, Object>` is the intended return type due to refactoring, the resolution should prioritize the right side's approach. Without broader context, I have prioritized semantic alignment with the test's assertions and the apparent domain-specific type (`DocumentModel`). If this resolution does not match the intended design, please provide additional context about the preferred constant naming convention or type usage.
+
+If you prefer to keep the conflict unresolved for further discussion, the original conflicted snippet is preserved above as requested.

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears to be importing two different classes:
+
+1. From HEAD: `br.com.caelum.vraptor.util.ISO8601Util`
+2. From commit e2ba470: `br.com.caelum.vraptor.view.GenericController`
+
+Since these are two separate imports that don't conflict with each other functionally, and both may be needed for different purposes in the code, I'll resolve this by including both imports.
+
+```java
+import br.com.caelum.vraptor.resource.DefaultResourceClass;
+import br.com.caelum.vraptor.resource.DefaultResourceMethod;
+import br.com.caelum.vraptor.resource.ResourceClass;
+import br.com.caelum.vraptor.resource.ResourceMethod;
+import br.com.caelum.vraptor.serialization.gson.adapters.CalendarDeserializer;
+import br.com.caelum.vraptor.util.ISO8601Util;
+import br.com.caelum.vraptor.view.GenericController;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+```

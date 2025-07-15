@@ -1,0 +1,79 @@
+<think>
+No reasoning found</think>
+Alright, let's break down the merge conflict and the possible resolutions.
+
+**Merge Conflict Analysis:**
+
+1. **Common Ancestors Version (if available):** Not provided, but we can infer the context from the comments and method signatures.
+
+2. **HEAD Version:**
+   ```java
+   public void store(String id, String filename) throws IOException {
+       store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+   ```
+   - This version returns `void`
+   - It appears to be calling another overloaded `store` method with additional parameters
+
+3. **Other Version (1488b22):**
+   ```java
+   public ExecJob store(String id, String filename) throws IOException {
+       return store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+   ```
+
+   - This version returns an `ExecJob` object
+   - It also appears to be calling another overloaded `store` method with additional parameters
+   - The functionality seems to be the same except for the return type
+
+**Semantic Analysis:**
+
+1. **HEAD Version Intent:**
+   - The method is declared with a `void` return type
+   - The intent appears to be performing some storage operation without returning any result
+   - The comment suggests it's using the default store function
+
+2. **Other Version Intent:**
+   - The method is declared with an `ExecJob` return type
+   - The intent appears to be performing some storage operation and returning an `ExecJob` object
+   - The comment suggests it's using the default store function
+
+**Possible Merge Resolutions:**
+
+1. **If `ExecJob` return type is intentional:**
+   - The method signature changed from `void` to `ExecJob`
+   - The functionality remains largely the same but now returns an `ExecJob` object
+   - This suggests that the method now provides some executable job information after storage
+
+2. **If `void` return type is correct:**
+   - The method signature change to `ExecJob` might be an error
+   - The functionality is purely about performing storage
+   - There is no need to return an `ExecJob` object
+
+**Conclusion:**
+
+The intent is somewhat ambiguous. It's unclear from the provided context whether the method should return an `ExecJob` or not. Both versions seem to want to perform storage using the default SFPig store function, but they differ in the return type.
+
+Given the ambiguity, I would recommend preserving the conflict for now and letting the developer decide which version is correct based on the broader context of the system.
+
+**Final Decision:**
+
+I will return the snippet with the conflict preserved as it is since the intent is not sufficiently clear to resolve the conflict definitively.
+
+```java
+     * @param id The alias to store
+     * @param filename The file to which to store to
+     * @throws IOException
+     */
+
+<<<<<<< HEAD
+    public void store(String id, String filename) throws IOException {
+        store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+=======
+    public ExecJob store(String id, String filename) throws IOException {
+        return store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+        
+    /**
+     *  forces execution of query (and all queries from which it reads), in order to store result in file
+     */
+```

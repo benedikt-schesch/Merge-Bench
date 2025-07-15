@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it appears that the `790b69a0bd40e3ab536f9c6568748f981b3d525e` commit adds a new constructor for `CSSURLEmbedder` with four parameters, while the HEAD doesn't have this constructor.
+
+Since this is adding a completely new constructor (not modifying an existing one), and there's no overlapping change or conflict in the actual implementation, I'll resolve it by keeping the new constructor.
+
+```java
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+        this.maxImageSize = maxImageSize;
+    }
+
+    public CSSURLEmbedder(Reader in, int options, boolean verbose, int maxUriLength) throws IOException {
+        this.code = readCode(in);
+        this.verbose = verbose;
+        this.options = options;
+        this.maxUriLength = maxUriLength;
+    }
+
+    //--------------------------------------------------------------------------
+    // Get/Set verbose flag
+    //--------------------------------------------------------------------------    
+    
+    public boolean getVerbose(){
+```

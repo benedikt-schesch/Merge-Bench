@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Based on the merge conflict, I can see that one side (HEAD) is adding getter and setter annotations for a field called `canComment`, while the other side (commit a17acec0) is removing these annotations.
+
+Looking at the context, I notice that there are fields `openGraphCommentOrder` and `openGraphCanComment` below, which suggests that the `canComment` field might be redundant or being replaced by these `openGraph` prefixed fields.
+
+The resolution would be:
+
+```java
+   */
+  @Getter
+  @Setter
+  private String order;
+
+  @Facebook("comment_order")
+  private String openGraphCommentOrder;
+
+  @Facebook("can_comment")
+  private Boolean openGraphCanComment;
+
+```
+
+I've removed the `canComment` field and its annotations as it appears the intent is to use the `openGraphCanComment` field instead.

@@ -1,0 +1,54 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's analyze the given code snippet and the changes made on both sides of the merge.
+
+The code snippet is in Java and appears to be part of a class that handles conversion of sample data according to a specified media type. The conflict arises in the method `convertSampleAccordingToMediaType`.
+
+On the left side of the conflict (`HEAD`), the method signature is:
+```java
+public static String convertSampleAccordingToMediaType(
+        Map<String, Object> content, String mediaTypeAsString,
+        String representationName)
+```
+
+On the right side (`4e8f0414b4f5ea733fcc30dd19944fd1e104bf74`), the method signature is:
+```java
+public static String convertSampleAccordingToMediaType(Object content,
+        String mediaTypeAsString, String representationName)
+```
+
+The difference between the two versions is the type of the `content` parameter. The `HEAD` version expects a `Map<String, Object>`, while the other version expects a more generic `Object`.
+
+Let's consider the intent and semantics:
+
+1. **Usage of `content` within the method**: Inside the method, there's no explicit usage of the `content` parameter shown in the provided snippet. However, the change from `Map<String, Object>` to `Object` suggests that the method might be designed to handle different types of content, not just a map.
+
+2. **Implications of the change**: By changing the type to `Object`, the method becomes more flexible and can potentially handle various types of input. However, this might also require additional type checking or handling within the method to ensure it works correctly with different types of objects.
+
+3. **Conflict resolution**: To resolve the conflict, we need to decide whether the `content` should be a `Map<String, Object>` or a generic `Object`. If the method is intended to work with various types of content and there's logic (not shown in the snippet) that handles different types, the `Object` type might be more appropriate. However, if the method is specifically designed to work with a map (e.g., it accesses the map's entries), changing it to `Object` could simplify the method signature but might require additional checks or casting within the method.
+
+Given the information and the code snippet provided, it seems the change to `Object` is to make the method more versatile. However, without seeing how `content` is used within the method or the rest of the class, it's challenging to definitively resolve the conflict based solely on the provided snippet.
+
+Since the intent behind using `Object` instead of `Map<String, Object>` isn't entirely clear from the given context, and to avoid potentially introducing bugs or altering the functionality, the safest approach would be to return the snippet as is, with the conflict markers.
+
+```java
+            "short", "integer", "long");
+
+    private static final List<String> decimalTypes = Arrays.asList("float",
+            "double");
+
+<<<<<<< HEAD
+    public static String convertSampleAccordingToMediaType(
+            Map<String, Object> content, String mediaTypeAsString,
+            String representationName) {
+=======
+    public static String convertSampleAccordingToMediaType(Object content,
+            String mediaTypeAsString, String representationName) {
+>>>>>>> 4e8f0414b4f5ea733fcc30dd19944fd1e104bf74
+        MetadataService ms = new MetadataService();
+        MediaType mediaType = MediaType.valueOf(mediaTypeAsString);
+        if (!supportedExtensions.contains(ms.getExtension(mediaType))) {
+            return null;
+        }
+
+```

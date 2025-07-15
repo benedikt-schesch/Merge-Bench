@@ -1,0 +1,25 @@
+<think>
+Okay, let's take a look at this merge conflict. The goal is to resolve it by understanding the intent of both changes.
+
+In the HEAD version, the method `exceptionForTypeAndMessage` takes a single parameter `ExceptionInformation container`. The other side (a17acec) changes the method to have multiple parameters like errorCode, errorSubcode, etc. 
+
+I need to figure out what each side is doing. The HEAD version is probably refactoring to encapsulate all the exception information into a single object, which is a common practice to reduce parameter clutter. The other side is adding more detailed parameters, possibly introducing new fields needed for exception handling.
+
+The conflict arises because both changes modify the same method's parameters. To resolve this, I should check if the `ExceptionInformation` class in HEAD includes all the parameters from the other branch. If it does, then keeping the HEAD version makes sense because it's a more encapsulated approach. If not, maybe the parameters from both need to be combined, but that might require creating a new parameter object that includes all necessary fields.
+
+Looking at the parameters in the a17acec version: errorCode, errorSubcode, httpStatusCode, type, message, userTitle, userMessage, isTransient, rawError. If the `ExceptionInformation` container in HEAD includes all these fields, then the HEAD version is sufficient. If not, perhaps the parameters need to be merged. But since the user hasn't provided the definition of `ExceptionInformation`, I have to make an assumption.
+
+Assuming that `ExceptionInformation` is a container that holds all the necessary data (which is the purpose of such a container), then the HEAD version is the correct resolution because it's a refactor that simplifies the method signature. The other branch's change might be adding more parameters that are now part of the container. Therefore, accepting the HEAD version and discarding the parameter list from the other branch would resolve the conflict correctly.
+
+But wait, maybe the other branch added new parameters that aren't in the container. If that's the case, merging would require updating the `ExceptionInformation` to include those new fields. However, without seeing the class definition, it's risky. But since the user asked to resolve based on intent and semantics, the likely correct resolution is to use the container approach from HEAD, assuming it encapsulates all necessary information. The other branch's parameters are probably moved into the container, making the HEAD version the updated one.
+
+Therefore, the resolved method should take the `ExceptionInformation container` as the parameter, maintaining the encapsulation.</think>
+```java
+   * 
+   * @param container
+   *          container for all data needed to create the associated {@see FacebookException}
+   * @return An appropriate {@code FacebookException} subclass.
+   */
+  FacebookException exceptionForTypeAndMessage(ExceptionInformation container);
+}
+```

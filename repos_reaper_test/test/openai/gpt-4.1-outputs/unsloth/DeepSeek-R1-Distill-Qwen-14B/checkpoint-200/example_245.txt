@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+        // for backward compatibility
+        PigInputFormat.sJob = conf;
+
+        InputFormat inputFormat = loadFunc.getInputFormat();
+
+        List<Long> inpLimitLists =
+                (ArrayList<Long>)ObjectSerializer.deserialize(
+                        conf.get("pig.inpLimits"));
+
+        return new PigRecordReader(inputFormat, pigSplit, loadFunc, context, inpLimitLists.get(pigSplit.getInputIndex()));
+    }
+
+```

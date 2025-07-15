@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The provided Java code snippet appears to be part of a class that wraps an input stream (`in`), keeping track of the current position (`pos`) within the stream. The methods shown are `read` and `skip`, both of which delegate to the corresponding methods on the wrapped input stream and then update the `pos` accordingly.
+
+The conflict arises from the fact that there are changes (or lack thereof) between the `HEAD` version and the version from the commit `1488b22ce313803d012c8ace36c3b12f930ee309`. The `HEAD` version has a blank line after the `read` method, while the other version has a blank line before the `skip` method. Essentially, both versions are adding a blank line but at different positions relative to the existing code.
+
+To resolve this conflict semantically, we should consider the intent behind both changes. In this case, both sides are essentially adding a blank line, which is typically used for readability and does not affect the functionality of the code.
+
+Since the addition of a blank line is not conflicting in terms of functionality (it's about code formatting), we can resolve this by ensuring that the code remains readable and consistent.
+
+```java
+    public int read(byte b[], int off, int len) throws IOException {
+        int read = in.read(b, off, len);
+        pos += read;
+        return read;
+    }
+
+    @Override
+    public long skip(long n) throws IOException {
+        long rc = in.skip(n);
+        pos += rc;
+        return rc;
+```

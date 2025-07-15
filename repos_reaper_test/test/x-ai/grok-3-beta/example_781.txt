@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved, as the intent and semantics of the return type change are ambiguous without further context or documentation. I will return the snippet exactly as provided, including the full context and spacing, in markdown code syntax.
+
+```java
+   * Package-private access point for {@link Scanner}s to open themselves.
+   * @param scanner The scanner to open.
+   * @return A deferred scanner ID (long) if HBase 0.94 and before, or a
+   * deferred {@link Scanner.Response} if HBase 0.95 and up.
+   */
+<<<<<<< HEAD
+  Deferred<Long> openScanner(final Scanner scanner) {
+=======
+  Deferred<Object> openScanner(final Scanner scanner) {
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+    num_scanners_opened.increment();
+    return sendRpcToRegion(scanner.getOpenRequest()).addCallbacks(
+      scanner_opened,
+      new Callback<Object, Object>() {
+        public Object call(final Object error) {
+```
+
+### Explanation of Decision
+I have chosen not to resolve the conflict because the intent behind the change in return type from `Deferred<Long>` to `Deferred<Object>` is not clear from the provided snippet or the surrounding context. Here are my considerations:
+
+1. **Original Intent (HEAD)**: The return type `Deferred<Long>` suggests that the method is expected to return a specific type, likely a scanner ID as hinted in the Javadoc comment for HBase 0.94 and before.
+2. **Changed Intent (Incoming Commit)**: The return type `Deferred<Object>` broadens the type to a generic `Object`, which could accommodate multiple return types (potentially aligning with the Javadoc mention of `Scanner.Response` for HBase 0.95 and up). However, this change may break downstream code expecting a `Long` or require additional casting/handling.
+3. **Ambiguity**: Without further context on the usage of this method, the HBase version being targeted, or the downstream effects of this type change, it's unclear whether `Deferred<Object>` is a deliberate generalization or an error. The Javadoc partially supports both return types but does not definitively indicate that `Object` is the correct choice for newer versions.
+
+Since the resolution could affect type safety or runtime behavior, I am preserving the conflict as-is for manual review or additional context from the developers involved in the merge. If further information is provided (e.g., the HBase version or downstream usage), I can assist in making a more informed decision.

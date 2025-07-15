@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to carefully consider the intent behind each change and the implications of each modification. 
+
+1. **Access Modifier**: The HEAD branch removes the `public` access modifier, which is typical for test methods in JUnit as they don't usually need to be public. The other branch adds the `public` modifier, but this is unnecessary unless specifically required.
+   
+2. **Method Name Typo**: The HEAD branch has a typo in `prepateCore`, which should be `prepareCore` as in the other branch.
+
+Here's the resolved code:
+
+```java
+		when(coreRegistry.getCore(projectAUri)).thenReturn(core);
+		return core;
+	}
+
+	@Test
+	void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 0);
+>>>>>>> ee249315695b6123b42f6cb1b6ab1489e37eb586
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(noTestsRun());
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+It seems the merge conflict is about which constant to use for the `mFavorited` column index. Here's the resolved snippet:
+
+```java
+			mSourceColumn = cursor
+					.getColumnIndexOrThrow(StatusTable.FIELD_SOURCE);
+			mInReplyToScreenName = cursor
+					.getColumnIndexOrThrow(StatusTable.FIELD_IN_REPLY_TO_SCREEN_NAME);
+			mFavorited = cursor
+					.getColumnIndexOrThrow(StatusTable.FIELD_FAVORITED);
+		}
+		mMetaBuilder = new StringBuilder();
+	}
+
+	private LayoutInflater mInflater;
+
+```
+
+I resolved the conflict by choosing the newer version that uses `StatusTable.FIELD_FAVORITED` instead of `TwitterDbAdapter.KEY_FAVORITED`. This is consistent with the pattern used in the previous lines where `StatusTable.FIELD_*` constants are being used.

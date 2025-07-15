@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it seems to be a very simple case where the only difference between the two versions is trailing whitespace. The HEAD version has a trailing whitespace after `getLog(getClass());` while the version from commit 1488b22c doesn't have this whitespace.
+
+Since whitespace differences rarely affect functionality in Java, here's the resolved snippet:
+
+```java
+import org.apache.pig.impl.util.WrappedIOException;
+
+public class PigContext implements Serializable, FunctionInstantiator {
+    private static final long serialVersionUID = 1L;
+    
+    private transient final Log log = LogFactory.getLog(getClass());
+    
+    public static final String JOB_NAME = "jobName";
+    public static final String JOB_NAME_PREFIX= "PigLatin";
+    
+    /* NOTE: we only serialize some of the stuff 
+
+```
+
+I've chosen the version without the trailing whitespace (the 1488b22c version) as it's generally considered better practice to avoid unnecessary trailing whitespace.

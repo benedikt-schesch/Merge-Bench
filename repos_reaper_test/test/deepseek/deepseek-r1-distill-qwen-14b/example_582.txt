@@ -1,0 +1,56 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict where two different approaches to handling JSON data are present. One side deserializes the JSON object into a `ProfilePictureSource` class, while the other extracts the "url" string directly. Both changes aim to set the `picture` variable but use different methods.
+
+Here's the full context of the code snippet with the merge conflict:
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    JsonObject picData = rawPicture.get("data").asObject();
+    if (picData != null) {
+      picture = jsonMapper.toJavaObject(picData.toString(), ProfilePictureSource.class);
+    }
+  }
+
+=======
+    JsonObject picData = rawPicture.getJsonObject("data");
+    if (picData != null) {
+      picture = picData.getString("url");
+    }
+  }
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+}
+```
+
+To resolve this conflict, the following considerations should be made:
+
+1. **Intent of the Original Code:** Determine whether the original code intended to parse the JSON data into a `ProfilePictureSource` object or if it was meant to extract just the URL.
+
+2. **Semantics of the Changes:** Assess what each side of the merge is trying to achieve. The left side (HEAD) uses a mapper to deserialize the JSON into an object, while the right side (a17acec0655b8058aaf4d336ba2a1352aa49e2fe) directly extracts the URL. The choice depends on whether the application needs more data from the JSON object or just the URL.
+
+3. **Conflict Impact:** If the `ProfilePictureSource` class is no longer used or needed, using the URL extraction might be more appropriate. Alternatively, if the class is required, the deserialization should be preserved.
+
+4. **Context and Functionality:** Review surrounding code to understand if the `picture` variable is used elsewhere and how. For example, if other parts of the code expect `picture` to be a `ProfilePictureSource`, then the left side should be chosen. If the URL is sufficient, the right side is better.
+
+Based on the information provided, it's not clear which change aligns with the overall project goals. Therefore, to be consistent and maintain code functionality, the left side is likely the correct implementation if `ProfilePictureSource` is necessary. However, if only the URL is needed, the right side should be selected.
+
+To resolve the conflict, you would choose one of the two approaches, depending on the application's requirements. It's always a good idea to test the chosen implementation to ensure it behaves as expected.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+    JsonObject picData = rawPicture.getJsonObject("data");
+    if (picData != null) {
+      picture = picData.getString("url");
+    }
+  }
+}
+```

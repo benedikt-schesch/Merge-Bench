@@ -1,0 +1,42 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The code in question is a Java method for serializing a Decimal128 value. The conflict is between the HEAD version and another branch (bdcc9aaa22f9470ce4d424736aabbc49c4857931). 
+
+Looking at the HEAD version, there's an else if condition checking if the jsonGenerator is an instance of TokenBuffer. If so, it writes the object with $numberDecimal field. The other branch, however, replaces that else if with a simple else block, meaning any other case (not MongoBsonGenerator) would trigger writing the object.
+
+The intent here seems to be that when using MongoBsonGenerator, it uses a specific method writeDecima128 (though I notice a typo, should probably be writeDecimal128). For other generators, especially TokenBuffer, they want to serialize it as an object with $numberDecimal. The HEAD version specifically targets TokenBuffer, while the other branch uses a broader else, covering all other cases.
+
+Wait, maybe the original intention was to handle MongoBsonGenerator specifically, and for all other cases (including TokenBuffer), serialize as the object. But the HEAD version only does that for TokenBuffer, leaving other generators unhandled. The other branch's else would cover all non-MongoBsonGenerator cases, which is more general.
+
+But why would the HEAD have an else if (TokenBuffer)? Maybe there was a reason to only handle TokenBuffer and not others. But perhaps the else branch is better because it's more general. If we merge these, maybe the correct approach is to combine both conditions. Wait, but the else in the other branch would override the else if. Alternatively, perhaps the intention is that for MongoBsonGenerator, use the specific method, and for all other cases (including TokenBuffer), serialize as the object. That would make sense because maybe TokenBuffer is a special case that needs the object format, but other generators might not. Wait, no—the other branch's else would handle any generator that's not MongoBsonGenerator, including TokenBuffer. But in the HEAD, they have an else if for TokenBuffer, implying that other generators would not trigger either condition, leading to possible missing handling.
+
+So the conflict arises because the two branches have different conditions. To resolve this, perhaps the correct approach is to check for MongoBsonGenerator first, and then for any other case, use the else to serialize as the object. That would mean the other branch's else is more appropriate, as it covers all non-Mongo cases. The HEAD's else if (TokenBuffer) is more restrictive. Maybe the TokenBuffer check was a mistake, or perhaps it's necessary. But without more context, maybe the correct resolution is to take the else branch from the other commit, as it's more general. Therefore, the merged code should have:
+
+if (MongoBsonGenerator) {
+    // writeDecimal128
+} else {
+    // write the object
+}
+
+But in the code, the HEAD has an else if (TokenBuffer), and the other branch has else. So merging would require combining. Wait, no—the conflict is between the else if and else. The correct resolution would be to choose one or the other. If the intent is to handle all non-Mongo cases with the object, then else is better. The TokenBuffer check in the HEAD might have been an unnecessary restriction. Maybe the original code in HEAD was written to only handle TokenBuffer, but the other branch generalized it. Therefore, resolving the conflict by taking the else from the other branch would be better. So the merged code would be:
+
+if (jsonGenerator instanceof MongoBsonGenerator) {
+    ((MongoBsonGenerator) jsonGenerator).writeDecima128(decimal);
+} else {
+    jsonGenerator.writeStartObject();
+    // ... rest
+}
+
+Thus, the else clause covers all other cases, including TokenBuffer and any other generator. That makes sense because maybe other generators also need to serialize Decimal128 as an object with $numberDecimal. Therefore, the correct resolution is to use the else clause instead of the else if checking for TokenBuffer.</think>
+```java
+    static class Decimal128Serializer extends JsonSerializer<Decimal128> {
+
+        public void serialize(Decimal128 decimal, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            if (jsonGenerator instanceof MongoBsonGenerator) {
+                ((MongoBsonGenerator) jsonGenerator).writeDecima128(decimal);
+            } else {
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeFieldName("$numberDecimal");
+                jsonGenerator.writeString(decimal.bigDecimalValue().toString());
+                jsonGenerator.writeEndObject();
+            }
+```

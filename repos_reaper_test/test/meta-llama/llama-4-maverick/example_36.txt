@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the intent and semantics of both sides of the merge.
+
+The conflict is in the `usage` method overloads in a Java class. The code snippet provided shows two different `usage` methods. The first one is not part of the conflict and calls the overloaded `usage` method with a `UsagePrinter` object created using a `StringBuilder` and `columnSize`.
+
+The conflicting methods are:
+1. The local (`HEAD`) version is a `usage` method that takes four parameters: `programName`, `groupName`, `command`, and `out`. It does not have a `commandName` parameter.
+2. The incoming version (`a647950590fa8dec1925101321699283f22a8bff`) includes a `usage` method with five parameters: `programName`, `groupName`, `commandName`, `command`, and `out`.
+
+Let's analyze the intent:
+- The first `usage` method (not in conflict) suggests that the class is designed to handle command usage printing, and it uses a `UsagePrinter` to format the output.
+- The local (`HEAD`) version of the conflicting method lacks a `commandName` parameter, suggesting a potentially different or simplified usage printing scenario.
+- The incoming version includes `commandName`, indicating it might be necessary for the usage information, possibly for displaying the name of the command.
+
+To resolve the conflict, we need to decide which version is more appropriate or if there's a way to reconcile them. Since the first `usage` method (not part of the conflict) calls the overloaded `usage` method with five parameters (including `commandName`), it suggests that the version with five parameters is likely intended to be the standard or more comprehensive form of `usage`.
+
+However, without more context about why the local version was simplified or if `commandName` is indeed necessary, we should be cautious. 
+
+Given the information and analyzing the intent, the most straightforward resolution, if we assume `commandName` is necessary and the first `usage` method's intent is to call the more detailed version, would be to keep the incoming version (`a647950590fa8dec1925101321699283f22a8bff`) as it seems more comprehensive.
+
+Here is the resolved snippet in markdown code syntax as requested:
+```java
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, StringBuilder out)
+    {
+        usage(programName, groupName, commandName, command, new UsagePrinter(out, columnSize));
+    }
+
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, UsagePrinter out)
+    {
+        //
+        // NAME
+        //
+        out.append("NAME").newline();
+```

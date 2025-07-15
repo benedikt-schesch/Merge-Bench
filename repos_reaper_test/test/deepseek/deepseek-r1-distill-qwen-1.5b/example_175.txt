@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve the semantic conflict, let's modify the try block to handle async `getPermission` correctly by ensuring `parseTopLevelStop` is called.
+
+```java
+        parser.parseTopLevelStop();
+        try {
+=======
+            parser.parseTopLevelStop();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+        } catch (Exception e) {
+            try {
+                Exception pe = Utils.getPermissionException(e);
+                if (pe != null)
+                    log.error("You don't have permission to perform the operation. Error from the server: " + pe.getMessage());
+=======
+```

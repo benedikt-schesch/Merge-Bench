@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we should ensure that both `retPos` and `newPos` are correctly initialized to the current position of the stream. The new version correctly sets both variables to `zStream.tell()`, aligning their initial values. This ensures consistency in tracking the position of the stream.
+
+```java
+    // and we set retPos to newPos once we have read a character from that block.
+    // see getPos() for more detail
+    private long retPos, newPos = -1;
+
+    public CBZip2InputStream(SeekableInputStream zStream, int blockSize) throws IOException {
+<<<<<<< HEAD
+        retPos = oldPos = zStream.tell();
+=======
+        retPos = newPos = zStream.tell();
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    	ll8 = null;
+        tt = null;
+        checkComputedCombinedCRC = blockSize == -1;
+        bsSetStream(zStream);
+        initialize(blockSize);
+```

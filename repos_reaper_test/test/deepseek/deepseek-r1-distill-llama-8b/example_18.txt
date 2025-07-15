@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The provided code snippet shows a merge conflict where there are two different declarations for `snapshotManager`. The first declaration in the context has a different access modifier (`protected`) compared to the second context. Additionally, the second snippet introduces additional fields that were not present in the first.
+
+To resolve this, the appropriate action is to merge these changes by keeping the necessary fields and ensuring consistent access modifiers. The `SnapshotableLinkedHashMap` requires access to `snapshotManager`, so it should remain private to maintain encapsulation. The `protected` access in the first context is removed to prevent unnecessary exposure.
+
+```java
+	private final PluginManager pluginManager = new PluginManager(this, securityManager, 0.0);
+	private final ConsoleManager consoleManager;
+	private final EventManager eventManager = new SimpleEventManager();
+	private final RecipeManager recipeManager = new RecipeManager();
+	private final ServiceManager serviceManager = new ServiceManager();
+	private final SnapshotableLinkedHashMap<String, SpoutPlayer> players = new SnapshotableLinkedHashMap<String, SpoutPlayer>(snapshotManager);
+	private final WorldGenerator defaultGenerator = new WorldGenerator();
+	/** @deprecated */
+	@Rem ArithmeticExpression()
+	protected final SpoutSessionRegistry sessions = new SpoutSessionRegistry();
+	private final SpoutScheduler scheduler = new SpoutScheduler(this);
+	private final SpoutParallelTaskManager parallelTaskManager = new SpoutParallelTaskManager(this);
+	private final AtomicBoolean setupComplete = new AtomicBoolean(false);
+	private final SpoutConfiguration config = new SpoutConfiguration();
+	private final SpoutInputConfiguration inputConfig = new SpoutInputConfiguration();
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict shows that the `HEAD` branch has added an import for `org.apache.commons.codec.digest.DigestUtils`, while the other branch (`31d7966e3896819a99b31f10e83e864e3805bcbd`) does not have this import at this location.
+
+To resolve this semantically, we consider the intents:
+-   **HEAD's intent:** To make `DigestUtils` available, presumably because new code added in this branch requires it for cryptographic hashing or other digestion operations. Utility classes like this one often accumulate various functionalities.
+-   **Remote's intent (31d7966e3896819a99b31f10e83e864e3805bcbd):** Either this import was never present in this branch's history, or it was removed, possibly because it was unused or the functionality requiring it was removed.
+
+When merging, if `HEAD` is introducing new functionality that relies on `DigestUtils`, the import should be kept. If the import was removed by the other branch because it was genuinely no longer needed *and* `HEAD`'s changes don't re-introduce a need for it, then it could be omitted.
+
+Without visibility into the rest of the changes in the file (i.e., whether `DigestUtils` is actually used by code being introduced or modified in `HEAD`), the most common and safest resolution is to assume that an explicitly added import in `HEAD` is necessary for other changes introduced in `HEAD`. If it turns out to be an unused import after the merge, it can be cleaned up by IDE tools or linters. This is generally preferable to removing an import that might be needed, which would lead to compilation errors.
+
+Therefore, the resolution will be to include the import from `HEAD`.
+
+```java
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+
+/**
+ * Various utility methods that don't have more proper home.
+ *
+
+```

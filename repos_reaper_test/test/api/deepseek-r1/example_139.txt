@@ -1,0 +1,25 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The code snippet shows a conflict in the Java method `setBackendException`. The HEAD version doesn't have the `@Private` annotation, while the other branch (f6a8f7aa42cae344f71cc6759f1c7880b49211fc) adds it.
+
+First, I need to understand what the `@Private` annotation signifies. In some frameworks, annotations like `@Private` indicate that a method is intended for internal use and not part of the public API. So, one side of the merge is adding this annotation to the method, probably to mark it as internal. The other side might have removed it or didn't have it in the first place.
+
+Looking at the surrounding context, the method `setBackendException` is a public method. If the intent of adding `@Private` is to denote that even though the method is public, it's not for external use, then keeping the annotation makes sense. However, if the HEAD version removed it because it's no longer considered private, that's a conflict.
+
+Since the user instructed to consider the semantics and intent of both sides, I need to determine if both changes can coexist. The conflict is about the presence of the `@Private` annotation. Since the two versions are adding and not adding it, there's a direct conflict here unless the annotation can be safely merged.
+
+But wait, the HEAD version doesn't have the annotation, and the other branch adds it. So, the conflict is between the absence and presence of `@Private`. To resolve this, I need to know if the annotation should be there. If both changes are meant to be kept, perhaps the correct resolution is to include the `@Private` annotation, assuming that the branch adding it is correct. Alternatively, if the HEAD removal was intentional, it should be removed.
+
+Without additional context, it's hard to tell, but the user said to resolve based on intent. If the method is indeed meant to be private API, then including `@Private` is correct. Since the conflict is just about adding that line, the resolved code should include the `@Private` annotation above the method. Therefore, the correct merge would be to take the version from the other branch, keeping the `@Private` annotation.</think>
+```java
+        public int compare(JobStats o1, JobStats o2) {
+            return o1.getJobId().compareTo(o2.getJobId());
+        }
+    }
+
+    @Private
+    public void setBackendException(String jobId, Exception e) {
+        if (e instanceof PigException) {
+            LOG.error("ERROR " + ((PigException)e).getErrorCode() + ": "
+                    + e.getLocalizedMessage());
+        } else if (e != null) {
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The code has conflicting constructor parameter lists, with one side having three parameters and the other having four. This can't be resolved automatically, so the snippet with the conflict is returned.
+
+```java
+  private final ConnectedUsers users;
+  private final boolean gameChatEnabled;
+
+  @Inject
+  public GameChatHandler(final GameManager gameManager, final ChatFilter chatFilter,
+                         final ConnectedUsers users) {
+>>>>>>> HEAD
+=======
+  private final ConnectedUsers users;
+  private final boolean gameChatEnabled;
+
+  @Inject
+  public GameChatHandler(final GameManager gameManager, final ChatFilter chatFilter,
+                         final ConnectedUsers users, @GameChatEnabled final boolean gameChatEnabled) {
+>>>>>>> ed08e371978529db8a908e266dc1a8add1d37967
+    super(gameManager);
+    this.chatFilter = chatFilter;
+    this.users = users;
+    this.gameChatEnabled = gameChatEnabled;
+  }
+```

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+The conflict is in the import statements.
+-   The `HEAD` branch includes `import org.spout.math.GenericMath;`. This implies that code in this branch (likely added or modified within this branch) requires the `GenericMath` class.
+-   The `cc070305054530b4eeda07a2b1b619ed34e1e7d201` branch has a blank line where this import would be. This implies that code in this branch either does not require `GenericMath`, or that a previous usage and its import were removed.
+
+**Semantic Intent:**
+-   **HEAD:** The intent is to make `GenericMath` available for use, presumably because some code within this file, as modified in `HEAD`, utilizes it.
+-   **`cc070305054530b4eeda07a2b1b619ed34e1e7d201`:** The intent is that `GenericMath` is not needed for the code in this file, as per the state of this branch. This could be because the functionality requiring it was never added, or was removed/refactored.
+
+**Resolution Ambiguity:**
+Without seeing the rest of the file and understanding which specific code changes from `HEAD` and `cc070305054530b4eeda07a2b1b619ed34e1e7d201` are being merged, it's impossible to definitively determine whether `GenericMath` will be needed in the final merged code.
+-   If the merged code includes functionality from `HEAD` that relies on `GenericMath`, the import should be kept.
+-   If the merged code adopts changes from `cc070305054530b4eeda07a2b1b619ed34e1e7d201` that obviate the need for `GenericMath` (e.g., a refactoring that removed its usage), then the import should be removed.
+
+Since the semantic need for `GenericMath` in the merged version of the code is ambiguous based solely on the provided snippet of import statements, the conflict should be presented as is for a human to resolve with more context.
+
+```java
+import org.spout.api.material.range.EffectRange;
+import org.spout.math.vector.Vector3;
+import org.spout.api.resource.SpoutModels;
+import org.spout.api.util.bytebit.ByteBitSet;
+import org.spout.api.util.flag.Flag;
+<<<<<<< HEAD
+import org.spout.math.GenericMath;
+=======
+
+>>>>>>> cc0703054530b4eeda07a2b1b619ed34e1e7d201
+import org.spout.physics.ReactDefaults;
+import org.spout.physics.collision.shape.CollisionShape;
+
+/**
+ * Defines the specific characteristics of a Block
+
+```

@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the intent behind the changes made in both branches.
+
+The code snippet is written in Java and appears to be part of a class that handles storing data to a file using a specific storage function (by default, `PigStorage`). The method in question is `store`, which takes an `id` and a `filename` as parameters.
+
+1. **Understanding the Conflict**:
+   - The conflict arises in the `store` method where one branch (HEAD) has a method signature of `public void store(String id, String filename) throws IOException`.
+   - The other branch (`1488b22ce313803d012c8ace36c3b12f930ee309`) has modified this to return an `ExecJob` object, changing the method signature to `public ExecJob store(String id, String filename) throws IOException`.
+
+2. **Analyzing Intent**:
+   - The original code (`HEAD`) does not return anything (`void`), suggesting it might be executing the store operation directly or asynchronously without waiting for a result or job execution handle.
+   - The modified code (`1488b22ce313803d012c8ace36c3b12f930ee309`) returns an `ExecJob`, indicating it not only stores the data but also provides a handle or result of the execution job, potentially allowing for further operations like checking the job status.
+
+3. **Resolution Approach**:
+   - To resolve this conflict, we need to consider the overall design and requirements of the class and the application. If the intent is to provide a handle to the execution job for further management or monitoring, the version returning `ExecJob` is more appropriate. However, if the class is designed to simply execute store operations without providing a handle to the job, the `void` return type might be sufficient.
+
+4. **Resolving the Conflict**:
+   - Given the information and analyzing the intent, it seems the change to return `ExecJob` adds functionality that could be useful for managing or monitoring the execution job. 
+   - The method's behavior change suggests that the newer version is enhancing the functionality by providing a return value that can be used to track or manage the job.
+
+Since the change involves altering the return type and potentially the functionality, and without additional context on whether this change is backwards compatible or aligns with the overall design intent, we should be cautious. 
+
+However, directly resolving this requires assuming that the change to return `ExecJob` is intended and beneficial. Thus, we will accept the change from the other branch (`1488b22ce313803d012c8ace36c3b12f930ee309`).
+
+Here is the resolved code snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+     * @param id The alias to store
+     * @param filename The file to which to store to
+     * @throws IOException
+     */
+
+    public ExecJob store(String id, String filename) throws IOException {
+        return store(id, filename, PigStorage.class.getName() + "()");   // SFPig is the default store function
+    }
+        
+    /**
+     *  forces execution of query (and all queries from which it reads), in order to store result in file
+     */
+```

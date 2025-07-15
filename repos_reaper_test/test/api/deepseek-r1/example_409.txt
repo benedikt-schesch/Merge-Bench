@@ -1,0 +1,62 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in a Java test method called parseAsciidocFileWithPrettifyAttribute. The two versions are changing how a configuration property is set and the type of the map variable.
+
+In the HEAD version, they're using config.setProperty with JBakeProperty.ASCIIDOCTOR_ATTRIBUTES and assigning the result to DocumentModel map. The other branch uses ASCIIDOCTOR_ATTRIBUTES.getKey() and declares map as Map<String, Object>.
+
+I need to figure out the intent here. The property key might have been refactored in one branch to use an enum or a constants class, which is better practice. So using ASCIIDOCTOR_ATTRIBUTES.getKey() is probably the correct way to retrieve the key.
+
+For the map variable, one branch uses DocumentModel, which might be a specific class, while the other uses a generic Map. The assertions later check map.getStatus() and map.getType(), which suggests that DocumentModel has these methods. But if the other branch changed it to Map, those method calls (getStatus(), getType()) would not compile. Wait, that's a problem. If the branch changed the type to Map, then using map.getStatus() would be incorrect because a Map uses get("key") instead of methods. So maybe there's a mistake here.
+
+Wait, looking at the test assertions: the HEAD version uses map.getStatus() and map.getType(), which implies that map is an object with those methods, like a DocumentModel. The other branch changes it to a Map, so those assertions would need to use map.get("status") instead. But in the given code, the assertions are still using method calls, which suggests that maybe the other branch's code is incorrect. But that's part of the conflict.
+
+Alternatively, perhaps the DocumentModel class has getters for status and type, while the Map version would require different code. This is a conflict in the code's logic. However, the user wants to resolve the conflict semantically, considering both intents.
+
+Wait, maybe the correct resolution is to take the config setting from the second branch (using getKey()) and keep the DocumentModel type from the first branch. Because the setting of the property might have been refactored to use a constants class, but the processing still returns a DocumentModel. Alternatively, maybe the second branch changed the return type of processFile to Map, which would require adjusting the assertions.
+
+But in the given code, both branches have Assert.assertEquals("draft", map.getStatus()); which if map is a DocumentModel, that's okay, but if it's a Map, that line would fail because a Map doesn't have a getStatus() method. So there's an inconsistency here.
+
+Wait, maybe the second branch's code is incorrect because changing the type to Map but not adjusting the assertions. But in the conflict, the code after the merge would have either DocumentModel or Map. So if the second branch intended to change the return type to Map, then the assertions would need to be adjusted to use map.get("status") instead of map.getStatus(). However, in the provided code, the assertions are still using method calls, which suggests that maybe the second branch's code is wrong. Or perhaps there's a mistake in the merge.
+
+Alternatively, maybe the DocumentModel class is a subclass of Map or has a way to retrieve properties, but that's less likely.
+
+So, to resolve this conflict, we need to decide which changes are correct. The setting of the property using ASCIIDOCTOR_ATTRIBUTES.getKey() is likely the correct approach if that's part of a refactoring to avoid hardcoding keys. So that line should be taken from the second branch.
+
+For the map variable, if the second branch changed the return type of processFile to Map, but the assertions are still using getStatus(), that would be an error. However, if in the second branch, the DocumentModel was replaced with a Map, but the test wasn't updated, that's a problem. Alternatively, maybe the second branch's code is correct, and the assertions were also changed elsewhere, but in the given snippet, they are not.
+
+But in the provided code snippet, the assertions after the conflict are the same in both branches? Let me check:
+
+HEAD version:
+DocumentModel map = parser.processFile(...);
+Assert.assertEquals("draft", map.getStatus());
+Assert.assertEquals("post", map.getType());
+
+Second branch:
+Map<String, Object> map = parser.processFile(...);
+Assert.assertEquals("draft", map.getStatus());
+Assert.assertEquals("post", map.getType());
+
+But a Map doesn't have getStatus() or getType() methods. So this would result in a compilation error. Therefore, the second branch's code is incorrect unless there's a different type involved. Therefore, the correct resolution would be to take the config line from the second branch (using getKey()) but keep the DocumentModel type from the first branch, assuming that the second branch's change to Map was a mistake or that the assertions were supposed to be updated but weren't included in the snippet.
+
+Alternatively, perhaps the second branch intended to change the return type to Map and adjust the assertions, but the snippet provided doesn't show that. Since the user provided only the snippet with the conflict, maybe the surrounding code in the test was updated to use the map as a DocumentModel, so the correct resolution is to use the config line from the second branch but keep the DocumentModel.
+
+Therefore, the resolved code would be:
+
+config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify");
+DocumentModel map = parser.processFile(asciidocWithSource);
+
+This combines the correct property setting from the second branch with the correct variable type from the first branch, ensuring that the assertions using getStatus() and getType() remain valid.</think>
+```java
+
+
+    @Test
+    public void parseAsciidocFileWithPrettifyAttribute() {
+
+        config.setProperty(ASCIIDOCTOR_ATTRIBUTES.getKey(),"source-highlighter=prettify");
+        DocumentModel map = parser.processFile(asciidocWithSource);
+        Assert.assertNotNull(map);
+        Assert.assertEquals("draft", map.getStatus());
+        Assert.assertEquals("post", map.getType());
+        assertThat(map.getBody())
+                .contains("class=\"paragraph\"")
+
+```

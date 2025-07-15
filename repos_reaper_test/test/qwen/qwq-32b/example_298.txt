@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+
+    public <T> T unmarshall(DBObject document, Class<T> clazz) throws MarshallingException {
+
+        DocumentStream stream = DocumentStreamFactory.fromDBObject(document);
+        try {
+<<<<<<< HEAD
+            return mapper.readValue(stream.getData(), stream.getOffset(), stream.getSize(), clazz);
+        } catch (IOException e) {
+            String message = String.format("Unable to unmarshall result to %s from content %s", clazz, document.toString());
+=======
+            return reader.withType(clazz).readValue(json);
+        } catch (Exception e) {
+            String message = String.format("Unable to unmarshall from json: %s to %s", json, clazz);
+>>>>>>> 4dad4b6f9ffd42aaf0a81bf4fc4026ac51e656d0
+            throw new MarshallingException(message, e);
+        }
+    }
+
+    public DBObject marshall(Object obj) throws MarshallingException {
+
+```

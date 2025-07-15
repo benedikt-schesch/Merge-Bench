@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The two versions of the code have slightly different approaches to creating the temp file:
+- The HEAD version uses a fixed "test.txt" filename
+- The commit version derives the filename from the test name with ".txt" extension
+
+Since both approaches achieve the same goal of creating a temp file but with different naming strategies, and there's no clear indicator of which approach is better without more context, I'll keep the commit version since it provides more context about which test created the file through the test name.
+
+```java
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+
+    @Test
+    public void testBigGroupAll() throws Throwable {
+<<<<<<< HEAD
+        int LOOP_COUNT = 4*1024;
+        File tmpFile = File.createTempFile("test", "txt");
+=======
+        int LOOP_COUNT = 4*1024;
+        File tmpFile = File.createTempFile(this.getName(), ".txt");
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpFile));
+        for(int i = 0; i < LOOP_COUNT; i++) {
+            ps.println(i);
+        }
+        ps.close();
+
+```

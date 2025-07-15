@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to implement the same method `getVersion()` with the same core logic. The conflict is in two areas:
+
+1. The catch block formatting (empty `{}` vs empty body on separate lines)
+2. The default version string ("1.4" vs "1.2")
+
+Since this is a conflict about version numbers, I'll resolve it by taking the version from the HEAD branch (newer version "1.4") while using the more compact catch block style from the other branch.
+
+```java
+    @Override
+    public String getVersion() {
+        String version = null;
+        try {
+            version = ServerInfo.class.getPackage().getImplementationVersion();
+        } catch (Exception e) {}
+        return version != null ? version : "1.4";
+    }
+
+    @Override
+    public String getStartupTime() {
+        return startupTime;
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side is importing `com.restfb.json.*` (wildcard import) while the other side is explicitly importing specific classes from that package. Additionally, there's a difference in the import for the `Comments` class.
+
+Here's the resolved code:
+
+```java
+import static java.lang.String.format;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
+
+import com.restfb.exception.FacebookJsonMappingException;
+import com.restfb.json.JsonArray;
+import com.restfb.json.JsonException;
+import com.restfb.json.JsonObject;
+import com.restfb.types.Post.Comments;
+import com.restfb.util.DateUtils;
+import com.restfb.util.ReflectionUtils.*;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+```
+
+I resolved the conflict by:
+1. Choosing the explicit imports over the wildcard import for the json package
+2. Using the more specific `com.restfb.types.Post.Comments` import which appears to be the newer/more precise import path

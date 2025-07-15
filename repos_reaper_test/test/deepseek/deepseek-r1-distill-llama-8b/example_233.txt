@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The code has a merge conflict in the assertions for the iterator "b1". The left side accesses the value as a long, while the right uses string comparison. Since the right side appears to correctly handle the ordering based on the Pig Latin query which orders lexicographically, the left side should be updated to match the same approach.
+
+```java
+        pigServer.registerQuery("c1 = order c by value;");
+
+        // order in lexicographic, so 12 comes before 2
+        Iterator<Tuple> iter = pigServer.openIterator("b1");
+        assertTrue("b1 has an element", iter.hasNext());
+        assertEquals("first item in b1", iter.next().get(0), "12");
+        assertTrue("b1 has an element", iter.hasNext());
+        assertEquals("second item in b1", iter.next().get(0), "2");
+        assertFalse("b1 is over", iter.hasNext());
+
+        iter = pigServer.openIterator("c1");
+        assertTrue("c1 has an element", iter.hasNext());
+```

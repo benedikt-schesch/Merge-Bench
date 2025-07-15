@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflict is in the static initializer where both sides are initializing the `FINITE_PLAYTIMES` set with the same elements, just using slightly different syntax. The semantics are identical - both are creating an unmodifiable set of the same string elements.
+
+I'll preserve the simpler and more modern Java syntax from the 5adedd24 side that uses the diamond operator and varargs directly:
+
+```java
+  private final static int JUDGE_TIMEOUT_PER_CARD = 7 * 1000;
+  private final static int MAX_SKIPS_BEFORE_KICK = 2;
+  private final static Set<String> FINITE_PLAYTIMES;
+
+  static {
+    final Set<String> finitePlaytimes = new TreeSet<>(Arrays.asList("0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.5x", "3x", "4x", "5x", "10x"));
+    FINITE_PLAYTIMES = Collections.unmodifiableSet(finitePlaytimes);
+  }
+
+  private final int id;
+  /**
+
+```

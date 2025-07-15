@@ -1,0 +1,29 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the two versions.
+
+The conflict is around the line where mFavorited is assigned. The HEAD version uses TwitterDbAdapter.KEY_FAVORITED, while the other branch uses StatusTable.FIELD_FAVORITED.
+
+First, I should check if these two constants are the same. If they're different names for the same column, maybe there was a refactor. StatusTable.FIELD_FAVORITED seems more descriptive, perhaps replacing a generic KEY from TwitterDbAdapter. But I need to be sure.
+
+Looking at the surrounding code, other columns like mSourceColumn and mInReplyToScreenName are using StatusTable.FIELD_... constants. That suggests consistency in using StatusTable's fields. The HEAD version's use of TwitterDbAdapter.KEY_FAVORITED might be outdated. The other branch's change aligns with the surrounding code's style.
+
+So the intent here is probably to standardize all column index lookups to use StatusTable constants. Therefore, the correct resolution is to pick the version from the branch (StatusTable.FIELD_FAVORITED) to maintain consistency.</think>
+```java
+			mSourceColumn = cursor
+					.getColumnIndexOrThrow(StatusTable.FIELD_SOURCE);
+			mInReplyToScreenName = cursor
+					.getColumnIndexOrThrow(StatusTable.FIELD_IN_REPLY_TO_SCREEN_NAME);
+			mFavorited = cursor
+					.getColumnIndexOrThrow(StatusTable.FIELD_FAVORITED);
+		}
+		mMetaBuilder = new StringBuilder();
+	}
+
+	private LayoutInflater mInflater;
+
+```
+
+The conflict is resolved by choosing `StatusTable.FIELD_FAVORITED` since:
+1. All other column indices in this context use StatusTable constants
+2. This maintains naming consistency with the pattern established by the surrounding code
+3. The `StatusTable.FIELD_*` pattern appears to be the newer/more specific convention compared to the generic `TwitterDbAdapter.KEY_*`

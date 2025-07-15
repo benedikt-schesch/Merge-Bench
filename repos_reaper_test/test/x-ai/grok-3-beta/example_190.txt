@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'll preserve the snippet exactly as provided and resolve the merge conflict based on the semantic intent. The conflict is in the method signature regarding the type of the second parameter for `registerFunction`. Let's analyze the intent:
+
+- **HEAD** uses `String functionSpec`, suggesting that the parameter is a string representation of the function specification, which might be parsed or processed later in the code (though not shown in the snippet).
+- **Branch 1488b22** uses `FuncSpec functionSpec`, indicating that the parameter is already an object of type `FuncSpec`, which aligns with the usage in the method body where `functionSpec` is directly used in a `put` operation into `definedFunctions` and checked for `null`.
+
+**Semantic Intent Analysis**: 
+- The method body uses `functionSpec` as an object (likely of type `FuncSpec` since it's used directly in a map and compared with `null`), which matches the declaration in the branch version (`FuncSpec functionSpec`).
+- The Javadoc comment above refers to `functionSpec` as a `FuncSpec` object, indicating the intent is to pass an object of type `FuncSpec`, not a `String`.
+- Therefore, the branch version (`FuncSpec functionSpec`) is semantically correct and aligns with the method body and documentation.
+
+Here is the resolved snippet with the full context preserved as provided:
+
+```java
+     * @param function - the new function alias to define.
+     * @param functionSpec - the FuncSpec object representing the name of 
+     * the function class and any arguments to constructor.
+     * 
+     */
+    public void registerFunction(String function, FuncSpec functionSpec) {
+        if (functionSpec == null) {
+            definedFunctions.remove(function);
+        } else {
+            definedFunctions.put(function, functionSpec);
+        }
+```
+
+This resolution adopts the branch version (`FuncSpec functionSpec`) as it matches the apparent intent of the method body and documentation.

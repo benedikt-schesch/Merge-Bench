@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The code defines an interface `IsEdit` with a package-private scope. On one side of the merge (`<<<<<<< HEAD`), the interface is empty, and on the other side (`>>>>>>>`), it contains a static final byte array `MUTATE` with the value "Mutate". 
+
+The intent of both sides appears to be defining constants related to RPC method names for HBase 0.95+. Since the interface is empty in one side and contains the constant in the other, the conflict can be resolved by including the constant in the interface.
+
+```java
+  /**
+   * Package-private interface to mark RPCs that are changing data in HBase.
+   * @since 1.4
+   */
+  interface IsEdit {
+    /** RPC method name to use with HBase 0.95+.  */
+    static final byte[] MUTATE = { 'M', 'u', 't', 'a', 't', 'e' };
+  }
+
+  /*
+   * This class, although it's part of the public API, is mostly here to make
+   * it easier for this library to manipulate the HBase RPC protocol.
+```

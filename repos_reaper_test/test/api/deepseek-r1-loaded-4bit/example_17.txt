@@ -1,0 +1,41 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the Java import statements. On the HEAD side, there are some imports related to ConcurrentHashMap, ConcurrentMap, AtomicBoolean, and logging. Then the other side, from commit 67bcb76a, adds imports from org.apache.commons.io.filefilter, org.jboss.netty.channel.group, and maybe others.
+
+The goal is to merge these without conflicts. Both sides are adding different imports. Since Java imports are independent of each other (unless there's a naming conflict, which there doesn't seem to be here), the correct approach is to include all the necessary imports from both branches.
+
+Looking at the code, the HEAD has imports up to java.util.logging.Logger. The conflicting part adds three new imports: DirectoryFileFilter, ChannelGroup, ChannelGroupFuture, and DefaultChannelGroup from Netty and Apache Commons. These are all in different packages, so they don't interfere with each other.
+
+So the resolved code should have all the imports from both sides. The order might not matter, but it's common to group similar packages. However, the user said to preserve the spacing as is. The original code has the HEAD imports first, then the other branch's imports. But in the conflict markers, the other branch's imports are added below the HEAD's. Wait, no—the conflict is between the HEAD's imports ending and the other branch adding their imports in the same place. So the correct way is to combine all imports, keeping both sets.
+
+Therefore, the merged code should include all the imports from both versions. The HEAD's imports are:
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+
+And the other branch adds:
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.jboss.netty.channel.group.ChannelGroup;
+import org.jboss.netty.channel.group.ChannelGroupFuture;
+import org.jboss.netty.channel.group.DefaultChannelGroup;
+
+So the merged imports section should have all of these. Since the conflict is in the same spot, we can just list all the imports together. However, we need to check if there's any duplication or ordering issues. Since they are different packages, no problem. So the resolved code will have all the imports from both sides, in the order they appeared in each branch. But in the conflict, the HEAD's part is first, then the other branch's. So the merged code should list the HEAD's imports first, followed by the other branch's imports. Then continue with the existing imports from both, like the org.spout.api ones.
+
+So the final merged code will have all the imports from both branches, ordered as per the original contexts. There's no ambiguity here because the imports don't overlap in terms of classes or packages. Therefore, the conflict can be resolved by combining all the imports.</think>
+```java
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.jboss.netty.channel.group.ChannelGroup;
+import org.jboss.netty.channel.group.ChannelGroupFuture;
+import org.jboss.netty.channel.group.DefaultChannelGroup;
+import org.spout.api.Engine;
+import org.spout.api.Spout;
+import org.spout.api.command.CommandManager;
+import org.spout.api.command.CommandSource;
+import org.spout.api.command.annotated.AnnotatedCommandExecutorFactory;
+```

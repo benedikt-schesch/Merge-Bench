@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, it appears that one side (HEAD) has added a serialVersionUID declaration, which is a standard practice for serializable classes in Java to ensure version compatibility. The other side (a17acec0) doesn't include this declaration.
+
+Since this is a class that extends AbstractFacebookType (which might be serializable), it's typically better to include a serialVersionUID to ensure proper serialization/deserialization across different versions. I'll resolve the conflict by keeping this field:
+
+```java
+   * 
+   * @since 1.10.0
+   */
+  public static class PageStartInfo extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    @Getter
+    @Setter
+    @Facebook
+    private String type;
+
+
+```

@@ -1,0 +1,22 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is the method getAllPlayerInfo(). The conflict is between two changes: one in HEAD and another in the branch 5adedd2. 
+
+Looking at the differences, the first part is the initialization of playersCopy. HEAD uses players.toArray(new Player[players.size()]) while the other branch uses new Player[0]. I remember that in Java, using toArray with a zero-length array is actually recommended because it's safer and more efficient. The toArray method will then allocate the right size array, so using new Player[0] is better practice here. So the branch change is an improvement.
+
+Next, the ArrayList initialization: HEAD has new ArrayList<Map<GamePlayerInfo, Object>>(playersCopy.length) with explicit type parameters, while the other branch uses the diamond operator new ArrayList<>(playersCopy.length). Since Java 7, the diamond operator allows the compiler to infer the type, so the branch's version is cleaner and correct. The initial capacity is set correctly in both cases, so using the shorter syntax is better.
+
+So both changes from the branch are improvements. The intent of both sides is to create a list of player info, but the branch's code uses more modern Java practices. Therefore, resolving the conflict by taking the branch's versions of both lines should work without issues. The rest of the code remains the same. There's no ambiguity here, so the conflict can be resolved by choosing the branch's changes.</think>
+```java
+   *
+   * @return Player information for every player in this game: Name, score, status.
+   */
+  public List<Map<GamePlayerInfo, Object>> getAllPlayerInfo() {
+    final List<Map<GamePlayerInfo, Object>> info;
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    info = new ArrayList<>(playersCopy.length);
+    for (final Player player : playersCopy) {
+      final Map<GamePlayerInfo, Object> playerInfo = getPlayerInfo(player);
+      info.add(playerInfo);
+    }
+    return info;
+```

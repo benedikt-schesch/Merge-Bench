@@ -1,0 +1,66 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's analyze the given code snippet and understand the intent of both sides of the merge.
+
+The code snippet is in Java and appears to be part of a plugin for the Spout API. The conflicting section is related to the import statements and the class definition of `SpoutMetaPlugin`.
+
+On the left-hand side (HEAD), we have:
+```java
+import org.spout.api.Engine;
+import org.spout.api.Spout;
+import org.spout.api.plugin.Plugin;
+import org.spout.api.plugin.PluginDescriptionFile;
+import org.spout.api.plugin.PluginLoader;
+import org.spout.api.protocol.Protocol;
+
+public final class SpoutMetaPlugin implements Plugin {
+	private PluginDescriptionFile pdf;
+	private Engine engine;
+	private PluginDictionary dictionary; // TODO extend this dictionary to load translation from a different location
+```
+
+On the right-hand side (77ca2cb827b0a0b10f18d609fa5fd707c62376f7), the import statements are missing, and we have:
+```java
+public final class SpoutMetaPlugin extends Plugin {
+	public SpoutMetaPlugin(Engine engine) {
+		this.engine = engine;
+		file = new File(engine.getClass().getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20", " "));
+```
+
+Let's examine the differences:
+
+1. Import statements: The left-hand side has several import statements that are not present on the right-hand side. Some of these imports are used in the left-hand side code (e.g., `PluginDescriptionFile`, `Engine`), while others are not (e.g., `PluginLoader`, `Protocol`).
+2. Class definition: The left-hand side defines `SpoutMetaPlugin` as implementing `Plugin`, while the right-hand side defines it as extending `Plugin`. In Java, a class can implement an interface but extend another class. The correct definition depends on the type of `Plugin`.
+3. Constructor and fields: The right-hand side has a constructor that initializes the `engine` field, which is also present on the left-hand side. However, the right-hand side has an additional `file` variable that is not declared anywhere in the given snippet.
+
+To resolve the conflict, we need to understand the intent behind both changes. The left-hand side seems to be setting up the plugin with a description file and a dictionary, while the right-hand side is introducing a constructor and a new field (`file`) that is not declared.
+
+Since `Plugin` is likely an abstract class or interface provided by the Spout API, and given that `SpoutMetaPlugin` is using `Engine` which is also from the Spout API, we should check the Spout API documentation for the correct way to define a plugin.
+
+Assuming `Plugin` is an abstract class and considering the need to combine the functionality, we might need to adjust the code to include the necessary import statements, correctly define the class, and ensure that all used variables are declared.
+
+However, without knowing the exact definition of `Plugin` in the Spout API and the purpose of the `file` variable (since its declaration is not shown), the safest resolution would be to return the original snippet with the conflict, as changing it might alter the intended functionality.
+
+Here is the original snippet in markdown code syntax, unchanged:
+```java
+
+import org.spout.api.Engine;
+import org.spout.api.Spout;
+import org.spout.api.plugin.Plugin;
+import org.spout.api.plugin.PluginDescriptionFile;
+<<<<<<< HEAD
+import org.spout.api.plugin.PluginLoader;
+import org.spout.api.protocol.Protocol;
+
+public final class SpoutMetaPlugin implements Plugin {
+	private PluginDescriptionFile pdf;
+	private Engine engine;
+	private PluginDictionary dictionary; // TODO extend this dictionary to load translation from a different location
+=======
+>>>>>>> 77ca2cb827b0a0b10f18d609fa5fd707c62376f7
+
+public final class SpoutMetaPlugin extends Plugin {
+	public SpoutMetaPlugin(Engine engine) {
+		this.engine = engine;
+		file = new File(engine.getClass().getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20", " "));
+```

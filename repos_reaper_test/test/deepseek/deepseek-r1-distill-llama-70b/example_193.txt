@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+To resolve this conflict, we need to ensure the var arg constructor receives the correct argument type. The left side explicitly converts args to a String array, which is safer and correctly formatted for the constructor. The right side might pass an incorrect type if args isn't an array. Thus, the left side's approach is preferable.
+
+```java
+        }
+        catch(NoSuchMethodException nme) {
+            // Second chance. Try with var arg constructor
+            try {
+                Constructor c = objClass.getConstructor(String[].class);
+                String[] argArr = args.toArray(new String[0]) ;
+                Object[] wrappedArgs = new Object[1] ;
+                wrappedArgs[0] = argArr ;
+                ret =  c.newInstance(wrappedArgs);
+            }
+            catch(Throwable e){
+                // bad luck
+                StringBuilder sb = new StringBuilder();
+
+```

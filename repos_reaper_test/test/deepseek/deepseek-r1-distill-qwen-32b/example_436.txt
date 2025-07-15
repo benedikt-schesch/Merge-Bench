@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises because both sides of the merge are trying to unregister different receivers. The first side is unregistering `videoUpdateReceiver` while the second side is attempting to unregister `libraryUpdateReceiver`.
+
+To resolve this conflict, we need to consider both receivers and unregister each of them.
+
+Here is the merged solution:
+
+```java
+        try {
+            getActivity().unregisterReceiver(videoUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        try {
+            getActivity().unregisterReceiver(libraryUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        /** @author John Doe */
+        super.onStop();
+    }
+
+    @Override
+    public void onAddClicked(CharSequence user, CharSequence password,
+```

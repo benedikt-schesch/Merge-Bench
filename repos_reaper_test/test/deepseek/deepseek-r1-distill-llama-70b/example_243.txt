@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises from two approaches to retrieving a configuration property. The original code uses `PigConfiguration.OPT_MULTIQUERY`, a constant, while the other uses a hardcoded string "opt.multiquery". Using a constant enhances maintainability. Thus, the original version is preserved.
+
+```java
+        // splits.
+        NoopFilterRemover fRem = new NoopFilterRemover(plan);
+        fRem.visit();
+
+        boolean isMultiQuery =
+            "true".equalsIgnoreCase(pc.getProperties().getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+        if (isMultiQuery) {
+            // reduces the number of MROpers in the MR plan generated
+            // by multi-query (multi-store) script.
+            MultiQueryOptimizer mqOptimizer = new MultiQueryOptimizer(plan, pc.inIllustrator);
+```

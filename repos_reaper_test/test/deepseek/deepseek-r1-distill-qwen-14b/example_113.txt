@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing imports between two branches. The HEAD branch imports `Collections.emptyList` and `Collections.unmodifiableList`, while the other branch adds `Arrays.asList` alongside these imports. Since `Arrays.asList` is not obviously needed in this context and the existing imports suffice for creating empty and unmodifiable lists, it's reasonable to retain the original imports.
+
+**Step-by-step explanation:**
+
+1. **Identify the Conflict:** The merge conflict is about whether to include `import static java.util.Arrays.asList;`.
+
+2. **Understand Imports:**
+   - `Collections.emptyList()` and `Collections.unmodifiableList()` provide empty and unmodifiable lists.
+   - `Arrays.asList()` converts an array to a list but isn't unmodifiable by default.
+
+3. **Assess Usage Needs:** Without specific code context, `Arrays.asList`'s necessity is unclear. It might be redundant here.
+
+4. **Resolve the Conflict:** Since `Arrays.asList` isn't clearly needed and the existing imports handle empty and unmodifiable lists, it's best to retain the original imports.
+
+```java
+ * Copyright @2010-2011 the original author or authors.
+ */
+package org.fest.assertions.internal;
+
+import static java.lang.String.format;
+<<<<<<< HEAD
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+=======
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+
+>>>>>>> 813d480c0d5d482664c5a509543f15a2883e7a11
+import static org.fest.util.Collections.isEmpty;
+import static org.fest.util.Collections.nonNullElements;
+import static org.fest.util.Introspection.descriptorForProperty;
+
+import java.beans.PropertyDescriptor;
+```

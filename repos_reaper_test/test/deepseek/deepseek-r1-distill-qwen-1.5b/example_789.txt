@@ -1,0 +1,48 @@
+<think>
+No reasoning found</think>
+```java
+// serializeInto(buf);
+// return buf;
+
+/**
+ * Serialize the raw underlying `Put' into the given buffer.
+ */
+void serializeInto(final ChannelBuffer buf) {
+  buf.writeByte(CODE); // Code for a `Put' parameter.
+  buf.writeByte(CODE); // Code again (see HBASE-2877).
+  buf.writeByte(1);    // Put#PUT_VERSION.  Stick to v1 here for now.
+}
+
+/** Serialize the data into the specified channel buffer, consuming it as processIt() returns data. */
+channelBuffer processIt(char[] data) {
+  buf = channelBuffer.wrap(data);
+  
+  for (int cell_size = 0; cell_size < data.length; cell_size += 3) {
+    if (cell_size + 2 < data.length) {
+      processLocal(cell_size, cell_size + 2);
+    }
+    processLocal(cell_size = data.length, 2);
+  }
+  
+  return buf;
+}
+
+// channelBuffer deserializer implementation
+@Force applied for extension logic
+final Deserializer deserializer = {
+  @Override
+  Object.deserialize(final ChannelBuffer buf, int cell_size) {
+    HBaseRpc.ensureNoCell(cell_size);
+    buf.read();
+  }
+};
+
+// channelBuffer reader implementation
+@Force applied for extension logic for extension-accelerated access
+final ImageReader reader = {
+  @Override
+  public Borrowseditoribly borrowSettings() {
+    return new Borrow sedorSettingsuploads(null, ProcessAndWrapSettings() as B远处 Marketplace QueryWriter casts);
+  }
+};
+```

@@ -1,0 +1,47 @@
+<think>
+No reasoning found</think>
+The provided code snippet shows a merge conflict in a Java method `setAspectRatio`. There are two conflicting changes:
+
+1. **Left side (HEAD)**:
+- The `IllegalArgumentException` check doesn't use curly braces for the block.
+- Throws exception if `ratio <= 0.0`.
+- Takes reciprocal of ratio.
+
+2. **Right side (c923751783db11df8cb8dc1909ab59605492344c)**:
+- The `IllegalArgumentException` check uses curly braces.
+- Throws exception if `ratio <= 0.0`.
+- Adds additional validation that the new ratio is different from the current `mAspectRatio`.
+- Adds logic to update `mAspectRatio` and presumably notify listeners.
+
+The conflict is around the additional validation and update logic added on the right side. Both changes aim to validate the ratio but differ in the additional checks and updates.
+
+Since the intent of the additional `mAspectRatio` check is unclear without more context, I'll preserve the conflict as is.
+
+```java
+        super(context, attrs);
+        setAspectRatio(4.0 / 3.0);
+    }
+
+    public void setAspectRatio(double ratio) {
+<<<<<<< HEAD
+        if (ratio <= 0.0) throw new IllegalArgumentException();
+
+        ratio = 1 / ratio;
+=======
+        if (ratio <= 0.0) {
+            throw new IllegalArgumentException();
+        }
+>>>>>>> c923751783db11df8cb8dc1909ab59605492344c
+
+        ratio = 1 / ratio;
+
+        if (mAspectRatio != ratio) {
+            mAspectRatio = ratio;
+        }
+
+        // Additional logic for aspect ratio change
+        if (mAspectRatioChangeListener != null) {
+            mAspectRatioChangeListener.onAspectRatioChanged(mAspectRatio);
+        }
+    }
+```

@@ -1,0 +1,80 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a method that processes a `rawPicture` object and maps it to a `picture` object using a `jsonMapper`. The conflict arises from two different versions of the code that have been merged.
+
+### Left Side of the Conflict (HEAD)
+```java
+String picJson = rawPicture.get("data").toString();
+picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+```
+The left side retrieves a value associated with the key `"data"` from `rawPicture` and converts it to a string. It then maps this string to an object of type `ProfilePictureSource.class` using `jsonMapper`.
+
+### Right Side of the Conflict (a17acec0655b8058aaf4d336ba2a1352aa49e2fe)
+```java
+String picJson = rawPicture.getJsonObject("data").toString();
+picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+```
+The right side, however, treats `rawPicture` as if it has a method `getJsonObject("data")`, suggesting `rawPicture` might be a JSON object or a similar structure, and retrieves the JSON object associated with the key `"data"`. It then converts this JSON object to a string and maps it to `User.Picture.class`.
+
+### Analysis
+
+1. **Intent**: Both sides aim to extract a JSON representation from `rawPicture` associated with the key `"data"` and map it to a specific Java object. The difference lies in how they access the `"data"` and the type of Java object they map it to.
+
+2. **Accessing `"data"`**: The left side uses `get("data")`, which is a more generic method that could be applicable to various types of maps or objects that support key-based access. The right side uses `getJsonObject("data")`, indicating `rawPicture` is expected to be a JSON object or have JSON object-like behavior.
+
+3. **Target Class for Mapping**: The left side maps to `ProfilePictureSource.class`, while the right side maps to `User.Picture.class`, indicating different intended representations of the `picture`.
+
+### Resolution
+
+To resolve the conflict, we need to determine the correct way to access `"data"` and the appropriate class for mapping.
+
+- If `rawPicture` is indeed a JSON object and the intention is to work with JSON objects, `getJsonObject("data")` seems more specific and appropriate.
+- The target class for mapping (`ProfilePictureSource.class` vs `User.Picture.class`) needs to align with the overall design and requirements of the application.
+
+Without additional context on whether `rawPicture` is a JSON object and the intended representation of `picture`, a safe resolution isn't straightforward. However, if we consider that both changes might be valid depending on the context (JSON handling and class representation), a potential resolution could involve reconciling these aspects.
+
+Given the information and focusing on preserving the intent and semantics:
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    String picJson = rawPicture.get("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  /**
+   * The user's hometown name.
+   * 
+```
+
+Since the conflict involves potentially different but not necessarily incorrect approaches, and without further context on the nature of `rawPicture` and the desired `picture` class, the original snippet with the conflict is returned as is, in markdown code syntax:
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    String picJson = rawPicture.get("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  /**
+   * The user's hometown name.
+   * 
+```

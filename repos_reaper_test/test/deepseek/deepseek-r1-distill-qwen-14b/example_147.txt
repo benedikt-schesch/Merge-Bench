@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict is in how the configuration property is set. The left side uses the constant PigConfiguration.OPT_ACCUMULATOR, while the right side uses a string "opt.accumulator". The constant is preferable for consistency and maintainability.
+
+```java
+        pigServer.registerQuery("B = group A by id;");
+        pigServer.registerQuery("C = foreach B generate group," +
+                "org.apache.pig.test.utils.AccumulativeSumBag(A);");
+
+        checkAccumulatorOff("C");
+<<<<<<< HEAD
+        pigServer.getPigContext().getProperties().setProperty(
+                PigConfiguration.OPT_ACCUMULATOR, "true");
+=======
+        pigServer.getPigContext().getProperties().setProperty("opt.accumulator", "true");
+
+>>>>>>> 5e2f75cb9f2d357f135a4cb3f2f905fb78fa9d40
+    }
+
+    private void checkAccumulatorOff(String alias) {
+        try {
+            Iterator<Tuple> iter = pigServer.openIterator(alias);
+```

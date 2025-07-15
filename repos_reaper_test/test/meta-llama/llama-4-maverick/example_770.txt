@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is a part of the Java documentation for a class named `DeleteRequest`. This class is used for sending delete requests to HBase, a distributed database built on top of Hadoop. The documentation explains how the `DeleteRequest` class works, particularly in relation to how it handles timestamps.
+
+The conflict arises from a difference in how the documentation describes the behavior of `DeleteRequest` with respect to timestamps. 
+
+The version from `HEAD` (the local branch) states that a `DeleteRequest` with a specific timestamp will delete values in HBase that were stored with a timestamp less than or equal to that of the `DeleteRequest`.
+
+The version from `d543609051366758e579ad168361daadd74cdf7f` (the branch being merged) adds more detail to this explanation. It not only includes the original condition (deleting values with timestamps less than or equal to the `DeleteRequest` timestamp) but also introduces an exception based on whether `setDeleteAtTimestampOnly` is called. If it is, then only the value at the specified timestamp is deleted.
+
+To resolve this conflict, we need to understand the intent behind both versions. The original version provides a basic understanding of how `DeleteRequest` works with timestamps. The incoming change refines this understanding by introducing a condition that affects the deletion behavior.
+
+Given the information, the incoming change (`d543609051366758e579ad168361daadd74cdf7f`) seems to provide a more comprehensive and accurate description of how `DeleteRequest` behaves, especially by mentioning the impact of `setDeleteAtTimestampOnly`. This suggests that the documentation is being updated to reflect a more nuanced behavior of `DeleteRequest`.
+
+Therefore, the resolution should aim to preserve the clarity and completeness of the documentation.
+
+Here is the resolved snippet in markdown code syntax, without modifying the context and preserving the spacing as is:
+
+```java
+ * All strings are assumed to use the platform's default charset.
+ * <h1>A note on passing {@code timestamp}s in argument</h1>
+ * Irrespective of the order in which you send RPCs, a {@code DeleteRequest}
+ * that is created with a specific timestamp in argument will only delete
+ * values in HBase that were previously stored with a timestamp less than
+ * or equal to that of the {@code DeleteRequest} unless
+ * {@link #setDeleteAtTimestampOnly} is also called, in which case only the
+ * value at the specified timestamp is deleted.
+ */
+public final class DeleteRequest extends BatchableRpc
+  implements HBaseRpc.HasTable, HBaseRpc.HasKey,
+             HBaseRpc.HasFamily, HBaseRpc.HasQualifiers, HBaseRpc.IsEdit {
+
+
+```

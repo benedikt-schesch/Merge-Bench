@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's analyze the context and the intent of both sides of the merge.
+
+The code snippet provided is in Java and appears to be part of a larger system managing card decks, possibly for a game like Cards Against Humanity. The class `CustomDeck` extends `CardSet` and contains fields for `id`, `name`, `watermark`, `description`, and sets of black and white cards.
+
+The conflict arises in the declaration of the sets for black and white cards. The local changes (`HEAD`) indicate that these sets should contain `CustomBlackCard` and `CustomWhiteCard` objects, respectively. In contrast, the incoming changes (`5adedd24812861bedaf540555ec046744b42b42a`) suggest that the sets should contain `CardcastBlackCard` and `CardcastWhiteCard` objects.
+
+Let's consider the intent and semantics:
+- The class is named `CustomDeck` in the local version, suggesting it's part of a custom sets module (`net.socialgamer.cah.customsets`).
+- The incoming changes rename the class to be presumably part of a Cardcast module (`net.socialgamer.cah.cardcast`), and change the types of cards to `CardcastBlackCard` and `CardcastWhiteCard`.
+
+Given the context that the file path also changes from `CustomDeck.java` to `CardcastDeck.java`, it suggests a rename operation alongside the change in card types. However, the class name in the code snippet remains `CustomDeck`.
+
+To resolve the conflict while preserving the intent and semantics of both sides, we need to decide whether the class should represent a custom deck or a Cardcast deck and adjust the types of cards and the class name accordingly.
+
+Since the incoming changes not only change the type of cards but also imply a rename of the class and its package, a straightforward resolution would be to accept the incoming changes entirely if the intent is to rename `CustomDeck` to represent a `CardcastDeck` with `Cardcast` cards. However, the class name in the code remains `CustomDeck`, indicating a potential inconsistency or incomplete rename operation.
+
+Given this context, a semantically correct resolution isn't straightforward without assuming the intent behind the merge. If the goal is to have a `CardcastDeck` with `Cardcast` cards, the class name should be changed to `CardcastDeck`. 
+
+However, since we're asked to return the entire snippet without modifying the context (other than resolving the conflict if possible) and to preserve the spacing as is, and given that the conflict involves fundamental changes to the types of cards used by the deck, we should directly resolve the conflict if the intent is clear.
+
+The intent seems ambiguous because the class name and package path are not consistently updated in the provided snippet. 
+
+Therefore, the conflict should be returned as is because we cannot be certain of the final intent without further context or clarification on whether the class should be `CustomDeck` or `CardcastDeck`.
+
+```java
+public class CustomDeck extends CardSet {
+  private final int id;
+  private final String name;
+  private final String watermark;
+  private final String description;
+<<<<<<< HEAD:src/main/java/net/socialgamer/cah/customsets/CustomDeck.java
+  private final Set<CustomBlackCard> blackCards = new HashSet<>();
+  private final Set<CustomWhiteCard> whiteCards = new HashSet<>();
+=======
+  private final Set<CardcastBlackCard> blackCards = new HashSet<>();
+  private final Set<CardcastWhiteCard> whiteCards = new HashSet<>();
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a:src/main/java/net/socialgamer/cah/cardcast/CardcastDeck.java
+
+  public CustomDeck(final int id, final String name, final String watermark, final String description) {
+    this.id = id;
+    this.name = name;
+    this.watermark = watermark;
+```

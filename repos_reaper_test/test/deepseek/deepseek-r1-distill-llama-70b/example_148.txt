@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+The conflict appears to be about adding a comment and initializing `ScriptState`. The intent on both sides is to ensure `ScriptState` is properly initialized but only if it hasn't been already. The resolution combines the comments to make the intent clearer.
+
+```java
+        addJarsFromProperties();
+        markPredeployedJarsFromProperties();
+
+        PigStats.start(pigContext.getExecutionEngine().instantiatePigStats());
+        // ScriptState may have been initialized in Main (e.g., if started via command line)
+        // In that case, we should not overwrite it
+        if (ScriptState.get() == null) {
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two `assertThat` statements checking the type of `scheme`. The left side (`HEAD`) asserts `scheme` is a `VCard`, while the right side adds a failure message. To resolve, we can combine both into a single assert with a helpful message.
+
+```java
+				"EMAIL:cookiemonster@sesamestreet.com\n" + //
+				"ADR:Sesamestreet 1\n" + //
+				"NOTE:more cookies, please\n" + //
+				"END:VCARD");
+	 assertNotNull(scheme);
+<<<<<<< HEAD
+	 assertThat(scheme, instanceOf(VCard.class));
+=======
+	 assertThat("wrong type", scheme, instanceOf(VCard.class));
+>>>>>>> 7d8e78a2b152062a876d6f8f0f8bde7550278ed0
+	 VCard vcard = (VCard) scheme;
+	 assertEquals("Cookiemonster", vcard.getName());
+	 assertEquals("Sesamestreet 1", vcard.getAddress());
+	 assertEquals("CTV", vcard.getCompany());
+	 assertEquals("cookiemonster@sesamestreet.com", vcard.getEmail());
+```

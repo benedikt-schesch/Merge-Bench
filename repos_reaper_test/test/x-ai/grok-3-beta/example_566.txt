@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict and provide the snippet with the resolution based on the intent and semantics of both sides.
+
+```java
+      for (FacebookType type : page) {
+        counter++;
+      }
+    }
+
+    assertThat(counter).isEqualTo(18);
+  }
+
+  @Test
+  public void checkIterator_snapshot() {
+    Connection<FacebookType> connection = create3PageConnection();
+```
+
+**Explanation of Resolution**:  
+The conflict is between `assertThat(counter).isEqualTo(18);` (from HEAD) and `assertEquals(18, counter);` (from the branch `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`). Both assertions are checking if the value of `counter` equals 18, so the intent is semantically identical—verifying the same condition. The difference lies in the assertion style: `assertThat` is typically used with Hamcrest matchers for more readable assertions, while `assertEquals` is a standard JUnit assertion.
+
+I resolved the conflict by choosing `assertThat(counter).isEqualTo(18);` from HEAD, as it aligns with a more modern and expressive style often preferred in tests for readability. However, if the project has a specific style guide or preference for `assertEquals`, the other option could be chosen instead. Since no such context is provided, I prioritized the HEAD version.

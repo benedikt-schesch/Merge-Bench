@@ -1,0 +1,52 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved, as the intent and semantics of both sides are clear but need to be resolved based on the testing framework or style being used. I will first present the unchanged snippet and then provide an analysis and resolution below.
+
+```java
+
+  @Test
+  public void checkContentTypeStream() {
+    InputStream stream = getClass().getResourceAsStream("/binary/fruits.png");
+    BinaryAttachment att = BinaryAttachment.with("example.png", stream);
+<<<<<<< HEAD
+    assertThat(att).hasContentType("image/png");
+=======
+    assertEquals("image/png", att.getContentType());
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+
+```
+
+**Analysis and Resolution:**
+
+- **Intent of HEAD (assertThat(att).hasContentType("image/png"))**: This side of the conflict uses a fluent assertion style, likely from a library like AssertJ, which provides readable and chained assertions. The intent is to verify that the content type of the `BinaryAttachment` object `att` is `"image/png"` using a domain-specific matcher `hasContentType`.
+- **Intent of the other branch (assertEquals("image/png", att.getContentType()))**: This side uses a more traditional assertion style, likely from JUnit's `assertEquals`, directly comparing the expected value `"image/png"` with the result of `att.getContentType()`. The intent is the same: to verify the content type of the `BinaryAttachment` object.
+- **Semantic Equivalence**: Both sides aim to assert that the content type of the `BinaryAttachment` is `"image/png"`. The difference lies in the testing framework or style preference (AssertJ vs. JUnit-style assertions) and possibly whether `hasContentType` is a custom matcher or directly maps to a getter like `getContentType()`.
+
+**Resolution**:
+Since the intent is the same (to verify the content type), the resolution depends on the project's preferred testing framework or style guide. If the project uses AssertJ (as suggested by `assertThat`), the HEAD version with `assertThat(att).hasContentType("image/png")` is likely the intended style for consistency and readability. If the project prefers traditional JUnit assertions or if `hasContentType` is not a reliable matcher, the other branch's `assertEquals("image/png", att.getContentType())` would be more explicit.
+
+However, without explicit knowledge of the project's style guide or whether `hasContentType` is a valid and reliable matcher, I will resolve in favor of the more modern and fluent style (HEAD), assuming the use of AssertJ is intentional.
+
+**Resolved Code** (if requested, but not embedded in the original snippet as per instructions):
+
+```java
+
+  @Test
+  public void checkContentTypeStream() {
+    InputStream stream = getClass().getResourceAsStream("/binary/fruits.png");
+    BinaryAttachment att = BinaryAttachment.with("example.png", stream);
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+
+```
+
+Note: If the project's style guide or framework usage differs, the resolution can be adjusted accordingly. Since the instruction is to return the snippet unchanged if unsure, I have preserved the original conflict in the code block above. If a resolved version is needed, the above resolution can be applied. Please confirm the testing framework or style preference if this resolution is not aligned with the project's guidelines.

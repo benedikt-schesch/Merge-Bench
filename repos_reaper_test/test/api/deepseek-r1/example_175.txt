@@ -1,0 +1,21 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the code snippet provided.
+
+The conflict is in the `exec()` method. Both sides are trying to set the parser to non-interactive and then parse with stop on error. The difference is the indentation. In HEAD, the lines are indented with 8 spaces, while the other branch uses 12 spaces (which is three tabs if each tab is 4 spaces). 
+
+Java uses curly braces, so indentation isn't syntactically significant, but it's important for readability. The surrounding code's indentation should be considered. The method `exec()` has its opening brace on the same line, and the try block starts with an indented block. Looking at the catch block, it's indented at 8 spaces. So the code inside the try should probably be indented consistently.
+
+In the HEAD version, the lines are indented 8 spaces, matching the catch block. The other branch has 12 spaces. Since the catch is at 8, the code inside the try should also be at 8 for consistency. The other branch's indentation might be a mistake, perhaps an extra tab. So the correct resolution is to take the HEAD version's indentation of 8 spaces to maintain consistency with the surrounding code. Alternatively, maybe the other branch's indentation is correct if the project uses a different style. But without more context, the HEAD's indentation aligns with the catch block's. Therefore, resolving by keeping the HEAD's indentation.</think>
+```java
+        parser.parseContOnError();
+    }
+
+    public void exec() throws Throwable {
+        try {
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+        } catch (Exception e) {
+            Exception pe = Utils.getPermissionException(e);
+            if (pe != null)
+                log.error("You don't have permission to perform the operation. Error from the server: " + pe.getMessage());
+```

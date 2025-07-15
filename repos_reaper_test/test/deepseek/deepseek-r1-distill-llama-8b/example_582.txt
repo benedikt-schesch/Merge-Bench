@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I analyzed both code snippets and determined that the second version is more efficient and appropriate. It directly retrieves the "data" as a JsonObject and extracts the "url" directly, which is likely the correct structure after potential refactoring. Thus, the older version using a string parse is no longer necessary.
+
+---
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    JsonObject picData = rawPicture.get("data").asObject();
+    if (picData != null) {
+      picture = jsonMapper.toJavaObject(picData.toString(), ProfilePictureSource.class);
+    }
+  }
+=======
+    JsonObject picData = rawPicture.getJsonObject("data");
+    if (picData != null) {
+      picture = picData.getString("url");
+    }
+  }
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+```

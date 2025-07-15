@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, let's analyze the given code snippet and understand the intent of both sides of the merge.
+
+The conflict is in the declaration of `mMenuTexture`. The local version (`HEAD`) declares it as `private BitmapTexture mMenuTexture;`, while the incoming version (`91801fdd7714064242fef90013824ede2bbcbe9d`) declares it as `private BitmapTextureAtlas mMenuTexture;`.
+
+First, we need to understand the difference between `BitmapTexture` and `BitmapTextureAtlas`. Typically, in the context of game development or graphical applications, a `BitmapTexture` represents a texture that is used to render a bitmap image directly. On the other hand, a `BitmapTextureAtlas` is a larger texture that contains multiple smaller textures (or regions) packed together. This is often used for optimization purposes, as it can reduce the number of texture swaps during rendering.
+
+Given the context that `mMenuTexture` is used in conjunction with `mMenuResetTextureRegion` and `mMenuQuitTextureRegion`, it suggests that `mMenuTexture` is likely being used as a source texture for these regions. This implies that `mMenuTexture` is probably intended to be a `BitmapTextureAtlas` because it contains multiple regions (`mMenuResetTextureRegion` and `mMenuQuitTextureRegion`), which is a common use case for a texture atlas.
+
+Therefore, the intent of the incoming version (`91801fdd7714064242fef90013824ede2bbcbe9d`) seems to be more semantically correct in this context, as it suggests that `mMenuTexture` is being used as an atlas for the menu items.
+
+Here is the resolved snippet in markdown code syntax as requested:
+
+```java
+>>>>>>> 91801fdd7714064242fef90013824ede2bbcbe9d
+	private TextureRegion mFaceTextureRegion;
+
+	protected MenuScene mMenuScene;
+
+	private BitmapTextureAtlas mMenuTexture;
+	protected TextureRegion mMenuResetTextureRegion;
+	protected TextureRegion mMenuQuitTextureRegion;
+
+	// ===========================================================
+	// Constructors
+```

@@ -1,0 +1,25 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the TRANSCODING_PARAMETERS constant. The HEAD version has "threads=2" at the end, while the other branch doesn't. I need to figure out the intent here.
+
+Both sides are setting parameters for transcoding. The main difference is the addition of the threads parameter. The HEAD side added "threads=2", which probably controls the number of threads used for transcoding. The other branch doesn't include that. 
+
+Since the HEAD version added an extra parameter, maybe it's an optimization to use multiple threads. The other branch might be an older version or a different configuration. If both changes are valid, maybe we should keep the threads parameter. But is there a reason why the other branch removed it? Or was it just not present?
+
+Looking at the surrounding code, there's no other mention of threads. The properties after are about extensions and parameters. The addition of threads=2 seems like a valid enhancement. It's possible that the HEAD version introduced this parameter to improve performance, while the other branch's version is the original. 
+
+Assuming both changes are meant to be additive, but since they conflict, we need to decide which one to keep. Since the HEAD has the extra parameter, and if there's no conflict in functionality, merging by including the threads=2 would make sense. Alternatively, maybe the other branch removed it for a reason, but without context, it's hard to tell. 
+
+Since the user asked to resolve based on intent and semantics, and if the threads parameter is an improvement without conflicting with the other change, the resolved line should include it. So the correct resolution is to take the HEAD version with threads=2.</think>
+```java
+														// if Google blocks this
+
+	private static final String HEADER_APPLICATION_URL = "Application-URL";
+	private static final String CHROME_CAST_MODEL_NAME = "Eureka Dongle";
+	private static final String TRANSCODING_EXTENSIONS = "wmv,avi,mkv,mpg,mpeg,flv,3gp,ogm";
+	private static final String TRANSCODING_PARAMETERS = "vcodec=VP80,vb=1000,vfilter=canvas{width=640,height=360},acodec=vorb,ab=128,channels=2,samplerate=44100,threads=2";
+	private static final String PROPERTY_TRANSCODING_EXTENSIONS = "transcoding.extensions";
+	private static final String PROPERTY_TRANSCODING_PARAMETERS = "transcoding.parameters";
+	private int port = EmbeddedServer.HTTP_PORT;
+	private List<DialServer> servers = new ArrayList<DialServer>();
+	private JComboBox deviceList;
+```

@@ -1,0 +1,18 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the MotionEvent.ACTION_MOVE block. Both versions have an if condition checking the raw Y and X positions. The HEAD version has the condition in one line, while the other branch splits the Math.abs part into two lines.
+
+I need to figure out the intent here. Both conditions are essentially the same, just formatted differently. The HEAD version keeps it all on one line, maybe for brevity, while the other splits it for readability. Since the content is the same, it's a formatting conflict. The semantic meaning isn't changing here. So the correct resolution would be to keep the split line for better readability, as that's a common practice in Java for long lines. But I have to make sure that the code works the same way. Both are checking if the Y movement is beyond half the height upwards or X movement beyond half the width. The logic is identical. So merging by taking the split version makes sense without altering functionality.</think>
+```java
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            mDownX = event.getRawX();
+            mDownY = event.getRawY();
+            mListener.onShutterButtonPressed();
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            if ((event.getRawY() - mDownY < -getHeight() / 2 || Math.abs(event.getRawX()
+                    - mDownX) > getWidth() / 2) && mListener != null) {
+                if (!mSlideOpen) {
+                    mListener.onSlideOpen();
+                    mSlideOpen = true;
+                }
+            } else {
+```

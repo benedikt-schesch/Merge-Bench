@@ -1,0 +1,48 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The given code snippet is written in Java and appears to be part of a test suite for UriBeacon, specifically testing its configuration service under various conditions. The tests are built using a builder pattern (`specUriBeaconTestsBuilder` and `Builder`), where each test case is defined with a name, a reference to the relevant specification, and a specific operation (like `.write()`) along with expected outcomes.
+
+The conflict arises in the test case named "Locked: Try Long Data". The conflicting lines are related to the `.write()` operation and the expected outcome.
+
+Let's analyze the changes:
+
+1. The left side of the conflict (between `<<<<<<< HEAD` and `=======`):
+   - Uses `.reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")` to point to a specific section of the UriBeacon specification.
+   - The `.write()` operation is `ProtocolV2.DATA, TestData.LONG_URI, ConfigUriBeacon.INSUFFICIENT_AUTHORIZATION`, indicating a test where a long URI is written, and the expected result is `INSUFFICIENT_AUTHORIZATION`.
+
+2. The right side of the conflict (between `=======` and `>>>>>>> 72bcd2216d792365c9e99dc69ee413acb1dc5b8e`):
+   - Omits the `.reference()` call present on the left side.
+   - The `.write()` operation is `ProtocolV2.DATA, TestData.LONG_URI, TestData.VALID_LENGTH_AUTHORIZATION_ERRORS`, indicating the same test scenario (writing a long URI) but with an expected outcome of `VALID_LENGTH_AUTHORIZATION_ERRORS`.
+
+To resolve the conflict, we need to understand the intent behind both changes. The left side maintains a reference to the specification and expects `INSUFFICIENT_AUTHORIZATION` when trying to write a long URI. The right side removes the reference (potentially because it's already set or not necessary in this context) and changes the expected outcome to `VALID_LENGTH_AUTHORIZATION_ERRORS`, which could be a more specific or updated error code for authorization issues when the data length is valid but the operation is unauthorized.
+
+Since both changes seem to be testing a similar scenario (writing a long URI when locked), the key decision lies in understanding the expected outcome and whether the reference is necessary.
+
+The removal of the `.reference()` call on the right side might be acceptable if the reference is redundant or set elsewhere. However, it's generally good practice to maintain such references for clarity and traceability to the specification.
+
+The change in the expected outcome from `ConfigUriBeacon.INSUFFICIENT_AUTHORIZATION` to `TestData.VALID_LENGTH_AUTHORIZATION_ERRORS` might reflect an update in how authorization errors are handled or represented in the test data.
+
+To resolve the conflict while preserving the intent of both sides, one might choose to keep the `.reference()` call for clarity and traceability and update the expected outcome to the potentially more specific or correct error code.
+
+However, without more context about the UriBeacon specification and the test framework's evolution (e.g., why `TestData.VALID_LENGTH_AUTHORIZATION_ERRORS` is used instead of `ConfigUriBeacon.INSUFFICIENT_AUTHORIZATION`), the most straightforward resolution would be to favor one side's changes over the other based on the most recent or correct interpretation of the specification and test intent.
+
+Let's choose to preserve the `.reference()` call for clarity and update the `.write()` operation to use the expected outcome from the right side of the conflict, as it might represent a more specific or updated condition.
+
+Here is the resolved snippet in markdown code syntax:
+
+```java
+                  BluetoothGatt.GATT_SUCCESS)
+      );
+      specUriBeaconTestsBuilder.add(
+          new Builder()
+              .name("Locked: Try Long Data")
+              .reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")
+              .write(ProtocolV2.DATA, TestData.LONG_URI, TestData.VALID_LENGTH_AUTHORIZATION_ERRORS)
+      );
+      specUriBeaconTestsBuilder.add(
+          new Builder()
+              .name("Locked: Try Short Flags")
+              .reference("https://github.com/google/uribeacon/blob/master/specification/ConfigService.md#32-lock")
+```

@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, let's first understand the intent and semantics of both sides of the merge.
+
+The code snippet appears to be part of a Java class, likely used for making queries to a server or an API. The method in question, `query`, takes three parameters: `command`, `parameters`, and `manager`. It is designed to return a `JsonNode` object, which represents the result of the query.
+
+On the left-hand side (HEAD), the `query` method is declared as `protected` and is implemented to perform a query using a `URLConnection`. The implementation details are not fully shown but it involves using an `ObjectMapper` to handle JSON data.
+
+On the right-hand side (fe1b8ab28f6b9e6d70825a39c04c0384351cd5a8), the `query` method is declared as `public`, and its implementation is significantly altered. Instead of performing the query, it immediately throws a `RuntimeException` with a message indicating that it is obsolete and should not be called. The original implementation is commented out.
+
+Considering the intent and semantics:
+
+1. The left-hand side (HEAD) is maintaining or enhancing the existing functionality of the `query` method, keeping it `protected` and functional.
+2. The right-hand side (fe1b8ab28f6b9e6d70825a39c04c0384351cd5a8) is deprecating or removing the `query` method, making it `public` (potentially to be more visible or accessible before removal) and throwing an exception to indicate its obsolescence.
+
+Given the conflict, if we were to resolve it based on the intent, we would need to decide whether to keep the method functional as in HEAD, or to deprecate/remove it as indicated in fe1b8ab28f6b9e6d70825a39c04c0384351cd5a8.
+
+However, the task requires us to return the entire snippet in markdown code syntax without modifying the context or spacing. Since the intent is ambiguous and there's no clear indication of how to reconcile the differences between making the method obsolete versus keeping it functional, we'll return the snippet as is.
+
+```java
+	 *            Parameters
+	 * @param manager
+	 *            Reference back to business layer
+	 * @return Parsed JSON object, empty object on error.
+	 */
+<<<<<<< HEAD
+	protected JsonNode query(String command, JsonNode parameters,
+			INotifiableManager manager) {
+		URLConnection uc = null;
+=======
+	public JsonNode query(String command, JsonNode parameters, INotifiableManager manager) {
+		throw new RuntimeException("Obsolete, remove any calls from this.");
+/*		URLConnection uc = null;
+>>>>>>> fe1b8ab28f6b9e6d70825a39c04c0384351cd5a8
+		try {
+			final ObjectMapper mapper = Client.MAPPER;
+
+			if (mUrl == null) {
+				throw new NoSettingsException();
+```

@@ -1,0 +1,20 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is a Java method that creates a HashMap for events. The conflict is between the HEAD version, which uses the explicit type parameters in the constructor, and the other branch which uses the diamond operator.
+
+First, I need to understand the intent of both changes. The HEAD version specifies the generic types when creating the HashMap, while the other branch uses the diamond operator (<>), which was introduced in Java 7 to simplify code by inferring the types from the left-hand side.
+
+Since the method's return type and the declared type of 'data' is HashMap<ReturnableData, Object>, using the diamond operator here is safe and reduces redundancy. The diamond operator should work because the type parameters can be inferred correctly. Therefore, the change in the branch is a valid improvement that modernizes the code without altering functionality.
+
+There's no semantic conflict here; both versions aim to create the same HashMap. The diamond operator is just a syntactic improvement. So the correct resolution is to keep the version with the diamond operator from the branch, as it's more concise and up-to-date.</think>
+```java
+  /**
+   * @return A HashMap to use for events dispatched from this game, with the game id already set.
+   */
+  public HashMap<ReturnableData, Object> getEventMap() {
+    final HashMap<ReturnableData, Object> data = new HashMap<>();
+    data.put(LongPollResponse.GAME_ID, id);
+    return data;
+  }
+
+  /**
+```

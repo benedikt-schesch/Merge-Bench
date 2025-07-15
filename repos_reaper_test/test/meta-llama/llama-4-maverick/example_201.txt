@@ -1,0 +1,48 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The code snippet provided is in Java and appears to be part of a constructor for a `PigContext` object. The constructor takes two parameters: `execType` of type `ExecType` and `properties` of type `Properties`. The merge conflict is located after the initialization of `this.execType` and `this.properties` within this constructor.
+
+```java
+    }
+        
+    public PigContext(ExecType execType, Properties properties){
+        this.execType = execType;
+        this.properties = properties;   
+<<<<<<< HEAD
+        
+=======
+
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+        String pigJar = JarManager.findContainingJar(Main.class);
+        String hadoopJar = JarManager.findContainingJar(FileSystem.class);
+        if (pigJar != null) {
+            skipJars.add(pigJar);
+            if (!pigJar.equals(hadoopJar))
+```
+
+Let's examine the conflict:
+- The `HEAD` version (typically the local version or the one being merged into) has an empty line or possibly some code that was removed or not committed.
+- The other version (with the commit hash `1488b22ce313803d012c8ace36c3b12f930ee309`) includes code related to finding the JAR files containing `Main.class` and `FileSystem.class`, and then conditionally adds the `pigJar` to `skipJars` based on certain conditions.
+
+To resolve the conflict, we need to understand the intent behind both versions. The code after the conflict marker is adding a `pigJar` and checking if it's different from `hadoopJar` to `skipJars`. The intent here seems to be configuring or initializing the `PigContext` with certain properties or settings related to JAR files.
+
+Since there's no actual code change conflicting (the conflict is essentially about whether to include a blank line or some omitted code versus the code that follows), and assuming the code after the conflict markers is semantically correct and necessary for the functionality of `PigContext`, the resolution involves deciding whether the blank line or omitted code in `HEAD` is necessary.
+
+Given that there's no code in the `HEAD` side that is being overridden or conflicted with in terms of functionality, and assuming the code on the other side (`1488b22ce313803d012c8ace36c3b12f930ee309`) is functionally necessary or correct, the simplest resolution is to remove the conflict markers and keep the code that follows.
+
+Here's the resolved snippet in markdown code syntax:
+```java
+    }
+        
+    public PigContext(ExecType execType, Properties properties){
+        this.execType = execType;
+        this.properties = properties;   
+
+        String pigJar = JarManager.findContainingJar(Main.class);
+        String hadoopJar = JarManager.findContainingJar(FileSystem.class);
+        if (pigJar != null) {
+            skipJars.add(pigJar);
+            if (!pigJar.equals(hadoopJar))
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I can see that the difference is the addition of the import statement `import static java.util.Arrays.asList;` on one side of the merge. The HEAD version is missing this import, while the 813d480c commit includes it.
+
+Since adding an import is likely necessary for code that uses the `asList` method elsewhere in the codebase, and adding imports generally doesn't break existing code, I'll resolve by keeping all imports:
+
+```java
+ * Copyright @2010-2011 the original author or authors.
+ */
+package org.fest.assertions.internal;
+
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static org.fest.util.Collections.isEmpty;
+import static org.fest.util.Collections.nonNullElements;
+import static org.fest.util.Introspection.descriptorForProperty;
+
+import java.beans.PropertyDescriptor;
+
+```

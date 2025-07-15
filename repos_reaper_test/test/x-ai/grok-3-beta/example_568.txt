@@ -1,0 +1,69 @@
+<think>
+No reasoning found</think>
+Here is the provided code snippet with the merge conflict preserved as is, including the full context, spacing, and markdown formatting. I will also provide an analysis of the intent and semantics behind both sides of the conflict and propose a resolution.
+
+```java
+  public DebugTokenInfo debugToken(String inputToken) {
+    verifyParameterPresence("inputToken", inputToken);
+    String response = makeRequest("/debug_token", Parameter.with("input_token", inputToken));
+
+    try {
+<<<<<<< HEAD
+      JsonObject json = Json.parse(response).asObject();
+      JsonObject data = json.get("data").asObject();
+=======
+      JsonObject json = new JsonObject(response);
+      JsonObject data = json.getJsonObject("data");
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+      return getJsonMapper().toJavaObject(data.toString(), DebugTokenInfo.class);
+    } catch (Exception t) {
+      throw new FacebookResponseContentException("Unable to parse JSON from response.", t);
+    }
+  }
+```
+
+### Analysis of Intent and Semantics
+
+- **HEAD Side (Left Side of Conflict):**
+  - The code uses a static `Json.parse(response)` method to parse the JSON string into a `JsonObject`, followed by calling `.asObject()` to ensure or convert it into the expected type.
+  - It retrieves the nested "data" object using `json.get("data").asObject()`, implying a similar type conversion or validation.
+  - The intent seems to be ensuring type safety or explicit conversion using `asObject()`, likely part of a specific JSON library's API (possibly a custom or older library version).
+
+- **Remote Side (Right Side of Conflict, Commit `a17acec0655b8058aaf4d336ba2a1352aa49e2fe`):**
+  - The code constructs a `JsonObject` directly with `new JsonObject(response)`, suggesting a different approach or library where the constructor handles the parsing of the JSON string.
+  - It retrieves the nested "data" object using `json.getJsonObject("data")`, which may be a method provided by a different JSON library (e.g., `javax.json` or a newer version of the library in use).
+  - The intent appears to be a modernization or refactoring to align with a different or updated JSON parsing API.
+
+- **Shared Intent:**
+  - Both sides aim to parse a JSON response string into a `JsonObject`, extract a nested "data" field as a `JsonObject`, and map it to a `DebugTokenInfo` class.
+  - The difference lies in the JSON library or API being used, likely due to a library update, refactoring, or codebase migration.
+
+- **Potential Ambiguity:**
+  - It is unclear which JSON library or version each side is using, as the class `JsonObject` and methods like `Json.parse()`, `asObject()`, `new JsonObject(response)`, and `getJsonObject()` could belong to different libraries (e.g., a custom `Json` class, `javax.json`, or others).
+  - Without knowing the exact library or context of the surrounding codebase, a precise resolution is challenging.
+
+### Proposed Resolution
+
+Given the shared intent of parsing JSON and extracting a nested "data" object, I propose adopting the approach from the remote side (`a17acec0655b8058aaf4d336ba2a1352aa49e2fe`) as it appears to be a more modern or direct instantiation of `JsonObject` with a constructor. However, I will note that this resolution assumes the library in use supports `new JsonObject(response)` and `getJsonObject("data")`. If this assumption is incorrect, the HEAD side might be more appropriate depending on the library context.
+
+Here is the resolved code snippet (also in markdown for clarity), but note that I will preserve the original conflicted snippet above as requested if ambiguity persists:
+
+```java
+  public DebugTokenInfo debugToken(String inputToken) {
+    verifyParameterPresence("inputToken", inputToken);
+    String response = makeRequest("/debug_token", Parameter.with("input_token", inputToken));
+
+    try {
+      JsonObject json = new JsonObject(response);
+      JsonObject data = json.getJsonObject("data");
+      return getJsonMapper().toJavaObject(data.toString(), DebugTokenInfo.class);
+    } catch (Exception t) {
+      throw new FacebookResponseContentException("Unable to parse JSON from response.", t);
+    }
+  }
+```
+
+### Caveat
+If the library or context does not support `new JsonObject(response)` or `getJsonObject("data")`, this resolution will fail. In such a case, the HEAD side's approach (`Json.parse(response).asObject()` and `json.get("data").asObject()`) would be more appropriate. Since I lack full context about the JSON library in use, I recommend verifying the library API before adopting this resolution. If further context or clarification is provided, I can adjust the resolution accordingly.
+
+For now, as per the instruction to preserve the original conflicted snippet if there is ambiguity, I have included both the unchanged conflicted code and a proposed resolution. If you can confirm the JSON library or provide additional context, I can refine the resolution further.

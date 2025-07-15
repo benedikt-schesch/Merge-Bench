@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The code snippet shows a merge conflict where the GruntParser is being initialized with or without an additional parameter `myPig`. The right side of the conflict adds `myPig` as a second parameter to the constructor. Without knowing the exact purpose of `myPig`, it's safer to assume the change is intentional and keep the version with `myPig`.
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "dump b;"
+                          + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+<<<<<<< HEAD
+            GruntParser parser = new GruntParser(new StringReader(script));
+=======
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+>>>>>>> 2125666c1941d4a88c08ab87ebf92ee46be4f0ea
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+```

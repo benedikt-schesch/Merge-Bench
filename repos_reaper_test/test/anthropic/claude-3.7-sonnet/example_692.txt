@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, one side (HEAD) introduces a property called `failureNotificationsDelayProperty`, while the other side (d72e83e...) removes it. In this case, I need to preserve the property that was introduced in HEAD:
+
+```java
+>>>>>>> d72e83e2638205c5015a1f9cb06ac4df592921c5
+
+	public static final Property<String> failureNotificationsProperty        = new StringProperty("failureNotifications").hint("Notifications after failed execution of action").partOfBuiltInSchema();
+	public static final Property<String> failureNotificationsPartialProperty = new StringProperty("failureNotificationsPartial").hint("CSS selector for partial to display as failure notification").partOfBuiltInSchema();
+	public static final Property<String> failureNotificationsEventProperty   = new StringProperty("failureNotificationsEvent").hint("Event to raise for failure notifications").partOfBuiltInSchema();
+	public static final Property<Integer> failureNotificationsDelayProperty  = new IntProperty("failureNotificationsDelay").hint("Delay before hiding failure notifications").defaultValue(5000).partOfBuiltInSchema();
+
+	public static final Property<String> successBehaviourProperty = new StringProperty("successBehaviour").hint("Behaviour after successful execution of action").partOfBuiltInSchema();
+	public static final Property<String> successPartialProperty   = new StringProperty("successPartial").hint("CSS selector for partial to refresh on success").partOfBuiltInSchema();
+	public static final Property<String> successURLProperty       = new StringProperty("successURL").hint("URL to navigate to on success").partOfBuiltInSchema();
+	public static final Property<String> successEventProperty     = new StringProperty("successEvent").hint("Event to raise on success").partOfBuiltInSchema();
+```

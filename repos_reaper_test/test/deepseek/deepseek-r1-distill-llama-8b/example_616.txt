@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+The left side uses `page.getLikes()` while the right uses `page.getLikesList(). The choice between `getLikes()` vs `getLikesList()` suggests different getter methods for the same data. To resolve this, we'll standardize on one method.
+
+```java
+  @Test
+  public void checkV2_6_likes() {
+    Page page = createJsonMapper().toJavaObject(jsonFromClasspath("v2_6/page-with-likes"), Page.class);
+    assertNotNull(page);
+    assertNotNull(page.getLikesList());
+    assertEquals(5, page.getLikesList().getData().size());
+    NamedFacebookType item = page.getLikesList().getData().get(0);
+    assertEquals("10582587785", item.getId());
+    assertEquals("Damien Rice", item.getName());
+  }
+```

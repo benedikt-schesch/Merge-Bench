@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see both sides are implementing a `setStackMargin` method but using different instance variables: `mStackMargin` on the HEAD side and `mMargin` on the other side. The `getStackMargin()` method below the conflict uses `mMargin`, which suggests that `mMargin` is the preferred variable name throughout the codebase.
+
+Here's the resolved snippet:
+
+```java
+        FrameLayout v = new FrameLayout(getContext());
+        viewCollection.add(v);
+        addView(v);
+    }
+
+    public void setStackMargin(int margin) {
+        mMargin = margin;
+        mCardAnimator.setStackMargin(mMargin);
+        mCardAnimator.initLayout();
+    }
+
+    public int getStackMargin() {
+        return mMargin;
+
+```

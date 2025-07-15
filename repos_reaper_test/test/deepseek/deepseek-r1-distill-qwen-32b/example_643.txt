@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we'll choose the assertion style that best fits the project's conventions and clarity. Since the surrounding tests use JUnit's assertEquals, but considering the expressiveness of AssertJ's assertThat for better readability, we'll opt for the AssertJ version.
+
+```java
+
+  @Test
+  public void checkContentTypeStream() {
+    InputStream stream = getClass().getResourceAsStream("/binary/fruits.png");
+    BinaryAttachment att = BinaryAttachment.with("example.png", stream);
+    assertThat(att).hasContentType("image/png");
+  }
+
+  @Test
+  public void checkContentTypeBytes_imagePng() {
+    String attachmentData = "this is a short string";
+```

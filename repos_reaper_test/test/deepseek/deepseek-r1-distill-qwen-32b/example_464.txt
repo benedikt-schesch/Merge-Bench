@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict where both sides are attempting to modify the same anonymous `ResourceServlet` class. The two main changes are:
+
+1. Adding a `serialVersionUID` field on the local branch (HEAD)
+2. Setting properties `applyLastModified` and `contentType` on the remote branch (b26c4f8)
+
+These two changes are independent and can be safely combined to maintain both the serialization version and the configuration settings.
+
+Here's the resolved code combining both changes:
+
+```java
+        return new DefaultResourceLoader();
+    }
+
+    private ResourceServlet concreteResourceServlet(final String location) {
+        return new ResourceServlet() {
+            private static final long serialVersionUID = 4602656496188884537L;
+			{
+                setApplyLastModified(true);
+                setContentType("image/png");
+            }
+```

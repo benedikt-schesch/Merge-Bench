@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to be related to the placement of an empty line and the presence of a `serialVersionUID` field in the `VideoStatus` class. On one side of the conflict, the `serialVersionUID` is present, while on the other side, it is not. 
+
+Given that the `serialVersionUID` is a standard field in Java for serializing objects, its presence is likely intentional. If the rest of the codebase consistently includes `serialVersionUID` in similar classes, it would be appropriate to keep it. 
+
+The empty line between the package declaration and the `serialVersionUID` might be a stylistic choice, but since the conflict marker indicates that one side has this line and the other does not, the decision depends on the team's coding conventions.
+
+Here is the snippet with the conflict resolved by keeping the `serialVersionUID` as it is more likely to be intentional:
+
+```java
+   * Represents the <a href="https://developers.facebook.com/docs/graph-api/reference/video-status/">Video Status Graph
+   * API type</a>.
+   */
+  public static class VideoStatus extends AbstractFacebookType {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Status of a video.
+     * 
+     * Either "ready" (uploaded, encoded, thumbnails extracted), "processing" (not ready yet) or "error" (processing
+     * failed).
+```
+
+This preserves the `serialVersionUID` and maintains the structure of the class.

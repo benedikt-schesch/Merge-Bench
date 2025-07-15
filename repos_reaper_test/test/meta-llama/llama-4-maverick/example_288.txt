@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes introduced by both sides of the merge.
+
+The code snippet is in Java and appears to be part of a class used in a data processing or big data context, possibly within a framework like Apache Pig, given the presence of `pkgr` and the terminology used.
+
+The conflict arises in the `setNumInps` method, which is used to set the number of inputs (`numInputs`) for an object, presumably representing a co-group operation in a data processing pipeline. The method also updates `pkgr` (another object, possibly related to packaging or processing data) with the new number of inputs.
+
+On one side of the merge (`HEAD`), the code initializes a `readOnce` boolean array with a size equal to `numInputs` and sets all its elements to `false`. This suggests that the code is tracking whether each input has been read once.
+
+On the other side of the merge (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`), there are no changes made to the `setNumInps` method regarding the initialization of `readOnce`. Essentially, this side does not include the initialization of `readOnce`.
+
+To resolve the conflict, we need to understand the intent behind both changes.
+
+1. The initialization of `readOnce` to track whether inputs have been read suggests that the code is managing the state of its inputs, potentially to avoid re-reading or to track progress.
+   
+2. The other side of the merge does not include this initialization, which could mean that either the initialization is not necessary, it's handled elsewhere, or it's introduced in a different commit.
+
+Without additional context about why `readOnce` is being initialized or its significance to the overall functionality, the safest approach is to preserve the functionality that is explicitly introduced by both sides of the merge. However, since one side does not modify the method, we will focus on understanding the intent of the change that is present.
+
+Given that the `HEAD` side introduces a clear functionality (initializing `readOnce`), and assuming this is a necessary step for the class's functionality (since it is explicitly introduced), the resolution should likely include this initialization.
+
+However, to be cautious and follow the instructions precisely without making assumptions beyond the given context, the entire snippet including the conflict markers should be returned as is if there's any ambiguity.
+
+Since the intent behind removing or keeping the `readOnce` initialization isn't clear from the provided context, and to adhere strictly to the instructions without inferring beyond the provided snippet:
+
+```java
+    }
+
+    public void setNumInps(int numInps) {
+        this.numInputs = numInps;
+        pkgr.setNumInputs(numInps);
+<<<<<<< HEAD
+        readOnce = new boolean[numInputs];
+        for (int i = 0; i < numInputs; i++)
+            readOnce[i] = false;
+=======
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+    }
+
+    /**
+     * From the inputs, constructs the output tuple for this co-group in the
+     * required format which is (key, {bag of tuples from input 1}, {bag of
+```

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Here's the reconciled code, taking into account the intent to more precisely check for `JsonArray` type:
+
+```java
+       * error ourselves.
+       *
+       * Per Antonello Naccarato, sometimes FB will return an empty JSON array instead of an empty string. Look for that
+       * here.
+       */
+      if (rawValue instanceof JsonArray) {
+        if (((JsonArray) rawValue).length() == 0) {
+          if (MAPPER_LOGGER.isTraceEnabled()) {
+            MAPPER_LOGGER.trace(format("Coercing an empty JSON array to an empty string for %s", fieldWithAnnotation));
+          }
+
+          return "";
+```

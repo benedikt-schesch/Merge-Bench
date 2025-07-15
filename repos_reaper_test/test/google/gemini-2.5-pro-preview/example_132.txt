@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+```java
+        if (dtzStr != null && dtzStr.length() > 0) {
+            // ensure that the internal timezone is uniformly in UTC offset style
+            DateTimeZone.setDefault(DateTimeZone.forOffsetMillis(DateTimeZone.forID(dtzStr).getOffset(null)));
+        }
+
+<<<<<<< HEAD
+        boolean aggregateWarning = "true".equalsIgnoreCase(pigContext.getProperties().getProperty("aggregate.warning"));
+=======
+        // Resolved conflict by choosing HEAD.
+        // Intent: The "aggregate.warning" property is a Pig-specific configuration.
+        // In Pig's architecture, PigContext is the primary container for such properties,
+        // especially in client-side or script setup phases (which seems likely given typical
+        // usage of PigContext and GruntParser, where similar code exists).
+        // Using pigContext.getProperties() directly accesses this primary source.
+        // While properties might also exist in a general Hadoop Configuration object ('conf'),
+        // PigContext often represents a more specific or overridden view for the current Pig session.
+        // Without strong evidence that 'conf' is universally preferred and correctly populated
+        // in this specific context, sticking to pigContext for Pig-specific properties is safer
+        // and more idiomatic.
+        boolean aggregateWarning = "true".equalsIgnoreCase(pigContext.getProperties().getProperty("aggregate.warning"));
+>>>>>>> 57eb1bac81a4e03e9838c06f642a1432dbbe4e1b
+        PigStatusReporter pigStatusReporter = PigStatusReporter.getInstance();
+        pigStatusReporter.setContext(new TaskContext<FetchContext>(new FetchContext()));
+        PigHadoopLogger pigHadoopLogger = PigHadoopLogger.getInstance();
+        pigHadoopLogger.setReporter(pigStatusReporter);
+        pigHadoopLogger.setAggregate(aggregateWarning);
+
+```

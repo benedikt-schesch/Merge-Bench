@@ -1,0 +1,23 @@
+<think>
+Okay, let's look at this merge conflict. The code snippet has a conflict in the imports section between the HEAD and another branch. The HEAD version doesn't have those imports, while the other branch adds two imports from net.openhft.chronicle.core.io: AbstractCloseable and Closeable.
+
+First, I need to figure out why these imports are being added. The other branch might be introducing new code that uses these classes, or maybe they're dependencies for existing code. Let me check the surrounding context. The package is for query-related classes in a Chronicle Map. The existing imports include CheckOnEachPublicOperation, MapClosable, UsingReturnValue, StageRef, and Staged. 
+
+MapClosable might relate to closing resources, so perhaps AbstractCloseable and Closeable are needed for that. Looking at the classes being imported: AbstractCloseable is a base class for closeable objects, and Closeable is an interface. If the code in this package is implementing closeable functionality, these imports are necessary. 
+
+The HEAD version doesn't have them, which could mean that in the current branch, those dependencies aren't used, but the other branch has added them because they're needed. Since the conflict is about adding these imports, resolving it would involve including both imports. There's no overlap in the lines except the conflict markers, so the correct resolution is to keep both imports. The conflict arises because one branch added them and the other didn't. Since they don't conflict in terms of content, just adding both is the right approach. No code is being modified, just adding necessary imports. So the resolved code should include both imports from the two branches.</think>
+```java
+ * limitations under the License.
+ */
+
+package net.openhft.chronicle.map.impl.stage.query;
+
+import net.openhft.chronicle.core.io.AbstractCloseable;
+import net.openhft.chronicle.core.io.Closeable;
+import net.openhft.chronicle.hash.impl.stage.hash.CheckOnEachPublicOperation;
+import net.openhft.chronicle.map.MapClosable;
+import net.openhft.chronicle.map.impl.stage.ret.UsingReturnValue;
+import net.openhft.sg.StageRef;
+import net.openhft.sg.Staged;
+
+```

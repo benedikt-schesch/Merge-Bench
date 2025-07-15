@@ -1,0 +1,43 @@
+<think>
+Okay, let's look at this merge conflict. The problem is in the declaration of the blackCards and whiteCards sets. In HEAD, they're using CustomBlackCard and CustomWhiteCard, while in the other branch, they're using CardcastBlackCard and CardcastWhiteCard. 
+
+Hmm, the class names are different. I need to figure out which one is correct. But wait, the file paths are different too. The HEAD version is in customsets/CustomDeck.java, and the other is in cardcast/CardcastDeck.java. Maybe these are two different classes that were renamed or moved.
+
+Wait, the class in HEAD is called CustomDeck, and the other branch's file is CardcastDeck. So perhaps these are two separate implementations. But the conflict arises because both changes were made to similar lines. However, looking at the surrounding context, the constructor and other fields are the same. 
+
+But the conflict is in the same file? Wait, no—the file names are different. So maybe this is a case where the files were renamed or moved, and the merge is trying to reconcile that. But how does that affect the variable types?
+
+Alternatively, maybe the Cardcast classes are a specific type of Custom classes. If CustomBlackCard is a superclass or interface that CardcastBlackCard implements, then perhaps the HEAD version is more generic, while the other branch is more specific. But without more context, it's hard to tell.
+
+Since the user wants a semantic merge, I need to consider the intent. If both branches are trying to declare the card sets but with different card types, maybe there's a refactoring involved. However, the classes CustomDeck and CardcastDeck might be different classes in different packages. So the conflict is because the same lines were modified in different files that were moved or renamed.
+
+Wait, the conflict markers show that the file names are different. So perhaps the merge is trying to apply changes from both versions, but the files were renamed. In such a case, Git might see it as a conflict because the same part of the code was modified in both branches but in different files. 
+
+But the user provided the code snippet as a merge conflict within the same file. Wait, no—the conflict markers show different file paths. So maybe during the merge, Git couldn't reconcile the file renaming and the code changes. So the correct resolution would be to keep both files, but since the code is presented as a single snippet, perhaps the user expects a resolution that combines the changes, but that might not be possible.
+
+Alternatively, maybe the file was renamed in one branch and modified in another. The correct resolution would be to accept both the rename and the changes. But in the code provided, the conflict is within the same code block. Wait, looking at the code, the class is CustomDeck in HEAD and CardcastDeck in the other branch. So the class name is different. That suggests that the two branches have different class names and different card types. 
+
+If the intent is to merge these two into one class, that might not be possible without more context. But if the user is expecting a resolution where both changes are somehow compatible, perhaps the card types are aliases or compatible. However, in Java, you can't have a Set of two different types unless they share a common interface.
+
+Assuming that both CustomBlackCard and CardcastBlackCard implement a common interface, say BlackCard, then the Set could be parameterized with that interface. But the original code doesn't show that. Since the user hasn't provided that information, it's ambiguous.
+
+In this case, since the conflict is between two different card types and the class names are different, it's unclear which one to choose. The user might have intended to rename the class and the card types in one branch, while the other branch uses different names. Without knowing which branch is correct, the conflict can't be safely resolved. Therefore, the correct approach is to leave the conflict as is for the user to decide.</think>
+```java
+public class CustomDeck extends CardSet {
+  private final int id;
+  private final String name;
+  private final String watermark;
+  private final String description;
+<<<<<<< HEAD:src/main/java/net/socialgamer/cah/customsets/CustomDeck.java
+  private final Set<CustomBlackCard> blackCards = new HashSet<>();
+  private final Set<CustomWhiteCard> whiteCards = new HashSet<>();
+=======
+  private final Set<CardcastBlackCard> blackCards = new HashSet<>();
+  private final Set<CardcastWhiteCard> whiteCards = new HashSet<>();
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a:src/main/java/net/socialgamer/cah/cardcast/CardcastDeck.java
+
+  public CustomDeck(final int id, final String name, final String watermark, final String description) {
+    this.id = id;
+    this.name = name;
+    this.watermark = watermark;
+```

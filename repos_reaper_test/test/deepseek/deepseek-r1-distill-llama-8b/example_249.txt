@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I analyzed both code snippets. The right side adds a comment explaining that the signature can be null for some job types. This comment is helpful for understanding. Since the functionality remains the same but the intent is clearer, the right version should be kept.
+
+```java
+     * @throws IOException on failure
+     */
+    @SuppressWarnings("unchecked")
+    static void passLoadSignature(LoadFunc loadFunc, int inputIndex,
+            Configuration conf) throws IOException {
+        // signature can be null for intermediate jobs where it will not
+        // be required to be passed down
+        List<String> inpSignatureLists = 
+                (ArrayList<String>)ObjectSerializer.deserialize(
+                        conf.get("pig.inpSignatures"));
+>>>>>>> 1cb2531c41db7942eca2b75f500cfe7e4a8cad81
+```

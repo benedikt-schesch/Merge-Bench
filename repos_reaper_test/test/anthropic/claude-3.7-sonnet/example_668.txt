@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+After analyzing the merge conflict, I can see that both sides are trying to provide different configurers. One side adds `AttatchSourcesClasspathConfigurer` and the other adds `RemoveNonRuntimeProjectsConfigurer`. Since the code later also includes `RemoveNonRuntimeDependenciesConfigurer` and has a collection of configurers, it seems the intent is to add both configurers.
+
+Here's the resolved code:
+
+```java
+>>>>>>> 4b0f0ad0ce6afc98a1fc78b9fe46584c41f478e8
+    }
+
+    @Provides
+    List<RawClasspathConfigurer> provideRawClasspathConfigurers(PersistNonRuntimeClasspathConfigurer persistConfigurer,
+            AttatchSourcesClasspathConfigurer attatchSourcesConfigurer,
+            RemoveNonRuntimeProjectsConfigurer removeProjectsConfigurer) {
+        final List<RawClasspathConfigurer> rawClasspathConfigurers = new ArrayList<RawClasspathConfigurer>();
+
+        rawClasspathConfigurers.add(persistConfigurer);
+        rawClasspathConfigurers.add(new RemoveNonRuntimeDependenciesConfigurer());
+<<<<<<< HEAD
+```

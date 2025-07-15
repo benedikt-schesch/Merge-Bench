@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Here is the entire snippet with the conflict, preserved exactly as provided:
+
+```java
+   * @throws HttpResponseException if the authentication response has an error code
+   * @throws IOException some other kind of I/O exception
+   */
+  public TokenInfoResponse requestTokenInfo() throws IOException {
+    HttpTransport authSubTransport = this.authSubTransport;
+<<<<<<< HEAD
+    authSubTransport.addParser(AuthKeyValueParser.INSTANCE);
+    HttpRequest request = authSubTransport.buildGetRequest();
+    request.setUrl("https://www.google.com/accounts/AuthSubTokenInfo");
+=======
+    HttpRequest request = authSubTransport.createRequestFactory().buildGetRequest(
+        new GenericUrl("https://www.google.com/accounts/AuthSubTokenInfo"));
+    request.addParser(AuthKeyValueParser.INSTANCE);
+>>>>>>> f1253614bee81db4cd5344faaa5c73a5c51b2c5b
+    return request.execute().parseAs(TokenInfoResponse.class);
+  }
+
+  /** Updates the authorization headers. */
+  private void updateAuthorizationHeaders() {
+
+The intent on the left is to add a parser to the transport and build a GET request, then set the URL. The right does it differently by creating the request with URL and adding parser to request. Both achieve similar goals but with different approaches. Resolve by choosing the right approach as it's more encapsulated.

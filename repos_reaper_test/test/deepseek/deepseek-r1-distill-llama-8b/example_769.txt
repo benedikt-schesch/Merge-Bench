@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, it's clear that the right side introduces a check for "hbase.increments.durable," which is important, while there's a discrepancy in the data type for nsre_watermarks. Since nsre_low_watermark and nsre_high_watermark should handle larger values, it's correct to use integers.
+
+**Step-by-step explanation:**
+
+1. **Identify the conflict:** The left side uses `getInt` for nsre_low_watermark and nsre_high_watermark, whereas the right side uses `getShort` and adds an if statement for a new durable setting.
+2. **Determine the correct data type:** The nsre_ variables typically require integer values, so using `getShort` is incorrect.
+3. **Integrate the new feature:** The if statement on the right correctly adds the durable setting, so it's retained.
+
+**Final code:**
+
+```java
+    rpc_timeout = config.getInt("hbase.rpc.timeout");
+    timer = newTimer(config, "HBaseClient");
+    rpc_timeout_timer = newTimer(config, "RPC Timeout Timer");
+    flush_interval = config.getShort("hbase.rpcs.buffered_flush_interval");
+    increment_buffer_size = config.getInt("hbase.increments.buffer_size");
+<<<<<<< HEAD
+    nsre_low_watermark = config.getInt("hbase.nsre.low_watermark");
+    nsre_high_watermark = config.getInt("hbase.nsre.high_watermark");
+=======
+    nsre_low_watermark = config.getInt("hbase.nsre.low_watermark");
+    nsre_high_watermark = config.getInt("hbase.nsre.high_watermark");
+    if (config.properties.containsKey("hbase.increments.durable")) {
+      increment_buffer_durable = config.getBoolean("hbase.increments.durable");
+    }
+>>>>>>> 003c60654636b9b3dc2f3a0846a8a76a44f1fb06
+```

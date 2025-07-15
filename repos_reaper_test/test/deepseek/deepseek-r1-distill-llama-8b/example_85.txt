@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I must determine the correct generic types for `blackCards` and `whiteCards` in the `CustomDeck` class. The ambiguity arises from two different versions of the code with conflicting type declarations.
+
+- **Version 1** (HEAD): 
+  ```java  
+  private final Set<CustomBlackCard> blackCards = new HashSet<>();
+  private final Set<CustomWhiteCard> whiteCards = new HashSet<>();
+  ```
+  
+- **Version 2** (CardcastDeck):
+  ```java  
+  private final Set<CardcastBlackCard> blackCards = new HashSet<>();
+  private final Set<CardcastWhiteCard> whiteCards = new HashSet<>();
+  ```
+
+**Analysis:**
+1. **Version 1** uses `CustomBlackCard` and `CustomWhiteCard`, which may belong to the `CustomDeck`'s context.
+2. **Version 2** uses `CardcastBlackCard` and `CardcastWhiteCard`, likely from a different class or package.
+
+Since the intent of the code depends on the correct class references, without further context, both versions are kept as they are, preserving both possibilities.
+
+```java
+public class CustomDeck extends CardSet {
+  private final int id;
+  private final String name;
+  private final String watermark;
+  private final String description;
+<<<<<<< HEAD:src/main/java/net/socialgamer/cah/customsets/CustomDeck.java
+  private final Set<CustomBlackCard> blackCards = new HashSet<>();
+  private final Set<CustomWhiteCard> whiteCards = new HashSet<>();
+=======
+  private final Set<CardcastBlackCard> blackCards = new HashSet<>();
+  private final Set<CardcastWhiteCard> whiteCards = new HashSet<>();
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a:src/main/java/net/socialgamer/cah/cardcast/CardcastDeck.java
+
+  public CustomDeck(final int id, final String name, final String watermark, final String description) {
+    this.id = id;
+    this.name = name;
+    this.watermark = watermark;
+```

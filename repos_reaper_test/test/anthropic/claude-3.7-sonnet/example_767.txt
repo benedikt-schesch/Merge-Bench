@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, the newer version uses `kv.serialize` and adds tracking of `nbytes_per_family`, while the old version uses `KeyValue.serialize` with explicit parameters. Both are trying to serialize the key-value pairs, but the new implementation seems more efficient and adds byte size tracking.
+
+Here's the resolved version:
+
+```java
+        // Total number of bytes taken by those "KeyValues".
+        buf.writeInt(0);  // We'll monkey patch this later.
+      }
+      nkeys_per_family++;
+
+      final KeyValue kv = edit.kv();
+      nbytes_per_family += kv.predictSerializedSize();
+      kv.serialize(buf, KeyValue.PUT);
+      prev = edit;
+    }  // Yay, we made it!
+
+    // Monkey-patch everything for the last set of edits.
+    buf.setInt(nkeys_per_family_index, nkeys_per_family);
+```

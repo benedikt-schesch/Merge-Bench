@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Okay, so looking at this code snippet, there's a merge conflict in the Java code where the GruntParser is being instantiated. The conflict is between initializing it with just a StringReader in HEAD versus including an additional myPig parameter in the other branch.
+
+The GruntParser likely requires both the script and the PigContext (myPig) to function correctly, especially if it's related to parsing scripts in a specific context. Since the other branch includes myPig, which is probably necessary for context-specific parsing, that's the right choice.
+
+Here's the resolved code with myPig included:
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "dump b;"
+                          + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+```

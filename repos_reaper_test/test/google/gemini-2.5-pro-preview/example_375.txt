@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing views on whether the `createMtlsKeyStore` method should be annotated with `@Beta`.
+
+*   **`HEAD` Side Intent:** This side wants to explicitly mark the `createMtlsKeyStore` method with `@Beta`. This indicates that the method is considered to be in a "beta" stage, meaning its API might be subject to change, it's not fully tested, or it's not yet considered stable for general-purpose use.
+*   **`51762f221ec8ab38da03149c8012e63aec0433dc` Side Intent:** This side does not have the `@Beta` annotation for the method. This could mean either:
+    1.  The method was never considered beta on this line of development.
+    2.  The method was previously beta, but its `@Beta` status was removed, implying it is now considered stable.
+
+**Semantic Ambiguity:**
+The core issue is a disagreement on the stability and maturity of the `createMtlsKeyStore` method.
+Without knowing the history (e.g., what was in the common ancestor of these two branches) or the specific policies of the project (e.g., which branch's assessment of "beta" status takes precedence), it's impossible to be certain which state is correct for the merged code.
+
+*   If `HEAD` is introducing a new feature or a significant modification and marking it as `@Beta`, and the other side simply reflects an older state before this beta status was considered, then keeping `@Beta` would be appropriate.
+*   However, if the method was `@Beta` in the common ancestor, and `51762f221ec8ab38da03149c8012e63aec0433dc` explicitly removed it (signifying a move to a stable state), while `HEAD` made other changes but kept the `@Beta` tag (perhaps unaware of the stabilization), then removing `@Beta` might be appropriate after careful consideration.
+
+Since the intents are contradictory regarding the API's stability, and there isn't enough context to definitively choose one over the other, the conflict should be presented for manual resolution by someone with more project-specific knowledge.
+
+```java
+   * @param certAndKey Certificate and private key input stream. The stream should contain one
+   *     certificate and one unencrypted private key. If there are multiple certificates, only the
+   *     first certificate will be used.
+   * @return keystore for mutual TLS.
+   */
+<<<<<<< HEAD
+  @Beta
+=======
+>>>>>>> 51762f221ec8ab38da03149c8012e63aec0433dc
+  public static KeyStore createMtlsKeyStore(InputStream certAndKey)
+      throws GeneralSecurityException, IOException {
+    KeyStore keystore = KeyStore.getInstance("JKS");
+    keystore.load(null);
+
+
+```

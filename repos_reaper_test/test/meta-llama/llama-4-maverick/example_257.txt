@@ -1,0 +1,56 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we first need to understand the context and the changes made in both branches. The conflict is in the import statements of a Java file.
+
+The `HEAD` version of the code (the local branch) does not include the import statement for `MultiQueryPackager`, while the version from the branch being merged (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`) does.
+
+```java
+import java.util.List;
+import java.util.Set;
+
+import org.apache.pig.PigException;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.PhysicalOperator;
+<<<<<<< HEAD
+=======
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.MultiQueryPackager;
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POCollectedGroup;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POCounter;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PODemux;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFRJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFilter;
+```
+
+To determine the correct resolution, let's consider the intent and semantics:
+
+1. **Understanding the Change**: The change adds an import statement for `MultiQueryPackager`. This suggests that the branch being merged (`88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a`) is introducing a new class or functionality that utilizes `MultiQueryPackager`.
+
+2. **Semantic Intent**: The addition of `MultiQueryPackager` indicates that the new or modified code is likely using this class. If the local branch (`HEAD`) does not have this import, it implies that the local branch either does not use `MultiQueryPackager` or it is not necessary without the changes from the other branch.
+
+3. **Resolution Approach**: To resolve the conflict, we need to decide whether the import statement for `MultiQueryPackager` is necessary for the merged version. If the changes from both branches are meant to be integrated and the branch being merged introduces a necessary functionality that uses `MultiQueryPackager`, then including this import is likely correct.
+
+4. **Checking for Usage**: Ideally, we should check if `MultiQueryPackager` is used somewhere in the code after the merge. If it's used, the import is necessary. If not, the import can be considered redundant and might be removed by an IDE or during code cleanup.
+
+Since the snippet does not provide information on whether `MultiQueryPackager` is used, we'll proceed based on the information given.
+
+Given the information and focusing on the task:
+
+The task requires returning the entire snippet (including full context) in markdown code syntax without modifying the context or spacing. 
+
+Here is the code snippet as requested:
+```java
+import java.util.List;
+import java.util.Set;
+
+import org.apache.pig.PigException;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.PhysicalOperator;
+<<<<<<< HEAD
+=======
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.MultiQueryPackager;
+>>>>>>> 88ae4a5fc1d6ff4a9d3c070fe2fc64a50827c37a
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POCollectedGroup;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POCounter;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PODemux;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFRJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POFilter;
+```

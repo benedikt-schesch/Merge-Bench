@@ -1,0 +1,19 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. The code in question is a Java method that throws an exception when a classpath entry isn't found. The conflict is between the two versions of the error message in the exception.
+
+Looking at the two sides, the HEAD version has the message "ClasspathEntry [" + path + "] not found in container [" + id + "]", while the other branch has "nt found" instead of "not". The word "nt" is probably a typo. Since the correct word should be "not", the HEAD version is correct. The other branch's message has a typo, so we should keep the HEAD version. 
+
+I need to make sure that the resolved code uses the correct exception message. The surrounding context doesn't seem to have any other changes, so the conflict is isolated to this line. Therefore, the correct resolution is to choose the HEAD version and discard the typo from the other branch.</think>
+```java
+        for (IClasspathEntry entry : container.getClasspathEntries()) {
+            if (entry.getPath().toOSString().contains(path)) {
+                return entry;
+            }
+        }
+        throw new ProjectConfigurationException("ClasspathEntry [" + path + "] not found in container [" + id + "]");
+    }
+
+    protected void assertErrorMarker(IProject project, String type) throws CoreException {
+        List<IMarker> markers = findMarkers(project, IMarker.SEVERITY_ERROR);
+        for (IMarker marker : markers) {
+```

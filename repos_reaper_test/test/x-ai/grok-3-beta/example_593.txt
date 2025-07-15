@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+Below is the snippet with the merge conflict included as provided, preserving the original context and spacing. I will then explain my analysis of the conflict and provide a resolution based on the intent and semantics of both sides of the merge.
+
+```java
+        throw new IllegalArgumentException(
+          "Provided queries must have non-blank keys and values. You provided: " + queries);
+      }
+
+      try {
+<<<<<<< HEAD
+        jsonObject.add(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (ParseException e) {
+=======
+        jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (JsonException e) {
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+        // Shouldn't happen unless bizarre input is provided
+        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
+      }
+    }
+```
+
+### Analysis of Intent and Semantics
+- **HEAD (Left Side):** Uses `jsonObject.add()` and catches `ParseException`. The intent seems to be adding key-value pairs to a JSON object, likely in a context where `add()` is the appropriate method for the JSON library being used at that point in time. The exception type `ParseException` suggests it might be tied to a specific JSON parsing library.
+- **Incoming Change (Right Side):** Uses `jsonObject.put()` and catches `JsonException`. The intent is similarly to add or update a key-value pair in a JSON object, but it uses a different method (`put()`) which might imply a different JSON library or an updated version of the library where `put()` is the preferred method. The exception type `JsonException` also indicates a potential difference in the library or error handling approach.
+
+### Resolution Consideration
+The key semantic intent on both sides is to associate a key with a value in a JSON object. However, the difference in method names (`add()` vs. `put()`) and exception types (`ParseException` vs. `JsonException`) suggests that the codebase might have undergone a change in the JSON library or API usage between the two branches. 
+
+- If `put()` is the modern or correct method for the JSON library in use (e.g., in libraries like `org.json`, `put()` is commonly used to add or replace key-value pairs), the incoming change (right side) is likely more current.
+- If `add()` is specific to a different library or context (e.g., some libraries use `add()` for appending to arrays or specific structures), the HEAD side might be correct for the original context.
+- The exception type also needs to match the library being used.
+
+Since the exact library or context isn't fully provided in the snippet, I cannot definitively resolve this without additional information (e.g., imports or library documentation). However, based on common JSON library usage in Java (e.g., `org.json`), `put()` is often the standard method for adding key-value pairs to a `JSONObject`, and `JsonException` is more generic and aligns with modern libraries.
+
+### Resolved Code
+I’ll propose a resolution favoring the right side (`put()` and `JsonException`) as it seems more consistent with widely used JSON libraries in Java. If this assumption is incorrect based on the specific library or context, the resolution can be adjusted.
+
+```java
+        throw new IllegalArgumentException(
+          "Provided queries must have non-blank keys and values. You provided: " + queries);
+      }
+
+      try {
+        jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
+      } catch (JsonException e) {
+        // Shouldn't happen unless bizarre input is provided
+        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
+      }
+    }
+```
+
+### Note
+If the codebase uses a specific JSON library where `add()` and `ParseException` are the correct constructs, or if there are other contextual clues not visible in this snippet, the HEAD side should be retained instead. If there is ambiguity in the library or intent, please provide additional context (e.g., imports or library version) to confirm the correct resolution. For now, I have resolved it based on the assumption of a common JSON library usage.

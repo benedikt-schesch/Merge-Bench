@@ -1,0 +1,27 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the Java code between the HEAD version and the branch version. Both versions are checking if the 'language' is not null or empty and whether it's in the supported languages list. If not, they call failWithErrorMessage with a similar message.
+
+The HEAD version has the condition split into two lines with the && operator, and the error message is split into two concatenated strings. The other version has the condition on a single line and the error message as a single concatenated string. 
+
+So, the intent of both branches is the same: validate the language against supported languages. The only differences are formatting. The HEAD version might have been formatted for readability, maybe to fit line length standards, while the other version condensed it.
+
+Since the actual logic is identical, the conflict is purely about code style. The best approach is to pick the more concise version to reduce line noise, but both achieve the same thing. However, since the user wants a semantic resolution, we should check if there's any functional difference. 
+
+Looking closely, the messages are the same, just split in HEAD. The condition is the same. So merging them without conflict is safe. The branch version's single-line condition and message are cleaner, so maybe that's the intended resolution. Alternatively, keeping the HEAD's formatting if the project prefers multi-line conditions. But without project-specific style guidelines, either is acceptable. However, since the user wants a resolution that considers intent, and both are the same, choosing one format over the other is okay. 
+
+In this case, the branch version (the one from commit 1d97bfa) is more concise, so resolving by taking that version. Therefore, replace the conflict markers with the single-line condition and message.</think>
+```java
+
+        if (StringUtils.isNullOrEmpty(defSource) && jaxRsResources.isEmpty()) {
+            failWithErrorMessage("You should specify the definition source to use (value no prefixed by any option). ");
+        }
+
+        if (!StringUtils.isNullOrEmpty(language) && !SUPPORTED_LANGUAGES.contains(language)) {
+            failWithErrorMessage("The language " + language + " is not currently supported. ");
+        }
+
+        if (StringUtils.isNullOrEmpty(serviceUrl)) {
+            serviceUrl = "https://apispark.restlet.com/";
+        }
+
+```

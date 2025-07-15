@@ -1,0 +1,33 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the setUp() method of a Java test class. The HEAD version uses `new PigServer(MAPREDUCE, cluster.getProperties())`, while the other branch uses `new PigServer(ExecType.MAPREDUCE, cluster.getProperties())`. 
+
+Hmm, the difference is the first argument passed to PigServer. In HEAD, it's just MAPREDUCE, which might be a static import or a field in the class. The other branch uses ExecType.MAPREDUCE, which is more explicit, referring to the ExecType enum. Maybe the HEAD version is using a static import for ExecType.MAPREDUCE, so MAPREDUCE is a valid reference. Or perhaps the HEAD branch has a different way of specifying the execution type.
+
+Wait, in Pig (Apache Pig), PigServer's constructor typically takes an ExecType. So ExecType is an enum with values like MAPREDUCE, LOCAL, etc. So the correct way is to use ExecType.MAPREDUCE. The HEAD version might have a static import for ExecType.*, allowing just MAPREDUCE. But without knowing if that's the case, using the fully qualified enum value is safer to avoid compilation errors.
+
+Also, looking at the rest of the conflict, the other branch adds a line after the setUp() method: `Boolean[] nullFlags = new Boolean[] { false, true };`. This is a field declaration. So the conflict arises because one branch changed the PigServer constructor argument, and the other added a new field. These are in different parts of the code, so they can be merged together without conflict.
+
+So the resolution would be to take both changes: use the ExecType.MAPREDUCE in the constructor (from the second branch) and include the nullFlags field from the second branch. Because the conflict markers are around the setUp() method and the added field, merging them should combine both changes. The context lines before and after the conflict should stay as they are.
+
+Therefore, the resolved code should have the PigServer initialized with ExecType.MAPREDUCE and include the nullFlags array. The test method that follows remains unchanged.</think>
+```java
+    private PigServer pig;
+    
+    @Before
+    @Override
+    protected void setUp() throws Exception {
+        pig = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+    }
+    
+    Boolean[] nullFlags = new Boolean[] { false, true };
+
+    @Test
+    public void testAdd() throws Throwable {
+        File tmpFile = File.createTempFile("test", "txt");
+``` 
+
+Rationale:  
+1. The `ExecType.MAPREDUCE` explicit enum reference is safer than a potential static import (`MAPREDUCE`) for long-term maintainability
+2. The `nullFlags` field addition from the second branch doesn't conflict with the constructor change - these are independent changes
+3. Preserved test method context without modification
+4. Maintained original spacing and comment structure

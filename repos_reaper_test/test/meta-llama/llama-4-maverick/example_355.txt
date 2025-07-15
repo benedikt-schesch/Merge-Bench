@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to analyze the intent and semantics of both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a class that has a `toString()` method. This method checks if the application is running as a native image and, if so, appends `-graalvm` to the version string.
+
+The conflict arises from two different ways of checking the `imageCode` property.
+
+On the left-hand side (`HEAD`), the code uses `PROPERTY_IMAGE_CODE_KEY` and `PROPERTY_IMAGE_CODE_VALUE_RUNTIME` to check the `imageCode` property. These are likely constants defined elsewhere in the code.
+
+On the right-hand side (`1055ff5de3675837270f9739454829ed0cc14cec`), the code uses hardcoded string literals `"org.graalvm.nativeimage.imagecode"` and `"runtime"` to check the `imageCode` property.
+
+To resolve this conflict, we need to determine which approach is more appropriate. 
+
+Upon closer inspection, it seems that both sides are achieving the same goal, which is to check if the application is running as a native image. The difference lies in how the property key and value are defined.
+
+Since the right-hand side is using hardcoded string literals that are likely the actual values of the constants used on the left-hand side, we can infer that the intent is to check the `imageCode` property with the specific key and value.
+
+However, the left-hand side is using constants, which is generally a better practice as it makes the code more readable and maintainable.
+
+To resolve the conflict in a way that preserves the intent and semantics of both sides, we should check if the constants on the left-hand side have the same values as the hardcoded string literals on the right-hand side.
+
+Assuming they do, the resolved code should be consistent with the coding practices used in the rest of the project. 
+
+Let's assume `PROPERTY_IMAGE_CODE_KEY` equals `"org.graalvm.nativeimage.imagecode"` and `PROPERTY_IMAGE_CODE_VALUE_RUNTIME` equals `"runtime"`, then both versions are semantically equivalent.
+
+Here is the code snippet with the conflict resolved, preserving the original context and spacing:
+```java
+    }
+
+    public String toString() {
+      // When running the application as a native image, append `-graalvm` to the
+      // version.
+      String imageCode = System.getProperty(PROPERTY_IMAGE_CODE_KEY);
+      if (imageCode != null && imageCode.equals(PROPERTY_IMAGE_CODE_VALUE_RUNTIME)){
+        String[] tokens = versionString.split(" ");
+        if (tokens.length > 0 && tokens[0].startsWith("gl-java")) {
+          tokens[0] += "-graalvm";
+          return Joiner.on(" ").join(tokens);
+        }
+
+```

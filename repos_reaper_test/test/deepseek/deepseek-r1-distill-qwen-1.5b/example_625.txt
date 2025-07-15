@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+@Test
+public void postImageToPagePhotosWithMessage() {
+  byte[] imageAsBytes = fetchBytesFromImage();
+  DefaultFacebookClient client =
+    new DefaultFacebookClient(getTestSettings().getSummonerId(), Version:UIOS_2_5);
+  
+  JsonObject obj = client.publish(getTestSettings().getPhotoUrl()
+    + "/photos",
+    JsonObject.class,
+    BinaryAttachment.with("test.png", imageAsBytes, "image/png")
+    + Parameter.with("message", "TestImage")
+    + Parameter.with("no_story", "true"));
+  assertNotNull(obj);
+}
+```
+
+Thought Process:
+1. The lack of union type with https version causes potential type mismatch
+2. Reasoning: The test environment was expecting)\
+3. Fix: Change the client construction to use the Absolute family version ( Gerald . $mine (
+4. Inspired By: Accepting the fact that some code constructs are different as per version specifying)

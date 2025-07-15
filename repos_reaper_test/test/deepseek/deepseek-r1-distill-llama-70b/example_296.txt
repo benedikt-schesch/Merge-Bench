@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I cannot resolve this merge conflict definitively as the intent is ambiguous. Both branches appear to be trying to set a generated document ID, but they use different approaches:
+
+1. The HEAD branch calls `setDocumentGeneratedId()` directly with the ID from the dbObject
+2. The other branch first converts the ID to a String and then sets it via `unmarshaller.setDocumentGeneratedId()`
+
+Since it's unclear which approach is intended, I'll return the snippet with the conflict markers:
+
+```java
+    public WriteResult execute() {
+        DBObject dbObject = marshall();
+
+        WriteResult writeResult = collection.save(dbObject, determineWriteConcern());
+
+<<<<<<< HEAD
+        setDocumentGeneratedId(dbObject.get(MONGO_DOCUMENT_ID_NAME));
+=======
+        String id = dbObject.get(MONGO_DOCUMENT_ID_NAME).toString();
+        unmarshaller.setDocumentGeneratedId(document, id);
+>>>>>>> 6e81e3852480002d055fb871f5da2f1b8c256cfb
+
+        return writeResult;
+    }
+
+    private DBObject marshall() {
+```

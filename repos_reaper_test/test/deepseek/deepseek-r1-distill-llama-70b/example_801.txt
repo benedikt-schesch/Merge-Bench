@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The code snippet appears to be handling a handshake process with an HBase server, checking if the server is version 0.92 or above. The merge conflict arises between setting a client version variable and making a helloRpc call. The resolved code should set the server version when the handshake is successful and only call helloRpc in that case. If the handshake fails, an exception is thrown without setting the version.
+
+```java
+<<<<<<< HEAD
+          // If we get here, it's because we tried to handshake with a server
+          // running HBase 0.92 or above, but using a pre-0.92 handshake.  So
+          // we know we have to handshake differently.
+          server_version = SERVER_VERSION_092_OR_ABOVE;
+          hbase_client.server_version = server_version;
+=======
+          // If we get here, it's because we tried to handshake with a server
+          // running HBase 0.92 or above, but using a pre-0.92 handshake.  So
+          // we know we have to handshake differently.
+          server_version = SERVER_VERSION_092_OR_ABOVE;
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+          helloRpc(chan, header092());
+        } else {
+          // We get here if the server refused our 0.92-style handshake.  This
+          // must be a future version of HBase that broke compatibility again,
+          // and we don't know how to talk to it, so give up here.
+
+```

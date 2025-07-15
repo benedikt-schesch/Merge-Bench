@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The code is updated to correctly process the SCENE_SET command by extracting sceneId and time, properly handling time values above 127 as minutes.
+
+```java
+public void handleApplicationCommandRequest(SerialMessage serialMessage, int offset, int endpoint) {
+    logger.debug("NODE {}: Received central scene command (v{})", this.getNode().getNodeId(), this.getVersion());
+    int command = serialMessage.getMessagePayloadByte(offset);
+    switch (command) {
+        case SCENE_SET:
+            int sceneId = serialMessage.getMessagePayloadByte(offset + 3);
+            int time = serialMessage.getMessagePayloadByte(offset + 2);
+            if (time > 127) {
+                // Values of 128 and above are in minutes (128 = 1 minute)
+                time = (time - 127) * 60;
+>>>>>>> 452b23374e752524bf93a83d45a22011448f5945
+```

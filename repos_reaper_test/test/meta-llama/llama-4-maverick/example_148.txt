@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the intent behind the changes made on both sides of the merge.
+
+The code snippet is in Java and appears to be part of a larger system, possibly Apache Pig, given the class and method names. The conflict arises between two versions of code: one from the local branch (`HEAD`) and the other from a commit (`2125666c1941d4a88c08ab87ebf92ee46be4f0ea`) being merged into it.
+
+The conflict is within a block of code where `PigStats` and `ScriptState` are being initialized or started based on certain conditions. The local branch (`HEAD`) contains a comment explaining that `ScriptState` should not be overwritten if it has already been initialized, presumably in a `Main` class or method.
+
+The incoming change from the commit (`2125666c1941d4a88c08ab87ebf92ee46be4f0ea`) seems to remove the comment present in the local branch.
+
+Let's analyze the intent:
+1. The local branch (`HEAD`) has a comment that provides context about why `ScriptState` is being checked for `null` before initialization. It suggests that `ScriptState` might have been initialized elsewhere (in `Main`), and thus, it should not be overwritten.
+2. The incoming change removes this comment.
+
+To resolve the conflict, we must consider whether the comment is still relevant or necessary. The code following the conflict checks if `ScriptState.get()` is `null` before initializing it, which is a good practice to avoid overwriting an already initialized state. The comment explains this reasoning, enhancing code readability and understandability.
+
+Given that the code logic on both sides of the conflict (regarding the `if (ScriptState.get() == null)` check and the initialization of `ScriptState`) is essentially the same, and the only difference is the presence or absence of a comment, we should consider preserving the comment for clarity.
+
+However, the incoming change (`2125666c1941d4a88c08ab87ebf92ee46be4f0ea`) removes the comment. If we choose to resolve by accepting the incoming change, we remove the comment. But, it's worth noting that the comment provides useful context.
+
+Let's preserve the original context and the comment for better understanding, but since the change is just about removing a comment, and there's no functional change intended by the merge, we can simply accept the version that keeps the comment for clarity, or understand it as a minor adjustment in code readability.
+
+However, to directly resolve the given conflict without altering the original context or spacing, we directly take the necessary parts from both versions.
+
+Here is the resolved code snippet in markdown code syntax:
+
+```java
+
+        addJarsFromProperties();
+        markPredeployedJarsFromProperties();
+
+        PigStats.start(pigContext.getExecutionEngine().instantiatePigStats());
+
+        if (ScriptState.get() == null) {
+            // If Pig was started via command line, ScriptState should have been
+            // already initialized in Main. If so, we should not overwrite it.
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+
+```

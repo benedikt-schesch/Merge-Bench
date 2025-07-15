@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I notice that one side (HEAD) has added a `listeners` field declaration, while the other side (from commit b782a4bb) appears to have the same declaration but later in the file. Since both sides have the exact same code for the `listeners` field, this appears to be a simple case where the same change was made in different places.
+
+Here's the resolved snippet:
+
+```java
+	@Inject
+	private DexService dexService;
+	
+	@Inject
+	private AndroidBuildService buildService;
+
+	private List<AndroidBuildListener> listeners = Collections.synchronizedList(new ArrayList<AndroidBuildListener>());
+
+	@Override
+	public Set<IProject> build(int kind, IProgressMonitor monitor) throws Exception {
+
+```
+
+I kept one instance of the `listeners` declaration and removed the duplicate, maintaining the proper spacing between the fields and the `build` method.

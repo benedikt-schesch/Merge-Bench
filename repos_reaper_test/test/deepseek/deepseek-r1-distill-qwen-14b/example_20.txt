@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict. The conflicting lines are shown with `<<<<<<< HEAD` and `>>>>>>>`. The context of the conflict appears to involve refactoring how `newPosition` is calculated and whether certain variables are used or commented out.
+
+The changes in the HEAD side introduce:
+
+- Painting `newPosition` as `Point newPosition`
+- Use `scene.getTransformLive().getPosition().add(movement)`
+- Commented out a line about `oldVolume`
+- Adds `worldVolume` which is a `BoundingBox`
+
+The changes in the other side (67bcb76a...) introduce:
+
+- Keeping the line about `final Point position` 
+- Adds `final BoundingBox oldVolume` but commented out
+- Does not include `worldVolume` nor the block calculations
+
+Given the ambiguity in intent, the conflict is best left unresolved.
+
+```java
+					// u - velocity
+					// t - timestep
+					// a - acceleration
+
+					final Vector3 movement = prevVelocity.multiply(dt).add(acceleration.multiply(dt * dt).divide(2));
+<<<<<<< HEAD
+					//final Point position = scene.getTransformLive().getPosition();
+					Point newPosition = scene.getTransformLive().getPosition().add(movement);
+					final BoundingBox volume = scene.getVolume();
+					//final BoundingBox oldVolume = volume.clone().offset(position);
+=======
+					Point newPosition = scene.getTransformLive().getPosition().add(movement);
+					final BoundingBox volume = scene.getVolume();
+>>>>>>> 67bcb76a96f358fc131320b011ffaa3bf3678c2
+					BoundingBox worldVolume = volume.clone().offset(newPosition);
+					final int bx = newPosition.getBlockX();
+					final int by = newPosition.getBlockY();
+					final int bz = newPosition.getBlockZ();
+					final int rangeX = (int) Math.ceil(volume.getMax().getX() - volume.getMin().getX());
+```

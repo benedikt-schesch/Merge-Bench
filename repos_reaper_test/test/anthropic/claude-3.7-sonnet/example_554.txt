@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are modifying the `testHelloWorld` method with very similar changes. The key differences are:
+
+1. The HEAD version throws an Exception and has a different string in the toast message
+2. The other version doesn't throw an Exception and has a different toast message
+
+Given the abstract method declaration above (`runScript` which throws Exception), it seems appropriate to keep the exception handling. The toast message difference appears to be a matter of preference.
+
+Here's the resolved snippet:
+
+```java
+
+    protected abstract void helpSetUp() throws Exception;
+    public abstract void runScript(final String js) throws Exception;
+
+    @SmallTest
+    public void testHelloWorld() throws Exception {
+        runScript("Log.d('RhinoTest', 'Helloworld, js');" + "toast('东北人都是活雷锋');");
+    }
+
+    /** TODO use TextUtils#concat */
+    /**
+     *
+
+```
+
+I kept the `throws Exception` declaration to match the abstract method, and I chose the toast message from the incoming change as it appears to be the more recent intention.

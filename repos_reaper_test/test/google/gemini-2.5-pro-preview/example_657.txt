@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict is in the import statements.
+- The `HEAD` branch is trying to add `import java.util.Map;`.
+- The `3e88fb2d7ef95f3cb7b5e2a771a0990c4a3a4a56` branch does not have this import.
+
+**Intent of `HEAD`:**
+The code changes in `HEAD` (or the branch it points to) likely introduced a requirement for `java.util.Map`. Adding the import statement directly reflects this need.
+
+**Intent of `3e88fb2d7ef95f3cb7b5e2a771a0990c4a3a4a56`:**
+The code at this commit (or the branch it represents) did not require `java.util.Map`. This is a passive state; it doesn't necessarily mean an active removal that conflicts with a need, but rather that the need wasn't present in that version of the code.
+
+**Resolution:**
+When merging, if the code introduced in `HEAD` that utilizes `java.util.Map` is being kept, then the import statement is necessary. Omitting it would likely cause compilation errors. It's generally safer to keep an import introduced by one branch, as an unused import is a minor issue (often caught by linters or IDEs), while a missing import for required code is a build-breaking issue.
+
+Assuming the changes in `HEAD` that necessitate `java.util.Map` are part of the intended merge, the import should be kept.
+
+```java
+
+import static com.restfb.util.StringUtils.fromInputStream;
+import static java.net.HttpURLConnection.HTTP_OK;
+
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * {@link WebRequestor} implementation that loads a file from the classpath instead of hitting the web. Useful for
+ * running unit tests against local JSON textfiles.
+ * 
+```

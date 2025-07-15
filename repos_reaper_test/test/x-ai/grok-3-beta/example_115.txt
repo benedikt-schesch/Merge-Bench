@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in terms of intent and semantics.
+
+**Analysis of Conflict:**
+- On the `HEAD` side, the import statement is `import org.fest.util.ExpectedException;`. This suggests the test class is using a utility class for handling expected exceptions from the `org.fest.util` package.
+- On the `d63f57791b...` side, the imports are `import org.fest.assertions.api.Fail;` and `import org.fest.assertions.test.ExpectedException;`. This indicates a different structure where `Fail` is being imported for assertions and `ExpectedException` is from a test-specific package.
+- Additionally, the file path has changed between branches. `HEAD` uses `org/fest/assertions/api/` while the other branch uses `org/fest/assertions/api/fail/`, suggesting a reorganization of the package structure or test categorization.
+- **Intent:** The `HEAD` side appears to be using a utility for expected exceptions, while the other branch seems to be testing the `Fail` class specifically for a scenario where an expected exception was not thrown. The test name `Fail_fail_because_exception_was_not_thrown_Test` and the Javadoc comment indicate the focus is on testing the `Fail#failBecauseExceptionWasNotThrown(Class)` method.
+- **Ambiguity:** Since the conflict involves different imports and potentially different test setups or package structures, it is ambiguous without further context on whether these two versions are meant to coexist or if one supersedes the other due to refactoring.
+
+Since I cannot definitively determine the correct resolution without additional context regarding the project's structure, naming conventions, or whether this is a refactoring or parallel change, I will return the snippet unchanged with the conflict markers intact.
+
+Here is the code snippet as provided:
+
+```java
+import static org.fest.util.ExpectedException.none;
+
+import org.junit.Rule;
+import org.junit.Test;
+
+<<<<<<< HEAD:src/test/java/org/fest/assertions/api/Fail_fail_because_exception_was_not_thrown_Test.java
+import org.fest.util.ExpectedException;
+=======
+import org.fest.assertions.api.Fail;
+import org.fest.assertions.test.ExpectedException;
+>>>>>>> d63f57791b22919cb13eefb8e975a0d465022f72:src/test/java/org/fest/assertions/api/fail/Fail_fail_because_exception_was_not_thrown_Test.java
+
+/**
+ * Tests for <code>{@link Fail#failBecauseExceptionWasNotThrown(Class)}</code>.
+ * 
+ * @author Joel Costigliola
+```

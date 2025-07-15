@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The conflict arises in the method signature of `jsonMappingCompleted`.
+*   The `HEAD` version defines the method as `protected void jsonMappingCompleted(JsonMapper jsonMapper)`, taking a `JsonMapper` object as an argument. This suggests an intent to potentially use the `JsonMapper` instance within the method for further operations or to access its configuration after the primary JSON mapping is complete.
+*   The `a17acec0655b8058aaf4d336ba2a1352aa49e2fe` version defines the method as `protected void jsonMappingCompleted()`, taking no arguments. This suggests that the operations performed after JSON mapping do not require direct access to the `JsonMapper` instance, or that the framework invoking this callback does not provide it.
+
+Without knowing:
+1.  If the `jsonMapper` parameter is actually used in the rest of the method body in the `HEAD` version (the provided snippet doesn't show its usage).
+2.  The specific requirements or capabilities of the `@JsonMappingCompleted` annotation (e.g., if it's from a library that dictates the method signature, and whether that library version might have changed in one of the branches).
+
+It's impossible to definitively determine the correct resolution. If the `jsonMapper` is used or intended for use by `HEAD`, its signature is necessary. If it's unused, or if the annotation contract (possibly from an updated library in the incoming change) mandates a no-argument method, then the incoming change's signature would be more appropriate.
+
+Given this ambiguity, the conflict should be presented as is for a developer with more context to resolve.
+
+```java
+    Date dateStart = toDateFromLongFormat(rawStartTime);
+    startTime = dateStart == null ? toDateFromShortFormat(rawStartTime) : dateStart;
+  }
+
+  @JsonMappingCompleted
+<<<<<<< HEAD
+  protected void jsonMappingCompleted(JsonMapper jsonMapper) {
+=======
+  protected void jsonMappingCompleted() {
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+
+```

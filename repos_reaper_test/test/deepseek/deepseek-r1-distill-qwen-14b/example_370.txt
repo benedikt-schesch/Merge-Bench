@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict shows two approaches to setting the `VERSION`. The left side uses a hardcoded string, while the right calls a method. Since `VERSION` is a `final` String, dynamically getting it doesn't fit. Therefore, keeping the hardcoded value makes sense.
+
+```java
+ * @author rmistry@google.com (Ravi Mistry)
+ */
+public final class GoogleUtils {
+
+  /** Current release version. */
+<<<<<<< HEAD
+  public static final String VERSION = "1.30.5".toString();
+  // {x-version-update-end:google-api-client:current}
+=======
+  public static final String VERSION = "1.30.5";
+  // {x-version-update-end:google-api-client:current}
+>>>>>>> a6c6decbd4a162ff4030e2c3f74c72eb6ac9eddb
+
+  // NOTE: Integer instead of int so compiler thinks it isn't a constant, so it won't inline it
+  /**
+   * Major part of the current release version.
+   *
+
+```

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The code snippet has a merge conflict in the test method where the expected exception verification is missing on one side. The correct resolution includes the assertion from the HEAD branch to ensure the test properly checks for the exception.
+
+```java
+  }
+
+  @Test(expected = FacebookJsonMappingException.class)
+  public void checkInvalidJson() {
+    new Connection<User>(new DefaultFacebookClient(Version.LATEST), "{", User.class);
+    failBecauseExceptionWasNotThrown(FacebookJsonMappingException.class);
+  }
+
+  @Test
+  public void checkIterator_reachAllElements() {
+    Connection<FacebookType> connection = create3PageConnection();
+
+```

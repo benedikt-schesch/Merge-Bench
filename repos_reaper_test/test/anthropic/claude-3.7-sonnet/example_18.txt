@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I see that one side declares `snapshotManager` as `protected final`, while the other side declares it as `private final`. Additionally, the right side includes three additional field declarations after the `snapshotManager` line.
+
+Here's my resolution, preserving the context and proper spacing:
+
+```java
+	private final PluginManager pluginManager = new PluginManager(this, securityManager, 0.0);
+	private final ConsoleManager consoleManager;
+	private final EventManager eventManager = new SimpleEventManager();
+	private final RecipeManager recipeManager = new SimpleRecipeManager();
+	private final ServiceManager serviceManager = new ServiceManager();
+	protected final SnapshotManager snapshotManager = new SnapshotManager();
+	protected final SnapshotableLinkedHashMap<String, SpoutPlayer> players = new SnapshotableLinkedHashMap<String, SpoutPlayer>(snapshotManager);
+	private final WorldGenerator defaultGenerator = new EmptyWorldGenerator();
+	protected final SpoutSessionRegistry sessions = new SpoutSessionRegistry();
+	protected final SpoutScheduler scheduler = new SpoutScheduler(this);
+	protected final SpoutParallelTaskManager parallelTaskManager = new SpoutParallelTaskManager(this);
+	private final AtomicBoolean setupComplete = new AtomicBoolean(false);
+	private final SpoutConfiguration config = new SpoutConfiguration();
+	private final SpoutInputConfiguration inputConfig = new SpoutInputConfiguration();
+```
+
+I chose to keep the `protected` visibility modifier for `snapshotManager` since that's likely needed for the subclass access, especially given the visible pattern of several other fields also being marked as `protected`.

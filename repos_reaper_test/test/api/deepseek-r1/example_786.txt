@@ -1,0 +1,18 @@
+<think>
+Okay, let's tackle this merge conflict. The conflict is in the constructor of the PleaseThrottleException class. The difference between the two branches is the type parameter in the Deferred parameter. The HEAD version uses a raw Deferred type, while the other branch uses Deferred<?>. 
+
+First, I need to understand the intent of both changes. Using Deferred<?> is more specific and uses generics to indicate that the Deferred can hold any type of object, which is a better practice in Java for type safety. The raw type might be from older code that didn't use generics, or maybe it was overlooked. 
+
+Since adding a wildcard generic doesn't break compatibility and improves type safety, resolving it to Deferred<?> makes sense. The rest of the parameters are the same, so merging by choosing the version with the generic is the right move here. I should replace the HEAD line with the one from the other branch to keep the generics. The surrounding context doesn't change, so the rest of the code stays as is. No other conflicts are present, so the resolved code should have Deferred<?> in the constructor parameter.</think>
+```java
+   * @param deferred A deferred one can wait on before retrying the failed RPC.
+   */
+  PleaseThrottleException(final String msg,
+                          final HBaseException cause,
+                          final HBaseRpc rpc,
+                          final Deferred<?> deferred) {
+    super(msg, cause);
+    this.rpc = rpc;
+    this.deferred = deferred;
+  }
+```

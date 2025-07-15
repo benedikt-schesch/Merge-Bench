@@ -1,0 +1,41 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the convertLabels method of a Java class. The two versions have different conditions in the if statement.
+
+In the HEAD version, the condition checks if rawLabels is not null and is an object. The other branch, a17acec, checks if rawLabels is not null and that rawLabels.get("data") is not null. 
+
+So, what's the intent here? Both conditions are trying to ensure that rawLabels has a "data" field that can be processed. The HEAD version might be checking the type of rawLabels, assuming that if it's an object, it can safely get the "data" field. The other branch is more directly checking that the "data" field exists and is not null.
+
+Wait, the line after the condition in both cases is the same: getting "data" from rawLabels. So maybe the problem is that in the HEAD version, even if rawLabels is an object, the "data" field might not exist, leading to a possible null when calling get("data"). The a17acec version avoids that by explicitly checking for the presence of "data".
+
+So the merge conflict arises from different approaches to ensuring that "data" is present. To resolve this, we need a condition that satisfies both intents. The correct approach would be to check that rawLabels is not null, is an object, AND that it contains the "data" key. That way, we cover both the type check and the presence of the key.
+
+So combining both conditions: if (rawLabels != null && rawLabels.isObject() && rawLabels.get("data") != null). That way, we ensure that rawLabels is an object and that "data" exists. This should prevent any potential null pointer exceptions when calling rawLabels.get("data").toString().
+
+Therefore, the resolved code should have the combined condition. Let me check the original code again. The conflict markers are around the if statement. So replacing the conflict with the combined condition makes sense here. That way, both checks are satisfied.</think>
+```java
+    return labels.remove(label);
+  }
+
+  @JsonMappingCompleted
+  protected void convertLabels(JsonMapper jsonMapper) {
+    if (rawLabels != null && rawLabels.isObject() && rawLabels.get("data") != null) {
+      String innerLabelsString = rawLabels.get("data").toString();
+      labels = jsonMapper.toJavaList(innerLabelsString, PageLabel.class);
+    }
+  }
+```
+
+The resolution combines both safety checks from HEAD and branch:
+1. Maintains `rawLabels.isObject()` type check from HEAD to ensure proper JSON structure
+2. Keeps null-check on `rawLabels.get("data")` from branch to prevent NPE
+3. Preserves identical processing logic that follows
+4. Maintains consistent spacing and method structure
+
+This merged condition ensures we only process labels when:
+- rawLabels exists 
+- is properly structured as a JSON object 
+- contains the required "data" field
+
+Without either check, we risk:
+1. Type mismatches (if rawLabels isn't an object)
+2. Null pointer exceptions (if data field is missing)

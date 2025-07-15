@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict appears to be solely due to code formatting differences (line breaks and indentation) between a single-line declaration and a multi-line declaration, with no functional changes. Both implementations are functionally identical.
+
+```java
+     * @return
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    private static LoadFunc getLoadFunc(int inputIndex, Configuration conf) throws IOException {
+<<<<<<< HEAD
+        ArrayList<FileSpec> inputs =
+            (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                    conf.get(PIG_INPUTS));
+=======
+        ArrayList<FileSpec> inputs = 
+                (ArrayList<FileSpec>) ObjectSerializer.deserialize(
+                        conf.get(PIG_INPUTS));
+>>>>>>> 1cb2531c41db7942eca2b75f500cfe7e4a8cad81
+        FuncSpec loadFuncSpec = inputs.get(inputIndex).getFuncSpec();
+        return (LoadFunc) PigContext.instantiateFuncFromSpec(loadFuncSpec);
+    }
+
+    @SuppressWarnings("unchecked")
+```

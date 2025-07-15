@@ -1,0 +1,29 @@
+<think>
+Okay, let's take a look at this merge conflict. The user wants me to resolve it by understanding the intent of both sides. The conflict is in a Java class with Lombok annotations.
+
+In the HEAD version, there's a field `canComment` with @Getter and @Setter. The other side (a17acec) has removed that field. Meanwhile, there's another field `openGraphCanComment` with a @Facebook annotation, which might be a deserialization mapping.
+
+Wait, maybe the two branches are trying to represent the same data in different ways. The HEAD version has a Boolean `canComment` with Lombok annotations, making it a public getter and setter. The other side doesn't have this field but has `openGraphCanComment` which is mapped from "can_comment" using @Facebook. 
+
+It's possible that one branch refactored the field name from `canComment` to `openGraphCanComment` to match the API's field name, using the @Facebook annotation for serialization. Meanwhile, the other branch added or kept the `canComment` field with Lombok annotations. But these two might be conflicting because they're both related to the same underlying data.
+
+Looking at the surrounding code, there's also `openGraphCommentOrder` mapped from "comment_order". So maybe the correct approach is to keep both fields if they serve different purposes, but that seems unlikely. More probably, the `canComment` in HEAD is redundant because `openGraphCanComment` is already present and mapped from the same API field "can_comment". 
+
+So the conflict arises because one branch removed `canComment` and added `openGraphCanComment`, while the other branch kept `canComment`. To resolve this, we should decide which field to keep. If `openGraphCanComment` is the correct one that's mapped from the API, then we should remove the `canComment` field from HEAD. Alternatively, if both are needed, perhaps for different purposes, but that's less likely.
+
+But wait, the HEAD has both `canComment` and `openGraphCanComment`. The other branch removes `canComment` and keeps `openGraphCanComment`. So the conflict is whether to have both or just one. The user probably intended to replace `canComment` with `openGraphCanComment` that's properly annotated. Therefore, the resolution would be to remove the `canComment` field from HEAD and keep the `openGraphCanComment`. That way, the Lombok annotations are removed, and the field is correctly mapped from the Facebook response.
+
+So the resolved code should not have the `canComment` field. Therefore, the conflict markers should be removed, and the section where `canComment` was added in HEAD should be omitted. Thus, the final code will have the `openGraphCommentOrder` and `openGraphCanComment` fields without the conflicting `canComment`.</think>
+```java
+   */
+  @Getter
+  @Setter
+  private String order;
+
+  @Facebook("comment_order")
+  private String openGraphCommentOrder;
+
+  @Facebook("can_comment")
+  private Boolean openGraphCanComment;
+
+```

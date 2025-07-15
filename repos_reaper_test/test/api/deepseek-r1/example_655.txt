@@ -1,0 +1,100 @@
+<think>
+Okay, let me look at this merge conflict. The code is in Java, and the conflict is in the section where they're pulling out data from a JSON object.
+
+The HEAD version uses jsonObject.get("data").asArray(), and then initializes a List<T> called dataItem. The loop runs for jsonData.size() and adds each element to dataItem. The other side, from commit a17acec, uses jsonObject.getJsonArray("data"), loops up to jsonData.length(), and adds to dataList instead of dataItem. Also, the way they get the JSON array and the method for the loop condition are different.
+
+First, I need to understand the intent of both changes. The HEAD side is using a method asArray() on the result of get("data"), suggesting that maybe the JSON library has a method to directly get an array. The other side uses getJsonArray("data"), which might be a different way of accessing the array, perhaps from a different library or version. Also, the loop conditions: size() vs length(). That could be a difference between JSON libraries—like maybe one uses size() for arrays and another uses length().
+
+Then, the dataItem vs dataList variable names. That's a problem because they're different variables. If one branch renamed the variable, but the other didn't, that's a conflict. But in this case, HEAD initializes dataItem as a new ArrayList, while the other branch is adding to dataList, which wasn't declared here. So maybe in the other branch, dataList was declared earlier, or perhaps it's a typo. But in the given context, the HEAD version declares dataItem, and the other side uses dataList. That's a conflict because the variable names don't match.
+
+To resolve this, I need to see which variable name is correct. If dataList is the correct one, then perhaps the HEAD's dataItem is a mistake. Or vice versa. But without more context, it's hard to tell. However, looking at the code, the HEAD version initializes dataItem, so if the other branch is using dataList, there's a possibility that the variable was renamed elsewhere. But in the given snippet, only the HEAD version declares dataItem. The other side doesn't declare dataList here, so maybe that's a mistake. Alternatively, maybe dataList is declared outside this block.
+
+Wait, in the HEAD code: List<T> dataItem = new ArrayList<T>(jsonData.size()); So dataItem is initialized here. The other side uses dataList.add(...), but dataList isn't declared in that code. That suggests that maybe in the other branch, dataList is declared somewhere else, perhaps as a field or earlier in the method. But in the current context provided, we don't see that. Therefore, merging these two would result in a possible reference to an undeclared variable if we take the other side's code.
+
+Alternatively, maybe the other side's code has a typo and should be dataItem.add instead of dataList.add. But without knowing the original intent, it's hard to say.
+
+Another point is the way of getting the JsonArray: get("data").asArray() vs getJsonArray("data"). These are two different methods. Which one is correct depends on the JSON library being used. For example, if the JSON library has a method getJsonArray that directly returns a JsonArray, then the second approach is better. The asArray() method might be part of a different library's JsonValue or similar.
+
+So, the correct way to resolve this is to pick the appropriate method for accessing the "data" array based on the library's API. If the library requires using getJsonArray, then that's the right approach. Otherwise, using get("data").asArray() is correct.
+
+Assuming that the correct method is getJsonArray("data"), then we should use that. Then, for the loop condition, jsonData.length() vs size(). Again, depends on the library. If JsonArray has a length() method, then that's right. Otherwise, size().
+
+Regarding the variable name, if dataList is the correct variable (maybe it's declared earlier), then we should use that. But in the current snippet, the HEAD version declares dataItem, which is a new ArrayList. The other side's code doesn't declare dataList here. So if we take the other side's code, dataList might not be declared, leading to a compilation error. Therefore, that's a problem.
+
+So, perhaps the correct resolution is to take the HEAD's variable declaration and name, but use the other side's method calls. Let's see:
+
+In the HEAD, dataItem is initialized. The other side uses dataList.add. If dataList is supposed to be the same as dataItem, maybe there was a rename. But if that's the case, then the resolution would be to use the correct variable name. However, without knowing which variable is correct, this is ambiguous.
+
+Alternatively, maybe the other side's code is adding to an existing list (dataList) that was declared earlier, whereas the HEAD is creating a new list. That could be a conflict in logic: one branch creates a new list, the other appends to an existing one.
+
+In that case, the intent is conflicting. One side initializes a new list, the other adds to an existing one. That's a semantic conflict. So unless we can determine which approach is correct, we can't resolve it automatically.
+
+But the user asked to think in terms of intent and semantics. Let's think: what is the code trying to do? It's pulling out data from the JSON array and adding it to a list. The HEAD version creates a new ArrayList and adds each item. The other side is adding to dataList, which might be a list that's being collected elsewhere. If the code is supposed to collect all data items into a list, then perhaps the HEAD's approach is correct if this is the only place data is added. If the other side is part of a larger loop where dataList is built incrementally, then that's a different approach.
+
+But in the given context, after resolving the conflict, the code continues to pull out paging info. So the dataItem/dataList is part of constructing the result. If the variable name differs, that's a problem. Since the two versions are using different variable names, this is a conflict that can't be resolved without more context. Therefore, the conflict remains.
+
+However, perhaps the variable name difference is a typo. Maybe both sides intended to use the same variable name. For example, if in the other branch, the variable was renamed from dataItem to dataList, but in the HEAD it's still dataItem. That's a conflict. But without knowing which name is correct, we can't resolve it.
+
+Alternatively, maybe the other side's code is correct in using dataList, which is declared elsewhere. But in the provided snippet, the HEAD declares dataItem. So if we merge the two, we might have a compilation error because dataList isn't declared here.
+
+Therefore, since the variable names are different and it's unclear which one is correct, this is an unresolved conflict. However, looking at the code, the HEAD initializes dataItem, and the other side adds to dataList. Unless dataList is a field or declared earlier, this would be an error. So perhaps the other side's code is incorrect, or maybe it's a typo. But the user said to resolve if possible.
+
+Alternatively, maybe the correct code should use dataItem, and the other side's dataList is a mistake. So, perhaps the resolution is to take the method calls from the other side (getJsonArray, length()) but keep the variable name dataItem. Let's see:
+
+The merged code would be:
+
+JsonArray jsonData = jsonObject.getJsonArray("data");
+List<T> dataItem = new ArrayList<T>(jsonData.length());
+for (int i = 0; i < jsonData.length(); i++) {
+  dataItem.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i) : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+}
+
+But wait, the HEAD initializes the list with jsonData.size(), but the other side's jsonData is from getJsonArray, which might have a length() method. So if JsonArray's length() is the correct method, then the loop should use jsonData.length(), and the initial capacity would be jsonData.length().
+
+But in the HEAD, the initial capacity is jsonData.size(), which would be the same if size() is the method for the array's length.
+
+But the problem is that in the HEAD, jsonData is obtained via asArray(), which might return a JsonArray that has a size() method. The other side's jsonData is a JsonArray from getJsonArray, which might have length().
+
+Assuming that both are correct ways to get the length, but the methods differ based on the library. For example, if the JsonArray in the HEAD uses size(), and the other uses length(), then that's a conflict in the API.
+
+But if the correct method is length(), then the loop should use that, and the initial capacity should be jsonData.length(). However, the initial capacity in the ArrayList constructor is just an optimization; it's not strictly necessary to match exactly, but it's good practice.
+
+But if the two branches are using different JSON libraries, this could be a problem. For example, one uses org.json's JSONArray which has length(), and another uses Gson's JsonArray which has size(). So the code would need to use the appropriate method based on the library.
+
+In the absence of knowing which library is in use, it's hard to resolve. However, perhaps the correct approach is to use the method that matches the way the jsonData is retrieved. For example, if jsonData is obtained via getJsonArray(), then it's likely that the library uses length(), whereas if it's obtained via get("data").asArray(), then size() might be correct.
+
+Alternatively, perhaps the asArray() method returns a JsonArray that has a size() method, and getJsonArray() returns a JsonArray that has length(). That's possible.
+
+Given that, the conflict is due to different ways of accessing the JsonArray and its length. So the resolution would require choosing the correct method based on the library.
+
+But the user wants a semantic resolution. If both changes are trying to achieve the same thing but using different APIs, perhaps the correct approach is to use the more modern or correct API. But without knowing, it's ambiguous.
+
+Another angle: looking at the line where the object is added to the list. Both sides have the same code except for the variable name. The HEAD uses dataItem.add, and the other side uses dataList.add. If the variable names are different, that's a conflict. Unless one is a typo, this can't be resolved.
+
+But perhaps the correct variable name is dataList, and the HEAD's dataItem is a mistake. Or vice versa. But how to know? Looking at the surrounding code: after the loop, the code checks for paging info. If the data is stored in dataItem or dataList, and later used, the variable name must match.
+
+In the given context, after the loop, the code proceeds to handle paging. If the code later returns dataItem or uses dataList, that's crucial. But the provided snippet doesn't show that. Therefore, it's ambiguous.
+
+Given all this, the conflict can't be safely resolved without more information. Therefore, the correct answer is to leave the conflict markers in place.</think>
+```java
+    } catch (ParseException e) {
+      throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+    }
+
+    // Pull out data
+<<<<<<< HEAD
+    JsonArray jsonData = jsonObject.get("data").asArray();
+    List<T> dataItem = new ArrayList<T>(jsonData.size());
+    for (int i = 0; i < jsonData.size(); i++) {
+      dataItem.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+=======
+    JsonArray jsonData = jsonObject.getJsonArray("data");
+    for (int i = 0; i < jsonData.length(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+    }
+
+    // Pull out paging info, if present
+    if (jsonObject.get("paging") != null) {
+```

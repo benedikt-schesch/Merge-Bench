@@ -1,0 +1,31 @@
+<think>
+Okay, let's see. The user provided a Java code snippet with a merge conflict. The task is to resolve the conflict by understanding the intent of both changes and preserving the context without modifying anything else.
+
+Looking at the conflict in the constructor of DebugScreen:
+
+HEAD version is:
+plugin = Spout.getPluginManager().getMetaPlugin();
+
+The other branch has:
+plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+
+So the difference is the cast to PluginManager in the latter. I need to figure out why that cast was added. Maybe in one branch, getPluginManager() returns a PluginManager type, but in the other, it's a more general type, and casting is necessary to access getMetaPlugin(). Alternatively, perhaps the method getMetaPlugin() is defined in PluginManager, so without the cast, the compiler wouldn't recognize it.
+
+Assuming that the HEAD version might have a different return type for Spout.getPluginManager(), which isn't PluginManager, the other branch's change adds an explicit cast to access the method. So the correct resolution would be to include the cast to ensure that getMetaPlugin() can be called. Therefore, the resolved line should include the cast from the second branch. The rest of the code remains the same. The surrounding context doesn't change, so the conflict markers are removed, and the line with the cast is kept.</think>
+```java
+	private final Map<Integer, Widget> spoutMessages = new HashMap<Integer, Widget>();
+	// The hashmap that contains the plugin's debug messages
+	private final Map<Plugin, Widget> messages = new HashMap<Plugin, Widget>();
+
+	public DebugScreen() {
+		plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+		init();
+	}
+
+	@Override
+	public void open() {
+
+```
+
+**Rationale:**  
+The conflict revolves around whether to cast `Spout.getPluginManager()` to `PluginManager` before calling `getMetaPlugin()`. The cast in the second branch suggests `getPluginManager()` returns a generic type (like a `PluginManager` interface) that requires narrowing to access `getMetaPlugin()`. The resolution preserves the cast to ensure type safety and compatibility with the method's availability in the `PluginManager` implementation, while keeping the semantic intent of both branches (initializing `plugin` via the manager).

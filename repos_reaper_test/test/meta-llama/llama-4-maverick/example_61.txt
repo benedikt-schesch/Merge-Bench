@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+    }
+  }
+
+  private void skipIdlePlayers() {
+    killRoundTimer();
+    final List<User> playersToRemove = new ArrayList<>();
+    final List<Player> playersToUpdateStatus = new ArrayList<>();
+    synchronized (roundPlayers) {
+
+      for (final Player player : roundPlayers) {
+        final List<WhiteCard> cards = playedCards.getCards(player);
+        if (cards == null || cards.size() < blackCard.getPick()) {
+
+``` 
+The conflict is between using the raw type `new ArrayList()` versus the diamond operator `new ArrayList<>()`. Both sides are trying to initialize empty lists, but the side with `HEAD` is using the older Java syntax, while the other side is using the more modern diamond operator, which is a shorthand for the same thing and is generally considered better practice as it reduces verbosity and improves readability. Since the intent is the same on both sides, I resolved the conflict by keeping the more modern syntax.

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Okay, I will analyze the conflict and resolve it based on the likely semantic intent.
+
+**Conflict Analysis:**
+
+*   **HEAD:** Introduces the `@Beta` annotation for the `trustCertificates` method.
+    *   *Intent:* To mark this method (or this specific overload/functionality related to mTLS) as being in a "beta" stage, meaning it's publicly available but potentially unstable or subject to change. This is common for new or significantly modified APIs.
+*   **Branch `51762f221ec8ab38da03149c8012e63aec0433dc`:** Does not have the `@Beta` annotation for this method.
+    *   *Intent:* This could mean either the method was considered stable in this branch, or this branch diverged before the `@Beta` annotation was added, or the annotation was explicitly removed to signify stabilization.
+
+**Resolution Rationale:**
+
+The method `trustCertificates` is being defined with parameters specific to mTLS (`mtlsKeyStore`, `mtlsKeyStorePassword`). When new functionality, especially complex features like mTLS support, is added or significantly modified, it's common practice to mark the corresponding API elements with `@Beta`.
+
+Assuming that the changes in `HEAD` involve the introduction or significant modification of this mTLS-related `trustCertificates` method, the addition of `@Beta` is a deliberate signal from the developer about its current stability.
+
+It is generally safer to err on the side of caution by keeping an API marked as `@Beta` if there's any doubt. If the API is indeed stable, the `@Beta` annotation can be removed later. Prematurely removing it could mislead users if the API is not yet finalized.
+
+Therefore, the most likely and safest semantic resolution is to accept the change from `HEAD` and keep the `@Beta` annotation. This signals that this specific version of the `trustCertificates` method, particularly with its mTLS capabilities, is considered to be in a beta state.
+
+```java
+     *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
+     * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS. (use
+     *     for example {@link SecurityUtils#createMtlsKeyStore(InputStream)})
+     * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+     */
+    @Beta
+    public Builder trustCertificates(
+        KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
+        throws GeneralSecurityException {
+      if (mtlsKeyStore != null && mtlsKeyStore.size() > 0) {
+        this.isMtls = true;
+
+```

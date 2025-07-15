@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, I need to consider the intent of both sides:
+
+1. The HEAD version has updated the method signature to include a `Sort` parameter.
+2. The incoming version (fe1b8ab) has marked the method as obsolete with a thrown exception and a comment indicating it should be removed.
+
+Since the incoming change is explicitly marking this method as obsolete and instructing to remove calls to it, I'll resolve the conflict with that intention.
+
+```java
+	 *            Offset (0 for none)
+	 * @param limit
+	 *            Limit (0 for none)
+	 * @return
+	 */
+	public ArrayList<FileLocation> getDirectory(INotifiableManager manager, String path, DirectoryMask mask, int offset, int limit,  final int mMediaType, Sort sort) {
+		throw new RuntimeException("Obsolete, remove any calls from this.");
+		/*
+		final ArrayList<FileLocation> dirs = new ArrayList<FileLocation>();
+		final JsonNode jsonDirs = mConnection.getJson(
+				manager,
+				"Files.GetDirectory",
+				sort(obj().p("media", "files").p("directory", path),
+
+```

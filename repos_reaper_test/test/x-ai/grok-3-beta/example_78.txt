@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I'll preserve the context exactly as provided and analyze the intent of both sides of the merge conflict. After reviewing the semantics, I'll provide the snippet with the conflict unresolved since the intent is ambiguous and the two sides seem to address different error cases.
+
+```java
+    BAD_REQUEST("br", "Bad request."),
+    @DuplicationAllowed
+    BANNED(DisconnectReason.BANNED, "Banned."),
+    CANNOT_JOIN_ANOTHER_GAME("cjag", "You cannot join another game."),
+    CAPSLOCK("CL", "Try turning caps lock off."),
+<<<<<<< HEAD
+    CUSTOM_SET_CANNOT_FIND("cscf", "Cannot find custom deck with the given ID or URL or invalid JSON "
+        + "was provided."),
+=======
+    CARDCAST_CANNOT_FIND("ccf", "Cannot find Cardcast deck with given ID. If you just added this"
+            + " deck to Cardcast, wait a few minutes and try again."),
+    CARDCAST_INVALID_ID("cii", "Invalid Cardcast ID. Must be exactly 5 characters."),
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+    DO_NOT_HAVE_CARD("dnhc", "You don't have that card."),
+    GAME_FULL("gf", "That game is full. Join another."),
+    INVALID_CARD("ic", "Invalid card specified."),
+    INVALID_GAME("ig", "Invalid game specified."),
+    INVALID_ID_CODE("iid", "Identification code, if provided, must be between 8 and 100 characters,"
+```
+
+**Analysis of Intent and Semantics:**
+- **HEAD Side**: Defines an error code `CUSTOM_SET_CANNOT_FIND` which seems to relate to a generic custom deck error, encompassing issues with ID, URL, or invalid JSON. The intent appears to cover a broad case of failing to locate or validate a custom deck.
+- **Other Side (5adedd24...)**: Introduces two specific error codes related to "Cardcast" decks: `CARDCAST_CANNOT_FIND` for when a specific Cardcast deck ID cannot be found (with additional user guidance), and `CARDCAST_INVALID_ID` for validation of the ID format (must be exactly 5 characters). The intent here is more specific, targeting errors related to a particular service or deck type called "Cardcast."
+- **Ambiguity**: It's unclear whether "Cardcast" is a subset of custom decks or a separate entity. If Cardcast is a type of custom deck, the HEAD side might be intended to cover it implicitly, but the other side splits it into more detailed errors. Alternatively, if Cardcast is distinct, both sets of errors might need to coexist. Without additional context about the relationship between custom decks and Cardcast, or the project's error granularity requirements, resolving this conflict risks losing intended functionality or specificity.
+
+Due to this ambiguity in intent and the potential for both sets of error codes to be necessary (or for one to supersede the other based on unprovided context), I have left the conflict markers intact as they were in the original snippet. A resolution would require further information about the domain or project conventions regarding error handling specificity.

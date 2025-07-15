@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+I'll provide the snippet with the merge conflict resolved based on the semantic intent of both changes. My reasoning is as follows:
+
+- The conflict involves the type of `mUserList`. On the `HEAD` side, it's a `PullToRefreshListView`, and on the other side (`5f1eecd`), it's a generic `ListView`.
+- The intent of `HEAD` seems to be adding pull-to-refresh functionality to the list view, which is a common UI enhancement for refreshing content.
+- The intent of the other side seems to be using a standard `ListView`, possibly for simplicity or compatibility reasons.
+- Since `PullToRefreshListView` is likely a subclass of `ListView` (as is common in Android libraries), it can be safely used in place of a `ListView` while maintaining the additional pull-to-refresh functionality. Therefore, adopting `HEAD`'s change seems semantically more feature-rich without likely breaking the code.
+
+Here is the resolved snippet with full context preserved:
+
+```java
+
+	@Override
+	protected void setupState() {
+		setTitle(getActivityTitle());
+
+		mUserList = (PullToRefreshListView) findViewById(R.id.follower_list);
+
+		setupListHeader(true);
+
+		mUserListAdapter = new UserArrayAdapter(this);
+		mUserList.setAdapter(mUserListAdapter);
+
+```

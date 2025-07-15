@@ -1,0 +1,24 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the PageRating class between the HEAD and a17acec0655b8058aaf4d336ba2a1352aa49e2fe. The conflicting parts are the presence of the serialVersionUID field in HEAD and its absence in the other branch.
+
+First, I need to understand why this conflict happened. The HEAD version adds a serialVersionUID, which is a common practice in Java for serialization compatibility. The other branch doesn't have this line. Maybe the other branch was developed without considering serialization, or perhaps it's an older version where the serialVersionUID wasn't needed yet.
+
+Now, considering the semantics. If both changes are adding different features, but the serialVersionUID is important for the class's serialization, especially if the class implements Serializable. Since the class extends FacebookType, I should check if FacebookType already has a serialVersionUID. If not, then adding it here makes sense for version control. However, if the other branch removed it for some reason, but that's less likely.
+
+The author in the context is Venil Noronha, and the since version is 1.6.16. The other branch's commit message isn't provided, but the conflict is about the presence of the serialVersionUID. Since serialVersionUID is a static final long, it's typically included when the class is intended to be serialized. If both branches are modifying different parts but the serialVersionUID is necessary, the correct resolution would be to keep it.
+
+So, the merge should include the serialVersionUID from HEAD because it's adding a necessary field for serialization. The other branch's change doesn't conflict with that line; perhaps they added the rawStartTime field or other parts. Therefore, resolving the conflict by keeping the serialVersionUID makes sense here.</think>
+```java
+ * @author Venil Noronha
+ * @since 1.6.16
+ */
+public class PageRating extends FacebookType {
+
+  private static final long serialVersionUID = 1L;
+
+  @Facebook("start_time")
+  private String rawStartTime;
+
+  /**
+   * Time the rating took place
+```

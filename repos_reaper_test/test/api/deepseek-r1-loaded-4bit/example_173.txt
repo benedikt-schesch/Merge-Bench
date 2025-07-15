@@ -1,0 +1,40 @@
+<think>
+Okay, let's look at this merge conflict. The conflict is in the class declaration of GFAny. The HEAD version has it extending EvalFunc<DataAtom>, while the other branch has it extending EvalFunc<Integer>. 
+
+First, I need to understand what each side is trying to do. The class GFAny is a built-in grouping function, and the generic type parameter of EvalFunc probably determines the return type or the data type it operates on. 
+
+In the HEAD version, DataAtom is used, which might be a custom class representing a data structure. The other branch uses Integer, which is a basic type. The rest of the code has a defaultNumGroups as an int and a Random object.
+
+I should check if there are other changes in the surrounding code that might affect this. But based on the given snippet, the only difference is the generic type. 
+
+Maybe the intent of the change in the other branch was to simplify or correct the return type. Alternatively, perhaps DataAtom was a mistake, and Integer is the correct type. Or vice versa. Without more context, it's hard to tell. 
+
+If both changes are valid but conflicting, I need to determine which one is correct. If the EvalFunc is supposed to return a number of groups, then Integer makes sense because numGroups is an int. But if DataAtom is a type that encapsulates group information, then that could also be valid.
+
+Since the conflict is about the generic type, and without additional information, it's ambiguous. The user asked to return the same snippet with the conflict if unsure. Therefore, I can't safely resolve this without more context. So the best approach is to leave the conflict as is.</think>
+``````java
+/**
+ * built-in grouping function; permits system to choose any grouping.
+ */
+<<<<<<< HEAD
+public class GFAny extends EvalFunc<DataAtom> {
+=======
+public class GFAny extends EvalFunc<Integer> {
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    public static final int defaultNumGroups = 1000;
+    
+    int numGroups = defaultNumGroups;
+    Random r = new Random();
+    
+``````
+
+The conflict remains unresolved because:
+1. The generic type parameter difference (`DataAtom` vs `Integer`) appears to be a fundamental disagreement about the base class's type specialization
+2. There's insufficient context about the EvalFunc class hierarchy and its type parameter requirements
+3. Both versions maintain compatible implementations with their respective declarations (same fields/methods shown)
+4. This could represent either a simple type correction or a deeper architectural divergence in typing strategies
+
+A human developer would need to determine whether:
+- This class should work with DataAtom objects (domain-specific type) 
+- Or use simple Integer counts (primitive wrapper type)
+based on the broader context of the EvalFunc class and its usage patterns in the codebase.

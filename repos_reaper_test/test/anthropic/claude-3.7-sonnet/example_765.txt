@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The merge conflict is related to a condition for including a version request in a message. One side checks both that the client's server version is negative and that the payload is not already a version request, while the other side only checks that the payload is not a version request. Looking at the semantics, the more restrictive condition from the HEAD version makes sense, as it adds the additional check to only request the server version when we don't already know it.
+
+```java
+            // pretty quickly. Since it's most likely going to fit in the same
+            // packet we send out, it adds ~zero overhead. But don't piggyback a
+            // version request if the payload is already a version request or if
+            // we already know the server version.
+            final ChannelBuffer buf;
+            if (client.server_version < 0 && !isVersionRequest(payload)) {
+              final ChannelBuffer version =
+                client.encode(client.getProtocolVersionRequest());
+              buf = ChannelBuffers.wrappedBuffer(header, payload, version);
+            } else {
+              buf = ChannelBuffers.wrappedBuffer(header, payload);
+
+```

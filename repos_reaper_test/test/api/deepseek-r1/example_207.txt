@@ -1,0 +1,24 @@
+<think>
+Okay, let's take a look at this merge conflict. The code snippet is from a Java class in the Apache Pig project. The conflict is in the imports section.
+
+On the HEAD side, there's an import statement for org.apache.pig.data.DataAtom. The other side, from commit 1488b22ce3..., removes that import. 
+
+So the question is, should DataAtom be imported or not? I need to figure out if the code actually uses DataAtom. If the class no longer references DataAtom, then the import is unnecessary and the conflict can be resolved by removing it. But if there's code elsewhere in the file that uses DataAtom, then keeping the import is necessary.
+
+Looking at the surrounding context provided, the imports after the conflict are for Tuple, Schema, and DataType. The HEAD version also includes DataAtom. But the conflicting part is only about the import line. Since the rest of the code isn't shown, I have to assume that if the DataAtom import is present in HEAD but removed in the other branch, maybe the other branch's change is removing an unused import.
+
+Alternatively, maybe DataAtom was used in the EvalFunc subclass, but if the code in the class doesn't use DataAtom anymore, then the import is redundant. So the correct resolution would be to remove the DataAtom import, accepting the change from the other branch.
+
+Therefore, the resolved code should not include the import for DataAtom. So the merge conflict is resolved by taking the version from the other branch, deleting the HEAD's addition of that import line.</think>
+```java
+package org.apache.pig.piggybank.evaluation.math;
+
+import java.io.IOException;
+
+import org.apache.pig.EvalFunc;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.apache.pig.data.DataType;
+
+
+```

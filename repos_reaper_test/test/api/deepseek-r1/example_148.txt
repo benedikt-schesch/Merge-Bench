@@ -1,0 +1,151 @@
+<think>
+Okay, let me look at this merge conflict. The code has a conflict around the comments for the ScriptState check. In the HEAD version, there's a comment explaining that ScriptState might have been initialized in Main and shouldn't be overwritten. The other branch (from commit 2125666...) just has a blank line where that comment was.
+
+The goal is to merge these two changes without losing the intent. The HEAD adds a comment, while the other side might have removed it or had a different change. Wait, actually, looking at the conflict markers, the HEAD has the comment, and the other branch doesn't. So when merging, we need to see if the comment is necessary.
+
+The code after the conflict checks if ScriptState is null and then initializes it. The comment in HEAD explains that if it was already initialized in Main, we shouldn't overwrite it. The other branch's version removes that comment, maybe because it's redundant with the comment inside the if block?
+
+Looking at the code after merging, the if block has a more detailed comment that says if Pig was started via command line, ScriptState was already initialized in Main. So the comment from HEAD is somewhat redundant with the comment inside the if statement. However, the HEAD comment is outside the if block, providing context for why the check is there.
+
+But wait, in the HEAD version, the comment is outside the if block, while the other branch's code adds a comment inside the if block. When merging, the conflict arises because one side added a comment outside, and the other removed it. But the actual code in both versions has the if (ScriptState.get() == null) check. The HEAD's comment is explaining the reasoning for the check, while the other branch's code may have removed that comment but kept the check.
+
+However, looking at the code again, the conflict is between the HEAD's comment and the other branch's blank line. The code after the conflict in both cases has the if block with a comment inside. So maybe the comment outside in HEAD is redundant because the comment inside the if block explains the same thing in more detail.
+
+Therefore, the correct resolution would be to keep the comment inside the if block (which is present in both versions) and remove the redundant comment from the HEAD. Wait, but the HEAD's comment is outside the if block. Let me check again.
+
+Original HEAD code:
+<<<<<<< HEAD
+        // ScriptState may have been initialized in Main. In that case, we
+        // should not overwrite it.
+=======
+
+>>>>>>> 2125666...
+So the HEAD adds a comment before the if statement, while the other branch has no comment there. Then, inside the if block, both have the same comment, but the other branch's code (after the conflict marker) has the comment inside the if block.
+
+Wait, the code after the conflict markers is:
+
+        if (ScriptState.get() == null) {
+            // If Pig was started via command line, ScriptState should have been
+            // already initialized in Main. If so, we should not overwrite it.
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+
+So the comment inside the if block is present in both versions. The HEAD adds an additional comment before the if statement. The other branch removes that comment. So when merging, the conflict is whether to keep the comment before the if or not.
+
+The comment before the if in HEAD says that ScriptState may have been initialized in Main, so we shouldn't overwrite it. The comment inside the if block explains that if Pig was started via command line, ScriptState was already initialized in Main. So the comment inside is more detailed and specific to the case when Pig is started via command line.
+
+So the comment outside (from HEAD) is a general note, while the comment inside is more specific. However, having both comments might be redundant. The other branch's code (the one that's being merged in) might have removed the outer comment, perhaps considering that the inner comment suffices.
+
+In a merge, if both changes are to be included, but the comments are conflicting, we need to see which one is more accurate. The outer comment in HEAD is a general statement, while the inner comment is more specific. However, the outer comment is not present in the other branch. So when merging, the conflict is between keeping the outer comment (HEAD) or not (other branch).
+
+But the user wants to resolve the conflict by considering the intent and semantics. The intent of the HEAD is to explain why the check is there. The intent of the other branch is perhaps to clean up redundant comments. Since the inner comment already explains the reason in more detail, maybe the outer comment is redundant and can be removed.
+
+Therefore, the correct resolution would be to accept the other branch's change (removing the outer comment) and keep the inner comment. So the merged code would have no comment before the if statement, but retain the comment inside.
+
+Wait, but looking at the code again, the code after the conflict markers in both cases includes the inner comment. So the conflict is only about the presence of the outer comment. The HEAD has the outer comment, the other branch doesn't. So the merge conflict is whether to include that outer comment.
+
+If we decide that the outer comment adds useful context, we should keep it. But if it's redundant with the inner comment, then we can remove it.
+
+The outer comment says: "ScriptState may have been initialized in Main. In that case, we should not overwrite it." The inner comment says: "If Pig was started via command line, ScriptState should have been already initialized in Main. If so, we should not overwrite it."
+
+The outer comment is a general explanation of why the check is there. The inner comment is more specific about when it's initialized (via command line). The outer comment is broader. So they are not exactly redundant. The outer comment explains the purpose of the check, while the inner comment gives a specific scenario.
+
+However, in the HEAD version, the outer comment was added, and the other branch removed it. So perhaps the other branch considered it redundant, but maybe not.
+
+But in the code, the check is if (ScriptState.get() == null), which is exactly what the outer comment is explaining. So the code is checking if it's null, and if so, initializing it. The outer comment explains that if it was already initialized (i.e., not null), we don't overwrite. So the comment is explaining the check's purpose.
+
+But in the inner comment, it's more detailed, explaining that in the command line case, it's already initialized. So the outer comment is a general statement, and the inner is a specific case.
+
+In this case, perhaps both comments are useful. The outer comment explains the overall logic, and the inner comment explains a particular scenario. However, in the other branch's code, the outer comment is removed, which might have been an oversight or intentional.
+
+But since the user is asking to resolve the conflict by considering the semantics and intent, we need to decide if keeping the outer comment is necessary.
+
+Alternatively, perhaps the outer comment was added in HEAD to clarify the check, while the other branch's code (which is from a different commit) didn't have that comment. When merging, if both changes are valid, but the comments don't conflict in terms of code, maybe we can keep both. But in this case, the conflict is that one side adds the comment and the other removes it.
+
+Wait, no. The conflict markers show that between <<<<<<< HEAD and =======, there's the comment, and between ======= and >>>>>>> 2125666..., there's nothing. So the conflict is that the current branch (HEAD) added the comment, and the other branch removed it (or didn't have it). So the merge conflict is whether to keep the comment or not.
+
+In such a case, if the comment adds useful information that's not redundant, it should be kept. If it's redundant with the inner comment, it should be removed.
+
+The outer comment explains the reason for the check, which is to avoid overwriting if already initialized. The inner comment explains a specific case (command line) where this happens. So the outer comment is more general and provides context, while the inner is a specific example. Therefore, both can coexist.
+
+However, in the code after merging, the outer comment from HEAD is present only if we choose to keep it. The other branch's version doesn't have it. So the conflict is whether to include that comment or not.
+
+If the intent of both branches is to ensure that ScriptState is not overwritten if already initialized, then keeping the outer comment adds clarity. However, if the other branch's removal of the comment was intentional (maybe because the inner comment suffices), then we should remove it.
+
+But without more context, it's hard to tell. The user instructs to resolve the conflict by considering the semantics. If the outer comment is helpful, keep it. If it's redundant, remove it.
+
+In this case, the outer comment and the inner comment are not entirely redundant. The outer comment explains the purpose of the check, while the inner explains a specific scenario. Therefore, keeping both comments would provide more context. However, in the code from the other branch, the outer comment is removed, which might indicate that the inner comment is sufficient.
+
+Alternatively, perhaps the outer comment was added in HEAD to provide more context, and the other branch didn't have that change. So merging would require keeping the outer comment from HEAD and the inner comment from both.
+
+But in the code provided, the inner comment is present in both versions. The conflict is only about the outer comment.
+
+So the correct resolution would be to keep the outer comment from HEAD, as it provides additional context, and the inner comment remains as is. However, the other branch's code might have removed the outer comment because it's redundant with the inner one.
+
+Alternatively, maybe the outer comment was added in a later commit in HEAD, and the other branch is older, so when merging, the outer comment should be kept.
+
+But without knowing the commit history, it's hard to say. However, the user wants to resolve the conflict semantically.
+
+The outer comment explains the check's intent, which is to avoid overwriting if already initialized. The inner comment explains that in the command line case, it's already initialized. Therefore, the outer comment is a general statement, and the inner is a specific case. Both can coexist.
+
+Therefore, the resolved code should include the outer comment from HEAD and the inner comment from both branches. Hence, the conflict is resolved by keeping the HEAD's comment and the other branch's lack of changes elsewhere.
+
+So the merged code would have the outer comment, followed by the if block with the inner comment.
+
+But looking at the original conflict:
+
+<<<<<<< HEAD
+        // ScriptState may have been initialized in Main. In that case, we
+        // should not overwrite it.
+=======
+
+>>>>>>> 2125666...
+
+So the HEAD has the comment, the other branch has nothing. Therefore, the merge conflict is between keeping the comment (HEAD) or not (other branch). To resolve this, we need to decide if the comment is necessary.
+
+If the comment adds value, keep it. If it's redundant with the inner comment, remove it.
+
+The inner comment says: "If Pig was started via command line, ScriptState should have been already initialized in Main. If so, we should not overwrite it." This is a specific case. The outer comment is a general statement that covers any case where ScriptState was initialized in Main, not just command line.
+
+Therefore, the outer comment is more general and provides a reason for the check, while the inner comment is a specific example. They are not redundant. Hence, both should be kept to provide full context.
+
+Therefore, the correct resolution is to keep the outer comment from HEAD and the inner comment from both, resulting in:
+
+        addJarsFromProperties();
+        markPredeployedJarsFromProperties();
+
+        PigStats.start(pigContext.getExecutionEngine().instantiatePigStats());
+        // ScriptState may have been initialized in Main. In that case, we
+        // should not overwrite it.
+        if (ScriptState.get() == null) {
+            // If Pig was started via command line, ScriptState should have been
+            // already initialized in Main. If so, we should not overwrite it.
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+
+But wait, the other branch's code after the conflict marker is:
+
+        if (ScriptState.get() == null) {
+            // If Pig was started via command line, ScriptState should have been
+            // already initialized in Main. If so, we should not overwrite it.
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+
+So the inner comment is present in both versions. Therefore, merging the outer comment from HEAD and keeping the inner comment would resolve the conflict without issues.
+
+Thus, the resolved code should include the outer comment from HEAD and the inner comment as is.</think>
+```java
+
+        addJarsFromProperties();
+        markPredeployedJarsFromProperties();
+
+        PigStats.start(pigContext.getExecutionEngine().instantiatePigStats());
+        // ScriptState may have been initialized in Main. In that case, we
+        // should not overwrite it.
+        if (ScriptState.get() == null) {
+            // If Pig was started via command line, ScriptState should have been
+            // already initialized in Main. If so, we should not overwrite it.
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+
+```

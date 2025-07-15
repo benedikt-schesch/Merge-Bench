@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```java
+private void drawUsingSpriteBatch(final Scene scene) {
+(final int width = this.mFaceTextureRegion.getWidth());
+(final int height = this.mFaceTextureRegion.getHeight());
+
+final SpriteBatch spriteBatch = new SpriteBatch(this.mBitmapTextureAtlas, SPRITE_COUNT);
+spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRCAlpha");
+for(int i = 0; i < SPRITE_COUNT; i++) {
+    final float x = this.mRandom.nextFloat() * (CAMERA_WIDTH - 32);
+    final float y = this.mRandom.nextFloat() * (CAMERA_HEIGHT - 32);
+    spriteBatch.draw(this.mFaceTextureRegion, x, y, width, height);
+}
+```
+
+The conflict was on the right side where m is removed to avoid the forbidden prefix `i`. Both born on his side are present, and ensure the 'm' prefix is removed on the right side.

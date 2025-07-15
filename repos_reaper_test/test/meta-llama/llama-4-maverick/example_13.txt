@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first analyze the context and the changes introduced by both sides of the merge.
+
+The code snippet is written in Java and appears to be part of a class used for a development console, likely within a game or application that utilizes the Spout plugin management system. The constructor `DevConsole(Font font)` initializes several instance variables, including `plugin`, `font`, and calls an `init()` method.
+
+The conflict arises in the line where `this.plugin` is assigned a value. 
+
+- The local version (`HEAD`) simply assigns `Spout.getPluginManager().getMetaPlugin()` to `this.plugin`.
+- The incoming change (`67bcb76a96f358fc131320b0611ffaa3bf3678c2`) casts `Spout.getPluginManager()` to `PluginManager` before calling `getMetaPlugin()` on it.
+
+Let's examine the intent behind both versions:
+
+1. **Local Version (`HEAD`):** This version directly calls `getMetaPlugin()` on the result of `Spout.getPluginManager()`. It implies that `Spout.getPluginManager()` returns an object that is known or expected to have a `getMetaPlugin()` method, presumably as part of its interface or class definition.
+
+2. **Incoming Change (`67bcb76a96f358fc131320b0611ffaa3bf3678c2`):** The change introduces a cast to `PluginManager` before calling `getMetaPlugin()`. This suggests that `Spout.getPluginManager()` might return a more general type (e.g., `Object` or an interface not including `getMetaPlugin()`), and the cast is necessary to inform the compiler that the returned object is actually a `PluginManager`, which does have `getMetaPlugin()`.
+
+To resolve the conflict, we need to consider the semantics and intent:
+
+- If `Spout.getPluginManager()` returns a type that inherently includes `getMetaPlugin()` (like `PluginManager`), and there's no need for a cast (perhaps because the return type is already `PluginManager` or an interface that includes `getMetaPlugin()`), then the local version (`HEAD`) is straightforward and sufficient.
+
+- If `Spout.getPluginManager()` returns a more generic type that does not include `getMetaPlugin()` in its interface, the cast to `PluginManager` is necessary to access `getMetaPlugin()`. This seems to be the rationale behind the incoming change.
+
+Given these considerations, the incoming change provides a more explicit and potentially necessary cast to `PluginManager`, suggesting that without this cast, the code might not compile or might throw a runtime exception if `getMetaPlugin()` is not accessible without the cast.
+
+Therefore, the resolution, if we assume the cast is necessary or improves code clarity and safety, would lean towards incorporating the change from the incoming version.
+
+Here is the resolved snippet in markdown code syntax, preserving the original spacing and context:
+
+```java
+	private DateFormat dateFormat;
+	private List<Widget> lines = new ArrayList<Widget>();
+	private float scroll = 0;
+
+	public DevConsole(Font font) {
+		this.plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+		this.font = font;
+		init();
+	}
+	
+	public void clearConsole() {
+```

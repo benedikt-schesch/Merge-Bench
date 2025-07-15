@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in terms of intent and semantics.
+
+### Analysis of the Conflict:
+- **Left Side (HEAD)**: Uses `JBakeProperty.TAG_SANITIZE` as the property key for configuration and declares the variable `map` as `DocumentModel`. This suggests that the code is using an enum or a constant class `JBakeProperty` to reference configuration keys, which is a common pattern for maintaining consistency in configuration property names. The use of `DocumentModel` implies a specific type or class for the parsed result.
+- **Right Side (d68ddea)**: Uses `TAG_SANITIZE.getKey()` which likely refers to some form of constant or enum as well, but with a different structure (possibly a newer or refactored API for accessing property keys). Additionally, it declares `map` as a raw `Map<String, Object>`, which is more generic and flexible, suggesting a possible refactoring or simplification of the return type from the parser.
+- **Shared Intent**: Both sides are trying to enable tag sanitization and test the result of processing a file with unsanitized tags. The expected outcome is the same: tags should be sanitized (e.g., spaces replaced with hyphens as seen in the assertion).
+
+### Resolution Reasoning:
+- The key difference is in how the configuration property is accessed (`JBakeProperty.TAG_SANITIZE` vs. `TAG_SANITIZE.getKey()`). Without additional context, it's unclear which is the "current" or "correct" approach, but since the right side (incoming commit) may represent a newer or refactored approach, I’ll lean towards it unless `JBakeProperty` is the established standard in the codebase.
+- The type difference (`DocumentModel` vs. `Map<String, Object>`) is significant. Since the assertion later uses `map.getTags()` and treats it as a map-like structure, `Map<String, Object>` is semantically compatible. However, if `DocumentModel` is a specific class with additional behavior, it might be the intended type. Given the lack of context about `DocumentModel`, I’ll preserve the more generic `Map<String, Object>` as it aligns with the immediate usage in the test.
+- Since I don’t have full context about the codebase (e.g., whether `JBakeProperty` or `TAG_SANITIZE` is the standard), I'll propose a resolution but note that if the intent or standard is unclear, the original conflict should be reviewed by someone with more context.
+
+### Resolved Snippet:
+Here is the resolved snippet with the conflict markers removed and decisions applied based on the above reasoning. However, I'll also note that if there is ambiguity in the property key naming convention, this resolution may need adjustment.
+
+```java
+        assertThat(map.getTags()).isEqualTo(Arrays.asList("jbake", "java", "tag with space").toArray());
+    }
+
+    @Test
+    public void sanitizeTags() {
+        config.setProperty(TAG_SANITIZE.getKey(), true);
+        Map<String, Object> map = parser.processFile(validaAsciidocWithUnsanitizedHeader);
+
+        assertThat(map.getTags()).isEqualTo(Arrays.asList("jbake", "java", "tag-with-space").toArray());
+    }
+```
+
+### Note:
+If `JBakeProperty.TAG_SANITIZE` is the established convention in the codebase, or if `DocumentModel` is required for specific behavior not evident in this snippet, the resolution should be adjusted accordingly. If you are unsure about the intent or conventions, I recommend consulting with the team or reviewing other parts of the codebase for consistency in property key access and type usage. If no resolution is agreed upon, the original conflict snippet can be retained as is for manual resolution. Below is the original conflicted snippet for reference if needed:
+
+```java
+        assertThat(map.getTags()).isEqualTo(Arrays.asList("jbake", "java", "tag with space").toArray());
+    }
+
+    @Test
+    public void sanitizeTags() {
+<<<<<<< HEAD
+        config.setProperty(JBakeProperty.TAG_SANITIZE, true);
+        DocumentModel map = parser.processFile(validaAsciidocWithUnsanitizedHeader);
+=======
+        config.setProperty(TAG_SANITIZE.getKey(), true);
+        Map<String, Object> map = parser.processFile(validaAsciidocWithUnsanitizedHeader);
+>>>>>>> d68ddea7554653e7928d220f68a3af13bfb30cdb
+
+        assertThat(map.getTags()).isEqualTo(Arrays.asList("jbake", "java", "tag-with-space").toArray());
+    }
+```

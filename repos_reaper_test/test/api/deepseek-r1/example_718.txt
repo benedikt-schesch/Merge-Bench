@@ -1,0 +1,37 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is in the if statement inside the while loop. The HEAD version uses Regex.SCREEN_NAME_MATCH_END and adds an Entity with EntityType.MENTION and Regex.EXTRACT_MENTIONS_GROUP_USERNAME. The other branch uses Regex.INVALID_MENTION_MATCH_END and passes "mention" as a string along with Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME.
+
+First, I need to understand what each side is trying to do. Both are checking if the text after the match doesn't meet some condition, then adding an entity. The difference is in the regex patterns and the parameters for the Entity constructor.
+
+Looking at the regex names: SCREEN_NAME_MATCH_END vs INVALID_MENTION_MATCH_END. Maybe one was renamed or the logic inverted. If INVALID_MENTION_MATCH_END is checking for invalid endings, then the condition !INVALID... would mean it's valid, similar to the HEAD's !SCREEN_NAME... which might be checking for valid endings. So both conditions are trying to include valid mentions by checking the absence of invalid patterns.
+
+For the Entity constructor, HEAD uses EntityType.MENTION, which is an enum, while the other branch uses the string "mention". Depending on how the Entity class is defined, one might be correct. If the constructor expects an enum, then EntityType.MENTION is right. But if it's expecting a string, "mention" could be correct. However, using an enum is generally better for type safety. The third parameter differs between EXTRACT_MENTIONS_GROUP_USERNAME and VALID_MENTION_OR_LIST_GROUP_USERNAME. These are probably group names or constants from the Regex class. Need to check which one is the correct constant for extracting the username.
+
+Assuming that both changes are valid but from different refactorings, maybe the correct resolution is to use INVALID_MENTION_MATCH_END (as it's more descriptive) and keep the EntityType.MENTION with the correct group name. Wait, but the group username constants might have been renamed. If VALID_MENTION_OR_LIST_GROUP_USERNAME is the updated constant, then that should be used. So combining both changes: the condition uses INVALID_MENTION_MATCH_END, and the Entity uses EntityType.MENTION with VALID_MENTION_OR_LIST_GROUP_USERNAME. But wait, the HEAD uses EXTRACT_MENTIONS_GROUP_USERNAME, and the other branch uses VALID_MENTION_OR_LIST_GROUP_USERNAME. Which one is correct? It depends on which regex group is being referenced. If the matcher is from VALID_MENTION_OR_LIST, then the group name should correspond to that regex's group, which might be VALID_MENTION_OR_LIST_GROUP_USERNAME. So the other branch's group is correct.
+
+But the Entity constructor in HEAD uses the enum, which is better. So the resolved code should have the if condition from the other branch (INVALID_MENTION_MATCH_END), and the Entity parameters from HEAD (EntityType.MENTION and EXTRACT...) or from the other branch? Wait, the parameters are mixed. The HEAD has EntityType.MENTION and EXTRACT..., the other branch has "mention" and VALID... So perhaps the correct resolution is:
+
+if (! Regex.INVALID_MENTION_MATCH_END.matcher(after).find()) {
+  extracted.add(new Entity(matcher, EntityType.MENTION, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME));
+}
+
+Because the regex used is VALID_MENTION_OR_LIST, so the group username should come from that regex's constant. And the EntityType should be the enum, not a string. So combining both: take the condition from the other branch, and the entity parameters from HEAD but with the correct group name from the other branch. That way, both changes are incorporated correctly. But I need to make sure that the group name matches the regex used. Since the matcher is from Regex.VALID_MENTION_OR_LIST, the group username should be VALID_MENTION_OR_LIST_GROUP_USERNAME, which is what the other branch uses. So the correct line is:
+
+extracted.add(new Entity(matcher, EntityType.MENTION, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME));
+
+So merging both changes by taking the regex check from the other branch and the entity parameters with the enum and the correct group name. Therefore, the resolved code would be the if condition from the other branch and the entity line combining both changes.</think>
+```java
+
+    List<Entity> extracted = new ArrayList<Entity>();
+    Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(text);
+    while (matcher.find()) {
+      String after = text.substring(matcher.end());
+      if (! Regex.INVALID_MENTION_MATCH_END.matcher(after).find()) {
+        extracted.add(new Entity(matcher, EntityType.MENTION, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME));
+      }
+    }
+    return extracted;
+  }
+
+
+```

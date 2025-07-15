@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The conflicting lines are:
+
+```java
+<<<<<<< HEAD
+            if (client.server_version < 0 && !isVersionRequest(payload)) {
+=======
+            if (!isVersionRequest(payload)) {
+>>>>>>> e7ed675fb9763b412458f905c07d274b0ffc12d9
+```
+
+The intent of both sides appears to be avoiding piggybacking a version request when either:
+1. The server version is unknown (`client.server_version < 0`) AND the payload isn't already a version request
+2. The payload isn't already a version request (removes the server version check)
+
+Since the intent is ambiguous about whether the server version check is still required in the newer version, I will preserve the conflict:
+
+```java
+            // pretty quickly. Since it's most likely going to fit in the same
+            // packet we send out, it adds ~zero overhead. But don't piggyback a
+            // version request if the payload is already a version request or if
+            // we already know the server version.
+            final ChannelBuffer buf;
+<<<<<<< HEAD
+            if (client.server_version < 0 && !isVersionRequest(payload)) {
+=======
+            if (!isVersionRequest(payload)) {
+>>>>>>> e7ed675fb9763b412458f905c07d274b0ffc12d9
+              final ChannelBuffer version =
+                client.encode(client.getProtocolVersionRequest());
+              buf = ChannelBuffers.wrappedBuffer(header, payload, version);
+            } else {
+              buf = ChannelBuffers.wrappedBuffer(header, payload);
+
+```

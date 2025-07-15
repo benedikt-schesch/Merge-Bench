@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```java
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = request.execute();
+    GoogleJsonResponseException responseException =
+        GoogleJsonResponseException.from(GoogleJsonErrorTest.FACTORY, response);
+<<<<<<< HEAD
+    assertNull(responseException.getDetails());
+    String expectedMessage = "403\nGET " + HttpTesting.SIMPLE_GENERIC_URL;
+    assertEquals(expectedMessage, responseException.getMessage());
+=======
+    assertNull(responseException.getDetails());
+    assertTrue(responseException.getMessage().startsWith("403"));
+>>>>>>> 47d00185e2cd4548663cc0e8c6cdf6d59640a613
+  }
+
+  public void testFrom_detailsArbitraryJsonContent() throws Exception {
+    HttpTransport transport = new ErrorTransport("{\"foo\":\"bar\"}", Json.MEDIA_TYPE);
+    HttpRequest request =
+```

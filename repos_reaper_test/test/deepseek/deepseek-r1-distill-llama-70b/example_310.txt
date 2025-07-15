@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The snippet contains a merge conflict between two different implementations of the `fetchMessages()` method. The conflict appears to be resolving around:
+
+1. Which database adapter to use (`getDb()` vs `getDb2()`)
+2. Which table name constant to use (`TwitterDbAdapter.TABLE_TWEET` vs `StatusTable.TABLE_NAME`)
+
+Without additional context about the intent behind these changes, the safest resolution is to present both versions as a conflict:
+
+```java
+		}
+	}
+
+	@Override
+	protected Cursor fetchMessages() {
+<<<<<<< HEAD
+		return getDb().fetchAllTweets(TwitterDbAdapter.TABLE_TWEET);
+=======
+		return getDb2().fetchAllTweets(StatusTable.TABLE_NAME);
+>>>>>>> de460f053e7948460b81e71a410d665d956db90a
+	}
+
+	@Override
+	protected String getActivityTitle() {
+		return getResources().getString(R.string.page_title_home);
+```

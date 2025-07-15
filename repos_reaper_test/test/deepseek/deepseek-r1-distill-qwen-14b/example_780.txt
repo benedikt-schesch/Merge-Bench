@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict appears to be a simple variable name change from `EMPTY_ARRAY` to `ZERO_ARRAY`. Both sides are trying to use the same array constant but with different names. To resolve the conflict, we can unify both sides to use `ZERO_ARRAY` since that seems to be the intended replacement.
+
+```java
+                                                  final byte[] family) {
+    // Just "fault in" the first region of the table.  Not the most optimal or
+    // useful thing to do but gets the job done for now.  TODO(tsuna): Improve.
+    final HBaseRpc dummy;
+    if (family == EMPTY_ARRAY) {
+      dummy = GetRequest.exists(table, ZERO_ARRAY);
+    } else {
+      dummy = GetRequest.exists(table, ZERO_ARRAY, family);
+    }
+    @SuppressWarnings("unchecked")
+    final Deferred<Object> d = (Deferred) sendRpcToRegion(dummy);
+    return d;
+  }
+```

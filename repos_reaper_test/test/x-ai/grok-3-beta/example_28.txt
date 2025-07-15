@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I'll analyze the merge conflict in this code snippet. The conflict arises because the two branches are working with different classes and different intents in the same file context, but likely representing different files or purposes.
+
+Looking at the semantics and intent:
+- The `HEAD` side defines a `PositionSendEvent` class and uses a `Point` and `Quaternion` for position and orientation data, suggesting this event is about sending entity or player position updates over the network.
+- The other side (`cc070305...`) defines a `BlockUpdateEvent` class and uses a `Chunk` along with `x, y, z` coordinates, suggesting this event is about sending updates related to block changes in a specific chunk.
+
+Since the file paths and class names are different (`PositionSendEvent.java` vs `BlockUpdateEvent.java`), this conflict likely occurred due to a rename, move, or incorrect merging of unrelated files. The intent of both sides cannot be merged into a single class as they represent entirely different functionalities. Therefore, I will return the snippet with the conflict unchanged, as resolving it would require context about the intended file structure or developer intent regarding which event class should take precedence or if both should exist separately.
+
+Here is the unchanged snippet with the conflict:
+
+```java
+ */
+package org.spout.api.protocol.event;
+
+import org.spout.api.event.HandlerList;
+import org.spout.api.event.ProtocolEvent;
+<<<<<<< HEAD:api/src/main/java/org/spout/api/protocol/event/PositionSendEvent.java
+import org.spout.api.geo.discrete.Point;
+import org.spout.math.imaginary.Quaternion;
+=======
+import org.spout.api.geo.cuboid.Chunk;
+>>>>>>> cc0703054530b4eeda07a2b1b619ed34e1e7d201:api/src/main/java/org/spout/api/protocol/event/BlockUpdateEvent.java
+
+public class BlockUpdateEvent extends ProtocolEvent {
+	private static final HandlerList handlers = new HandlerList();
+	private final Chunk chunk;
+	private final int x, y, z;
+
+```

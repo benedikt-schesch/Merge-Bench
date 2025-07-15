@@ -1,0 +1,60 @@
+<think>
+No reasoning found</think>
+The merge conflict in the code snippet involves two competing blocks of import statements within a Java file related to Apache Pig's physical layer. The goal in resolving such a conflict is to determine the *intended set of import statements* that both contributors were working toward, with the understanding that imports are additive and can be re-ordered without affecting program behavior.
+
+---
+
+### ✅ Context Review
+
+- **HEAD** contains:
+  ```java
+  import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPoissonSample;
+  import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPreCombinerLocalRearrange;
+  import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PORank;
+  import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POReservoirSample;
+  ```
+
+- **Incoming merge (88ae4a5)** includes:
+  ```java
+  import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPreCombinerLocalRearrange;
+  import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PORank;
+  ```
+
+As evident:
+- The incoming changes add **two imports** that are **already included** in the `HEAD`.
+- The `HEAD` changes include **all of those imports**, plus two additional ones: `POPoissionSample` and `POReservoirSample`.
+
+---
+
+### 🧠 Semantic Merge Consideration
+
+In Java, **order of imports does not matter**, and the language allows for **duplicate imports**, but standard (and best) practice is to avoid them.
+
+Therefore, **semantically merging these changes** means combining both lists into one **unified, deduplicated** list of needed import statements — and in this case, the `HEAD` list *already* includes all imports needed from both versions.
+
+This implies that the `HEAD`'s imports are **sufficient** to fulfill the intent of both branches — keeping all necessary operators present in a stable and functional import section.
+
+---
+
+### ✅ Final Resolution
+
+To accurately reflect the combined intent of both changes, **resolve the conflict by choosing the `HEAD` version** of the imports:
+
+```java
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POMergeJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PONative;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POOptimizedForEach;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPackage;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPartialAgg;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPoissonSample;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POPreCombinerLocalRearrange;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.PORank;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POReservoirSample;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POSkewedJoin;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POSort;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POSplit;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POStore;
+import org.apache.pig.backend.hadoop.executionengine.physicalLayer.relationalOperators.POStream;
+```
+
+This version reflects **both developers' intent** without sacrificing any needed functionality.

@@ -1,0 +1,19 @@
+<think>
+Okay, let's look at this merge conflict. The code is in Java, and the conflict is in the synchronized block. The HEAD version uses `new HashMap<ReturnableData, Object>()` with explicit type parameters, while the other branch uses the diamond operator `new HashMap<>()`. 
+
+Hmm, in Java, when you use the diamond operator, the compiler infers the type arguments from the context. Both versions are creating a HashMap with the same key and value types, just the syntax is different. Since Java 7 introduced the diamond operator, using `<>` is more concise and modern. The intent of both changes is the same: to create a HashMap for the data. 
+
+The conflict is purely syntactical. There's no semantic difference here. So resolving it by choosing the diamond operator makes sense because it's cleaner and both branches are trying to achieve the same thing. The surrounding context doesn't show any other changes, so replacing the explicit type with the diamond operator should resolve the conflict without issues.</think>
+```java
+    // have to do this all synchronized in case they play while we're processing this
+    synchronized (roundTimerLock) {
+      killRoundTimer();
+
+      if (state == GameState.JUDGING) {
+        final Map<ReturnableData, Object> data = new HashMap<>();
+        data.put(LongPollResponse.EVENT, LongPollEvent.HURRY_UP.toString());
+        data.put(LongPollResponse.GAME_ID, this.id);
+        final QueuedMessage q = new QueuedMessage(MessageType.GAME_EVENT, data);
+        getJudge().getUser().enqueueMessage(q);
+      }
+```

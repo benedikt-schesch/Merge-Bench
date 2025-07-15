@@ -1,5 +1,4 @@
 | Model | C | | | | C++ | | | | C# | | | | Go | | | | Javascript | | | | Php | | | | Python | | | | Ruby | | | | Rust | | | | Typescript | | | |
 | | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict |
 | --- | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | |
-| Deepseek | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
-| Test | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+| DeepSeek deepseek-r1-0528 | 18.00% | 20.00% | 42.00% | 50.00% | 50.00% | 32.00% | 16.00% | 36.00% | 34.00% | 24.00% | 24.00% | 38.00% | 32.00% | 62.00% | 26.00% | 36.00% | 48.00% | 28.00% | 56.00% | 56.00% | 16.00% | 58.00% | 58.00% | 18.00% | 48.00% | 54.00% | 24.00% | 18.00% | 24.00% | 20.00% |

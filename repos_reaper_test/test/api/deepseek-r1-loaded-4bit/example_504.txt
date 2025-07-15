@@ -1,0 +1,22 @@
+<think>
+Okay, let's tackle this merge conflict. The code in question is in the onLoadResources method. The HEAD version uses mBuildableTexture and BuildableBitmapTexture, while the other branch uses mBuildableBitmapTextureAtlas and BuildableBitmapTextureAtlas. Also, the factory class names differ: SVGTextureRegionFactory vs SVGBitmapTextureAtlasTextureRegionFactory.
+
+First, I need to understand the intent of both changes. It looks like the branch is updating to use a different class, maybe a more specific texture atlas class. The variable name change from mBuildableTexture to mBuildableBitmapTextureAtlas suggests that the type might have been renamed or replaced. Similarly, the factory class name change could be part of a larger refactor, perhaps moving to a more feature-specific factory.
+
+Looking at the lines after the conflict, both versions are using SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset, which matches the branch's factory name. That implies that the branch's changes are necessary for the subsequent code to work correctly. The HEAD version's factory name doesn't match the method calls below, which would cause errors.
+
+So, the correct resolution is to take the branch's version of the code. Using mBuildableBitmapTextureAtlas and the updated factory class ensures that the code is consistent with the method calls that follow. The variable name and class changes are likely part of a refactor that's necessary for the rest of the code to function properly.</think>
+```java
+		return new Engine(new EngineOptions(true, ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera));
+	}
+
+	@Override
+	public void onLoadResources() {
+		this.mBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		SVGBitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+
+		this.mSVGTestTextureRegions = new BaseTextureRegion[COUNT];
+		int i = 0;
+		this.mSVGTestTextureRegions[i++] = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "chick.svg", 16, 16);
+		this.mSVGTestTextureRegions[i++] = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "chick.svg", 32, 32);
+```

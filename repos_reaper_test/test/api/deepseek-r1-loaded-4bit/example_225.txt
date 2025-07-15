@@ -1,0 +1,29 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in a Java code snippet, and the two versions are making different changes to how the Pig function is registered and how the query string is constructed.
+
+First, in the HEAD version, the code registers the function "foo" using `pig.registerFunction("foo", MyApply.class.getName()+"('foo')");`. Then, the query string uses `Util.encodeEscape(tmpFile.toString())` inside the load statement.
+
+In the other branch (1488b22), the registration uses `new FuncSpec` wrapped around the same string. So the line becomes `pig.registerFunction("foo", new FuncSpec(MyApply.class.getName()+"('foo')"));`. Also, the query string uses `Util.generateURI(tmpFile.toString())` instead of encodeEscape.
+
+So the conflict is between two changes: one adds FuncSpec to the function registration, and the other changes the Util method called for generating the URI in the query.
+
+To resolve this, I need to see if these changes are compatible. The FuncSpec change is adding a necessary class for registering the function properly, which might be a correction. The Util method change from encodeEscape to generateURI is probably another correction, maybe to use a more appropriate method for URI generation.
+
+Since these are two separate changes (one in function registration, the other in URI handling), they can be merged together without conflict. The HEAD version's use of encodeEscape is replaced with generateURI in the other branch, and the FuncSpec is added. Therefore, combining both changes would be correct.
+
+So the resolved code should include both the FuncSpec in the registerFunction call and the generateURI method in the query string. That way, both changes are incorporated correctly.</think>
+```java
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpFile));
+        for(int i = 0; i < 1; i++) {
+            ps.println(i);
+        }
+        ps.close();
+        pig.registerFunction("foo",
+            new FuncSpec(MyApply.class.getName()+"('foo')"));
+        String query = "foreach (group (load '"+Util.generateURI(tmpFile.toString())+"' using " + MyStorage.class.getName() + "()) by " + MyGroup.class.getName() + "('all')) generate flatten(foo($1)) ;";
+        System.out.println(query);
+        pig.registerQuery("asdf_id = " + query);
+        Iterator it = pig.openIterator("asdf_id");
+        tmpFile.delete();
+        Tuple t;
+```

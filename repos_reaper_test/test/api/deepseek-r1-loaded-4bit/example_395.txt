@@ -1,0 +1,30 @@
+<think>
+Okay, let me try to figure out how to resolve this merge conflict. So, looking at the code snippet, the conflict is in a Java test method. The HEAD version has the method declared as `@Test void shouldSetAppropriateStatusIfNoTestsWereRun()`, while the other branch (ee249315...) uses `@Test public void shouldSet...` with a different method name `prepareCore` instead of `prepateCore`.
+
+First, I need to check the method name. The HEAD version has `prepateCore`, which might be a typo. The other branch uses `prepareCore`, which is likely the correct spelling. So the method name should be `prepareCore`.
+
+Next, the method modifiers: HEAD uses `void` without `public`, and the other branch adds `public`. In JUnit 5 (JUnit Jupiter), test methods don't need to be public, so the `public` modifier is optional. The HEAD version probably follows JUnit 5 conventions, omitting `public`. The other branch might be using JUnit 4 or older style where `public` was required. Since the test class might be using JUnit 5, removing `public` is acceptable. But maybe the project's style requires `public` for tests. However, without more context, it's safer to go with JUnit 5's default, which doesn't require `public`. So the HEAD's version without `public` is preferable.
+
+But wait, the other branch's change also fixes the method name. So the correct resolution would be to take the method name from the other branch (`prepareCore`) and keep the method modifier from HEAD (no `public`). Also, ensure that the test annotation is `@Test` as both sides have that.
+
+So the resolved method declaration should be:
+
+@Test
+void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+    InfinitestCore core = prepareCore(projectAUri(), 0);
+
+That way, we correct the typo in the method name and maintain the JUnit 5 style without `public`. Both changes are semantically important: the method name fix is a correction, and the `public` modifier is unnecessary in JUnit 5. The rest of the context doesn't have conflicts, so the surrounding code remains as is.</think>
+```java
+		when(coreRegistry.getCore(projectAUri)).thenReturn(core);
+		return core;
+	}
+
+	@Test
+	void shouldSetAppropriateStatusIfNoTestsWereRun() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 0);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(noTestsRun());
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+```

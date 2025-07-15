@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+I'm returning the snippet with the merge conflict resolved based on the semantic intent of both sides. The key difference is the type used for `this.mFontTexture`. Let's analyze the intent:
+
+- **HEAD**: Uses `BitmapTexture`, which may be an older or custom implementation for texture handling.
+- **Incoming (91801fdd)**: Uses `BitmapTextureAtlas`, which is likely an updated or more specific class for managing textures, possibly providing better functionality or compatibility in the context of the project (AndEngine or similar game engine).
+
+**Resolution Intent**: The incoming change (using `BitmapTextureAtlas`) is likely the intended one as it might be an update or correction to align with the engine's current API or best practices. `BitmapTextureAtlas` is often used in game engines like AndEngine for texture atlases, which are optimized for sprite sheets and multiple textures. Thus, I’ll resolve in favor of the incoming change.
+
+Here is the resolved snippet with the full context preserved exactly as provided:
+
+```java
+		return new Engine(new EngineOptions(true, ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera));
+	}
+
+	@Override
+	public void onLoadResources() {
+		this.mFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+
+		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.BLACK);
+
+		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
+		this.mEngine.getFontManager().loadFont(this.mFont);
+```

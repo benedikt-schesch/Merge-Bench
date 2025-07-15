@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to consider the intent of both code snippets. The left side (HEAD) maps the `picData` to a `ProfilePictureSource` object, while the right side extracts just the URL as a string. Assuming `picture` should be a `ProfilePictureSource`, the left side's approach is appropriate.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+    JsonObject picData = rawPicture.get("data").asObject();
+    if (picData != null) {
+      picture = jsonMapper.toJavaObject(picData.toString(), ProfilePictureSource.class);
+    }
+  }
+}
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see that one side didn't add anything, while the other side added a line to initialize a `projectConfigurationManager` by getting it from `MavenPlugin`. This addition doesn't conflict with any other changes, so I'll resolve by keeping the added initialization.
+
+```java
+		buildService.setJdk(jdk);
+		
+		listener = new DummyAndroidBuildListener();
+
+		registry.registerBuildListener(listener);
+		projectConfigurationManager = MavenPlugin.getProjectConfigurationManager();
+    }
+
+	@Override
+	protected void tearDown() throws Exception {
+		listener.clear();
+```

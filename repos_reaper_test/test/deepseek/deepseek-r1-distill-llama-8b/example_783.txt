@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises because the two versions of the code calculate the header size differently. The left side calculates it as a fixed sum including `method.length`, while the right side uses `method(server_version).length`, which likely adjusts for server version differences. It's unclear which version should be used, so the conflict is preserved.
+
+```java
+    // Add extra bytes for the RPC header:
+    //   4 bytes: Payload size (always present, even in HBase 0.95+).
+    //   4 bytes: RPC ID.
+    //   2 bytes: Length of the method name.
+    //   N bytes: The method name.
+<<<<<<< HEAD
+    final int header = 4 + 4 + 2 + method.length
+=======
+    final int header = 4 + 4 + 2 + method(server_version).length
+      // Add extra bytes for the RPC header used in HBase 0.92 and above:
+      //   1 byte:  RPC header version.
+      //   8 bytes: Client version.  Yeah, 8 bytes, WTF seriously.
+      //   4 bytes: Method fingerprint.
+      + (server_version < RegionClient.SERVER_VERSION_092_OR_ABOVE ? 0
+>>>>>>> d543609051366758e579ad168361daadd74cdf7f
+```

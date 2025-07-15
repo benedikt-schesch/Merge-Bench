@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different approaches to accessing and mapping the `data` field from `rawPicture`. Both versions aim to achieve similar semantics—extracting JSON data and mapping it to a Java object—but they differ in the method used to access the data (`get` vs. `getJsonObject`) and the target class for mapping (`ProfilePictureSource` vs. `User.Picture`).
+
+---
+
+### Analysis
+
+- **Method Call Difference**:
+  - `rawPicture.get("data").toString()` implies that `rawPicture` is likely a `Map<String, Object>` or similar structure where `get` returns an arbitrary object, which is then converted to a string.
+  - `rawPicture.getJsonObject("data").toString()` implies that `rawPicture` is a structured JSON object (e.g., `JsonObject`), and `getJsonObject` is a method to directly access a nested JSON object.
+
+- **Class Mapping Difference**:
+  - `ProfilePictureSource.class` and `User.Picture.class` are two different types. This suggests a possible refactoring or divergence in the data model between the two branches.
+
+---
+
+### Resolution Consideration
+
+To resolve this conflict, we would need to know:
+- The actual type of `rawPicture` (e.g., is it a `Map`, `JsonObject`, or another structure?)
+- Which class (`ProfilePictureSource` or `User.Picture`) is the correct one to use in the current context.
+
+Without this information, **the intent behind the changes is ambiguous**, and making a decision could lead to incorrect behavior or runtime errors.
+
+---
+
+### Final Output
+
+As per the instructions, if the intent is ambiguous, the original snippet with the conflict should be returned unchanged.
+
+```java
+    picture = null;
+
+    if (rawPicture == null)
+      return;
+
+<<<<<<< HEAD
+    String picJson = rawPicture.get("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, ProfilePictureSource.class);
+=======
+    String picJson = rawPicture.getJsonObject("data").toString();
+    picture = jsonMapper.toJavaObject(picJson, User.Picture.class);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  /**
+   * The user's hometown name.
+   * 
+```

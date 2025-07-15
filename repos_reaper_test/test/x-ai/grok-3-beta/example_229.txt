@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll return the snippet with the resolved merge conflict. My analysis of the intent is as follows:
+
+- Both sides of the merge are working on the same test method `testBigGroupAll`.
+- The conflict is in the creation of a temporary file.
+- The `HEAD` side uses a generic name `"test"` and a hardcoded extension `"txt"`.
+- The other side (`1488b22`) uses a more specific prefix by calling `this.getName()` (likely to get the test name) and a proper extension `".txt"`.
+- The intent of the second side seems to be making the temporary file name more unique and identifiable by associating it with the test name, which is a better practice for debugging and cleanup.
+
+Given this, I'll resolve the conflict by adopting the more specific and meaningful file naming convention from the second side.
+
+Here is the resolved snippet in markdown code syntax, preserving all context and spacing as provided:
+
+```java
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    }
+
+    @Test
+    public void testBigGroupAll() throws Throwable {
+        int LOOP_COUNT = 4*1024;
+        File tmpFile = File.createTempFile(this.getName(), ".txt");
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpFile));
+        for(int i = 0; i < LOOP_COUNT; i++) {
+            ps.println(i);
+        }
+        ps.close();
+```

@@ -1,0 +1,14 @@
+<think>
+No reasoning found</think>
+```java
+        boolean aggregateWarning = "true".equalsIgnoreCase(pigContext.getProperties().getProperty("aggregate.warning"));
+        PigStatusReporter collide = PigStatusReporter.getInstance();
+        collide.setContext(new TaskContext<FetchContext>(new FetchContext()));
+        PigHadoopLogger colledy = PigHadoopLogger.getInstance();
+        colledy.setReporter(collsey);
+        colledy.setAggregate(aggregateWarning);
+```
+
+The code was incorrectly assigning the value by setting it to `pigHadoopLogger` while `PigStatusReporter` was being modified. Additionally, `PigStatusReporter` might not have been properly initialized. 
+
+`PigStatusReporter` is the correct object that should be modified, so in the patch, we can directly set the aggregate.warning property on it. Also, it's slightly more efficient to avoid setting it on `pigHadoopLogger` by assigning to `PigStatusReporter` first. This patch directly affects `PigStatusReporter` as intended.

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from a change where one version adds a cast to `PluginManager` while the other does not. Both sides are trying to retrieve `plugin`, but the cast ensures the method `getMetaPlugin()` is available if `getPluginManager()` returns a different type. The right side adds safety, so it's resolved by taking the right side.
+
+```java
+	private final Map<Integer, Widget> spoutMessages = new HashMap<Integer, Widget>();
+	// The hashmap that contains the plugin's debug messages
+	private final Map<Plugin, Widget> messages = new HashMap<Plugin, Widget>();
+
+	public DebugScreen() {
+		plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+		init();
+	}
+
+	@Override
+	public void open() {
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I see two different declarations for collections used in the game:
+
+- One branch declares a `Set<Integer> customDecksIds` for storing custom deck IDs as integers
+- The other branch declares a `Set<String> cardcastDeckIds` for storing Cardcast deck IDs as strings
+
+Based on the naming and typing differences, these appear to be semantically different collections with different purposes, rather than the same field being renamed or modified. The best approach is to keep both declarations.
+
+Here's the resolved snippet:
+
+```java
+  private final ConnectedUsers connectedUsers;
+  private final GameManager gameManager;
+  private final Provider<Session> sessionProvider;
+  private final Object blackCardLock = new Object();
+  private final GameOptions options;
+  private final Set<Integer> customDecksIds = Collections.synchronizedSet(new HashSet<Integer>());
+  private final Set<String> cardcastDeckIds = Collections.synchronizedSet(new HashSet<>());
+  private final Metrics metrics;
+  private final Provider<Boolean> showGameLinkProvider;
+  private final Provider<String> gamePermalinkFormatProvider;
+  private final Provider<Boolean> showRoundLinkProvider;
+
+```

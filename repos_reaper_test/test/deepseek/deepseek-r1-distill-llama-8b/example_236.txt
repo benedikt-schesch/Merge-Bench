@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we need to choose between the two approaches for creating the `Tuple` instance. The left branch uses the default constructor, while the right uses the factory method. Given that the right branch might be maintaining existing practices or ensuring proper initialization, we'll keep `TupleFactory.getInstance().newTuple(input[i].length)`.
+
+```java
+    }
+
+    static public Tuple loadTuple(Tuple t, String[][] input) throws ExecException {
+        for (int i = 0; i < input.length; i++) {
+            DataBag bag = BagFactory.getInstance().newDefaultBag();
+<<<<<<< HEAD
+            Tuple f = loadTuple(new Tuple(input[i].length), input[i]);
+=======
+            Tuple f = loadTuple(TupleFactory.getInstance().newTuple(input[i].length), input[i]);
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+            bag.add(f);
+            t.set(i, bag);
+        }
+        return t;
+    }
+```

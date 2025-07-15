@@ -1,0 +1,27 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java code. Let me look at the conflicting parts.
+
+In the HEAD version, the line is `retPos = oldPos = zStream.tell();` and in the other branch, it's `retPos = newPos = zStream.tell();`. The variables involved are retPos, oldPos, and newPos. 
+
+Looking at the declarations above, the variables are `private long retPos, newPos = -1;`. Wait, there's no declaration of oldPos here. That's a problem because if HEAD uses oldPos, but it's not declared in this class, that would cause a compile error. The other branch uses newPos, which is declared. 
+
+So the conflict arises because one branch is using a variable that doesn't exist. The correct resolution would be to use newPos, as in the other branch, since oldPos isn't declared here. Therefore, the correct line should be `retPos = newPos = zStream.tell();` to avoid referencing an undeclared variable. That makes sense because newPos is initialized to -1 and is part of the class's state. The HEAD version might be a mistake or from a different context where oldPos exists, but in this snippet, it's not present. So the merge should take the version from the other branch.</think>
+```java
+    // and we set retPos to newPos once we have read a character from that block.
+    // see getPos() for more detail
+    private long retPos, newPos = -1;
+
+    public CBZip2InputStream(SeekableInputStream zStream, int blockSize) throws IOException {
+        retPos = newPos = zStream.tell();
+    	ll8 = null;
+        tt = null;
+        checkComputedCombinedCRC = blockSize == -1;
+        bsSetStream(zStream);
+        initialize(blockSize);
+``` 
+
+The conflict is resolved by keeping `newPos` assignment since:
+1. The class declares `newPos` but not `oldPos`, making HEAD's version invalid
+2. Both branches aim to initialize stream position tracking
+3. Semantic intent is to update both position trackers with current stream position
+4. Maintaining `newPos` aligns with field declarations and position management comments

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+```java
+  @Test
+  public void checkV2_6_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonFromClasspath("v2_6/page-with-fancount"), Page.class);
+    assertNotNull(page);
+    assertEquals(3L, page.getLikes().longValue());
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+
+  @Test
+  public void checkV2_5_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonVarious sources page-with-likes), Page.class);
+>>>>>>> a17acec0655b8058aaf4d336ba2a1352aa49e2fe
+  }
+```
+
+The key families involved are:
+
+- `Page` (java.lang.Object)
+  - `get FanCount()` (java3): From Java 3 to Java 2, the method name for counting fans has shifted, and `LikesCount` is deprecated; it's still present for compatibility.
+  - `getLikesCount()` (java1): From Java 1 to Java 3, the method is written as `getLikesCount()` as a deprecated alias for it.
+
+The discrepancy is between the method name and the actual property, so the fix is to change the assertion for V2.6 to call `getLikes()`.
+
+```java
+  @Test
+  public void checkV2_6_fanCount() {
+    Page page = createJsonMapper().toJavaObject(jsonLyndonLettersPageAlongPointsWithCounts()), Page.class);
+    // ... rest of the code
+  }
+```
+
+Seeing that in both Java versions the functionality is the same, it's confirmed that the tests are conflicting. The correct fix is to replace the method call from `getFanCount()` to `getLikes()`.

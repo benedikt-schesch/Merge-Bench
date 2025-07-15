@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict is in the logging message string. The key differences are:
+
+1. "resource access permissions or node ownership" vs "grants or node ownership"
+2. The commit adds sorting of the missing principals
+3. The commit adds an exclamation mark after "imported"
+4. The commit uses Collectors.joining() with a stream and sorting
+
+Since the intent appears to be to warn about missing principals that affect functionality during deployment, while maintaining the1(!) Let's take the version that includes the exclamation mark and the stream sorted version as it appears more complete. Here is the reconciled version:
+
+```java
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+						+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+						+ "\tBecause of these missing grants/ownerships, the functionality is not identical to the export you just imported!\n\n"
+						+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+						+ "\n\n\tConsider adding these principals to your 'pre-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+						+ "###############################################################################"
+				);
+				publishWarningMessage(title, text);
+			}
+```

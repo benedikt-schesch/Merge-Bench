@@ -1,0 +1,55 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I'll analyze the intents of both `HEAD` and commit `83418dbbb7fe923f2aef29aa4f23d01886e1b965` for the conflicting block within the `logger.info` call.
+
+Both branches are trying to log a warning message about missing users or groups (principals) during a deployment process, which affects node access rights.
+
+**`HEAD` version:**
+```java
+					+ "\tThe following user(s) and/or group(s) are missing for resource access permissions or node ownership during deployment.\n"
+					+ "\tBecause of these missing permissions/ownerships, node access rights are not identical to the export you just imported.\n\n"
+					+ "\t" + String.join(", ",  missingPrincipals)
+```
+- Uses the term "resource access permissions".
+- States "permissions/ownerships".
+- Ends the sentence "imported." with a period.
+- Lists `missingPrincipals` joined by a comma and space, on a single line.
+
+**`83418dbbb7fe923f2aef29aa4f23d01886e1b965` version:**
+```java
+					+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+					+ "\tBecause of these missing grants/ownerships, node access rights are not identical to the export you just imported!\n\n"
+					+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+```
+- Uses the term "grants" instead of "resource access permissions". This might be a terminological refinement or standardization within the project. "Grants" can be a more precise or encompassing term for access rights.
+- Consistently uses "grants/ownerships".
+- Ends the sentence "imported!" with an exclamation mark, adding a bit more emphasis to the warning.
+- Sorts the `missingPrincipals` and lists each on a new, indented line. This significantly improves readability, especially if there are multiple missing principals.
+
+**Semantic Resolution:**
+The changes in `83418dbbb7fe923f2aef29aa4f23d01886e1b965` appear to be enhancements:
+1.  The switch from "resource access permissions" to "grants" is likely an intentional semantic update for clarity or correctness within the domain.
+2.  The consistent use of "grants/ownerships" follows from this.
+3.  The exclamation mark is a minor stylistic choice that fits the "Warning" context.
+4.  The formatting of `missingPrincipals` (sorted and on separate lines) is a clear improvement for readability of the log output.
+
+Combining these observations, the version from `83418dbbb7fe923f2aef29aa4f23d01886e1b965` is preferable as it maintains the core warning intent while improving terminology and presentation.
+
+The line `>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965` at the beginning of the snippet is treated as part of the fixed context, as per the instructions.
+
+```java
+>>>>>>> 83418dbbb7fe923f2aef29aa4f23d01886e1b965
+					+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-data-deploy.conf</a> and re-importing.";
+
+			logger.info("\n###############################################################################\n"
+					+ "\tWarning: " + title + "!\n"
+					+ "\tThe following user(s) and/or group(s) are missing for grants or node ownership during deployment.\n"
+					+ "\tBecause of these missing grants/ownerships, node access rights are not identical to the export you just imported!\n\n"
+					+ "\t" + missingPrincipals.stream().sorted().collect(Collectors.joining("\n\t"))
+					+ "\n\n\tConsider adding these principals to your 'pre-data-deploy.conf' (see https://docs.structr.com/docs/fundamental-concepts#pre-deployconf) and re-importing.\n"
+					+ "###############################################################################"
+			);
+
+			publishWarningMessage(title, text);
+
+```

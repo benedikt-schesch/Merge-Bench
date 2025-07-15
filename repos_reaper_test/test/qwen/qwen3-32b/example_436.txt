@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with the conflict resolved by combining both unregistration attempts while preserving context:
+
+```java
+        try {
+            getActivity().unregisterReceiver(videoUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        try {
+            getActivity().unregisterReceiver(libraryUpdateReceiver);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onAddClicked(CharSequence user, CharSequence password,
+
+```
+
+### Resolution Logic:
+- **Intent Analysis**: Both branches aim to safely remove a broadcast receiver in `onStop()`. 
+  - The `HEAD` change handles `videoUpdateReceiver`.
+  - The `308db82053` change adds a new `libraryUpdateReceiver`.
+- **Merge Strategy**: Since the receivers are distinct and the error handling is intentional for both, combining both try-catch blocks preserves both changes without altering their purpose or the surrounding method flow.
+- **Structural Integrity**: Spacing, method placement (`super.onStop();`), and the start of `onAddClicked` are preserved exactly as in the original context.

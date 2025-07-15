@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The merge conflict involves setting up a mock provider and initializing deserializers. The older commit has a duplicated mock setup, while the newer commit adds deserializer initialization. The correct resolution includes the mock setup once and initializes the deserializers before deserialization.
+
+```java
+		when(provider.parameterNamesFor(bark.getMethod())).thenReturn(new String[] { "dog" });
+
+		List<JsonDeserializer> deserializers = new ArrayList<JsonDeserializer>();
+		deserializers.add(new br.com.caelum.vraptor.serialization.iso8601.gson.CalendarISO8601Deserializer(new ISO8601Util()));
+
+		deserializer = new GsonDeserialization(provider, new DefaultJsonDeserializers(deserializers), request);
+
+		Object[] deserialized = deserializer.deserialize(stream, bark);
+
+		assertThat(deserialized.length, is(1));
+		assertThat(deserialized[0], is(instanceOf(Dog.class)));
+		Dog dog = (Dog) deserialized[0];
+```

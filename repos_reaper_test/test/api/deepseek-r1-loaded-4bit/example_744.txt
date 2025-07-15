@@ -1,0 +1,35 @@
+<think>
+Okay, let's take a look at this merge conflict. The code in question is a Java method where there's a loop over some widgets. The conflict is between the HEAD version and the other branch. 
+
+In the HEAD, the code is:
+if (widget != ignore)
+    widget.setYSmooth(mTotalHeight);
+
+In the other branch, it's:
+if (widget != ignore) {
+    widget.setYSmooth(mTotalHeight);
+}
+
+So the difference is whether to use braces around the if statement's body or not. The HEAD version doesn't use braces, while the other branch adds them. 
+
+Now, when resolving merge conflicts, the goal is to preserve the intent of both changes. In Java, it's common practice to use braces even for single-line statements to avoid potential errors if someone adds another line later without noticing the missing braces. However, the original code in HEAD might have been written without braces intentionally, maybe following a different style guide.
+
+But looking at the surrounding code, I should check if there's a consistent style. For example, if other parts of the codebase use braces for all if statements, then the change from the other branch is aligning with that style. Alternatively, if the existing code often omits braces for single lines, then HEAD's version is consistent.
+
+Since the user hasn't provided the entire file, I have to make an educated guess. The conflict is purely about code style. Both versions are functionally equivalent. However, adding braces is generally considered safer and more maintainable. 
+
+Therefore, resolving the conflict by including the braces from the other branch would be better. It doesn't change the functionality but improves code consistency and prevents future errors if the block is expanded. So the correct resolution is to keep the version with braces.</think>
+```java
+        mTotalHeight = WIDGETS_MARGIN;
+
+        for (int i = 0; i < mOpenWidgets.size(); i++) {
+            WidgetBase.WidgetContainer widget = mOpenWidgets.get(i);
+
+            if (widget != ignore) {
+                widget.setYSmooth(mTotalHeight);
+            }
+
+            mTotalHeight += widget.getMeasuredHeight() + mSpacing;
+        }
+    }
+```

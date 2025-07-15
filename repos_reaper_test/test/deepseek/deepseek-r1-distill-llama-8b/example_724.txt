@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The code shows a merge conflict in the `isEquals` method. Two different implementations are provided. Upon analysis, both versions handle nulls in similar ways, but the second version is safer by first checking if the first object is null before calling `equals`, which prevents potential `NullPointerException` if the `equals` method isn't null-safe. Therefore, the second version is preferable.
+
+```java
+    public static boolean isLeast(int[] objs, int count) {
+        return null != objs && objs.length >= count;
+    }
+
+<<<<<<< HEAD
+    public static boolean isEquals(Object obj1, Object obj2) {
+        if (null != obj1) {
+            return obj1.equals(obj2);
+        }
+        return null == obj2;
+=======
+    public static boolean isEquals(Object a, Object b) {
+        return (a == null) ? (b == null) : a.equals(b);
+>>>>>>> 41bc0309ba863dbff4e537b458048d65f4238312
+    }
+
+    public static String trim(CharSequence charSequence) {
+        return null == charSequence ? null : charSequence.toString().trim();
+    }
+```

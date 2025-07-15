@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Here is the resolved code snippet with proper semantic integration:
+
+```java
+		verifyNoInteractions(workspace);		
+	}
+
+	@Test
+    void shouldNotUpdateIfClassesAreNotChanged() throws CoreException {
+        assertDoesNotThrow(() -> processor.processEvent(emptyEvent()));
+        verifyNoInteractions(workspace);
+    }
+
+	@Test
+	void shouldRespondToPostBuildEvents() {
+		IResourceChangeEvent event = new ResourceChangeEvent(this, POST_BUILD, AUTO_BUILD, null);
+```
+
+**Resolution reasoning**:  
+Both branches are implementing the same test to verify behavior when classes are not changed. The `HEAD` version:
+1. Focuses on exception safety using `assertDoesNotThrow()`
+2. Uses a standard Java test method declaration (non-public - valid in JUnit 5)
+3. Does not include the verification interaction
+
+The `ee24931` branch:
+1. Uses a traditional `public void` JUnit 4 style method signature
+2. Explicitly verifies no interactions with `verifyNoInteractions(workspace)`
+
+The semantic conflict has been resolved by combining these into a single implementation:  
+1. Retaining the JUnit 5 style `void` method declaration (more modern)  
+2. Keeping the exception safety assert from `HEAD`  
+3. Adding the interaction verification from `ee24931` as the second assert  
+4. Maintaining the exact same test method name and parameter signature from both versions

@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I will analyze the intent behind the changes in both branches.
+
+**HEAD Branch Analysis:**
+The HEAD branch introduces the calculation for `newPosition` and `volume`. It also includes two commented-out lines:
+1.  `//final Point position = scene.getTransformLive().getPosition();`
+2.  `//final BoundingBox oldVolume = volume.clone().offset(position);`
+These commented-out lines seem to represent logic for obtaining the original position (before movement) and calculating the bounding box at that original position (`oldVolume`). This suggests that this logic might have been used previously, is being kept for reference, or is part of a feature that is temporarily disabled.
+
+**Branch `67bcb76a96f358fc131320b0611ffaa3bf3678c2` Analysis:**
+This branch also introduces the calculation for `newPosition` and `volume`. The lines for these calculations are identical to those in the HEAD branch:
+1.  `Point newPosition = scene.getTransformLive().getPosition().add(movement);`
+2.  `final BoundingBox volume = scene.getVolume();`
+However, this branch does not include the commented-out lines present in HEAD. This could imply that these lines were deemed unnecessary or were cleaned up in this branch.
+
+**Semantic Resolution:**
+The core functional change – calculating `newPosition` and `volume` – is identical in both branches within the conflict block. The conflict arises solely from the presence of the two commented-out lines in the HEAD branch.
+
+Given that the commented-out lines in HEAD represent a coherent block of logic (calculating an "old" position and volume, which could be relevant for debugging or other physics calculations), and their presence does not break any functionality (as they are comments), the most conservative approach that preserves potential intent is to keep them. If these comments were intentionally removed by the other branch as part of a cleanup, this resolution would reintroduce them. However, without explicit information that they are harmful or definitively obsolete, preserving them is safer. This choice assumes the comments might hold value (e.g., as notes, for future debugging, or for a temporarily disabled feature).
+
+The resolution will therefore be to use the version from HEAD, as it includes the common functional code and the additional commented-out lines.
+
+```java
+					// u - velocity
+					// t - timestep
+					// a - acceleration
+
+					final Vector3 movement = prevVelocity.multiply(dt).add(acceleration.multiply(dt * dt).divide(2));
+					//final Point position = scene.getTransformLive().getPosition();
+					Point newPosition = scene.getTransformLive().getPosition().add(movement);
+					final BoundingBox volume = scene.getVolume();
+					//final BoundingBox oldVolume = volume.clone().offset(position);
+					BoundingBox worldVolume = volume.clone().offset(newPosition);
+					final int bx = newPosition.getBlockX();
+					final int by = newPosition.getBlockY();
+					final int bz = newPosition.getBlockZ();
+					final int rangeX = (int) Math.ceil(volume.getMax().getX() - volume.getMin().getX());
+
+```

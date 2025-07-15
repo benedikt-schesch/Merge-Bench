@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+```java
+    synchronized (playedCards) {
+      if (state == GameState.PLAYING || playersToRemove.size() == 0) {
+        // not sure how much of this check is actually required
+        if (players.size() < 3 || playedCards.size() < 2) {
+<<<<<<< HEAD
+          logger.info(String.format(
+              "Resetting game %d due to insufficient players after removing %d idle players.",
+              id, playersToRemove.size()));
+=======
+          logger.info(String.format("Resetting game %d due to insufficient players after removing %d idle players.", id, playersToRemove.size()));
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+          resetState(true);
+        } else {
+          judgingState();
+        }
+      }
+```
+
+The conflict involves two variations of the same log message. Both versions:
+1. Log a game reset due to insufficient players
+2. Use string formatting with the same `id` and `playersToRemove.size()` arguments
+3. Contain the exact same text content in the log message
+
+The only difference is code formatting (line wrapping within the string literal). Since the semantic intent is identical across both branches, either version resolves the conflict equivalently. The remaining context involving `resetState(true)` and `judgingState()` is identical in both versions.

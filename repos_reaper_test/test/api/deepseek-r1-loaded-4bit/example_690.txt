@@ -1,0 +1,26 @@
+<think>
+Okay, let's take a look at this merge conflict. The conflict is in the imports section of a Java class called ActionMapping. The HEAD version has an import for org.structr.core.property.*, while the other branch (d72e83e) is importing specific classes from the same package: EndNodes, Property, StartNodes, and StringProperty.
+
+The goal here is to resolve the conflict by determining which imports to keep. Using wildcard imports like .* can sometimes be frowned upon because it's less explicit about which classes are being used. On the other hand, importing each class individually makes it clear which ones are needed.
+
+I should check if the code actually uses any other classes from the org.structr.core.property package besides the ones listed in the d72e83e version. If there are no other classes used, then replacing the wildcard import with the specific ones is better. But if there are other classes from that package being used elsewhere in the file, then keeping the wildcard might be necessary.
+
+Looking at the code provided, the class has properties like StartNodes, EndNodes, etc. The imports in the d72e83e version include all the specific ones that are referenced here. So, it's possible that the other branch is cleaning up the imports to be explicit, while the HEAD was using a wildcard.
+
+Since the conflict is only in the imports and both versions are trying to include the necessary classes, the correct resolution would be to use the explicit imports from d72e83e. This avoids the wildcard and makes the dependencies clear. There's no indication that other classes from the property package are needed here, so replacing the wildcard with the specific imports resolves the conflict without issues.</think>
+```java
+package org.structr.web.entity.event;
+
+import org.structr.common.PropertyView;
+import org.structr.common.View;
+import org.structr.core.entity.AbstractNode;
+import org.structr.core.property.EndNodes;
+import org.structr.core.property.Property;
+import org.structr.core.property.StartNodes;
+import org.structr.core.property.StringProperty;
+import org.structr.web.entity.dom.DOMElement;
+import org.structr.web.entity.dom.DOMNode;
+import org.structr.web.entity.dom.relationship.*;
+
+public class ActionMapping extends AbstractNode {
+```

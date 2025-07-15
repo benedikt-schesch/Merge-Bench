@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, I will take the code from the 'other' branch because it correctly initializes the `mBuildableBitmapTextureAtlas` and sets up the SVG bitmap factory appropriately. This ensures that the application uses a texture atlas for more efficient texture management.
+
+The conflicting lines are replaced to use the 'other' version, ensuring consistency and efficiency.
+
+```java
+		return new Engine(new EngineOptions(true, ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.mCamera));
+	}
+
+	@Override
+	public void onLoadResources() {
+<<<<<<< HEAD
+		this.mBuildableTexture = new BuildableBitmapTexture(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		SVGTextureRegionFactory.setAssetBasePath("gfx/");
+=======
+		this.mBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		SVGBitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+>>>>>>> 91801fdd7714064242fef90013824ede2bbcbe9d
+
+		this.mSVGTestTextureRegions = new BaseTextureRegion[COUNT];
+		int i = 0;
+		this.mSVGTestTextureRegions[i++] = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "chick.svg", 16, 16);
+		this.mSVGTestTextureRegions[i++] = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "chick.svg", 32, 32);
+```

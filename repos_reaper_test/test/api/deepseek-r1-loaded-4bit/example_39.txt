@@ -1,0 +1,34 @@
+<think>
+Okay, I need to resolve this merge conflict in the Java imports. Let's look at what's happening here.
+
+The HEAD version has imports from org.apache.logging.log4j for both LogManager and Logger. The other branch, from commit 5adedd2, is using org.apache.log4j.Logger. 
+
+So the conflict is between log4j 2.x (logging.log4j) and log4j 1.x (log4j). These are different packages. The user might have upgraded to Log4j 2 in one branch and kept the old version in another. 
+
+I should check if both are needed or if one replaces the other. Since they're different packages, it's possible that the code was migrated to Log4j 2 in HEAD, and the other branch hasn't made that change. 
+
+The correct resolution would be to keep the Log4j 2.x imports because they're from a newer version, assuming that's intentional. But wait, maybe the other branch added a necessary import. However, looking at the conflict, the only difference is the Logger import. The HEAD version uses the newer LogManager and Logger from log4j 2, while the other branch uses the old Logger from log4j 1.x. 
+
+Since these are conflicting, we can't have both. The correct approach is to pick one. The HEAD version is probably the intended one if the project upgraded to Log4j 2. So we should remove the conflict markers and keep the HEAD imports, deleting the older import from the other branch. 
+
+So the resolved imports would include both LogManager and Logger from org.apache.logging.log4j, and remove the line importing org.apache.log4j.Logger. That way, the code uses the updated Log4j 2.x classes. 
+
+Therefore, the merged code should have the HEAD's imports without the conflict markers.</think>
+```java
+import net.socialgamer.cah.RequestWrapper;
+import net.socialgamer.cah.data.ConnectedUsers;
+import net.socialgamer.cah.data.QueuedMessage;
+import net.socialgamer.cah.data.QueuedMessage.MessageType;
+import net.socialgamer.cah.data.User;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+```
+
+The conflict arises from different Log4j versions being used in the branches. The resolution keeps the Log4j 2.x imports (`org.apache.logging.log4j`) from HEAD since they represent a newer version and are semantically compatible with the older 1.x API in most cases. This preserves the apparent intent of upgrading logging frameworks while maintaining all required imports.

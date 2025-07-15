@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The conflict shows that one side (HEAD) wants to include a field `private int maxImageSize;`, while the other side (`790b69a...`) has this line missing (either it was deleted, or never existed on that branch).
+
+**Intent of HEAD:**
+To define a private integer field named `maxImageSize`. This suggests an intention to introduce a mechanism for limiting the maximum size of images, which could be complementary to the existing `maxUriLength` field.
+
+**Intent of 790b69a...:**
+To not have the `maxImageSize` field. This could mean:
+1.  The field was present in a common ancestor and this branch/commit deliberately removed it (e.g., it was deprecated, refactored, or found to be unnecessary).
+2.  The field was never present in this line of development, and HEAD is attempting to introduce it.
+
+**Semantic Ambiguity:**
+Without knowing the history of these branches or the specific changes in commit `790b69a...`, it's impossible to be certain about the correct resolution.
+*   If `maxImageSize` is a new feature being introduced by HEAD, it should likely be kept.
+*   If `maxImageSize` is a field that was deliberately removed by `790b69a...` (e.g., as part of a cleanup or refactoring), then re-introducing it would be incorrect.
+
+Since the intent is ambiguous and a wrong resolution could either discard a new feature or reintroduce obsolete code, it is safest to preserve the conflict for a human developer with more context to decide.
+
+```java
+    private String code = null;
+    private int options = 1;
+    private String mhtmlRoot = "";
+    private String outputFilename = "";
+    private int maxUriLength = DEFAULT_MAX_URI_LENGTH;  //IE8 only allows dataURIs up to 32KB
+<<<<<<< HEAD
+    private int maxImageSize;
+=======
+>>>>>>> 790b69a0bd40e3ab536f9c6568748f981b3d525e
+    
+    //--------------------------------------------------------------------------
+    // Constructors
+    //--------------------------------------------------------------------------    
+    
+
+```

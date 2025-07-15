@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+To resolve the given merge conflict, let's first understand the context and the changes made on both sides of the merge.
+
+The code snippet appears to be part of a larger Java application that handles deployment and import of certain configurations or data, potentially within a content management or a similar system. The specific section deals with checking for and reporting "missing principals" (users or groups) after a deployment or import operation.
+
+The conflict arises in the construction of a warning message when such missing principals are detected. The message is intended to inform the user about the missing entities and suggest a potential solution.
+
+Let's analyze the conflicting changes:
+
+1. **Left-hand side (HEAD) changes:**
+   - The text message starts with "The following user(s) and/or group(s) are missing for resource access permissions or node ownership during <b>deployment</b>."
+   - It mentions "Because of these missing permissions/ownerships, <b>the functionality is not identical to the export you just imported</b>."
+   - The list of missing principals is generated using `String.join("</li><li>", missingPrincipals)`.
+
+2. **Right-hand side (83418dbbb7fe923f2aef29aa4f23d01886e1b965) changes:**
+   - The initial part of the text message is slightly different, focusing on "grants or node ownership" instead of "resource access permissions or node ownership."
+   - The consequence of missing grants/ownerships is phrased as "<b>the functionality is not identical to the export you just imported</b>!" (note the exclamation mark and the term "grants" instead of "permissions").
+   - The list of missing principals is sorted before being joined with `missingPrincipals.stream().sorted().collect(Collectors.joining("</li><li>"))`.
+
+To resolve this conflict, we need to understand the intent behind both changes and see if they can be reconciled.
+
+1. **Terminology:** The left-hand side uses "resource access permissions," while the right-hand side uses "grants." Both seem to refer to similar concepts, but "grants" might be a more concise or specific term in this context. Using "grants" could be considered more precise if it's the standard terminology within the application's domain.
+
+2. **Sorting the list of missing principals:** The right-hand side sorts the list before displaying it. This is a clear improvement for usability as it makes the list more readable, especially if it's long.
+
+3. **Punctuation and emphasis:** The right-hand side ends the sentence before the list with an exclamation mark, potentially making the warning more noticeable.
+
+Considering these points, a resolution that takes into account the intent and semantics of both sides could involve:
+
+- Adopting the more specific terminology ("grants") from the right-hand side.
+- Keeping the improvement of sorting the list of missing principals.
+- Incorporating the slightly different phrasing that still conveys the same overall message.
+
+Here's how the resolved snippet could look, presented in markdown code syntax as requested, without modifying the surrounding context or spacing:
+
+```java
+			applyConfigurationFileIfExists(ctx, postDeployConfFile, DEPLOYMENT_IMPORT_STATUS);
+
+			if (!missingPrincipals.isEmpty()) {
+
+				final String title = "Missing Principal(s)";
+				final String text = "The following user(s) and/or group(s) are missing for grants or node ownership during <b>deployment</b>.<br>"
+						+ "Because of these missing grants/ownerships, <b>the functionality is not identical to the export you just imported</b>!"
+						+ "<ul><li>" + missingPrincipals.stream().sorted().collect(Collectors.joining("</li><li>")) + "</li></ul>"
+						+ "Consider adding these principals to your <a href=\"https://docs.structr.com/docs/fundamental-concepts#pre-deployconf\">pre-deploy.conf</a> and re-importing.";
+
+				logger.info("\n###############################################################################\n"
+						+ "\tWarning: " + title + "!\n"
+```

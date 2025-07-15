@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at the merge conflict, it appears that the `HEAD` branch has added a line to add the `Instantiator.class` to the `REQUEST_COMPONENTS` map with `VRaptorInstantiator.class` as its implementation, while the other branch (`0b417b6`) has removed this line.
+
+Considering that the immediate lines around this conflict are adding various components to the `REQUEST_COMPONENTS` map, and the `HEAD` branch specifically adds the `Instantiator.class` mapping, I'll preserve this addition since it appears to be an intentional enhancement.
+
+```java
+            REQUEST_COMPONENTS.put(OgnlFacade.class, OgnlFacade.class);
+        } else {
+            REQUEST_COMPONENTS.put(ParametersProvider.class, IogiParametersProvider.class);
+            REQUEST_COMPONENTS.put(ParameterNamesProvider.class, VRaptorParameterNamesProvider.class);
+            REQUEST_COMPONENTS.put(InstantiatorWithErrors.class, VRaptorInstantiator.class);
+            REQUEST_COMPONENTS.put(Instantiator.class, VRaptorInstantiator.class);
+        }
+
+        return Collections.unmodifiableMap(REQUEST_COMPONENTS);
+    }
+
+```

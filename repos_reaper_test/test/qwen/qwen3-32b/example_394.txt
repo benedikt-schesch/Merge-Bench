@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The correct approach is to resolve the merge conflict by considering the semantics of both branches. The primary differences are:
+
+- The `@Test` annotation's visibility (`void` vs `public void`)
+- The method name typo in `preapteCore` (correcting it is crucial)
+- The test setup and verification logic is otherwise functionally identical between both branches
+
+Here's the resolved snippet:
+
+```java
+		assertEquals(1, updates);
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+	}
+
+	@Test
+	public void shouldUpdateCoreOnAutoBuild() throws CoreException {
+		InfinitestCore core = prepareCore(projectAUri(), 10);
+
+		workspace.updateProjects(Collections.singleton(resource));
+
+		assertStatusIs(findingTests(0, projects.size(), 0));
+		verify(core).setRuntimeEnvironment(any(RuntimeEnvironment.class));
+```
+
+**Resolution logic**:
+- Took `public void` from the `ee249315` branch (essential for JUnit 5 test methods)
+- Corrected the typo in `preapteCore` to `prepareCore` (from `ee249315` branch)
+- Kept the test logic as it's fundamentally the same between both branches

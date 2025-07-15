@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The merge conflict involves whether to include the `isMultiQuery` assignment. The left side includes it, while the right side omits it. Since `isMultiQuery` is likely necessary for functionality, the left side's code is preserved.
+
+```java
+    public PigServer(PigContext context, boolean connect) throws ExecException {
+        this.pigContext = context;
+        currDAG = new Graph(false);
+
+        aggregateWarning = "true".equalsIgnoreCase(pigContext.getProperties().getProperty("aggregate.warning"));
+        isMultiQuery = "true".equalsIgnoreCase(pigContext.getProperties()
+                .getProperty(PigConfiguration.OPT_MULTIQUERY, "true"));
+
+        jobName = pigContext.getProperties().getProperty(
+                PigContext.JOB_NAME,
+                PigContext.JOB_NAME_PREFIX + ":DefaultJobName");
+```

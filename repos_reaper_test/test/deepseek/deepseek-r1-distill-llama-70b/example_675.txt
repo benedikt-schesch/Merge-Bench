@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Here is the resolved code, maintaining the correct type based on the query result:
+
+```java
+		Account account = (Account) principal;
+		List<AccessToken> accessTokens = jdbcTemplate.query(SELECT_TOKEN(SQL, new RowMapper<AccessToken>() {
+			public AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new AccessToken(rs.getString("accessToken"), rs.getString("secret"), rs.getString("provider"));
+			}
+		}, account.getId(), resourceId);
+		AccessToken accessToken = null;
+		if (accessTokens.size() > 0) {
+			accessToken = accessTokens.get(0);
+		}
+		return accessToken;
+	}
+```
+
+The type `AccessToken` is consistent with the query result, ensuring correct assignment.
