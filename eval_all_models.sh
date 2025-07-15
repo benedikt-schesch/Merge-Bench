@@ -26,6 +26,9 @@ MODELS=(
     "deepseek/deepseek-r1-0528"
     "google/gemini-2.5-pro"
     "x-ai/grok-4"
+    "qwen/qwen3-235b-a22b"
+    # "anthropic/claude-opus-4"
+    # "openai/o3-pro"
 )
 
 echo "Evaluating ${#MODELS[@]} models across ${#LANGUAGES[@]} languages"
