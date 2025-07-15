@@ -41,12 +41,21 @@ LANGUAGES=(
 # Collect all unique models across all languages
 declare -A all_models
 for lang in "${LANGUAGES[@]}"; do
-    root_dir="eval_outputs/${lang}"
-    if [[ -d "$root_dir" ]]; then
-        for model_dir in "$root_dir"/*; do
-            if [[ -d "$model_dir" ]]; then
-                model=$(basename "$model_dir")
-                all_models["$model"]=1
+    lang_dir="eval_outputs/${lang}"
+    if [[ -d "$lang_dir" ]]; then
+        # Scan for provider directories
+        for provider_dir in "$lang_dir"/*; do
+            if [[ -d "$provider_dir" ]]; then
+                provider=$(basename "$provider_dir")
+                # Scan for model directories within each provider
+                for model_dir in "$provider_dir"/*; do
+                    if [[ -d "$model_dir" ]]; then
+                        model=$(basename "$model_dir")
+                        # Build full model identifier: provider/model
+                        full_model="${provider}/${model}"
+                        all_models["$full_model"]=1
+                    fi
+                done
             fi
         done
     fi
