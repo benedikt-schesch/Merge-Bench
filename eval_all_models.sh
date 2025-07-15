@@ -19,6 +19,7 @@ LANGUAGES=(
     "ruby"
     "rust"
     "typescript"
+    "java"
 )
 
 # List of API models to evaluate
@@ -28,7 +29,7 @@ MODELS=(
     "x-ai/grok-4"
     "qwen/qwen3-235b-a22b"
     "anthropic/claude-opus-4"
-    # "openai/o3-pro"
+    "openai/o3-pro"
 )
 
 echo "Evaluating ${#MODELS[@]} models across ${#LANGUAGES[@]} languages"
