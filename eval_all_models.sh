@@ -24,7 +24,6 @@ LANGUAGES=(
 # List of API models to evaluate
 MODELS=(
     "deepseek/deepseek-r1-0528"
-    "google/gemini-2.5-pro"
 )
 
 echo "Evaluating ${#MODELS[@]} models across ${#LANGUAGES[@]} languages"

@@ -1,0 +1,5 @@
+| Model | C | | | | C++ | | | | C# | | | | Go | | | | Javascript | | | | Php | | | | Python | | | | Ruby | | | | Rust | | | | Typescript | | | |
+| | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict | Correct | Semantic | Conflict |
+| --- | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | | ---: | ---: | ---: | |
+| Deepseek | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+| Test | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
