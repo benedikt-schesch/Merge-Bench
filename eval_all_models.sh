@@ -24,6 +24,7 @@ LANGUAGES=(
 # List of API models to evaluate
 MODELS=(
     "deepseek/deepseek-r1-0528"
+    "google/gemini-2.5-pro"
 )
 
 echo "Evaluating ${#MODELS[@]} models across ${#LANGUAGES[@]} languages"
@@ -46,9 +47,6 @@ done
 
 echo "All evaluations completed."
 
-# Generate performance tables for each language
-echo "Generating performance tables..."
-for language in "${LANGUAGES[@]}"; do
-    echo "Generating performance table for $language..."
-    ./src/scripts/build_performance_table.sh "$language"
-done
+# Generate consolidated performance table
+echo "Generating consolidated performance table..."
+./src/scripts/build_performance_table.sh "all"
