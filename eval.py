@@ -234,12 +234,10 @@ def main() -> None:
 
         # If the model resolves the conflict semantically
         if reward >= 0.5:
-            logger.info(f"Semantically resolved {idx}.")
             count_resolved_semantically += 1
 
         # If the model resolves the conflict perfectly
         if reward == 1.0:
-            logger.info(f"Perfectly resolved {idx}.")
             count_resolved_perfectly += 1
 
         # Update progress bar with current percentages

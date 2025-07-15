@@ -27,7 +27,7 @@ MODELS=(
     "google/gemini-2.5-pro"
     "x-ai/grok-4"
     "qwen/qwen3-235b-a22b"
-    # "anthropic/claude-opus-4"
+    "anthropic/claude-opus-4"
     # "openai/o3-pro"
 )
 
@@ -45,7 +45,7 @@ for language in "${LANGUAGES[@]}"; do
     for model in "${MODELS[@]}"; do
         current_job=$((current_job + 1))
         echo "[$current_job/$total_jobs] Evaluating $model on $language"
-        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS" --verbose
+        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS"
     done
 done
 
