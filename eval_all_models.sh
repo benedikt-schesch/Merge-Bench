@@ -3,9 +3,9 @@
 set -e
 
 # Default maximum number of parallel workers for eval.py
-MAX_WORKERS=${1:-64}
+MAX_WORKERS=${1:-4}
 
-MAX_SAMPLES=${2:-50}
+MAX_SAMPLES=${2:-200}
 
 # List of all available languages from merges/ directory
 LANGUAGES=(
