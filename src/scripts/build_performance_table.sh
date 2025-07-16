@@ -29,6 +29,7 @@ LANGUAGES=(
     "ruby"
     "rust"
     "typescript"
+    "java"
 )
 
 # Collect all unique models across all languages
