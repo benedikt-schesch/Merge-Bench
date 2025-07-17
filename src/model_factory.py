@@ -28,7 +28,6 @@ class ModelFactory:  # pylint: disable=too-few-public-methods
         try:
             # Check if it's an API model
             if APIModel.is_api_model(model_name):
-                logger.info(f"Creating API model: {model_name}")
                 return APIModel(model_name)
             return UnSlothModel(model_name)
 

@@ -166,7 +166,6 @@ def main() -> None:
         idx, example = item
         output_file_path = output_dir / f"example_{idx}.txt"
         if not output_file_path.exists():
-            logger.info(f"Processing example {idx}...")
             full = model_inference(example, args.model_name, args.verbose)
             output_file_path.write_text(full, encoding="utf-8")
 

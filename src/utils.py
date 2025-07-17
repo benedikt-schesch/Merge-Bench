@@ -133,7 +133,6 @@ def cached_query_openrouter(prompt: str, model: str) -> Optional[Dict[str, str]]
     # Try load from cache
     cached = load_from_cache(cache_key, model)
     if cached:
-        logger.info(f"Using cached response for model={model}")
         return cached
 
     # Get API credentials / endpoint
@@ -154,9 +153,11 @@ def cached_query_openrouter(prompt: str, model: str) -> Optional[Dict[str, str]]
                 messages=[{"role": "user", "content": prompt}],
                 stream=False,
             )
-            print(resp)
             # Extract content; reasoning may or may not be present
             content = resp.choices[0].message.content
+            if content == "":
+                logger.error(f"Returned empty content {resp}")
+                continue
             reasoning = getattr(resp.choices[0].message, "reasoning_content", None)
 
             if content is None:

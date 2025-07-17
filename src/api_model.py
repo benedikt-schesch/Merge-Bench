@@ -26,7 +26,6 @@ class APIModel(ModelInterface):
 
     def __init__(self, model_name: str):
         self._model_name = model_name
-        logger.info(f"Initialized API model: {model_name}")
 
     def inference(self, prompt: str, **kwargs: Any) -> str:
         """Generate response using OpenRouter"""
@@ -34,7 +33,6 @@ class APIModel(ModelInterface):
         if response is None:
             logger.error(f"OpenRouter API returned None for model {self._model_name}")
             return ""
-
         result = response["result"]
         reasoning = response.get("reasoning", "No reasoning found")
         completion = f"<think>\n{reasoning}</think>\n{result}"
