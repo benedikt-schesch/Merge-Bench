@@ -50,7 +50,7 @@ class CacheAnalyzer:
             }
 
             # Check each cache file in the model directory
-            for cache_file in model_dir.glob("*.json"):
+            for cache_file in model_dir.glob("**/*.json"):
                 self.total_entries += 1
                 self.cache_stats[model_name]["total"] += 1
                 self.cache_stats[model_name]["files"].append(cache_file)
@@ -58,7 +58,6 @@ class CacheAnalyzer:
                 try:
                     with open(cache_file, "r", encoding="utf-8") as f:
                         data = json.load(f)
-
                     # Check if result is empty or problematic
                     result = data.get("result", "")
                     if not result or not result.strip():
