@@ -32,7 +32,7 @@ class APIModel(ModelInterface):
         response = cached_query_openrouter(prompt, self._model_name)
         if response is None:
             logger.error(f"OpenRouter API returned None for model {self._model_name}")
-            return ""
+            raise ValueError(response)
         result = response["result"]
         reasoning = response.get("reasoning", "No reasoning found")
         completion = f"<think>\n{reasoning}</think>\n{result}"

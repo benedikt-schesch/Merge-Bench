@@ -257,7 +257,7 @@ def main() -> None:
     )
 
     # Log results
-    logger.success("Evaluation Results:")
+    logger.success(f"Evaluation Results {args.model_name}:")
     logger.success(f"Total merges evaluated: {total}")
     logger.success(f"Percentage with valid thinking format: {pct_thinking:.2f}%")
     logger.success(f"Percentage with valid markdown format: {pct_code_md:.2f}%")

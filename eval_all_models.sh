@@ -3,23 +3,23 @@
 set -e
 
 # Default maximum number of parallel workers for eval.py
-MAX_WORKERS=${1:-2}
+MAX_WORKERS=${1:-6}
 
 MAX_SAMPLES=${2:-200}
 
 # List of all available languages from merges/ directory
 LANGUAGES=(
-    "c"
+    # "c"
     "cpp"
-    "csharp"
-    "go"
-    "javascript"
-    "php"
-    "python"
-    "ruby"
-    "rust"
-    "typescript"
-    "java"
+    # "csharp"
+    # "go"
+    # "javascript"
+    # "php"
+    # "python"
+    # "ruby"
+    # "rust"
+    # "typescript"
+    # "java"
 )
 
 # List of API models to evaluate
