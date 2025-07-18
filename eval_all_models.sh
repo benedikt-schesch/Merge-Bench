@@ -9,17 +9,17 @@ MAX_SAMPLES=${2:-200}
 
 # List of all available languages from merges/ directory
 LANGUAGES=(
-    # "c"
+    "c"
     "cpp"
-    # "csharp"
-    # "go"
-    # "javascript"
-    # "php"
-    # "python"
-    # "ruby"
-    # "rust"
-    # "typescript"
-    # "java"
+    "csharp"
+    "go"
+    "javascript"
+    "php"
+    "python"
+    "ruby"
+    "rust"
+    "typescript"
+    "java"
 )
 
 # List of API models to evaluate
@@ -45,7 +45,7 @@ evaluate_model() {
         local total=${#LANGUAGES[@]}
 
         echo "[$model_name] [$progress/$total] Evaluating $language"
-        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS" --verbose
+        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS"
     done
 
     echo "[$model_name] Completed all languages"
