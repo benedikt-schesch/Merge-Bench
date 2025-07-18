@@ -3,7 +3,7 @@
 set -e
 
 # Default maximum number of parallel workers for eval.py
-MAX_WORKERS=${1:-6}
+MAX_WORKERS=${1:-8}
 
 MAX_SAMPLES=${2:-200}
 
