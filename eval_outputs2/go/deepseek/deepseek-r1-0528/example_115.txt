@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict. The difference is purely stylistic - it's about whether there should be an empty line after the assignment to `protoReq.FloatVal`. Both versions are functionally identical.
+
+Here's the resolved version without any semantic changes:
+
+```go
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "floatVal")
+	}
+
+	protoReq.FloatVal, err = runtime.FloatValue(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "floatVal", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+```
+
+Explanation:
+1. Removed the conflict markers (`<<<<<<< HEAD`, `=======`, `>>>>>>> ...`)
+2. Kept the assignment and error check together without the empty line between them
+3. Preserved all surrounding context exactly as provided
+4. Maintained consistent spacing and formatting
+
+This resolution maintains the intended functionality while choosing the more common Go style of keeping assignments and their immediate error checks together without blank lines. Both versions would work identically at runtime.

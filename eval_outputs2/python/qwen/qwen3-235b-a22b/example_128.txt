@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in the phone number formatting configuration. Both sides define the same `number_format` list, with one difference: the right side has added the parameter `mobile_number_portable_region=True`, and the string literals have the `u` prefix.
+
+Since the difference in the `u` prefix can be attributed to Python 2 vs. Python 3 string handling (and the project appears likely Python 3 given the absence of `u` on the left), it's safe to assume the strings do not need the prefix and the `number_format` as defined on the left is preferable.
+
+However, the addition of `mobile_number_portable_region=True` appears to be a meaningful and new functional change and should be preserved.
+
+---
+
+The resolution should include:
+- Keeping the `number_format` from the left (`HEAD`) without the `u` prefixes (as they are unnecessary in Python 3).
+- Adding the `mobile_number_portable_region=True` parameter from the right.
+- Ensuring correct syntax and structure (proper commas and parentheses).
+
+Here's the full code snippet with resolved conflict:
+
+```python
+    uan=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='800\\d{5}', possible_number_pattern='\\d{8}', example_number='80012345'),
+    national_prefix='0',
+    national_prefix_for_parsing='0',
+    number_format=[NumberFormat(pattern='(\\d{2})(\\d{3})(\\d{4})', format='\\1 \\2 \\3', leading_digits_pattern=['[235]'], national_prefix_formatting_rule='0\\1'),
+        NumberFormat(pattern='(\\d{3})(\\d{5})', format='\\1 \\2', leading_digits_pattern=['8'], national_prefix_formatting_rule='0\\1')],
+    mobile_number_portable_region=True)
+```

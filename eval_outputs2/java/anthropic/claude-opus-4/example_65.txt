@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - returning an empty ArrayList when the game state is not PLAYING. The only difference is the syntax used:
+
+- HEAD uses the explicit generic type declaration: `new ArrayList<List<Map<WhiteCardData, Object>>>()`
+- The incoming change uses the diamond operator: `new ArrayList<>()`
+
+Since Java 7, the diamond operator (`<>`) is the preferred way to instantiate generic types as it reduces verbosity while maintaining type safety through type inference. The compiler can infer the type from the method's return type declaration.
+
+Both approaches are functionally identical, but the diamond operator is more concise and follows modern Java best practices.
+
+Here's the resolved code:
+
+```java
+  public List<List<Map<WhiteCardData, Object>>> getWhiteCards(final User user) {
+    // if we're in judge mode, return all of the cards and ignore which user is asking
+    if (state == GameState.JUDGING) {
+      return getWhiteCards();
+    } else if (state != GameState.PLAYING) {
+      return new ArrayList<>();
+    } else {
+      // getPlayerForUser synchronizes on players. This has caused a deadlock in the past.
+      // Good idea to not nest synchronizes if possible anyway.
+      final Player player = getPlayerForUser(user);
+      synchronized (playedCards) {
+
+```

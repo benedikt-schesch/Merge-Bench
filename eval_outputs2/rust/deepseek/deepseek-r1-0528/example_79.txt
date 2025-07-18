@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and found that the intent is ambiguous. The conflict involves two different changes to the cursor-related fields:
+
+1. The HEAD branch adds `physical_cursor_position: Option<DVec2>`
+2. The other branch adds both `cursor_position: Option<Vec2>` and `raw_window_handle: RawWindowHandleWrapper`
+
+These appear to be semantically different changes that can't be automatically reconciled:
+- The cursor position fields have different names and types (`DVec2` vs `Vec2`)
+- The other branch adds an entirely new field (`raw_window_handle`)
+- It's unclear if these cursor fields are meant to coexist or replace each other
+
+Since the intent is ambiguous, I'm returning the original snippet with the conflict markers preserved:
+
+```rust
+    vsync: bool,
+    resizable: bool,
+    decorations: bool,
+    cursor_visible: bool,
+    cursor_locked: bool,
+<<<<<<< HEAD
+    physical_cursor_position: Option<DVec2>,
+=======
+    cursor_position: Option<Vec2>,
+    raw_window_handle: RawWindowHandleWrapper,
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    focused: bool,
+    mode: WindowMode,
+    #[cfg(target_arch = "wasm32")]
+    pub canvas: Option<String>,
+    command_queue: Vec<WindowCommand>,
+```

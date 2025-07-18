@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict arises from a minor wording difference in an error message, but both versions convey the same semantic meaning and intent. The branch version ("occurred when") is slightly more explicit while maintaining the same error reporting functionality. Here's the resolved snippet:
+
+```go
+func TestMarshalJSONPBMarshaler(t *testing.T) {
+	rawJson := `{ "foo": "bar", "baz": [0, 1, 2, 3] }`
+	msg := dynamicMessage{RawJson: rawJson}
+	str, err := new(Marshaler).MarshalToString(&msg)
+	if err != nil {
+		t.Errorf("an unexpected error occurred when marshaling JSONPBMarshaler: %v", err)
+	}
+	if str != rawJson {
+		t.Errorf("marshaling JSON produced incorrect output: got %s, wanted %s", str, rawJson)
+	}
+}
+```
+
+Key resolution points:
+1. Both versions report unexpected errors during marshaling
+2. The branch version ("occurred when") is more explicit about timing
+3. No functional difference exists between the messages
+4. Spelling consistency ("marshaling") is maintained
+5. Error formatting (`%v`) remains identical
+6. All surrounding context is preserved exactly as provided
+
+The resolution maintains the test's intent while choosing the clearer error message wording from the branch.

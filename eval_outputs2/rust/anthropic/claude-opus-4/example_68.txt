@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar functionality but with different naming and structure:
+
+- **HEAD** (left side): Has a method called `validate_world_and_update_archetypes` that both validates the world ID and updates archetypes in a single method, with an inline panic if validation fails.
+- **Right side**: Has a method called `update_archetypes` that calls a separate `validate_world` method first, then proceeds with the archetype update logic.
+
+The semantic intent of both sides is the same:
+1. Validate that the world matches the QueryState's world
+2. Update the archetypes
+
+The right side's approach is cleaner as it separates concerns - validation is handled by a dedicated method. This follows the single responsibility principle and makes the code more modular.
+
+Here's the resolved conflict:
+
+```rust
+    /// generates new archetypes for the given world.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the `world.id()` does not equal the current [`QueryState`] internal id.
+    pub fn update_archetypes(&mut self, world: &World) {
+        self.validate_world(world);
+        let archetypes = world.archetypes();
+        let new_generation = archetypes.generation();
+        let old_generation = std::mem::replace(&mut self.archetype_generation, new_generation);
+        let archetype_index_range = old_generation.value()..new_generation.value();
+
+
+```

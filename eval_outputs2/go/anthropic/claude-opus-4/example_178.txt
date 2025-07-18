@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to import the same package `"go.mongodb.org/mongo-driver/x/bsonx/bsoncore"`. The only difference is:
+- HEAD: single import without parentheses
+- Other branch: import with parentheses (typically used for multiple imports)
+
+Since both sides want the same import and there's currently only one import needed, the semantic intent is clear. I'll resolve by using the simpler single import syntax from HEAD:
+
+```go
+package mongoparser
+
+import "go.mongodb.org/mongo-driver/x/bsonx/bsoncore"
+
+type Command string
+
+const (
+	Unknown           Command = "unknown"
+
+```

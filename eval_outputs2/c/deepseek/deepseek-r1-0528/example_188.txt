@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict occurs because the incoming change adds an optional post-write hook using `advance_func.gpio_write_post`, while the base code doesn't have this feature. Both changes share the same error handling for the write operation and ultimately return `MRAA_SUCCESS` on success. The intent is to add a new feature while preserving existing behavior.
+
+The resolution integrates the new hook functionality while maintaining the original success/error flow:
+
+```c
+    int length = snprintf(bu, sizeof(bu), "%d", value);
+    if (write(dev->value_fp, bu, length*sizeof(char)) == -1) {
+        return MRAA_ERROR_INVALID_HANDLE;
+    }
+
+    if (advance_func.gpio_write_post != NULL)
+        return advance_func.gpio_write_post(dev,value);
+    return MRAA_SUCCESS;
+}
+
+static mraa_result_t
+mraa_gpio_unexport_force(mraa_gpio_context dev)
+```
+
+Key resolution points:
+1. The error handling for `write()` remains unchanged
+2. The new hook call is added after successful write
+3. When the hook exists, its return value is propagated
+4. Original `MRAA_SUCCESS` return is preserved for the no-hook case
+5. Maintains backward compatibility for existing callers
+6. Enables new functionality through `advance_func` interface
+
+The spacing and context are preserved exactly as provided.

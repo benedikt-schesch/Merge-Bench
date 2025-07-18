@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic intent - they're both defining the same function `defaultAPIOptions` with identical logic. The only difference is:
+
+- HEAD uses `*descriptor.MethodDescriptorProto`
+- The incoming change uses `*descriptorpb.MethodDescriptorProto`
+
+This appears to be a refactoring where the package name was changed from `descriptor` to `descriptorpb`. Since both sides have the same function signature and the conflict is only about the type reference, and given that the incoming change also shows a file path change (from `protoc-gen-grpc-gateway/descriptor/services.go` to `internal/descriptor/services.go`), it seems the incoming change is part of a broader refactoring effort.
+
+The semantic intent is clear: both want the same function, just with updated type references. I'll resolve this by keeping the incoming change's type reference:
+
+```go
+		return nil, fmt.Errorf("extension is %T; want an HttpRule", ext)
+	}
+	return opts, nil
+}
+
+func defaultAPIOptions(svc *Service, md *descriptorpb.MethodDescriptorProto) (*options.HttpRule, error) {
+	// FQSN prefixes the service's full name with a '.', e.g.: '.example.ExampleService'
+	fqsn := strings.TrimPrefix(svc.FQSN(), ".")
+
+	// This generates an HttpRule that matches the gRPC mapping to HTTP/2 described in
+	// https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md#requests
+
+```

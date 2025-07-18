@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import the same modules (`sys` and `io`), but in different positions in the file.
+
+- The HEAD version has the imports after the `setuptools` import
+- The other branch (1fcf849...) has the imports at the top of the file (which is the standard Python convention)
+
+Since both sides want the same imports and the conventional Python style is to have all imports at the top of the file, the semantic intent is clear: we need `io` and `sys` imports, and they should be at the top.
+
+Here's the resolved version:
+
+```python
+import io
+import sys
+
+from setuptools import setup
+
+sys.path.insert(0, '.')
+version = __import__('voluptuous').__version__
+
+
+with io.open('README.md', encoding='utf-8') as f:
+
+```

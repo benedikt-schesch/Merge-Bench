@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, here's the resolved version. The conflict arises from differing import styles for `bevy_ecs`, but both versions share identical core imports (`ResMut` and `FromWorld`). The other branch's version includes `IntoSystem` which is likely needed elsewhere in the file (unseen in the snippet), so we preserve that import while maintaining the surrounding context exactly:
+
+```rust
+use crate::{
+    update_asset_storage_system, Asset, AssetLoader, AssetServer, AssetStage, Handle, HandleId,
+    RefChange,
+};
+use bevy_app::{App, EventWriter, Events};
+use bevy_ecs::{
+    system::{IntoSystem, ResMut},
+    world::FromWorld,
+};
+use bevy_utils::HashMap;
+use crossbeam_channel::Sender;
+use std::fmt::Debug;
+
+/// Events that happen on assets of type `T`
+```
+
+**Resolution rationale:**
+1. Preserved `IntoSystem` from the other branch since it appears intentionally added
+2. Maintained multi-line import style for consistency with surrounding structured imports
+3. Kept all other context identical including spacing and comments
+4. All existing functionality (`ResMut`, `FromWorld`) remains available
+5. No ambiguity - the added trait doesn't conflict with existing code

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (HEAD) has no `tearDown` method, while the other side (8a08444b80550a21aa79eb24c96872111fe9cd01) adds a `tearDown` method that calls `parent::tearDown()` and `m::close()`.
+
+The `tearDown` method appears to be for cleaning up after tests, specifically closing Mockery (indicated by `m::close()`). This is a common pattern in PHPUnit tests when using Mockery for mocking. Since this doesn't conflict with any existing functionality and is a standard testing practice, the semantic intent is clear: ensure proper cleanup after each test.
+
+Here's the resolved code:
+
+```php
+use Config;
+use TestCase;
+
+class TestConfig extends TestCase
+{
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
+    public function testDefaultDriver()
+    {
+        $this->assertEquals(Config::get('dispatcher::driver'), 'dateTime');
+    }
+
+
+```

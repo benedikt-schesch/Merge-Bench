@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in how the test method is annotated and declared. The HEAD version uses a docblock `@group` annotation and includes a return type `: void`, while the other branch uses a PHP 8 attribute for grouping and omits the return type. 
+
+The resolution preserves the method description, upgrades the group annotation to a modern PHP attribute, and retains the return type for better type safety. This combines the semantic intent of both changes:
+
+1. Keeps the docblock description for documentation
+2. Uses PHP 8 attribute for group annotation (modern practice)
+3. Maintains `: void` return type (type safety improvement)
+
+Resolved code:
+```php
+
+    /**
+     * Tests that calling a stubbed method will result in the stubbed answer being returned.
+     */
+    #[\PHPUnit\Framework\Attributes\Group('testonly')]
+    public function testStubbedMethodsReturnStubbedAnswer(): void
+    {
+        $newClassName = str_replace('\\', '_', self::class) . '_TestClass7';
+        $mockedClass  = \PhakeTest_MockedClass::class;
+
+        $this->classGen->generate($newClassName, $mockedClass, $this->infoRegistry);
+```

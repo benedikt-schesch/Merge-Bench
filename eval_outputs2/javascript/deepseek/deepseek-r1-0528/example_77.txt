@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I've analyzed the semantic merge conflict regarding the dyeTexelSize uniform value. The key difference is in the second parameter calculation:
+
+- HEAD uses `1.0 / dyeHeight` (correct aspect ratio)
+- Other branch uses `1.0 / dyeWidth` (incorrect aspect ratio)
+
+Since dyeTexelSize should reflect the actual texture dimensions, and we have both dyeWidth and dyeHeight available, the HEAD version is semantically correct. Here's the resolved version:
+
+```javascript
+    gl.uniform1f(advectionProgram.uniforms.dissipation, config.VELOCITY_DISSIPATION);
+    blit(velocity.write.fbo);
+    velocity.swap();
+
+    gl.viewport(0, 0, dyeWidth, dyeHeight);
+
+    if (!ext.supportLinearFiltering)
+        { gl.uniform2f(advectionProgram.uniforms.dyeTexelSize, 1.0 / dyeWidth, 1.0 / dyeHeight); }
+    gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.texId);
+    gl.uniform1i(advectionProgram.uniforms.uSource, density.read.texId);
+    gl.uniform1f(advectionProgram.uniforms.dissipation, config.DENSITY_DISSIPATION);
+    blit(density.write.fbo);
+    density.swap();
+```
+
+Resolution rationale:
+1. Preserved HEAD's correct aspect ratio calculation (`1.0 / dyeHeight`)
+2. Maintained HEAD's formatting and blank line after viewport
+3. Kept all surrounding context unchanged
+4. The correction ensures proper texel size calculation when linear filtering isn't supported
+5. The solution maintains consistency with viewport dimensions

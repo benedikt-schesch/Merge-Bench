@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD (left side)**: Uses `Util.getTuplesFromConstantTupleStrings` with an empty array and `Util.checkQueryOutputsAfterSort` for verification
+- **Right side**: Uses `ImmutableMultiset.of()` to create an empty multiset and `verifyExpected` for verification
+
+Both sides are trying to verify that the result is empty, but using different approaches:
+- HEAD uses a utility method that creates tuples from strings and checks with sorting
+- The right side uses Guava's ImmutableMultiset for an empty collection and a different verification method
+
+Since both achieve the same semantic goal (verifying empty results) but with different implementations, and without more context about which approach is preferred in the codebase, I'll return the snippet with the conflict preserved:
+
+```java
+      String query = "DATA = LOAD 'empty' USING mock.Storage();"
+        + "A = rank DATA;"
+        + "store A into 'empty_result' using mock.Storage();";
+
+      Util.registerMultiLineQuery(pigServer, query);
+<<<<<<< HEAD
+      List<Tuple> expected = Util.getTuplesFromConstantTupleStrings(new String[]{});
+      Util.checkQueryOutputsAfterSort(data.get("empty_result"), expected);
+=======
+
+      Multiset<Tuple> expected = ImmutableMultiset.of();
+      verifyExpected(data.get("empty_result"), expected);
+>>>>>>> b91691ef1d20e616fd9c37d4018eb0db78db8898
+    }
+
+    @Test
+    public void testRankWithSplitInMap() throws Exception {
+        String query = "R1 = LOAD 'testsplit' USING mock.Storage() AS (a:int,b:int);"
+
+```

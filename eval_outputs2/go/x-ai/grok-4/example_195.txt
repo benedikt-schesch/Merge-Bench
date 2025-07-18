@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```go
+				g.Expect(k8sClient.List(hubCtx, deploys, client.InNamespace(namespace))).Should(Succeed())
+				g.Expect(len(deploys.Items)).Should(Equal(0))
+				deploys = &v13.DeploymentList{}
+				g.Expect(k8sClient.List(workerCtx, deploys, client.InNamespace(namespace))).Should(Succeed())
+				g.Expect(len(deploys.Items)).Should(Equal(0))
+<<<<<<< HEAD
+				// check component revision
+				compRevs := &v13.ControllerRevisionList{}
+				g.Expect(k8sClient.List(workerCtx, compRevs, client.InNamespace(prodNamespace))).Should(Succeed())
+				g.Expect(len(compRevs.Items)).Should(Equal(0))
+=======
+>>>>>>> 47a565d00d0bde2f49b1a615defd1089a2bae9c2
+			}, time.Minute).Should(Succeed())
+		})
+
+		It("Test create EnvBinding Application with trait disable and without workflow, delete env, change env and add env", func() {
+			// This test is going to cover multiple functions, including
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different approaches to URL encoding. The HEAD version uses a custom `string_url` function for both the field name and value, while the other branch uses PHP's built-in `urlencode` function. 
+
+After analyzing the context:
+1. The surrounding code consistently uses `string_url` for URL encoding (visible in the `else if` branch)
+2. Both versions correctly handle string casting of the value
+3. Maintaining consistency with the existing `string_url` usage is semantically appropriate
+
+Resolved version:
+```php
+			}
+		} else if( $t_count == 1 ) {
+			$t_query_array[] = string_url( $p_field_name ) . '=' . string_url( $p_field_value[0] );
+		}
+	} else {
+		$t_query_array[] = string_url( $p_field_name ) . '=' . string_url( (string)$p_field_value );
+	}
+
+	return implode( '&', $t_query_array );
+}
+
+
+```

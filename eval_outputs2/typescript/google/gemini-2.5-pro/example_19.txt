@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The semantics of the two branches diverge on what the initial `context` for the middleware execution should be.
+
+-   The `HEAD` branch initializes an empty `context` object. This implies that the middleware pipeline should start with a clean slate, and any required information should be added by the middleware themselves.
+-   The `405a60a4c57070a19882ea10a640d53e5a777e1b` branch initializes the `context` with a shallow copy of the `extractedFn` object. This is a deliberate action to provide the middleware pipeline with initial data from the `extractedFn` object, which likely contains useful information about the function being executed.
+
+The intent of providing initial context data seems more specific and feature-rich. Populating the context from the start is a common pattern in middleware systems to make relevant data available throughout the execution chain. Therefore, adopting the change from the incoming branch is the most logical resolution.
+
+```typescript
+          return executeMiddleware(resolvedMiddleware, 'client', {
+            ...extractedFn,
+            method: resolvedOptions.method,
+            data: opts?.data as any,
+            headers: opts?.headers,
+            context: Object.assign({}, extractedFn),
+          }).then((d) => {
+            if (d.error) throw d.error
+            return d.result
+          })
+        },
+
+```

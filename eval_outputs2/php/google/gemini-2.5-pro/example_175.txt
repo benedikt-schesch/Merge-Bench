@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```php
+
+    public function testLogNotScheduled()
+    {
+        $command = m::mock('Indatus\Dispatcher\Scheduling\ScheduledCommand');
+        $scheduleService = m::mock('Indatus\Dispatcher\Services\ScheduleService[getScheduledCommands,isDue]', [
+                $this->console
+            ], function ($m) use (&$command) {
+                $scheduler = m::mock('Indatus\Dispatcher\Scheduling\Schedulable');
+                $command->shouldReceive('schedule')->once()
+                    ->andReturn($scheduler);
+
+
+```

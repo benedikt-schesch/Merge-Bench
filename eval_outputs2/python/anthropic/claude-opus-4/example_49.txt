@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to fix the same formatting issue in the docstring. The only difference is:
+- HEAD version: has an extra space after the opening quotes (`""" Test`)
+- Other version: has no extra space after the opening quotes (`"""Test`)
+
+The Python convention (PEP 257) is to not have a space after the opening quotes in docstrings. Since both sides have the same intent (fixing the docstring) and the other version follows the correct convention, I'll resolve this by choosing the version without the extra space.
+
+```python
+    out_ = schema({"number": '1234567.8901234'})
+    assert float(out_.get("number")) == 1234567.8901234
+
+
+def test_number_when_invalid_precision_n_scale_none_yield_decimal_true():
+    """Test with Number with no precision and invalid scale"""
+    schema = Schema({"number": Number(precision=14, yield_decimal=True)})
+    try:
+        schema({"number": '12345674.8901234'})
+    except MultipleInvalid as e:
+
+```

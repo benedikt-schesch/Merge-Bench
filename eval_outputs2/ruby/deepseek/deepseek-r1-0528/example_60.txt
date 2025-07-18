@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Since the intent behind the conflicting changes is ambiguous without additional context (such as the implementations of `url` and `base_url` methods), the conflict cannot be safely resolved. Both versions modify the URL construction differently, and it's unclear which approach is correct or if they are compatible. Therefore, the original conflict is preserved.
+
+```ruby
+        JSON.parse(body)
+      end
+
+      def commit(action, parameters, options)
+        begin
+<<<<<<< HEAD
+          raw_response = ssl_post(url(action), post_data(action, parameters), request_headers(options))
+=======
+          raw_response = ssl_post("#{base_url(action)}/#{action}", post_data(action, parameters), request_headers(options))
+>>>>>>> 3de50b31248ab4d6532af3910b74001dcbdb7cc0
+          response = parse(raw_response)
+        rescue ResponseError => e
+          raw_response = e.response.body
+          response = parse(raw_response)
+        end
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - marking this test method as dependent on `testInitialize`. The conflict is between two different approaches:
+
+1. **HEAD**: Uses the older PHPDoc `@depends` annotation and adds a void return type
+2. **Other branch**: Uses the newer PHP 8 attribute syntax `#[\PHPUnit\Framework\Attributes\Depends('testInitialize')]` but doesn't specify a return type
+
+Since both approaches serve the same purpose (declaring test dependencies), and considering modern PHP practices favor attributes over annotations when available, while also preferring explicit return types, the best resolution would be to combine both improvements:
+
+```php
+    }
+
+    /**
+     * @depends testInitialize
+     */
+    #[\PHPUnit\Framework\Attributes\Depends('testInitialize')]
+    public function testNamespaceAliasOnVar(): void
+    {
+        $this->initializer->initialize($this);
+
+        $this->assertInstanceOf(\Phake\IMock::class, $this->shortNameMock1);
+    }
+
+```
+
+This resolution:
+- Keeps both the PHPDoc and attribute for maximum compatibility
+- Includes the void return type for better type safety
+- Preserves the intent from both sides of the merge

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a missing return statement in one branch. The HEAD branch returns 1 after cleanup, while the other branch has no return statement. Since the surrounding context doesn't show the function's return type or full control flow, the intent is ambiguous. 
+
+Resolving would require knowing if:
+1. The function should always return a value
+2. The cleanup operation changes error-handling requirements
+3. The return value affects upstream logic
+
+Without this information, it's unsafe to automatically resolve. The conflict markers are preserved as required.
+
+```c
+    else
+#endif
+      ssh_sharing_logf(cs->parent->ssh, cs->id, "Socket error: %s", error_msg);
+  }
+  share_begin_cleanup(cs);
+<<<<<<< HEAD
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static int getstring_inner(const void *vdata,
+                           int datalen,
+                           char **out,
+```

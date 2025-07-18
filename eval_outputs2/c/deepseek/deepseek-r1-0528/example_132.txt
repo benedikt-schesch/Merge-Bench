@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The merge conflict involves the function signature and implementation of `x11_receive`. The ambiguity arises because: 
+
+1. **HEAD branch** declares `x11_receive` as returning an `int` and includes a `return 0` statement
+2. **Other branch** declares it as `void` with an empty body
+
+Without additional context about the function's intended purpose or its usage, it's impossible to determine which version is semantically correct. The return type (`int` vs `void`) and presence/absence of a return statement represent a fundamental conflict in the function's contract.
+
+Here's the original code with conflicts preserved:
+
+```c
+                    int port,
+                    const char *error_msg,
+                    int error_code)
+{
+}
+<<<<<<< HEAD
+static int x11_receive(Plug plug, int urgent, char *data, int len)
+{
+  return 0;
+=======
+static void x11_receive(Plug plug, int urgent, char *data, int len)
+{
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+static void x11_sent(Plug plug, int bufsize)
+{
+}
+<<<<<<< HEAD
+
+```

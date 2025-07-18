@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `select` method:
+
+- HEAD version: Adds a local variable `oldValue` to store the previous value of `this._selected`
+- Incoming version: Adds a period to the JSDoc comment and calls two new methods (`_selectInInput` and `_selectInView`) before setting `this._selected`
+
+The semantic intent appears to be:
+1. HEAD wants to preserve the old value (likely for comparison or event emission)
+2. The incoming changes want to separate the selection logic into input and view components
+
+Both changes are complementary and can be merged together. The resolved version should:
+- Keep the improved JSDoc comment with the period
+- Preserve the `oldValue` variable from HEAD
+- Include the method calls from the incoming changes
+
+Here's the resolved code:
+
+```typescript
+  ngOnDestroy() {
+    this._inputSubscription.unsubscribe();
+    this._disabledChange.complete();
+  }
+
+  /** Selects the given date. */
+  select(date: D): void {
+    let oldValue = this._selected;
+    this._selectInInput(date);
+    this._selectInView(date);
+    this._selected = date;
+  }
+
+  /** Selects the given date from view in input. */
+  private _selectInInput(date: D): void {
+
+```

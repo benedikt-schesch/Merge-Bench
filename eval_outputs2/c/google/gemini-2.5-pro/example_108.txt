@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+This is a classic conflict where a function signature is being changed across an entire API. One branch (`HEAD`) still has the old function signature for the `Plug` interface callbacks, which returned an `int`. The other branch (`4348393f562c8011ebca43d6198e98638aa115b5`) has changed them to return `void`, as the integer return value was never used.
+
+The semantic intent of the `4348393f562c8011ebca43d6198e98638aa115b5` branch is to refactor the API for clarity and to remove unused return values. This is the correct path forward. The resolution involves removing the `return 0;` from the preceding function to match its now-`void` return type, and choosing the `void` signature for `rlogin_receive`.
+
+```c
+  if (error_msg) {
+    /* A socket error has occurred. */
+    logevent(rlogin->frontend, error_msg);
+    connection_fatal(rlogin->frontend, "%s", error_msg);
+  } /* Otherwise, the remote side closed the connection normally. */
+}
+
+static void rlogin_receive(Plug plug, int urgent, char *data, int len)
+{
+  Rlogin rlogin = (Rlogin)plug;
+  if (urgent == 2) {
+    char c;
+
+
+```

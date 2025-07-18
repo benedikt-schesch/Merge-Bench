@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (left side)**: Uses `!ie_upto10 && !e_button(e)` - checking if NOT IE up to version 10 AND the button check fails
+- **Right side**: Uses `!ie_lt9 && (ie ? !e.buttons : !e_button(e))` - checking if NOT IE less than 9 AND then either checking `!e.buttons` for IE or `!e_button(e)` for non-IE
+
+Both sides are trying to handle browser compatibility for mouse button detection, but the right side appears to be more comprehensive:
+1. It uses a more specific IE version check (`ie_lt9` vs `ie_upto10`)
+2. It handles modern IE differently by checking `e.buttons` property (which is the modern standard) vs the older `e_button(e)` method
+
+The semantic intent is to properly detect when no mouse button is pressed across different browser versions. The right side's approach is more nuanced and likely more correct for handling the differences between IE versions.
+
+Here's the resolved code:
+
+```javascript
+      pushPendingSelection(doc, doc.history.done);
+      doc.history.atomicSelection = false;
+    }
+
+    var move = operation(cm, function(e) {
+      if (!ie_lt9 && (ie ? !e.buttons : !e_button(e))) done(e);
+      else extend(e);
+    });
+    var up = operation(cm, done);
+    on(document, "mousemove", move);
+    on(document, "mouseup", up);
+
+```

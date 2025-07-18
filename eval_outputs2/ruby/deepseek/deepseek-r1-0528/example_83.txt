@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes, the resolution maintains consistency with the surrounding code while ensuring safe handling of potentially nil `options`. The incoming change's approach of using `options || {}` aligns with the pattern in the `else` branch and provides nil safety.
+
+Here's the resolved code:
+
+```ruby
+          merge_multipart_file!(options) if request_method == :multipart_post
+          @request_method = :post
+          @headers = Twitter::Headers.new(@client, @request_method, @uri).request_headers
+        elsif %i[json_put].include?(request_method)
+          @request_method = :put
+          @headers = Twitter::Headers.new(@client, @request_method, @uri, options || {}).request_headers
+        else
+          @request_method = request_method
+          @headers = Twitter::Headers.new(@client, @request_method, @uri, options).request_headers
+        end
+      end
+
+```
+
+Key reasoning:
+1. The `else` branch already passes `options` directly to `Twitter::Headers`
+2. The `options || {}` approach safely handles potential nil values while maintaining consistency
+3. This resolution preserves the behavior intended by both branches of the merge conflict
+4. The pattern matches the surrounding code's semantics for header initialization

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+I'll help resolve this merge conflict while preserving the surrounding context exactly. Here's my analysis:
+
+The conflict centers around how to prepare the query before accessing entity data. Both versions are updating archetypes, but the HEAD version also includes world validation. Considering the function is marked `unsafe`, validation is likely critical for safety invariants. However, the other branch's version might be part of a broader refactor.
+
+Since I don't have enough context to determine if the validation was intentionally removed in the other branch or if `update_archetypes` now includes validation, I must return the conflicted version as the intent is ambiguous.
+
+```rust
+    pub unsafe fn get_unchecked<'w, 's>(
+        &'s mut self,
+        world: &'w World,
+        entity: Entity,
+    ) -> Result<<Q::Fetch as Fetch<'w, 's>>::Item, QueryEntityError> {
+<<<<<<< HEAD
+        self.validate_world_and_update_archetypes(world);
+=======
+        self.update_archetypes(world);
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+        self.get_unchecked_manual(
+            world,
+            entity,
+            world.last_change_tick(),
+            world.read_change_tick(),
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_6(rctx, inboundMarshaler, server, req, pathParams)
+```
+
+**Resolution Reasoning:**  
+The conflict occurs between two versions of `runtime.AnnotateIncomingContext` call. The semantic intent is clear:
+1. Both branches agree on the first three parameters (`ctx`, `mux`, `req`)
+2. The incoming branch adds a required fourth parameter – the fully-qualified gRPC method name (`/grpc.gateway.examples.internal.helloworld.Greeter/SayHello`)
+3. This matches modern grpc-gateway patterns where method names are explicitly passed for context annotation
+4. The trailing error handling and function call remain identical in both branches
+
+The method name parameter is necessary for proper operation of the gateway runtime and should be retained. The HEAD version omits this required parameter and would cause runtime issues.

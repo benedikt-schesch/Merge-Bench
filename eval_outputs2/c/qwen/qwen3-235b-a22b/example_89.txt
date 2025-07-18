@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The resolution of the merge conflict is guided by the intent across both versions of the code: properly cleaning up a Cairo-based draw context by releasing associated resources. The two diverging implementations represent two approaches:
+
+- **HEAD version:** calls `cairo_destroy(dctx.u.cairo.cr);`, which directly destroys the Cairo drawing context.
+- **Incoming commit version (fc089d5):** introduces conditional logic based on the GTK+ version. For versions **3.22.0 and above**, `gdk_window_end_draw_frame()` is used to end a drawing operation initiated by `gdk_window_begin_draw_frame()` (which better matches the expected drawing lifecycle in modern GTK). For **older versions**, it falls back to `cairo_destroy()`.
+
+Given that the newer version (fc089d5) uses `gdk_window_end_draw_frame()` when appropriate—thus managing resources more safely and idiomatically based on GTK lifecycle expectations—it better reflects semantic correctness and compatibility. Therefore, the incoming change correctly generalizes the drawing context cleanup and should **replace** the direct Cairo context destruction from the HEAD version.
+
+However, as per the instructions, **no modifications should be made to the surrounding code**, including spacing and formatting, even if improvements might be possible.
+
+---
+
+Here is the resolved snippet in markdown code block, preserving all surrounding code and formatting exactly as given:
+
+```c
+    gdk_gc_unref(dctx.u.gdk.gc);
+  }
+#endif
+#ifdef DRAW_TEXT_CAIRO
+  if (dctx.type == DRAWTYPE_CAIRO) {
+#if GTK_CHECK_VERSION(3, 22, 0)
+    gdk_window_end_draw_frame(dctx.u.cairo.gdkwin, dctx.u.cairo.drawctx);
+#else
+    cairo_destroy(dctx.u.cairo.cr);
+#endif
+  }
+#endif
+
+  gdk_window_invalidate_rect(
+      gtk_widget_get_window(fs->preview_area), NULL, FALSE);
+
+```

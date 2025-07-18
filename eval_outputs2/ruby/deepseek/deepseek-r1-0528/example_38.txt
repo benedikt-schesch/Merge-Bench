@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing method definitions and documentation styles. The HEAD version defines `manhattan_distance` as an instance method without explicit parameter documentation, while the incoming branch defines it as a class method (`self.manhattan_distance`) with YARD-style parameter documentation.
+
+After analyzing the semantics:
+1. Both versions implement identical functionality in the method body
+2. The YARD documentation improves maintainability
+3. The method is a pure utility function (no instance state needed)
+
+The optimal resolution preserves the documentation improvements while maintaining the original method type as an instance method. This maintains backward compatibility with existing callers while adding documentation benefits.
+
+Resolved version:
+```ruby
+      end
+      
+      
+      # city block, Manhattan distance, or L1 norm.
+      # Parameters a and b are vectors with continuous attributes.
+      # @param a [Object] First vector for distance calculation
+      # @param b [Object] Second vector for distance calculation
+      # @return [Object] Manhattan distance between the vectors
+      def manhattan_distance(a, b)
+        sum = 0.0
+        a.each_with_index do |item_a, i|
+          item_b = b[i]
+          sum += (item_a - item_b).abs
+        end
+```

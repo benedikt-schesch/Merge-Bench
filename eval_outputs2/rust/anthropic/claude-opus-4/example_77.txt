@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to initialize a component ID, but using different approaches:
+
+- **HEAD** (left side): Creates a `storages` variable and uses `components.init_component::<W<usize>>(&mut storages)`
+- **Right side**: Uses `components.get_or_insert_id::<usize>()` without needing the `storages` variable
+
+The key difference is:
+- HEAD wraps the type in `W<...>` and requires a mutable reference to `storages`
+- The right side uses the type directly and doesn't need `storages`
+
+Since the right side's approach is simpler and doesn't require the additional `storages` variable that isn't used elsewhere in the visible code, and both achieve the same goal of getting a component ID, I'll resolve in favor of the simpler approach:
+
+```rust
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+
+    #[test]
+    fn table() {
+        let mut components = Components::default();
+        let component_id = components.get_or_insert_id::<usize>();
+        let columns = &[component_id];
+        let mut table = Table::with_capacity(0, columns.len());
+        table.add_column(components.get_info(component_id).unwrap());
+        let entities = (0..200).map(Entity::new).collect::<Vec<_>>();
+        for entity in entities.iter() {
+
+```

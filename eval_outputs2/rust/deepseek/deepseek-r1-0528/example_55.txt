@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+The merge conflict involves the trait bound for the generic type `T` in the `EventReader` implementation. Both sides agree on the struct name and method implementation, but disagree on whether `T` should be a `Resource` or `Component`. Since these are distinct traits with different semantic meanings in Rust (especially in game engine contexts like Bevy), and without additional context about the intended purpose of `EventReader`, this appears to be a genuine conflict in design intent.
+
+Here's the original code with conflict markers preserved:
+
+```rust
+                    .map(map_instance_event_with_id),
+            ),
+    }
+}
+
+<<<<<<< HEAD
+impl<'w, 's, T: Resource> EventReader<'w, 's, T> {
+=======
+impl<'w, 's, T: Component> EventReader<'w, 's, T> {
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    /// Iterates over the events this EventReader has not seen yet. This updates the EventReader's
+    /// event counter, which means subsequent event reads will not include events that happened
+    /// before now.
+    pub fn iter(&mut self) -> impl DoubleEndedIterator<Item = &T> {
+        self.iter_with_id().map(|(event, _id)| event)
+```
+
+Key observations:
+1. Both implementations share identical method signatures and documentation
+2. The conflict is purely about the trait bound (`Resource` vs `Component`)
+3. These traits imply different semantic purposes:
+   - `Resource` suggests singleton global data
+   - `Component` suggests entity-associated data
+4. Without knowing the project's design decisions, this requires human intervention
+
+Resolution requires either:
+1. Choosing one trait bound based on project conventions
+2. Creating two separate implementations
+3. Introducing a new trait that unifies both contexts
+4. Modifying `EventReader` to support both use cases
+
+Since the conflict involves fundamental design intent, I've preserved the original conflict markers for manual resolution.

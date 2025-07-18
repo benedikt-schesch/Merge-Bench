@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD (current branch) includes: `var _ = descriptor.ForMessage`
+- The incoming change (0e11f6f8...) removes this line
+
+This appears to be a conflict in the import usage declarations (the `var _ = ...` pattern is commonly used in Go to ensure imports are used). 
+
+Since this is in a gRPC-related file (based on the context showing `StreamServiceClient` and other gRPC-related imports), and the `descriptor` package is commonly used in gRPC code generation, the most likely scenario is:
+
+1. HEAD added the descriptor import and its usage declaration
+2. The incoming change either never had it or removed it because it wasn't needed
+
+Without seeing the actual imports or more context about whether `descriptor.ForMessage` is actually used in the file, the safest resolution is to keep the line from HEAD, as removing an import usage declaration could cause compilation errors if the import is actually used elsewhere in the file.
+
+```go
+var _ codes.Code
+var _ io.Reader
+var _ status.Status
+var _ = runtime.String
+var _ = utilities.NewDoubleArray
+var _ = descriptor.ForMessage
+var _ = metadata.Join
+
+func request_StreamService_BulkCreate_0(ctx context.Context, marshaler runtime.Marshaler, client StreamServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var metadata runtime.ServerMetadata
+	stream, err := client.BulkCreate(ctx)
+
+```

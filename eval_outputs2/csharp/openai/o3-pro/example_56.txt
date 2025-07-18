@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+            ExecutionState<NullType> tempExecutionState = CommonUtility.CreateTemporaryExecutionState(modifiedOptions);
+#else
+            ExecutionState<NullType> tempExecutionState = BlobCommonUtility.CreateTemporaryExecutionState(modifiedOptions);
+#endif
+
+            return Task.Run(async () =>
+            {
+                bool lessThanSingleBlobThreshold = sourceAsStream.CanSeek
+                                                   && (length ?? sourceAsStream.Length - sourceAsStream.Position)
+                                                   <= modifiedOptions.SingleBlobUploadThresholdInBytes;
+                if (modifiedOptions.ParallelOperationThreadCount == 1 && lessThanSingleBlobThreshold)
+                {
+                    string contentMD5 = null;
+                    if (modifiedOptions.StoreBlobContentMD5.Value)
+                    {
+                        StreamDescriptor streamCopyState = new StreamDescriptor();
+```

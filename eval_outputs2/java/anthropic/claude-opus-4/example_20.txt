@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - calculating a new position and volume for physics movement. The key difference is that HEAD has some commented-out code that the other branch doesn't have.
+
+Both sides:
+- Calculate `newPosition` identically
+- Get the `volume` from the scene
+- Both continue with creating `worldVolume` and calculating block coordinates
+
+The HEAD branch includes commented-out code that appears to be old/unused:
+- `//final Point position = scene.getTransformLive().getPosition();`
+- `//final BoundingBox oldVolume = volume.clone().offset(position);`
+
+Since these lines are already commented out and both sides have the same functional code, the semantic intent is identical. The cleaner resolution is to take the version without the commented code.
+
+```java
+					// u - velocity
+					// t - timestep
+					// a - acceleration
+
+					final Vector3 movement = prevVelocity.multiply(dt).add(acceleration.multiply(dt * dt).divide(2));
+					Point newPosition = scene.getTransformLive().getPosition().add(movement);
+					final BoundingBox volume = scene.getVolume();
+					BoundingBox worldVolume = volume.clone().offset(newPosition);
+					final int bx = newPosition.getBlockX();
+					final int by = newPosition.getBlockY();
+					final int bz = newPosition.getBlockZ();
+					final int rangeX = (int) Math.ceil(volume.getMax().getX() - volume.getMin().getX());
+
+```

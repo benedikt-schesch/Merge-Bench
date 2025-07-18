@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same test method `testGit()` but with different annotations:
+
+- HEAD has: `@SuppressWarnings("unchecked")` before the method declaration
+- The other branch has: `@Test` annotation before the method declaration
+
+There's also a structural issue where `@Test` appears at the class level at the top, which is incorrect in Java (it should be at the method level).
+
+Based on the semantics and intent:
+1. Both sides want the same test method
+2. The `@Test` annotation is necessary for this to be recognized as a test method
+3. The `@SuppressWarnings("unchecked")` annotation from HEAD is likely needed to suppress warnings in the method implementation
+
+The resolution should include both annotations at the method level, and remove the incorrectly placed `@Test` at the class level.
+
+```java
+>>>>>>> a647950590fa8dec1925101321699283f22a8bff
+
+@Test
+public class HelpTest
+{
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGit()
+    {
+        CliBuilder<Runnable> builder = Cli.<Runnable>builder("git")
+                .withDescription("the stupid content tracker")
+                .withDefaultCommand(Help.class)
+                .withCommands(Help.class,
+
+```

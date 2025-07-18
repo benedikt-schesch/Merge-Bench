@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing type annotations for the `path` property. The HEAD branch uses `typing.List[str]` while the other branch uses `typing.List[typing.Hashable]`. 
+
+The resolution chooses `typing.List[typing.Hashable]` because:
+1. Hashable is more general (strings are hashable, but paths might contain other hashable types like integers)
+2. It preserves compatibility with both branches
+3. The underlying implementation (`self.errors[0].path`) likely supports hashable types
+4. The change maintains semantic correctness while being more flexible
+
+Here's the resolved snippet:
+
+```python
+    @property
+    def msg(self) -> str:
+        return self.errors[0].msg
+
+    @property
+    def path(self) -> typing.List[typing.Hashable]:
+        return self.errors[0].path
+
+    @property
+    def error_message(self) -> str:
+        return self.errors[0].error_message
+
+```

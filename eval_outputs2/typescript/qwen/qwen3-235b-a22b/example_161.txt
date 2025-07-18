@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```typescript
+import { getAllFeatures } from "../models/FeatureModel";
+import { ExperimentRule, NamespaceValue } from "../../types/feature";
+import { hasActiveSubscription } from "../services/stripe";
+import { usingOpenId } from "../services/auth";
+import { cloneDeep } from "lodash";
+import { getLicence } from "../init/licence";
+import { getSSOConnectionSummary } from "../models/SSOConnectionModel";
+import crypto from "crypto";
+
+export async function getUser(req: AuthRequest, res: Response) {
+  // If using SSO, auto-create users in Mongo who we don't recognize yet
+  if (!req.userId && usingOpenId()) {
+    const user = await createUser(req.name || "", req.email, "", req.verified);
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict involves two branches making changes at the same location. The HEAD branch only calls `mm_do_lock_slow()` when `ret` is true, while the other branch adds `_spinlock_unlock()` and `sched_yield()` after the lock attempt. Since the intent of these operations is ambiguous (the unlock/yield might be required for resource management or scheduling, but could conflict with locking semantics), and without more context about the locking strategy, it's unsafe to automatically resolve this. 
+
+The conflict is preserved as shown below:
+
+```c
+
+        if (ret) {
+            /* Still no luck, try the slow approach */
+            mm_do_lock_slow(&lock->locked);
+        }
+<<<<<<< HEAD
+=======
+        _spinlock_unlock(lock);
+        sched_yield();
+>>>>>>> 5921a191ef461e97a894063110b45f415affddcb
+    }
+    return 1;
+}
+
+static void mm_do_lock_slow(volatile unsigned int* locked)
+
+```

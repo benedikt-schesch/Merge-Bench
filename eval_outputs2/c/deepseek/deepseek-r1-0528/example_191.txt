@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises because one branch added a new optional post-function call before returning success, while the other branch didn't have this addition. The semantic intent is:
+1. Both sides agree on closing the drive and returning success
+2. The branch adds an optional post-hook (gpio_mode_post) that should be called if available
+3. If the post-hook exists, it should return its result instead of MRAA_SUCCESS
+
+The resolution preserves both intents by:
+1. Keeping the close(drive) call
+2. Adding the conditional gpio_mode_post call
+3. Maintaining the MRAA_SUCCESS return as fallback
+
+Resolved code:
+```c
+        return MRAA_ERROR_INVALID_RESOURCE;
+
+    }
+
+    close(drive);
+    if (advance_func.gpio_mode_post != NULL)
+        return advance_func.gpio_mode_post(dev,mode);
+    return MRAA_SUCCESS;
+}
+
+mraa_result_t
+mraa_gpio_dir(mraa_gpio_context dev, gpio_dir_t dir)
+
+```

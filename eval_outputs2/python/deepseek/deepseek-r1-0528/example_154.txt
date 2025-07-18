@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+```python
+    # print a debug.dbg title
+    debug.dbg()
+    debug.dbg('-' * 70)
+    debug.dbg(' ' * 62 + 'complete')
+    debug.dbg('-' * 70)
+    debug.dbg('complete_scope', scope)
+    debug.dbg('user_scope', f.parser.user_scope.get_simple_for_line(row))
+
+    try:
+        path = f.get_row_path(column)
+    except ParserError as e:
+        path = []
+```
+
+Resolution reasoning:
+1. Both sides share the common goal of logging debug information
+2. The surrounding context consistently uses `debug.dbg()` for debug output
+3. The conflicting changes are complementary rather than mutually exclusive:
+   - HEAD logs `complete_scope` using the existing debug framework
+   - The other branch adds new logging for `user_scope`
+4. To maintain consistency and preserve both intents:
+   - Keep `debug.dbg` format for `complete_scope` (HEAD version)
+   - Convert the `print` statement for `user_scope` to match `debug.dbg` style
+   - Add the `user_scope` logging as a new line
+5. The `row` variable from the other branch's change appears to be in scope based on the surrounding context
+
+This resolution maintains:
+- Consistent debug logging style
+- All debug information from both branches
+- Semantic meaning of both changes
+- Proper indentation and formatting

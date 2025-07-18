@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Based on the context, the conflict arises from inserting either a `Foo(0.0f32)` or a raw `0.0f32` into the world. The surrounding code shows a system that removes `Foo` components, and the test expects exactly one removal operation to occur (verified by the resource counter).
+
+The key observations:
+1. The removal system specifically targets `Foo` components
+2. The test asserts that the removal count is `1`
+3. The system runs twice, but should only remove `Foo` once
+
+The HEAD version (`Foo(0.0f32)`) is consistent with the removal system, while the other branch's version (`0.0f32`) would cause the test to fail since:
+- The removal system wouldn't find any `Foo` components
+- The resource counter would remain `0`
+- The assertion (`assert_eq!(..., 1)`) would fail
+
+Resolved version maintaining test correctness:
+
+```rust
+                commands.entity(entity).remove::<Foo>();
+            }
+        }
+
+        let mut stage = SystemStage::parallel().with_system(removal);
+        world.spawn().insert(Foo(0.0f32));
+        world.insert_resource(0usize);
+        stage.run(&mut world);
+        stage.run(&mut world);
+        assert_eq!(*world.get_resource::<usize>().unwrap(), 1);
+
+
+```

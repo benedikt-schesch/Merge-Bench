@@ -1,0 +1,14 @@
+<think>
+No reasoning found</think>
+The conflict arises from the addition of formatting directives (`# fmt: off` and `# fmt: on`) around the import statement in one branch, while the other branch simply has the import. Both branches agree on the core content (`import typing`), so we preserve the formatting directives as they provide additional semantic value (disabling formatters for that section). 
+
+The resolved code maintains the formatting directives and preserves the original spacing/context exactly:
+
+```python
+# fmt: off
+import typing
+
+# fmt: on
+
+class Error(Exception):
+    """Base validation exception."""

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to ensure that `host` and `port` configuration values are set, but with different approaches:
+
+- **HEAD** (left side): Uses a more explicit approach with `if` statements that only set the values if they are `null`
+- **Right side**: Uses a ternary operator approach that sets the values if they're not already set (using `isset()`)
+
+Both approaches achieve the same semantic intent - ensuring that `$this->cfg['host']` and `$this->cfg['port']` have values, using the provided `$host` and `$port` as defaults.
+
+However, there's a subtle difference: the HEAD version only sets values when they are explicitly `null`, while the right side sets values when they're not set at all (undefined). The HEAD approach seems more precise and is already handling the `host` assignment earlier in the context.
+
+Since the HEAD version is more consistent with the existing code pattern above it (which already handles the host assignment), I'll resolve in favor of HEAD:
+
+```php
+            }
+            if ($this->cfg['port'] === null) {
+                $this->cfg['port'] = $port;
+            }
+        }
+
+        // choose appropriate transport
+        // if 'bosh_url' cfg is defined include 0206
+        if (isset($this->cfg['bosh_url'])) {
+            JAXLLogger::debug("including bosh xep");
+
+```

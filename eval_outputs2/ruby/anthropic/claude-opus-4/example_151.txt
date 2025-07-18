@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the method signature for `get_page`. The conflict is about whether `target_url` should be a positional parameter or a keyword argument.
+
+- HEAD version: `def get_page(target_url)` - uses positional parameter
+- Incoming version: `def get_page(target_url: nil)` - uses keyword argument with nil default
+
+Given that the method is immediately using `target_url` in the request without any nil checking, and the docstring indicates it's an "API-generated URL for the requested results page", it appears this parameter is required. The keyword argument approach with `nil` default doesn't align with the intent since the parameter seems mandatory.
+
+However, since I cannot be certain about the broader context of why the keyword argument change was made (it might be part of a larger refactoring effort to standardize the codebase), I should preserve the conflict as is:
+
+```ruby
+            ##
+            # Retrieve a single page of AvailablePhoneNumberCountryInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of AvailablePhoneNumberCountryInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return AvailablePhoneNumberCountryPage.new(@version, response, @solution)
+
+```

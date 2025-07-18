@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import modules from the `phonenumbers` package, but they're adding different imports:
+
+- HEAD (current branch) adds: `from phonenumbers.util import prnt`
+- The incoming branch adds: `AsYouTypeFormatter` to the existing import line
+
+Since these are non-conflicting additions (they import different things), the semantic intent is to include both imports. Here's the resolved version:
+
+```python
+import re
+import unittest
+
+from phonenumbers import PhoneNumberType, PhoneMetadata, NumberParseException
+from phonenumbers import phonenumberutil, PhoneNumber, is_emergency_number
+from phonenumbers import shortnumberinfo, ShortNumberCost, AsYouTypeFormatter
+from phonenumbers.util import prnt
+from phonenumbers.re_util import fullmatch
+
+
+class ExampleNumbersTest(unittest.TestCase):
+    """Verifies all of the example numbers in the metadata are valid and of
+
+```

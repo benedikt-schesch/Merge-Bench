@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to rename a parameter in the function signature. The HEAD version uses `app_builder` while the other branch uses `app`. Since both changes have the same intent (improving the parameter name), and `app` is more concise and clear than `app_builder`, I'll resolve by choosing the simpler name.
+
+```rust
+        }
+    }
+    *current_frame += 1;
+}
+
+pub(crate) fn setup_app(app: &mut App) -> &mut App {
+    let filename =
+        std::env::var("CI_TESTING_CONFIG").unwrap_or_else(|_| "ci_testing_config.ron".to_string());
+    let config: CiTestingConfig = ron::from_str(
+        &std::fs::read_to_string(filename).expect("error reading CI testing configuration file"),
+    )
+
+```

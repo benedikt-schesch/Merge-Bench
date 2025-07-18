@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve a similar goal - checking whether the query should use the dense iteration path - but they're using different approaches:
+
+- **HEAD**: Uses compile-time constants `Q::Fetch::IS_DENSE && F::Fetch::IS_DENSE` to check if both the query fetch and filter fetch are dense
+- **Other branch**: Uses a runtime field `self.is_dense` to check the same condition
+
+The semantic intent is the same: determine if the query iterator should use the optimized dense iteration path. The `self.is_dense` field was likely introduced to cache this check, possibly computed during iterator initialization based on the same `IS_DENSE` constants.
+
+Since both achieve the same goal and the runtime field approach is likely an optimization to avoid repeated compile-time constant checks, I'll preserve the newer approach using `self.is_dense`:
+
+```rust
+        &mut self,
+        tables: &'w Tables,
+        archetypes: &'w Archetypes,
+        query_state: &'s QueryState<Q, F>,
+    ) -> Option<<Q::Fetch as Fetch<'w, 's>>::Item> {
+        if self.is_dense {
+            loop {
+                if self.current_index == self.current_len {
+                    let table_id = self.table_id_iter.next()?;
+                    let table = &tables[*table_id];
+                    self.fetch.set_table(&query_state.fetch_state, table);
+
+```

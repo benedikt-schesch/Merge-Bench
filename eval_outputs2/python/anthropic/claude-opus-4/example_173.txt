@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (current branch)**: Imports `size`, `inverse`, and `GCD` from `Crypto.Util.number`
+
+**Incoming branch**: Adds Python 2.1 compatibility check and imports `size` and `inverse` from `Crypto.Util.number` (but not `GCD`)
+
+The semantic intent appears to be:
+- The incoming branch wants to ensure Python 2.1 compatibility
+- The HEAD wants to use the `GCD` function in addition to `size` and `inverse`
+
+The resolution should include both the Python 2.1 compatibility check AND import all three functions (`size`, `inverse`, and `GCD`).
+
+```python
+
+__all__ = ['rsa_construct']
+
+import sys
+
+if sys.version_info[0] == 2 and sys.version_info[1] == 1:
+    from Crypto.Util.py21compat import *
+from Crypto.Util.number import size, inverse, GCD
+
+class error(Exception):
+    pass
+
+class _RSAKey(object):
+
+```

@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is defining type aliases and constants for `NullValue` from the `structpb` package
+2. The incoming branch is adding a compile-time assertion comment and constant to ensure proto package version compatibility
+
+These changes appear to be complementary rather than conflicting - the HEAD changes are about exposing symbols from structpb, while the incoming changes are about ensuring proto package compatibility. Both should be kept.
+
+Here's the resolved code:
+
+```go
+	reflect "reflect"
+)
+
+// Symbols defined in public import of google/protobuf/struct.proto.
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+
+type NullValue = structpb.NullValue
+
+const NullValue_NULL_VALUE = structpb.NullValue_NULL_VALUE
+
+var NullValue_name = structpb.NullValue_name
+var NullValue_value = structpb.NullValue_value
+
+```

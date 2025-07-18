@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+```ruby
+      end
+    end
+
+    describe "workers_size" do
+      it "retrieves the number of busy workers" do
+        Sidekiq.redis do |c|
+          c.sadd("processes", ["process_1", "process_2"])
+          c.hset("process_1", "busy", 1)
+          c.hset("process_2", "busy", 2)
+        end
+        s = Sidekiq::Stats.new
+        assert_equal 3, s.workers_size
+```
+
+### Resolution Reasoning:
+1. **Redis Connection**  
+   Using `Sidekiq.redis` is more conventional and explicit than `@cfg.redis`, which appears to be an internal implementation detail.
+
+2. **SADD Operation**  
+   The array version `c.sadd("processes", ["process_1", "process_2"])` is functionally equivalent to two separate SADD calls but more efficient. Both approaches add two members to the Redis set.
+
+3. **Preserved Logic**  
+   The subsequent hset operations and assertions remain unchanged since they're identical in both versions. The test setup achieves the same semantic state regardless of which Redis connection method or SADD approach is used.
+
+The resolution maintains the test's intent while adopting the more standard and efficient implementation. The merged version:
+- Uses Sidekiq's public Redis interface
+- Efficiently adds set members in one operation
+- Preserves all test assertions and setup logic

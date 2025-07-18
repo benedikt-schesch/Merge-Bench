@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+An expert in semantic merge conflict resolution would recognize that both branches are attempting to add capabilities to the file, and the conflict arises from choosing different libraries for the same purpose (PDF parsing). Additionally, one branch adds other unrelated, non-conflicting utilities.
+
+The semantic resolution is to include the additions from both branches, as it's possible the codebase now requires both PDF parsing libraries, or is in a state of transition. This approach preserves the intent of both changes and prevents breaking code that might rely on either library. A follow-up code review can then determine if one of the libraries is redundant.
+
+```typescript
+import { v4 as uuidv4 } from "uuid";
+import { WriteImageResponse } from "pdf2pic/dist/types/convertResponse";
+import axios from "axios";
+import fs from "fs-extra";
+import heicConvert from "heic-convert";
+import mime from "mime-types";
+import path from "path";
+import PDFParser from "pdf2json";
+import pdf from "pdf-parse";
+import xlsx from "xlsx";
+
+import { isValidUrl } from "./common";
+import { ExcelSheetContent, Page, PageStatus } from "../types";
+
+
+```

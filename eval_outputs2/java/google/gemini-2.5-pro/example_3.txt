@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Resolving this merge conflict requires analyzing the intent behind the changes on both sides.
+
+*   **`HEAD` Branch (`src/main/java/...`)**: The intent here is to reconnect the user to a default server upon connection failure. It calls a `connect` method with five arguments: `user`, a server name string, a `ServerInfo` object, a `handshake` object, and a boolean. This suggests a method signature like `connect(UserConnection, String, ServerInfo, Handshake, boolean)`.
+
+*   **`cae7155...` Branch (`proxy/src/main/java/...`)**: This side also reconnects the user to the default server. However, it introduces two changes:
+    1.  It adds a user-facing message to inform them that they are being moved to the default server, which is a clear user experience improvement.
+    2.  It calls a `connect` method with four arguments: `user`, a `ServerInfo` object, a `handshake` object, and a boolean. This suggests a refactored, cleaner method signature like `connect(UserConnection, ServerInfo, Handshake, boolean)`, which avoids passing the server name separately when it's already contained within the `ServerInfo` object.
+
+**Resolution:**
+The changes from the `cae7155...` branch are superior. They not only add a helpful message for the user but also use a cleaner, less redundant API for the `connect` method. The `HEAD` branch's version of the `connect` call is likely from an older or intermediate state before this refactoring occurred. Therefore, the most logical resolution is to accept the changes from the `cae7155...` branch entirely, as it incorporates both the core fallback logic and semantic improvements.
+
+```java
+        } catch (Exception ex)
+        {
+            ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+                user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+                return connect(user, def, handshake, false);
+            } else
+            {
+                throw new RuntimeException("Could not connect to target server " + Util.exception(ex));
+            }
+        }
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD** (current branch): Uses `players.toArray(new Player[players.size()])` - pre-allocates an array with the exact size needed
+- **Incoming change**: Uses `players.toArray(new Player[0])` - passes an empty array and lets the toArray method create the right-sized array
+
+Both approaches are functionally equivalent in modern Java. However, the incoming change using `new Player[0]` is actually the preferred modern Java idiom because:
+1. It's more concise
+2. Modern JVMs optimize this pattern and it can actually be faster than pre-sizing
+3. It avoids a potential race condition in concurrent scenarios where the collection size might change between the `size()` call and `toArray()` call
+
+Since both sides have the same intent (converting the players collection to an array for safe iteration) and the incoming change represents the more modern, recommended approach, I'll resolve in favor of the incoming change:
+
+```java
+   * @return The {@code Player} object representing {@code user} in this game, or {@code null} if
+   * {@code user} is not in this game.
+   */
+  @Nullable
+  public Player getPlayerForUser(final User user) {
+    final Player[] playersCopy = players.toArray(new Player[0]);
+    for (final Player player : playersCopy) {
+      if (player.getUser() == user) {
+        return player;
+      }
+    }
+
+```

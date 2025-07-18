@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Has the `global_namespace_import` configuration and wants to continue directly to `new_with_parentheses`
+- **Incoming change**: Wants to add `'list_syntax' => ['syntax' => 'short']` after `global_namespace_import`
+
+Both sides seem to have valid configuration options for what appears to be a PHP code style configuration file (likely PHP-CS-Fixer). The semantic intent is to have both configuration options included, as they configure different aspects of code formatting.
+
+The resolution should include both the `global_namespace_import` setting and the `list_syntax` setting:
+
+```php
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => true,
+            'import_functions' => true,
+        ],
+        'list_syntax' => ['syntax' => 'short'],
+        'new_with_parentheses' => true,
+        'no_blank_lines_after_phpdoc' => true,
+        'no_empty_phpdoc' => true,
+        'no_empty_comment' => true,
+        'no_leading_import_slash' => true,
+```

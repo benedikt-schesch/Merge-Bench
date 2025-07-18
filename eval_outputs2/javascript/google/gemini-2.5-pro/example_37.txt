@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Both branches are attempting to add a new `getMaxY` convenience function. The incoming branch (`c973213a...`) also includes a helpful comment that explains the reason for this new function, referencing a previous buggy implementation. The merge tool has failed and duplicated the function definition.
+
+The correct semantic resolution is to combine the intents: include the new `getMaxY` function that both branches want, and also include the explanatory comment from the incoming branch, which adds valuable context. The duplicated code caused by the faulty merge should be removed.
+
+```javascript
+
+//iteratee for lodash _.max
+    function getMax(v, i){
+      return parseFloat(v);
+    }
+
+//for some reason this loop does not properly get the maxY if there are multiple datasets (was doing 4 datasets that differred wildly)
+//just used lodash _.max utility
+    function getMaxY() {
+      if (self.options.maxY) {
+        return self.options.maxY;
+      }
+      
+```

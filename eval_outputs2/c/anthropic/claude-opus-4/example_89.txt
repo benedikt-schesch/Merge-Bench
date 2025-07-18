@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the cleanup of Cairo drawing contexts, but they're taking different approaches based on GTK version compatibility.
+
+The HEAD version simply destroys the Cairo context directly, while the incoming change adds conditional compilation to use different cleanup methods depending on the GTK version (using the newer `gdk_window_end_draw_frame` for GTK 3.22.0 and later, and falling back to `cairo_destroy` for older versions).
+
+The semantic intent is clear: properly clean up Cairo drawing resources while maintaining compatibility across different GTK versions. The incoming change is more comprehensive as it handles both old and new GTK APIs.
+
+Here's the resolved conflict:
+
+```c
+    gdk_gc_unref(dctx.u.gdk.gc);
+  }
+#endif
+#ifdef DRAW_TEXT_CAIRO
+  if (dctx.type == DRAWTYPE_CAIRO) {
+#if GTK_CHECK_VERSION(3, 22, 0)
+    gdk_window_end_draw_frame(dctx.u.cairo.gdkwin, dctx.u.cairo.drawctx);
+#else
+    cairo_destroy(dctx.u.cairo.cr);
+#endif
+  }
+#endif
+
+  gdk_window_invalidate_rect(
+      gtk_widget_get_window(fs->preview_area), NULL, FALSE);
+
+```

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```c
+
+  ret = 1;
+  for (i = 1; i < cmd->nwords; i++) {
+    dir = canonify(cmd->words[i]);
+    if (!dir) {
+      printf("%s: canonify: %s\n", cmd->words[i], fxp_error());
+      return 0;
+    }
+
+    req = fxp_mkdir_send(dir);
+    pktin = sftp_wait_for_reply(req);
+
+```

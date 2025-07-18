@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both branches' changes, here's the resolved version that preserves both functionalities:
+
+```python
+
+import unittest
+
+from phonenumbers import PhoneNumber, FrozenPhoneNumber
+from phonenumbers import geocoder
+from phonenumbers.geocoder import description_for_number, country_name_for_number
+from phonenumbers.geocoder import description_for_valid_number
+from phonenumbers.geocoder import _area_description_for_number
+from phonenumbers.prefix import prefix_description_for_number
+from phonenumbers.util import u
+
+# Allow override library geocoding metadata with the test metadata.
+REAL_GEOCODE_DATA = geocoder.GEOCODE_DATA
+REAL_GEOCODE_LONGEST_PREFIX = geocoder.GEOCODE_LONGEST_PREFIX
+from .testgeodata import GEOCODE_DATA as TEST_GEOCODE_DATA
+
+```
+
+### Resolution Summary:
+1. **Combined Imports**: 
+   - Added both HEAD's `_area_description_for_number` and other branch's `prefix_description_for_number` since they serve different purposes
+   - Unified import paths for description/country functions under `phonenumbers.geocoder`
+   - Preserved HEAD's `from phonenumbers.util import u`
+
+2. **Justification**:
+   - The geocoder-specific imports are semantically consistent
+   - The prefix utilities are additive functionality
+   - The test setup (`REAL_GEOCODE_*` assignments) remains unaffected
+   - Original spacing and comment context preserved
+
+Both branches' semantic intents are maintained with no conflicting modifications. The original imports from both contexts are included while avoiding duplication.

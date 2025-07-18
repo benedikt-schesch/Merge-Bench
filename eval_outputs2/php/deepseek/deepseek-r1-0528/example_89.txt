@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+```php
+    protected $reg = array();
+
+    /**
+     * @param array $common
+     */
+    public function __construct(array $common = array())
+    {
+        $this->common = $common;
+    }
+
+    public function __destruct()
+
+```
+
+**Resolution Reasoning:**
+1. **Docblock Consistency:** The `@param array $common` annotation clearly indicates the parameter should be an array
+2. **Type Safety:** Maintaining the `array` type hint ensures type safety
+3. **Backward Compatibility:** The default `= array()` preserves optional parameter behavior from HEAD
+4. **Semantic Alignment:** Both versions agree on parameter name and property assignment (`$this->common = $common`)
+5. **Error Prevention:** Type hint prevents potential runtime errors from invalid argument types
+
+The resolution maintains the documented interface while preserving flexibility for callers. The type hint + default value satisfies both requirements:
+- Enforces array type (matches docblock and HEAD)
+- Allows omission (matches HEAD's default behavior)
+- Maintains identical method body from both branches

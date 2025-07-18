@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the only difference between the two versions is the indentation/alignment of the second condition in the if statement. Both sides are semantically identical - they're checking the same conditions with the same logic.
+
+The HEAD version has different spacing/alignment compared to the incoming change. Since both achieve the same semantic intent and this appears to be purely a formatting difference, I'll preserve the conflict as requested since the intent is clear but the formatting preference is ambiguous.
+
+```c
+        zend_unmangle_property_name(p->arKey, &cname, &mname);
+#  endif
+
+        /* lookup the member's info in parent and child */
+        if((zend_hash_find(&parent->properties_info, mname, strlen(mname)+1, &pinfo.ptr) == SUCCESS) &&
+<<<<<<< HEAD
+                (zend_hash_find(&from->properties_info, mname, strlen(mname)+1, &cinfo.ptr) == SUCCESS)) {
+=======
+            (zend_hash_find(&from->properties_info, mname, strlen(mname)+1, &cinfo.ptr) == SUCCESS)) {
+>>>>>>> 5921a191ef461e97a894063110b45f415affddcb
+            /* If the static member points to the same value in parent and child, remove for proper inheritance during restore */
+            if(zend_hash_quick_find(&parent->default_static_members, p->arKey, p->nKeyLength, p->h, &pprop.ptr) == SUCCESS) {
+                if(*pprop.v == *cprop.v) {
+                    return ZEND_HASH_APPLY_REMOVE;
+                }
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both branches are working in the same area of code but with different intents:
+
+- The HEAD branch has the ContentEditorPresenter initialization followed directly by the toolbar menu setup
+- The incoming branch (f8f91f1d) adds code to set the action bar background color between these two operations
+
+Both changes appear to be independent and non-conflicting in terms of functionality. The incoming change is adding UI customization for the action bar, while the existing code flow remains intact. Therefore, both changes should be kept.
+
+Here is the resolved code:
+
+```java
+
+      Scheduler observeOn = AndroidSchedulers.mainThread();
+      Scheduler subscribeOn = Schedulers.io();
+      contentEditorPresenter = new ContentEditorPresenter(getString(R.string.imgur_client_id), new ImgurUpload(), observeOn, subscribeOn);
+
+      if (getSupportActionBar() != null) {
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(AttributesUtils.getPrimaryColor(this)));
+      }
+
+      toolbarExtra.inflateMenu(R.menu.content_editor_extra);
+      toolbarExtra.setOnMenuItemClickListener(this);
+
+      final String hint = getIntent().getExtras().getString(HINT);
+
+
+```

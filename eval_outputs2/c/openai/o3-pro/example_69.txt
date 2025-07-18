@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```c
+  updist = downdist = 0;
+  for (i = 1; i < 4096 && (!updist || !downdist); i++) {
+    uppoint = downpoint = cursor;
+    uppoint.y -= i;
+    downpoint.y += i;
+    upitem = (p_LBItemFromPt ? p_LBItemFromPt(hwnd, uppoint, FALSE) : LBItemFromPt(hwnd, uppoint, FALSE));
+    downitem = (p_LBItemFromPt ? p_LBItemFromPt(hwnd, downpoint, FALSE) : LBItemFromPt(hwnd, downpoint, FALSE));
+    if (!updist && upitem != ret)
+      updist = i;
+    if (!downdist && downitem != ret)
+      downdist = i;
+  }
+```

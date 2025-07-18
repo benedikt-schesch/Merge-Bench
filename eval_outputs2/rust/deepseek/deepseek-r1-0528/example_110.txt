@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of the conflict, here's the resolved version. The key decisions are:
+
+1. Kept the HEAD version's docstring with period for grammatical correctness
+2. Kept the HEAD version's `#[derive(Debug)]` attribute as it provides valuable debugging capability
+3. Maintained all surrounding context exactly as provided
+
+```rust
+    pub fn elapsed(&self) -> Duration {
+        self.state.lock().unwrap().started.elapsed()
+    }
+}
+
+/// Manages multiple progress bars from different threads.
+#[derive(Debug)]
+pub struct MultiProgress {
+    state: Arc<RwLock<MultiProgressState>>,
+}
+
+impl Default for MultiProgress {
+```
+
+The resolution preserves:
+- The grammatical period in the docstring from HEAD
+- The `#[derive(Debug)]` attribute from HEAD
+- All surrounding code and spacing exactly as in the original snippet
+- The semantic intent of both branches (documentation clarity + debug capability)
+
+The conflict was resolvable because:
+1. The docstring period improves readability without changing meaning
+2. The Debug derivation is additive functionality that doesn't conflict with the other branch's changes
+3. Both changes affect the same lines but are semantically compatible

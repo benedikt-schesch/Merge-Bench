@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```typescript
+  //
+  room.listing.remove();
+  stats.local.roomCount--;
+
+  // decrease amount of rooms this process is handling
+  if (!isGracefullyShuttingDown) {
+    stats.persist();
+
+    // remove from devMode restore list
+    if (isDevMode) {
+      await presence.hdel(getRoomRestoreListKey(), room.roomId);
+```

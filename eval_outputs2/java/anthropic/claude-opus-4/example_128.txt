@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same class, with two main differences:
+
+1. The `languages` array: HEAD has 6 languages, while the other branch adds "tr" (Turkish) as a 7th language
+2. The constructor: HEAD uses `@Inject` annotation and has 4 parameters, while the other branch has no `@Inject` and adds a 5th parameter `ConfigDetectorDialog configDetectorDialog`
+
+Based on the semantic intent:
+- Both sides want to keep the language list, with the incoming branch adding Turkish support
+- The HEAD side wants dependency injection with `@Inject`
+- The incoming side wants to add an additional dependency `ConfigDetectorDialog`
+
+The resolution should combine both intents: keep the `@Inject` annotation, include all languages including Turkish, and add the new parameter.
+
+```java
+	private Text notScannedText;
+	private Button[] displayMethod;
+	private Button showInfoCheckbox;
+	private Button askConfirmationCheckbox;
+	private Combo languageCombo;
+	private String[] languages = { "system", "en", "hu", "lt", "es", "ku", "tr" };
+
+	@Inject public PreferencesDialog(PingerRegistry pingerRegistry, Config globalConfig, ScannerConfig scannerConfig, GUIConfig guiConfig, ConfigDetectorDialog configDetectorDialog) {
+		this.pingerRegistry = pingerRegistry;
+		this.globalConfig = globalConfig;
+		this.scannerConfig = scannerConfig;
+		this.guiConfig = guiConfig;
+	}
+
+```

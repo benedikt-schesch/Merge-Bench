@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the Laravel framework version constant, but they're setting different version numbers:
+
+- HEAD wants to set version to '12.14.0' (a major version 12)
+- The other branch wants to set version to '11.44.7' (a major version 11)
+
+Since HEAD is trying to set a higher major version (12.x) compared to the incoming change (11.x), and this appears to be a framework version constant that should reflect the actual Laravel version being used, the semantic intent seems to be that HEAD represents a more recent/upgraded version of the framework.
+
+Here's the resolved conflict, keeping the higher version from HEAD:
+
+```php
+    /**
+     * The Laravel framework version.
+     *
+     * @var string
+     */
+    const VERSION = '12.14.0';
+
+    /**
+     * The base path for the Laravel installation.
+     *
+     * @var string
+
+```

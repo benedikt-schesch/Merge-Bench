@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Uses `this.getEmail()` - suggesting there's a method to retrieve the email
+- **e0ec8d42...**: Uses `this.user.email` - directly accessing the email property from the user object
+
+Both sides are trying to get the user's email for the integration value. The conflict is about **how** to get the email, not **what** to get. Since `HEAD` is using a method call `getEmail()`, it suggests this might be the preferred abstraction pattern in the codebase (perhaps for validation, transformation, or lazy loading).
+
+Here's the resolved code:
+
+```typescript
+
+  async cleanIntegration (): Promise<void> {
+    const integration = await this.client.findOne(setting.class.Integration, {
+      createdBy: this.user.userId,
+      type: calendar.integrationType.Calendar,
+      value: this.getEmail()
+    })
+    if (integration !== undefined) {
+      await this.client.update(integration, { disabled: true })
+    }
+
+```

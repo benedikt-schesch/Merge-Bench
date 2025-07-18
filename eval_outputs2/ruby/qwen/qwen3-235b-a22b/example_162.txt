@@ -1,0 +1,51 @@
+<think>
+No reasoning found</think>
+The merge conflict in this code snippet pertains to a change in how the `get_page` method receives its parameter:
+
+- **Original (HEAD):** `def get_page(target_url)` — a positional parameter that requires a value to be passed.
+- **Incoming change (commit `d26f64b`):** `def get_page(target_url: nil)` — a keyword parameter with a default value of `nil`.
+
+---
+
+### Intent and Semantics Analysis
+
+The method `get_page` retrieves a page of results from a provided `target_url`. The comment above the method clearly states:
+
+> *Request is executed immediately.*
+> 
+> *`@param [String] target_url API-generated URL for the requested results page*`
+
+This emphasizes the semantic need that `target_url` be a non-optional string input, i.e., the method is not supposed to function if the URL is absent.
+
+Introducing a keyword argument with `nil` as a default value changes both the API consumer's expectations and potentially the internal logic. If `target_url` is `nil`, the statement:
+
+```ruby
+response = @version.domain.request('GET', target_url)
+```
+
+could throw an error unless additional logic (not shown here) safely handles the `nil` case. Since the rest of the snippet assumes the URL is provided and functional, changing the parameter in this way (from required to optional) without context for that change introduces ambiguity and potential bugs.
+
+Thus, **the intent of the original method is to enforce the presence of a valid URL**, and the incoming change might be part of a larger refactoring that is not represented in this snippet alone. Since there's no logic provided to handle a missing `target_url`, and the method comment assumes it's required, the positional version better reflects the current semantics and intent.
+
+---
+
+### Recommended Resolution
+
+Given the lack of additional context and the clear intent that `target_url` should be a required non-nil input, the conflict should be resolved in favor of the **original version in `HEAD`**.
+
+---
+
+### Final Merged Code (with preserved context)
+```ruby
+                ##
+                # Retrieve a single page of CredentialListMappingInstance records from the API.
+                # Request is executed immediately.
+                # @param [String] target_url API-generated URL for the requested results page
+                # @return [Page] Page of CredentialListMappingInstance
+                def get_page(target_url)
+                  response = @version.domain.request(
+                      'GET',
+                      target_url
+                  )
+                  return CredentialListMappingPage.new(@version, response, @solution)
+```

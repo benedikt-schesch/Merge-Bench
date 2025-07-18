@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and found the intent ambiguous. The conflict revolves around whether a `return 0;` statement should be present at the end of the function. Since the function's return type isn't visible in the provided context, I can't determine if:
+
+1. The function should return a value (making the return statement necessary)
+2. The function is void (making the return statement invalid)
+3. `connection_fatal()` terminates execution (making the return unreachable)
+
+Without seeing the function signature or understanding the full control flow, I'm preserving the conflict markers as instructed.
+
+Here's the unchanged code snippet with conflict markers:
+
+```c
+
+  if (error_msg)
+    logevent(error_msg);
+  if (!ssh->close_expected || !ssh->clean_exit)
+    connection_fatal(ssh->frontend, "%s", error_msg);
+<<<<<<< HEAD
+  return 0;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void ssh_receive(Plug plug, int urgent, char *data, int len)
+{
+  Ssh ssh = (Ssh)plug;
+
+```

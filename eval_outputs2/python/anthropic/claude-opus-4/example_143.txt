@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+1. **HEAD (left side)**: The script is named `buildgeocodingdata.py` and takes 3 arguments: `indir outfile module_prefix`
+2. **Right side**: The script is named `buildprefixdata.py` and takes 2 arguments: `indir outfile`
+
+The conflict appears to be about:
+- The script name (buildgeocodingdata.py vs buildprefixdata.py)
+- The number of command-line arguments (3 vs 2)
+
+Since the docstring mentions "per-prefix metadata" and the right side uses "buildprefixdata.py", it seems like the right side is more aligned with the described functionality. However, the HEAD side adds an additional `module_prefix` parameter which might be a needed enhancement.
+
+Without more context about the actual implementation and requirements, I cannot determine which version is correct or if both changes are needed. Therefore, I'm returning the snippet with the conflict preserved:
+
+```python
+#!/usr/bin/env python
+"""Script to read the libphonenumber per-prefix metadata and generate Python code.
+
+Invocation:
+<<<<<<< HEAD:tools/python/buildgeocodingdata.py
+  buildgeocodingdata.py indir outfile module_prefix
+=======
+  buildprefixdata.py indir outfile
+>>>>>>> 298c8f361a29b79085d5f926a70e863e056a33a5:tools/python/buildprefixdata.py
+
+Processes all of the per-prefix data under the given input directory and emit
+generated Python code.
+"""
+```

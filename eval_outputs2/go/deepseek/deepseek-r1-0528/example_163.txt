@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on analyzing the semantic intent of both branches, I've resolved the conflict by combining both sets of fields since they serve distinct purposes and appear complementary:
+
+```go
+			mock.Spec = models.MockSpec{
+				Metadata: PostSpec.Metadata,
+				// OutputBinary: genericSpec.Objects,
+				PostgresRequests:  PostSpec.PostgresRequests,
+				PostgresResponses: PostSpec.PostgresResponses,
+				ReqTimestampMock:  PostSpec.ReqTimestampMock,
+				ResTimestampMock:  PostSpec.ResTimestampMock,
+			}
+		case models.SQL:
+			mysqlSpec := spec.MySQLSpec{}
+			err := m.Spec.Decode(&mysqlSpec)
+			if err != nil {
+```
+
+**Resolution rationale:**
+1. The HEAD version provides core PostgreSQL request/response handling
+2. The merging branch adds timestamp tracking fields
+3. Both sets of fields appear semantically compatible:
+   - `PostgresRequests/Responses` handle data content
+   - `ReqTimestampMock/ResTimestampMock` handle timing metadata
+4. No field name conflicts exist
+5. The comment remains preserved as originally positioned
+
+The resolved version maintains all functionality from both branches while preserving the original structure and spacing of the context.

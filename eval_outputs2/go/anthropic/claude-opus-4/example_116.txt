@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the only difference between the two versions is the presence or absence of a blank line after the `runtime.DoubleValue(val)` assignment.
+
+The HEAD version has a blank line after the assignment, while the incoming change (0e11f6f8faadec71484fea2af292dcb6c56230d6) removes this blank line.
+
+Since this is purely a formatting difference with no semantic changes, and both versions are functionally identical, I'll resolve this by choosing the version without the blank line for consistency with the compact style that groups the assignment with its error check.
+
+```go
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "doubleVal")
+	}
+
+	protoReq.DoubleVal, err = runtime.DoubleValue(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "doubleVal", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+
+```

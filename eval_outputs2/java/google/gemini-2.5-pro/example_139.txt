@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+An analysis of the two sides of the merge conflict suggests that the incoming change (`f6a8f7aa...`) is adding the `@Private` annotation to the `setBackendException` method. Annotations like `@Private` are typically used by frameworks (like Hadoop in this case) to indicate that a method is not part of the public API and is intended for internal use only. The `HEAD` branch has no change.
+
+The most logical resolution is to accept the addition of the `@Private` annotation, as it adds valuable metadata about the method's intended usage without altering its functionality.
+
+```java
+        public int compare(JobStats o1, JobStats o2) {
+            return o1.getJobId().compareTo(o2.getJobId());
+        }
+    }
+
+    @Private
+    public void setBackendException(String jobId, Exception e) {
+        if (e instanceof PigException) {
+            LOG.error("ERROR " + ((PigException)e).getErrorCode() + ": "
+                    + e.getLocalizedMessage());
+        } else if (e != null) {
+
+```

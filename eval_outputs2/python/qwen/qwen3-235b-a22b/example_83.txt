@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in a comment line describing the purpose of subsequent code that modifies file content. The difference lies only in the leading whitespace — spaces (in the `HEAD`) versus a tab (in the other commit). Since the surrounding code consistently uses spaces for indentation (as seen in the previous lines), maintaining consistency with Python best practices (which recommend using 4 spaces for indentation) is crucial here to avoid potential `IndentationError`.
+
+The intent from both branches appears identical — indicating that a domain replacement logic will follow this comment if `--new-domain` is specified. Therefore, the correct resolution is to use the `HEAD` version’s indentation style to preserve consistency and correctness with respect to Python syntax and project conventions.
+
+Here is the full, resolved snippet with the conflict removed and the code preserved exactly as required:
+
+```python
+                print "fixing links in ", filepath
+                newtext = fixLinks(filetext, parser)
+                with open(filepath, 'w') as f:
+                    f.write(newtext)
+
+        # fix all localhost references, if new domain given
+        if arguments['--new-domain']:
+            filetypes = ['*.html', '*.xml', '*.xsl', 'robots.txt']
+            for root, dirs, filenames in os.walk(static_path):
+                for extension in filetypes:
+                    for filename in fnmatch.filter(filenames, extension):
+```

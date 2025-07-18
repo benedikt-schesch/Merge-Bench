@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet with the conflict addressed by preserving both branches' changes. The key changes are:
+1. Both `physical_cursor_position` (from HEAD) and `cursor_position` (from other branch) are included since they appear to be distinct fields
+2. The `raw_window_handle` field from the other branch is preserved
+3. All other context remains unchanged
+
+```rust
+            vsync: window_descriptor.vsync,
+            resizable: window_descriptor.resizable,
+            decorations: window_descriptor.decorations,
+            cursor_visible: window_descriptor.cursor_visible,
+            cursor_locked: window_descriptor.cursor_locked,
+            physical_cursor_position: None,
+            cursor_position: None,
+            raw_window_handle: RawWindowHandleWrapper::new(raw_window_handle),
+            focused: true,
+            mode: window_descriptor.mode,
+            #[cfg(target_arch = "wasm32")]
+            canvas: window_descriptor.canvas.clone(),
+            command_queue: Vec::new(),
+```
+
+Reasoning:
+- Both branches added new fields (`physical_cursor_position` and `cursor_position`/`raw_window_handle`) which don't conflict semantically
+- The field names suggest they represent different concepts (physical vs logical cursor position)
+- The `raw_window_handle` is likely required for platform-specific functionality
+- All fields are initialized to reasonable default values (`None` or newly created wrapper)
+- The context lines before and after the conflict remain unchanged as requested

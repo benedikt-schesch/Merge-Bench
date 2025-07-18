@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet preserving the full context and semantics from both branches:
+
+```javascript
+    settings.vga_memory_size = options["vga_memory_size"] || 8 * 1024 * 1024;
+    settings.boot_order = options["boot_order"] || 0x213;
+    settings.fastboot = options["fastboot"] || false;
+    settings.fda = undefined;
+    settings.fdb = undefined;
+    settings.uart1 = options["uart1"] || false;
+    settings.uart2 = options["uart2"] || false;
+    settings.uart3 = options["uart3"] || false;
+    settings.cmdline = options["cmdline"];
+    settings.preserve_mac_from_state_image = options["preserve_mac_from_state_image"];
+
+    if(options["network_relay_url"])
+    {
+        this.network_adapter = new NetworkAdapter(options["network_relay_url"], this.bus);
+    }
+```
+
+**Resolution rationale:**
+- The HEAD branch added default values for UART ports (uart1-uart3) - kept as they provide sensible defaults
+- The other branch added cmdline and preserve_mac_from_state_image - preserved as they are required configuration options
+- Both changes are complementary and address different aspects of the settings object
+- No functional overlap or conflicts in logic between the two changesets
+- Combined configuration maintains original code structure and formatting

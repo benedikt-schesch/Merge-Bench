@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same intent - they want to display "checkUpdate" when either `updaterState` is falsy or when it equals "error". The only difference is in the formatting/parentheses placement.
+
+The HEAD version has the condition split across two lines with the logical OR operator at the beginning of the second line, while the other version has the entire condition on one line with clearer parentheses grouping.
+
+Both versions are semantically identical, but the second version (from commit 499df63) is more readable with its explicit parentheses grouping the OR condition.
+
+Here's the resolved code:
+
+```typescript
+              <span className="capitalize">
+                {updaterState === "checking-for-update" &&
+                  t("checkingForUpdate")}
+                {updaterState === "update-available" && t("updateAvailable")}
+                {updaterState === "update-downloaded" && t("quitAndInstall")}
+                {(!updaterState || updaterState === "error") &&
+                  t("checkUpdate")}
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+```

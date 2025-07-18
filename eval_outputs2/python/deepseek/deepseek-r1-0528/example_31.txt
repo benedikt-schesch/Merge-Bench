@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The duplicate imports in the conflict block are redundant since they're already present at the top. Here's the resolved version:
+
+```python
+import io
+import sys
+
+from setuptools import setup
+
+sys.path.insert(0, '.')
+version = __import__('voluptuous').__version__
+
+with io.open('README.md', encoding='utf-8') as f:
+```
+
+Resolution reasoning:
+1. Both branches have `import io` + `import sys` at the top
+2. The `import sys` and `import io` in HEAD are duplicates
+3. The incoming branch removes these redundant imports while preserving the same io/sys availability
+4. No logical conflicts exist since setup.py can still access sys/io via top-level imports
+
+The resolution maintains semantics by:
+- Preserving initial imports
+- Keeping path manipulation logic
+- Maintaining version fetching
+- Preserving file reading functionality
+- Avoiding redundant module imports

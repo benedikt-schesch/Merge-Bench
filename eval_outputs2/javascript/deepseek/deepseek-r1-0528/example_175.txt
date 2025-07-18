@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```javascript
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Make globaly available as well
+        define(['moment', 'jquery'], function (moment, jquery) {
+            if (!jquery.fn) jquery.fn = {}; // webpack server rendering
+            if (typeof moment !== 'function' && moment.default) moment = moment.default;
+            return factory(moment, jquery);
+        });
+    } else if (typeof module === 'object' && module.exports) {
+        // Node / Browserify
+        //isomorphic issue
+```
+
+**Resolution Reasoning:**
+1. **Preserved Context:** All surrounding code remains unchanged with exact spacing
+2. **Semantic Intent:** Both sides aim to handle ES6 default imports where `moment` might be wrapped in a `default` property
+3. **Optimal Solution:** 
+   - Uses dot notation (`moment.default`) for better readability and convention
+   - Keeps the truthiness check (`moment.default`) which is sufficient for this context
+   - Maintains the semicolon for proper statement termination
+   - Avoids redundant property existence checks since `moment.default` naturally handles falsy values
+4. **Webpack Compatibility:** Both versions address server-side rendering cases, but the resolved syntax is cleaner while maintaining equivalent functionality

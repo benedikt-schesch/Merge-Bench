@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar things with a few key differences:
+
+1. **Unicode string prefix (`u''`)**: HEAD uses regular strings while the other branch uses unicode strings (`u'\\1 \\2'`)
+2. **New field**: The other branch adds `mobile_number_portable_region=True` at the end
+
+Since both changes are complementary and don't conflict in intent:
+- The unicode string prefix is likely for Python 2/3 compatibility
+- The new field addition is a feature enhancement
+
+Here's the resolved version that incorporates both changes:
+
+```python
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='800\\d{7}', possible_number_pattern='\\d{10}', example_number='1234567890'),
+    national_prefix='1',
+    preferred_extn_prefix=' extn. ',
+    national_prefix_for_parsing='1',
+    number_format=[NumberFormat(pattern='(\\d{3})(\\d{4})', format=u'\\1 \\2', national_prefix_optional_when_formatting=True),
+        NumberFormat(pattern='(\\d{3})(\\d{3})(\\d{4})', format=u'\\1 \\2 \\3', national_prefix_optional_when_formatting=True)],
+    intl_number_format=[NumberFormat(pattern='(\\d{3})(\\d{3})(\\d{4})', format=u'\\1 \\2 \\3')],
+    main_country_for_code=True,
+    mobile_number_portable_region=True)
+```

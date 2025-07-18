@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Resolving this merge conflict requires combining the intents from both branches.
+*   The `HEAD` branch's intent is to add a `void` return type hint to the function signature, which is a code quality improvement for modern PHP.
+*   The other branch's intent is to modernize the code by using a native PHP 8 `#[Depends]` attribute instead of the older `PHPDoc` annotation for PHPUnit.
+
+The correct semantic resolution is to apply both of these modernizations. We will add the PHP attribute and the `void` return type to the function signature.
+
+```php
+    }
+
+    /**
+     * @depends testInitialize
+     */
+    #[\PHPUnit\Framework\Attributes\Depends('testInitialize')]
+    public function testNamespaceAliasOnVar(): void
+    {
+        $this->initializer->initialize($this);
+
+        $this->assertInstanceOf(\Phake\IMock::class, $this->shortNameMock1);
+    }
+
+```

@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing approaches to validation within the gRPC interceptor. The HEAD version uses a simple `validate(req)` call, while the other branch introduces enhanced validation with context, fail-fast behavior, and error callbacks. Since the other branch's version provides more control through evaluated options and aligns with the comment about fallback behavior, it's the more complete solution. 
+
+Here's the resolved code:
+
+```go
+// Note that generated codes prior to protoc-gen-validate v0.6.0 do not provide an all-validation
+// interface. In this case the interceptor fallbacks to legacy validation and `all` is ignored.
+func UnaryServerInterceptor(opts ...Option) grpc.UnaryServerInterceptor {
+	o := evaluateOpts(opts)
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		if err := validate(ctx, req, o.shouldFailFast, o.onValidationErrCallback); err != nil {
+			return nil, err
+		}
+		return handler(ctx, req)
+	}
+}
+```
+
+Key resolution points:
+1. Maintains the options evaluation (`o := evaluateOpts(opts)`)
+2. Uses the enhanced validation call from the other branch that includes:
+   - Context (`ctx`)
+   - Fail-fast flag (`o.shouldFailFast`)
+   - Error callback (`o.onValidationErrCallback`)
+3. Preserves all surrounding context and spacing
+4. The chosen version provides more control over validation behavior while maintaining the fallback mechanism mentioned in the comment
+
+This resolution keeps the option handling consistent and provides richer validation capabilities while maintaining the intended legacy fallback behavior.

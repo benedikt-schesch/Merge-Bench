@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet preserving context and semantics:
+
+```javascript
+            if (numeral._.includes(int, '-')) {
+                int = int.slice(1);
+                neg = true;
+            }
+
+            if (int.length < leadingCount) {
+                for (var i = leadingCount - int.length; i > 0; i--) {
+                    int = '0' + int;
+                }
+            }
+
+            if (thousands > -1) {
+                int = int.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + locale.delimiters.thousands);
+            }
+
+            if (format.indexOf('.') === 0) {
+```
+
+**Resolution Reasoning:**
+1. **Semantic Compatibility:** The padding logic from the incoming branch (bdbded5) doesn't conflict with HEAD's functionality. It ensures minimum digit count before thousands formatting.
+2. **Execution Order:** Leading zero padding must happen before thousands separation to maintain correct digit grouping.
+3. **No Context Loss:** The padding block complements existing behavior by handling digit-length requirements.
+4. **Variable Safety:** `leadingCount` is assumed to be properly initialized in outer scope (as per merge context).
+5. **Negative Handling:** The padding correctly operates after negative sign removal.
+
+The resolution maintains both branches' intents: HEAD's thousands formatting and the incoming branch's digit padding requirement.

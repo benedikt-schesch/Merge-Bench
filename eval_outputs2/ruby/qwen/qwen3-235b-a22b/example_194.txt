@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+The conflict in this code involves a change in the method signature for `get_page`. One version maintains a standard positional parameter: `def get_page(target_url)`, while the other introduces a keyword argument with a default of `nil`: `def get_page(target_url: nil)`.
+
+To assess which version should persist, we observe how the method is implemented:
+
+```ruby
+response = @version.domain.request(
+    'GET',
+    target_url
+)
+```
+
+This means that the method expects a defined `target_url`—it is directly used in a request. Making `target_url` optional by setting a default of `nil` could introduce a runtime error (a `nil` URL in an HTTP request is indeed invalid and likely unusable), unless further handling is implemented elsewhere, which is not visible in this snippet.
+
+### Semantic Interpretation:
+- The original version (HEAD): `def get_page(target_url)` ensures that consumers **must** provide a `target_url`, enforcing contract integrity.
+- The incoming change attempts to allow an optional parameter, which may indicate an intent to supply a default elsewhere or allow backward compatibility, but with no such logic visible in the snippet.
+
+Since the code requires a valid `target_url` and there is no internal fallback logic shown to handle a nil value safely, the **positional argument** that guarantees a provided `target_url` is semantically correct for the behavior of the method.
+
+### Resolution:
+We preserve the original method signature and remove the merge conflict markers accordingly.
+
+Here's the resolved snippet:
+
+```ruby
+            ##
+            # Retrieve a single page of OriginationUrlInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of OriginationUrlInstance
+            def get_page(target_url)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return OriginationUrlPage.new(@version, response, @solution)
+```

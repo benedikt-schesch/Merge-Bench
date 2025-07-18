@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to destructure variables from `this.props` and `this.state`, but they're organizing them differently.
+
+The HEAD version:
+- Creates intermediate variables for `context`, `props`, and `state`
+- Destructures from these intermediate variables
+- Includes `options` and `display` from props
+
+The incoming version:
+- Destructures directly from `this.props` and `this.state`
+- Includes `menuItems` in the props destructuring
+- Doesn't include `options` and `display`
+
+Since both sides need `menuItems` from state (HEAD has it in state destructuring, incoming has it incorrectly in props), and HEAD includes additional props that may be needed, the semantic intent appears to be to have all necessary variables available. The most complete resolution would use HEAD's approach but ensure all variables are properly destructured:
+
+```typescript
+        }
+    };
+
+    // eslint-disable-next-line max-lines-per-function
+    render() {
+        const { context, props, state } = this;
+        const { className = '', style = '', menu, deep = 0, options, display } = props;
+        const { show, posStyle, menuItems } = state;
+
+        return (
+            <ul className={joinClassNames(styles.colsMenu, className)} style={{ ...style, ...posStyle, display: show ? 'block' : 'none' }} ref={this._MenuRef}>
+                {/* legacy: render selections */}
+                {menu?.map((item: BaseMenuItem, index: number) => {
+
+```

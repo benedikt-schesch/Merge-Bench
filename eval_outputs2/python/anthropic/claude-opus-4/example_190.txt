@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+**HEAD side**: Appears to be adding a condition to check if the line should be processed as code, considering whether it's not starting with multistart and not in multi_line mode, or if it's a multi_string.
+
+**Incoming change**: Is focused on processing documentation by removing delimiters, accumulating the documentation text, and capturing the indentation level.
+
+These changes appear to be addressing different concerns and likely both need to be preserved. The HEAD side is determining when to process something as code, while the incoming change is processing documentation text.
+
+Here's the resolved conflict that preserves both intents:
+
+```python
+            if (multi_line
+                    and line.strip().endswith(multiend)
+                    and len(line.strip()) > len(multiend)):
+                multi_line = False
+
+            # Get rid of the delimiters so that they aren't in the final docs
+            line = line.replace(multistart, '')
+            line = line.replace(multiend, '')
+            docs_text += line.strip() + '\n'
+            indent_level = re.match("\s*", line).group(0)
+
+            if((not line.strip().startswith(multistart) and not multi_line) or multi_string):
+
+                process_as_code = True
+
+                if(multi_string):
+                    multi_line = False
+
+```

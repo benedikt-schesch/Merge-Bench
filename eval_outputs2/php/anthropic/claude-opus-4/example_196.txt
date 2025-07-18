@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same test method, but with different improvements:
+
+- **HEAD**: Adds a return type declaration (`: void`) to the method
+- **BASE**: Adds a PHP 8 attribute syntax (`#[\PHPUnit\Framework\Attributes\DataProvider('typeReturnMap')]`) to replace the docblock annotation
+
+Both changes are complementary and represent modernization of the PHP code. The semantic intent is to:
+1. Use PHP 8+ attributes for the data provider (from BASE)
+2. Add proper return type hints (from HEAD)
+
+Here's the resolved conflict that combines both improvements:
+
+```php
+    }
+
+    /**
+     * @dataProvider typeReturnMap
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('typeReturnMap')]
+    public function testSimpleReturn($method, $expectedValue): void
+    {
+        $context = new \PhakeTest_ScalarTypes();
+        $cb = $this->answer->getAnswerCallback($context, $method);
+
+        $this->assertSame($expectedValue, $cb());
+
+```

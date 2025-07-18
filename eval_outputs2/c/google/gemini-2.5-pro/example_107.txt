@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from a change in the return type of the function containing this code. One branch (`4348393f562c...`) refactored the function signature to return `void`, thus removing the `return` statement. The `HEAD` branch keeps the old behavior where the function returned an integer.
+
+The semantic intent of the `4348393f562c...` branch is to align the function's implementation with a broader API change. Therefore, the correct resolution is to remove the `return 1;` statement, as the function no longer returns a value.
+
+```c
+  Raw raw = (Raw)plug;
+  c_write(raw, data, len);
+  /* We count 'session start', for proxy logging purposes, as being
+   * when data is received from the network and printed. */
+  raw->session_started = TRUE;
+}
+
+static void raw_sent(Plug plug, int bufsize)
+{
+  Raw raw = (Raw)plug;
+
+```

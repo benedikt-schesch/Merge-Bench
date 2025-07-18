@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to build an array of input attributes for an HTML form element. The conflict appears to be about whether to include a conditional addition of a 'required' attribute.
+
+The HEAD version ends after setting the 'autocomplete' attribute to 'off', while the incoming change adds a conditional check to set a 'required' attribute if `$input_required` is truthy.
+
+Since both changes appear to be intentional additions that don't conflict semantically (one sets autocomplete, the other conditionally adds required), the resolution should include both:
+
+```php
+            if (!is_array($input_attrs)) $input_attrs = array();
+            $input_attrs['type'] = 'text';
+            $input_attrs['name'] = $input_name;
+            $input_attrs['id']   = $input_id;
+            $input_attrs['autocomplete'] = 'off';
+            if ($input_required) $input_attrs['required'] = $input_required;
+
+            foreach($input_attrs as $name => $val) {
+                $input_attr .= sprintf('%s="%s" ', $name, htmlspecialchars($val));
+            }
+
+
+```

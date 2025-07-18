@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - defining an options hash with the same key-value pairs. The only difference is the syntax style:
+
+- HEAD uses the older Ruby hash rocket syntax (`:key => value`)
+- The incoming change uses the newer Ruby 1.9+ syntax (`key: value`)
+
+Since both sides have identical intent and semantics, and the newer syntax is generally preferred in modern Ruby code, I'll resolve this by using the newer syntax:
+
+```ruby
+
+      protected
+      
+      def s3connect!
+        options = {
+          access_key_id: @access_key_id,
+          secret_access_key: @secret_access_key,
+          use_ssl: true
+        }
+
+        options[:server] = @host if @host
+        AWS::S3::Base.establish_connection!(options) unless AWS::S3::Base.connected?
+      end
+
+```

@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Based on the provided context, the conflict arises because both branches modify the same field (`onEvict`) but with incompatible type declarations. The HEAD branch uses a custom type `onEvictFunc`, while the other branch uses an inline function signature. Since I can't verify the existence/compatibility of `onEvictFunc` and the surrounding context doesn't resolve this ambiguity, I'm returning the unresolved conflict:
+
+```go
+	// keys are read.
+	getBuf *ringBuffer
+	// setBuf is a buffer allowing us to batch/drop Sets during times of high
+	// contention.
+	setBuf chan *item
+<<<<<<< HEAD
+	// onEvict is called for item evictions
+	onEvict onEvictFunc
+=======
+	// onEvict is called for item evictions.
+	onEvict func(uint64, uint64, interface{}, int64)
+>>>>>>> 29b4dd7a077785696ba5422081b3c301d4c1e5f1
+	// KeyToHash function is used to customize the key hashing algorithm.
+	// Each key will be hashed using the provided function. If keyToHash value
+	// is not set, the default keyToHash function is used.
+	keyToHash func(interface{}) (uint64, uint64)
+	// stop is used to stop the processItems goroutine.
+```
+
+Reason for not resolving:
+1. The types (`onEvictFunc` vs inline signature) are syntactically incompatible
+2. No surrounding context confirms if `onEvictFunc` is defined elsewhere
+3. The comment differences (period vs no period) are trivial compared to the type conflict
+4. Semantic intent is ambiguous without knowing which type declaration matches the codebase's architecture
+
+A human should resolve this by:
+1. Checking if `onEvictFunc` type exists in the codebase
+2. Determining which declaration matches other callback patterns (like `keyToHash`)
+3. Choosing either the type abstraction (HEAD) or inline signature (other branch) consistently

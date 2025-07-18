@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+This merge conflict arises from a change that adds explicit type casting to arguments of a `sprintf` function call.
+
+*   **HEAD** passes the variables `multilen` and `udata[uindex]` directly to `sprintf`, relying on C's default argument promotion rules.
+*   **Branch `4348393...`** explicitly casts both `multilen` and `udata[uindex]` to `(int)`.
+
+The intent of the branch is to improve type safety and potentially silence compiler warnings. The `%d` format specifier in `sprintf` expects an `int`. Explicitly casting the arguments ensures that the correct data type is passed, which is a good practice that makes the code more robust and portable. This change does not alter the program's logic but improves its quality.
+
+Therefore, the resolution is to accept the version with the explicit casts.
+
+```c
+        blen = alen = 0;
+      } else {
+        multilen = WideCharToMultiByte(
+            CP_ACP, 0, unitab + uindex, 1, NULL, 0, NULL, NULL);
+        if (multilen != 1) {
+          blen = sprintf(
+              before, "{\\uc%d\\u%d", (int)multilen, (int)udata[uindex]);
+          alen = 1;
+          strcpy(after, "}");
+        } else {
+          blen = sprintf(before, "\\u%d", udata[uindex]);
+          alen = 0;
+
+```

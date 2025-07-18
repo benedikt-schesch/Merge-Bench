@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding a `tearDown()` method while the other branch adds a test method. The resolution integrates both changes by placing the `tearDown()` method before the test method since they serve different purposes and are both valid additions to the test class. The `tearDown()` method handles cleanup after each test, while `testDefaultDriver()` contains a specific test case. 
+
+Here's the resolved code snippet:
+
+```php
+use Config;
+use TestCase;
+
+class TestConfig extends TestCase
+{
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
+    public function testDefaultDriver()
+    {
+        $this->assertEquals(Config::get('dispatcher::driver'), 'dateTime');
+    }
+
+
+```

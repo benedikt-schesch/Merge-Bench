@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same `bindataFileInfo` struct initialization, with two differences:
+
+1. The `modTime` field has different Unix timestamps:
+   - HEAD: `1444419364` (older timestamp)
+   - Incoming: `1467390283` (newer timestamp)
+
+2. There's a minor formatting difference in spacing after `info:`:
+   - HEAD: `info:  info` (two spaces)
+   - Incoming: `info: info` (one space)
+
+Since this appears to be auto-generated code (likely from a bindata tool), the semantic intent is to update the file metadata. The newer timestamp from the incoming change should be preferred, and the formatting should be consistent (one space is more standard).
+
+Here's the resolved code:
+
+```go
+	bytes, err := confGitignoreSeamgenBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/SeamGen", size: 961, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreSketchup = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xd2\xd2\x2b\xce\x4e\xe2\x02\x04\x00\x00\xff\xff\x1e\xdd\x12\xe3\x06\x00\x00\x00")
+
+
+```

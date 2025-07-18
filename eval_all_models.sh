@@ -3,7 +3,7 @@
 set -e
 
 # Default maximum number of parallel workers for eval.py
-MAX_WORKERS=${1:-4}
+MAX_WORKERS=${1:-2}
 
 MAX_SAMPLES=${2:-200}
 
@@ -24,11 +24,11 @@ LANGUAGES=(
 
 # List of API models to evaluate
 MODELS=(
-    # "deepseek/deepseek-r1-0528"
-    # "google/gemini-2.5-pro"
-    # "x-ai/grok-4"
-    # "qwen/qwen3-235b-a22b"
-    # "anthropic/claude-opus-4"
+    "deepseek/deepseek-r1-0528"
+    "google/gemini-2.5-pro"
+    "x-ai/grok-4"
+    "qwen/qwen3-235b-a22b"
+    "anthropic/claude-opus-4"
     "openai/o3-pro"
 )
 
@@ -45,7 +45,7 @@ evaluate_model() {
         local total=${#LANGUAGES[@]}
 
         echo "[$model_name] [$progress/$total] Evaluating $language"
-        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS"
+        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS" --verbose
     done
 
     echo "[$model_name] Completed all languages"

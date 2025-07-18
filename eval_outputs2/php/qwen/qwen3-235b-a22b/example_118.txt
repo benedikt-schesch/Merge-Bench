@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs between two changes to the `use` statements at the top of the file. On one side (`HEAD`), three new import statements—`Application`, `Str`, and `InvalidArgumentException`—have been added. On the other side of the merge (`5e4cb54`), those lines are absent. However, both sides are necessary and appear to serve distinct but complementary purposes:
+
+- The `HEAD` version introduces support for Laravel core utilities (`Application`, `Str`) and a common exception (`InvalidArgumentException`), suggesting that they may be referenced inside the class (e.g., `Application::VERSION`, `Str::lower()`, handling invalid input logic via `InvalidArgumentException`).
+- The `5e4cb54` side introduces `Kris\LaravelFormBuilder` classes and traits, indicating that this is a package-specific service provider integration that builds upon Laravel’s `FormBuilder`.
+
+Since the two sets of imports do not conflict (i.e., no namespace/class name collision), and both appear to be semantically important to the intended functionality of `FormBuilderServiceProvider`, the appropriate merge strategy is to combine the use statements.
+
+Here is the resolved snippet:
+
+````markdown
+```php
+
+use Illuminate\Foundation\AliasLoader;
+use Collective\Html\FormBuilder as LaravelForm;
+use Collective\Html\HtmlBuilder;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
+use Kris\LaravelFormBuilder\Traits\ValidatesWhenResolved;
+use Kris\LaravelFormBuilder\Form;
+
+class FormBuilderServiceProvider extends ServiceProvider
+{
+
+```
+````

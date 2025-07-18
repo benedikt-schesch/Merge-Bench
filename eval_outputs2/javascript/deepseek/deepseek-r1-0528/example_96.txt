@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+```javascript
+        },
+        options = {
+            currentLocale: defaults.currentLocale,
+            zeroFormat: defaults.zeroFormat,
+            nullFormat: defaults.nullFormat,
+            defaultFormat: defaults.defaultFormat,
+            scalePercentBy100: defaults.scalePercentBy100
+        };
+
+
+    /************************************
+        Constructors
+
+```
+
+**Resolution Explanation:**  
+Both branches add configuration properties to the `options` object. The conflict arises because:
+1. HEAD branch adds `defaultFormat`
+2. Other branch adds both `defaultFormat` and `scalePercentBy100`
+
+Since these are additive changes that don't conflict semantically, the proper resolution is to **include both properties**:
+- Keep `defaultFormat` from HEAD
+- Add `scalePercentBy100` from the other branch
+- Maintain trailing comma after last property for consistency
+
+The properties are complementary and represent separate configuration concerns, so both should be preserved in the merged code.

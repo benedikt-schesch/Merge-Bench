@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the return type of the `getMenuItems` method, and the incoming change (HEAD) also adds a TODO comment about composing shortcuts to menu items.
+
+The semantic intent appears to be:
+- HEAD wants to change the return type to `Array<IDisplayMenuItem<IMenuItem>>` (more specific generic type)
+- The incoming branch wants to change the return type to `IDisplayMenuItem[]` (less specific, no generic) and add a TODO comment
+
+Since the HEAD version has a more specific type definition which is generally better for type safety, and the TODO comment from the incoming branch is valuable information that should be preserved, I'll merge both intentions:
+
+```typescript
+                }
+            }
+        });
+    }
+
+    getMenuItems(positions: MenuPosition): Array<IDisplayMenuItem<IMenuItem>> {
+        // TODO: @wzhudev: compose shortcut to returned menu items.
+        if (this._menuByPositions.has(positions)) {
+            return [...this._menuByPositions.get(positions)!.values()].filter((menu) => !menu.parentId).map((menu) => this.getDisplayMenuItems(menu));
+        }
+
+        return [] as Array<IDisplayMenuItem<any>>;
+
+```

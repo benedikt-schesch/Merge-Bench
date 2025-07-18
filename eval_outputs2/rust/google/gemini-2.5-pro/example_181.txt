@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+This conflict is purely stylistic. Both sides of the merge have the same semantic intent: to check if both `patch_tag` and `target_tag` have a value, and if so, perform a sub-check. The incoming change (right side) simply adds a space around the `=` operator and a blank line for better formatting, which is idiomatic in Rust. The resolution is to adopt the better-formatted version.
+
+```rust
+        let dom_patches:Vec<DomPatch> = patches.iter().map(|patch|{
+            let patch_path = patch.path();
+            let patch_tag = patch.tag();
+            if let Some(target_node) = nodes_lookup.get(patch_path) {
+                let target_tag = target_node.tag();
+
+                if let (Some(patch_tag), Some(target_tag)) = (patch_tag, target_tag) {
+                    if **patch_tag != target_tag{
+                        panic!(
+                            "expecting a tag: {patch_tag:?}, but found: {target_tag:?}"
+                        );
+                    }
+
+```

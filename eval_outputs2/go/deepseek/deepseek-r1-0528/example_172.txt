@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from two changes:
+1. The `Objects` field was marked as deprecated in HEAD with `omitempty` tag
+2. The `Assertions` field was changed to a nested map in the incoming branch
+
+The resolution maintains the deprecation marker for `Objects` while accepting the enhanced `Assertions` type. Here's the resolved version:
+
+```go
+
+type HttpSpec struct {
+	Metadata         map[string]string      `json:"metadata" yaml:"metadata"`
+	Request          models.HttpReq         `json:"req" yaml:"req"`
+	Response         models.HttpResp        `json:"resp" yaml:"resp"`
+	Objects          []*models.OutputBinary `json:"objects" yaml:"objects,omitempty"` //deprecated.
+	Assertions       map[string]map[string][]string   `json:"assertions" yaml:"assertions,omitempty"`
+	Created          int64                  `json:"created" yaml:"created,omitempty"`
+	ReqTimestampMock time.Time              `json:"reqTimestampMock" yaml:"reqTimestampMock,omitempty"`
+	ResTimestampMock time.Time              `json:"resTimestampMock" yaml:"resTimestampMock,omitempty"`
+}
+```

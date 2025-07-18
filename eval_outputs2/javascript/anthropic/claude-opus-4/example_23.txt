@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same functionality - they're both requiring the same modules and setting up the same variables. The only difference is:
+
+- HEAD uses `'use strict'` and `const` declarations (ES6 style)
+- The other branch uses `var` declarations (ES5 style)
+
+Since the HEAD version is using more modern JavaScript practices (`'use strict'` and `const`), and both achieve the same semantic intent, I'll resolve in favor of the HEAD version:
+
+```javascript
+'use strict'
+const path = require('path')
+const utils = require('./utils')
+const config = require('../config')
+const vueLoaderConfig = require('./vue-loader.conf')
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+
+```

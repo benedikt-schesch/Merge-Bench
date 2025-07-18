@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals two different trait bounds for the generic type `T` in the implementation of `SystemParamFetch` for `LocalState<T>`.
+
+*   The `HEAD` version requires `T: Resource + FromWorld`. This treats the system's local state as a type of `Resource`, which is conceptually a unique, global data type in many ECS frameworks.
+*   The `Incoming` version requires `T: Component + FromWorld`. This treats the local state as a `Component`, which is data typically associated with an entity.
+
+While `Local<T>` state is neither a global resource nor data attached to a regular entity, the `Incoming` change to use the `Component` trait is likely a deliberate design decision. In modern ECS architectures like Bevy (which this code strongly resembles), this change was made to unify the internal storage and retrieval mechanisms. By treating system-local state as a `Component` (likely stored on a special, internal singleton "system state" entity), the framework can reuse the powerful and highly optimized component storage and access pathways that are also used by `Query`.
+
+This unification simplifies the framework's internals and ensures consistent behavior. Therefore, the `Incoming` change represents a semantic evolution of the design, and resolving in its favor is the correct approach.
+
+```rust
+    fn default_config() -> Option<T> {
+        None
+    }
+}
+
+impl<'w, 's, T: Component + FromWorld> SystemParamFetch<'w, 's> for LocalState<T> {
+    type Item = Local<'s, T>;
+
+    #[inline]
+    unsafe fn get_param(
+        state: &'s mut Self,
+
+```

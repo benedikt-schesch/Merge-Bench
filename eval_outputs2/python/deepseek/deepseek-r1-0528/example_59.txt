@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two different approaches to validating an exception in a test case. Both versions correctly capture the exception, but validate it differently. 
+
+The HEAD version uses an assertion on the exception message, while the incoming branch uses assertions on:
+1. The number of errors in the exception当`ctx.value.errors`  
+2. The type of the first error  
+
+Combining both validations produces better test coverage. The conflict is resolved by keeping the exception context manager and the initial schema call, then applying *both* assertion types. This ensures:
+1. The exception message is validated
+2. The error count is checked
+3. The specific error type is verified
+
+Here's the resolved code:
+
+```python
+    with pytest.raises(
+        MultipleInvalid,
+        match=r"value is not allowed for dictionary value @ data\['color'\]",
+    ) as ctx:
+        schema({'color': ['blue', 'yellow']})
+    assert len(ctx.value.errors) == 1
+    assert isinstance(ctx.value.errors[0], ContainsInvalid)
+    assert str(ctx.value) == "value is not allowed for dictionary value @ data['color']"
+
+
+def test_remove():
+    """Verify that Remove works."""
+    # remove dict keys
+```
+
+Key changes:
+1. Removed the `except` block (redundant since `pytest.raises` already catches the exception)
+2. Kept the `ctx.value` validations from the incoming branch
+3. Added a string validation using `str(ctx.value)` to preserve HEAD's intent
+4. Maintained the exact context and spacing before/after the conflict

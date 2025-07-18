@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Uses `h.getComponentRevisionNamespace(ctx)` to determine the namespace
+- **Branch (47a565d...)**: Uses `h.app.Namespace` directly
+
+The key difference is that HEAD appears to have introduced a method `getComponentRevisionNamespace(ctx)` which likely contains logic to determine the appropriate namespace dynamically, possibly based on context or other factors. The branch side uses a simpler direct reference to the app's namespace.
+
+Given that HEAD has introduced a dedicated method for getting the namespace, it suggests there's important logic in that method that should be preserved. The method name also implies it's specifically designed for component revision scenarios, which matches this use case.
+
+Therefore, the semantic intent appears to be that HEAD's approach with the dedicated method should be used.
+
+```go
+
+	for _, curComp := range h.app.Status.AppliedResources {
+		crList := &appsv1.ControllerRevisionList{}
+		listOpts := []client.ListOption{client.MatchingLabels{
+			oam.LabelControllerRevisionComponent: curComp.Name,
+		}, client.InNamespace(h.getComponentRevisionNamespace(ctx))}
+		_ctx := multicluster.ContextWithClusterName(ctx, curComp.Cluster)
+		if err := h.r.List(_ctx, crList, listOpts...); err != nil {
+			return err
+		}
+		needKill := len(crList.Items) - h.r.appRevisionLimit - len(compRevisionInUse[curComp.Name])
+
+```

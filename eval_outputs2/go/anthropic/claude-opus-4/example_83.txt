@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a type alias for gRPC metadata with additional convenience methods. The key differences are:
+
+1. **HEAD** (current branch): Uses `NiceMD` as the type name and aliases `metadata.MD`
+2. **Incoming** (other branch): Uses `MD` as the type name and aliases `grpcMetadata.MD`
+
+Both sides appear to have the same intent - creating a wrapper type for gRPC metadata. The incoming change seems to be a refactoring that:
+- Simplified the type name from `NiceMD` to just `MD`
+- Changed from using an unqualified `metadata.MD` to the qualified `grpcMetadata.MD` (which matches the import alias at the top)
+
+Given that the incoming change uses the properly qualified import and has a simpler name, and considering the comment below refers to "MD wrapper", the incoming change appears to be the intended resolution.
+
+```go
+	"strings"
+
+	grpcMetadata "google.golang.org/grpc/metadata"
+)
+
+// MD is a convenience wrapper defining extra functions on the metadata.
+type MD grpcMetadata.MD
+
+// ExtractIncoming extracts an inbound metadata from the server-side context.
+//
+// This function always returns a MD wrapper of the grpcMetadata.MD, in case the context doesn't have metadata it returns
+// a new empty MD.
+
+```

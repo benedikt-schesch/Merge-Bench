@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```rust
+        // of the current [`ExecutionPlan`] as we traverse the plan tree.
+        let subrules: Vec<Box<PipelineFixerSubrule>> = vec![
+            Box::new(hash_join_convert_symmetric_subrule),
+            Box::new(hash_join_swap_subrule),
+        ];
+<<<<<<< HEAD
+        let state = pipeline
+            .transform_up(&|p| apply_subrules(p, &subrules, config))?
+            .data;
+=======
+        let new_plan = plan.transform_up(&|p| apply_subrules(p, &subrules, config))?;
+>>>>>>> e1ca74e7c68e4949504e902f91d2e2b152cfc910
+        // Next, we apply another subrule that tries to optimize joins using any
+        // statistics their inputs might have.
+        // - For a hash join with partition mode [`PartitionMode::Auto`], we will
+        //   make a cost-based decision to select which `PartitionMode` mode
+        //   (`Partitioned`/`CollectLeft`) is optimal. If the statistics information
+
+```

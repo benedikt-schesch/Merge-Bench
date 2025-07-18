@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - they both want to declare the `files` variable by calling `get_dir_config_files(cwd)`. 
+
+The HEAD version has the declaration after `runtime_entry`, while the incoming branch has it before. Since both sides have the exact same line of code and the `files` variable is used in the `for` loop immediately after, we only need one instance of this declaration.
+
+The most logical resolution is to keep it in the position where HEAD has it (after `runtime_entry`) since that's the current state of the codebase, and remove the duplicate.
+
+```rust
+
+  let entry_name = "index".to_string();
+
+  let files = get_dir_config_files(cwd);
+  let runtime_entry = cwd.to_path_buf().join("runtime.ts");
+
+  for (name, config_entry) in files {
+    let compiler = create_compiler_with_args(
+      cwd.to_path_buf(),
+      create_path_buf.clone(),
+
+```

@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD (current branch) adds three new admin endpoints:
+  - GET endpoint to fetch users for a specific organization
+  - POST endpoint to update a user
+  - DELETE endpoint to delete an organization
+
+- The incoming branch adds:
+  - PUT endpoint to update/create an organization
+
+These changes appear to be complementary rather than conflicting - they're adding different administrative functionality. The semantic intent on both sides is to expand the admin API capabilities, and there's no overlap in the routes themselves.
+
+Here's the resolved version:
+
+```typescript
+// Teams
+app.use("/teams", teamRouter);
+
+// Admin
+app.get("/admin/organizations", adminController.getOrganizations);
+app.get("/admin/organization/:orgId/users", adminController.getUsersForOrg);
+app.post("/admin/user/:userId", adminController.updateUser);
+app.delete("/admin/organization/:orgId", adminController.deleteOrganization);
+app.put("/admin/organization", adminController.putOrganization);
+
+// License
+app.get("/license", licenseController.getLicenseData);
+app.get("/license/report", licenseController.getLicenseReport);
+app.post(
+```

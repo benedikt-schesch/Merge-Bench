@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set the same properties (`show_in_menu` and `show_in_nav_menus`), but with different approaches:
+
+- HEAD is using `disp_boolean()` function to process the taxonomy array values
+- The incoming change is using pre-processed variables `$show_in_menu` and `$show_in_nav_menus`
+
+Given that the incoming change uses variables that were likely processed elsewhere (similar to how `$public` and `$rewrite` are used), and considering the pattern in the rest of the code where some values use variables while others use `disp_boolean()` directly, the semantic intent appears to be to use the pre-processed variables for these specific properties.
+
+Here is the resolved code:
+
+```php
+		"labels" => $labels,
+		"public" => <?php echo $public; ?>,
+		"hierarchical" => <?php echo $taxonomy['hierarchical']; ?>,
+		"label" => "<?php echo $taxonomy['label']; ?>",
+		"show_ui" => <?php echo disp_boolean( $taxonomy['show_ui'] ); ?>,
+		"show_in_menu" => <?php echo $show_in_menu; ?>,
+		"show_in_nav_menus" => <?php echo $show_in_nav_menus; ?>,
+		"query_var" => <?php echo disp_boolean( $taxonomy['query_var'] );?>,
+		"rewrite" => <?php echo $rewrite; ?>,
+		"show_admin_column" => <?php echo $taxonomy['show_admin_column']; ?>,
+		"show_in_rest" => <?php echo disp_boolean( $taxonomy['show_in_rest'] ); ?>,
+		"rest_base" => "<?php echo $taxonomy['rest_base']; ?>",
+
+```

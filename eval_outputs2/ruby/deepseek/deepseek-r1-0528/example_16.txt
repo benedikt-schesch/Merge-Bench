@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing implementations for initializing `@attachment` and the introduction of a new `adapter` method in the other branch. The resolution preserves both changes:
+
+1. Uses `StringIO.new('')` for default attachment initialization (more standard Ruby)
+2. Keeps the new `adapter` method from the other branch
+3. Maintains the existing `end` after the conflict to close the `adapter` method
+
+The resolved code maintains both functionalities while ensuring proper syntax:
+
+```ruby
+      json
+    end
+
+    def body(io=nil)
+      @attachment = io unless io.nil?
+      @attachment ||= StringIO.new('')
+    end
+
+    def adapter(connection=nil)
+      @connection = connection unless connection.nil?
+      @connection ||= Weary.adapter
+    end
+
+    def basic_auth(*credentials)
+      if !credentials.empty?
+        @basic_auth = true
+```

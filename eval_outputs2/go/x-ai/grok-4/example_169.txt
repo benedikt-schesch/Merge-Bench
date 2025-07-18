@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```go
+	// fetch the recorded testcases with their mocks
+	returnVal.Ys = yaml.NewYamlStore(path+"/tests", path, "", "", t.logger, tele)
+
+	routineId := pkg.GenerateRandomID()
+	// Initiate the hooks
+	returnVal.LoadedHooks = hooks.NewHook(returnVal.Ys, routineId, t.logger)
+
+	// Recover from panic and gracfully shutdown
+	defer returnVal.LoadedHooks.Recover(routineId)
+
+	select {
+	case <-stopper:
+		returnVal.Ok = false
+		return returnVal
+
+```

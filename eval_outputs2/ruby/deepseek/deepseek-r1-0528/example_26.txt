@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises from two changes:
+1. The method's third parameter name differs (`klass` vs `objects`)
+2. The controller check uses `controller` vs `@controller`
+
+The condition in the else branch uses `objects.length`, making `objects` the appropriate parameter name. The `@controller` reference seems unnecessary since `controller` is typically available in Rails helpers. The resolution keeps `controller` and adopts `objects` for parameter consistency.
+
+Resolved code:
+```ruby
+    "stage: #{link_to current_stage.name, project_stage_path(current_project, current_stage)} (of project #{link_to current_project.name, project_path(current_project)})"
+  end
+
+  # returns the open/closed status of a menu
+  # either the active controller is used or the given status is returned
+  def controller_in_use_or(contr_name, status, objects)
+    if controller.is_a? contr_name
+      :open
+    else
+      if status == :closed && (objects.length <= 3 )
+        # the box should be closed
+        # open it anyway if we have less than three
+```

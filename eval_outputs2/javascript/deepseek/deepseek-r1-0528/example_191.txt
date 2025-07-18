@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict involves two changes:
+1. Type annotations added to function parameters in the other branch
+2. Different property existence checks (`hasOwnProperty.call` vs `hasOwn.call`)
+
+The semantic intent is consistent - both want to:
+1. Create a jsx function that handles Emotion styling
+2. Check for presence of a 'css' prop before rendering
+3. Use the same logic after the condition
+
+The resolution keeps the type annotations since they improve type safety and uses `hasOwn.call` which matches the imported utility. The surrounding context remains unchanged.
+
+```javascript
+import Emotion, { createEmotionProps } from './emotion-element'
+import { hasOwn } from './utils'
+
+export const Fragment = ReactJSXRuntime.Fragment
+
+export function jsx(type: any, props: any, key: any) {
+  if (!hasOwn.call(props, 'css')) {
+    return ReactJSXRuntime.jsx(type, props, key)
+  }
+
+  return ReactJSXRuntime.jsx(Emotion, createEmotionProps(type, props), key)
+}
+```

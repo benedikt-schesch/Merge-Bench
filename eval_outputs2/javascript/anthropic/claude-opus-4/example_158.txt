@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic intent - they want to use a local image file when running on localhost, but differ in how they construct the local path.
+
+- HEAD uses: `"images/kolibri.img"`
+- The other branch uses: `HOST + "kolibri.img"`
+
+Since `HOST` is likely a variable that contains the base URL/path (possibly including "images/"), and both sides are trying to reference the same local kolibri.img file, I'll resolve this by keeping the approach from the branch that uses the `HOST` variable, as it's more consistent with using a configurable base path.
+
+```javascript
+            },
+            {
+                id: "kolibrios",
+                fda: {
+                    "url": ON_LOCALHOST ?
+                            HOST + "kolibri.img" :
+                            "//builds.kolibrios.org/eng/data/data/kolibri.img",
+                    "size": 1474560,
+                    "async": false,
+                },
+                name: "KolibriOS",
+```

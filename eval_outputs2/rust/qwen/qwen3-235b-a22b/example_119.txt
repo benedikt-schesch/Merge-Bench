@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differing module paths (`dynval` vs `value`) and differing imports (`NumWithUnit`/`DynVal` vs `PrimVal`). The intent behind the change is ambiguous without context about module refactoring, type compatibility, or usage of the conflicting types elsewhere in the code. Since both sides are explicitly trying to import the same symbols (`Coords` and `VarName`) from different modules, resolving this safely requires more information. Therefore, the conflict is left unresolved as instructed.
+
+```rust
+use crate::{
+    config,
+    config::{window_definition::WindowName, AnchorPoint},
+    display_backend, eww_state,
+    script_var_handler::*,
+<<<<<<< HEAD:crates/eww/src/app.rs
+    dynval::{Coords, NumWithUnit, DynVal, VarName},
+=======
+    value::{Coords, PrimVal, VarName},
+>>>>>>> db9e673b81d0d85dccc1aee2c8dd19cb7ca460e5:src/app.rs
+    EwwPaths,
+};
+use anyhow::*;
+use debug_stub_derive::*;
+use gdk::WindowExt;
+```

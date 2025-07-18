@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from changes made to different test files in separate branches. The HEAD branch modifies `tests/Phake/Annotation/MockInitializerTypedPropertiesTest.php` while the other branch modifies `tests/Phake/Matchers/PHPUnit6ConstraintAdapterTest.php`. Since these are distinct test files with different purposes, the conflict cannot be resolved automatically without knowing which file's content should be preserved.
+
+The changes are semantically incompatible because:
+1. They set up different test dependencies (`MockInitializer` vs PHPUnit constraint adapter)
+2. They belong to different test classes (implied by different file paths)
+3. They serve different testing purposes
+
+Therefore, the conflict must be resolved manually by selecting the appropriate test file context. Here's the original snippet with conflict markers preserved:
+
+```php
+    #[Mock]
+    private AnotherNamespacedClass $nativeMock;
+
+    protected function setUp(): void
+    {
+<<<<<<< HEAD:tests/Phake/Annotation/MockInitializerTypedPropertiesTest.php
+        $this->initializer = new MockInitializer();
+=======
+        $this->constraint = $this->getMockBuilder(Constraint::class)->getMock();
+        $this->adapter    = new PHPUnit6ConstraintAdapter($this->constraint);
+        $this->constraint->expects($this->any())
+            ->method('toString')
+            ->willReturn('phpunit matcher');
+>>>>>>> 78e410ae3ae8d3249e757e46cbab122d33af879e:tests/Phake/Matchers/PHPUnit6ConstraintAdapterTest.php
+    }
+
+    public function testInitialize(): void
+    {
+```

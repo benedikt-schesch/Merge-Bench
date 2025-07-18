@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from different quote styles and whitespace usage in the conditional statement. Both versions implement identical functionality to conditionally declare `attr_accessible` for Rails versions below 4. The HEAD version uses double quotes and has no extra newline, while the other branch uses single quotes and adds a blank line. 
+
+The resolution preserves the HEAD version's style for consistency with the adjacent class (`TestModelSecurityModelWithFind`) which uses double quotes in its version check. The blank line from the other branch is removed to maintain consistent spacing with the surrounding context.
+
+```ruby
+end
+
+class TestModelSecurityModel < ActiveRecord::Base
+  has_many :test_attrs
+  using_access_control
+  if Rails.version < "4"
+    attr_accessible :attr, :attr_2, :test_attrs
+  end
+end
+class TestModelSecurityModelWithFind < ActiveRecord::Base
+  if Rails.version < "3.2"
+```

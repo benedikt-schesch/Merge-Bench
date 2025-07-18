@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to improve the type annotations for the `_nested_getitem` function, but with different approaches:
+
+- **HEAD** introduces a generic `IndexT` TypeVar and uses it to ensure type consistency between the dictionary keys and the path items, while keeping the data parameter typed as a Dict.
+- **The other branch** makes the function more flexible by typing `data` as `Any` (allowing it to work with any subscriptable type) and uses `typing.Hashable` for the path items.
+
+The semantic intent of both changes appears to be:
+1. Make the function work with any subscriptable data structure (not just dictionaries)
+2. Provide appropriate type hints for the path parameter
+
+The second approach (from the other branch) is more general and practical since:
+- The function body already handles multiple types (catching KeyError for dicts, IndexError for sequences)
+- Using `Any` for data allows the function to work with nested structures of mixed types
+- `Hashable` is a reasonable constraint for indices
+
+Here's the resolved version:
+
+```python
+# fmt: on
+
+MAX_VALIDATION_ERROR_ITEM_LENGTH = 500
+
+
+def _nested_getitem(
+    data: typing.Any, path: typing.List[typing.Hashable]
+) -> typing.Optional[typing.Any]:
+    for item_index in path:
+        try:
+            data = data[item_index]
+        except (KeyError, IndexError, TypeError):
+            # The index is not present in the dictionary, list or other
+
+```

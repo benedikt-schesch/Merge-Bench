@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `createCalendarClient` method, but with different changes:
+
+- **HEAD** (current branch): Changes the parameter from `user.email` to `user.userId` in the `getCalendarClient` call
+- **Incoming branch**: Adds a `stayAlive: boolean = false` parameter to the method signature while keeping `user.email`
+
+Both changes appear to be intentional improvements that should be combined. The semantic intent is:
+1. Add the `stayAlive` parameter for controlling client lifecycle
+2. Use `user.userId` instead of `user.email` for identifying the calendar client
+
+Here's the resolved conflict:
+
+```typescript
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+    await instance.initClient(workspace)
+    return instance
+  }
+
+  async createCalendarClient (user: User, stayAlive: boolean = false): Promise<CalendarClient> {
+    const current = this.getCalendarClient(user.userId)
+    if (current !== undefined) {
+      if (current instanceof Promise) {
+        return await current
+      }
+      return current
+
+```

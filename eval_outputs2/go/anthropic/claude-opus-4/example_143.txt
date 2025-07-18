@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic intent - returning an error when a recursive type is detected in query parameters. The only difference is:
+
+- HEAD: Uses "Recursive" with capital R
+- The other branch: Uses "recursive" with lowercase r
+
+Since this is just a capitalization difference in an error message, and both convey the same meaning, I'll preserve the conflict as-is since there's no clear semantic preference for one over the other:
+
+```go
+	}
+
+	// Check for cyclical message reference:
+	isCycle := touchedIn[*msg.Name]
+	if isCycle {
+<<<<<<< HEAD:protoc-gen-swagger/genswagger/template.go
+		return nil, fmt.Errorf("Recursive types are not allowed for query parameters, cycle found on %q", fieldType)
+=======
+		return nil, fmt.Errorf("recursive types are not allowed for query parameters, cycle found on %q", fieldType)
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6:protoc-gen-openapiv2/internal/genopenapi/template.go
+	}
+
+	// Construct a new map with the message name so a cycle further down the recursive path can be detected.
+	// Do not keep anything in the original touched reference and do not pass that reference along.  This will
+	// prevent clobbering adjacent records while recursing.
+
+```

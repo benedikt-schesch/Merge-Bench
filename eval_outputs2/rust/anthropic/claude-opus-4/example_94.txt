@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the `HEAD` branch has no additional content after the `read_slice` method, while the incoming branch adds a new `is_finished` method that checks if the internal slice is empty.
+
+Since this appears to be adding new functionality without conflicting with existing code, and the method seems useful for checking the reader's state, I'll resolve this by accepting the incoming change:
+
+```rust
+        }
+        let (read_slice, remaining) = self.slice.split_at(length);
+        self.slice = remaining;
+        Ok(read_slice)
+    }
+
+    #[inline]
+    pub(crate) fn is_finished(&self) -> bool {
+        self.slice.is_empty()
+    }
+}
+
+impl<'storage> Reader for SliceReader<'storage> {
+    #[inline(always)]
+    fn read(&mut self, bytes: &mut [u8]) -> Result<(), DecodeError> {
+
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import from '@colyseus/core', but with different items:
+
+- HEAD imports just `Presence` and also adds `EventEmitter` from 'events'
+- The other branch imports both `Presence` and `spliceOne`
+
+Since both sides need imports from '@colyseus/core' and the HEAD side also needs EventEmitter, the semantic intent is to have all necessary imports. The resolution should include all unique imports from both sides.
+
+```typescript
+import Redis, { Cluster, ClusterNode, ClusterOptions, RedisOptions } from 'ioredis';
+import { Presence, spliceOne } from '@colyseus/core';
+import EventEmitter from 'events';
+
+type Callback = (...args: any[]) => void;
+
+export class RedisPresence implements Presence {
+    protected sub: Redis | Cluster;
+
+```

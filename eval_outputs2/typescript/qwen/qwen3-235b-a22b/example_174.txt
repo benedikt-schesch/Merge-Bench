@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict between the types `PersonId` vs `Ref<Account>` (likely representing different reference mechanisms for a user's identity) and `WorkspaceUuid` vs `string` (which could be a UUID vs a more generic string representation of a workspace) introduces semantic ambiguity. The resolution of this conflict depends on the broader context and design decisions made in the software project, particularly how identifiers and references are modeled in the system.
+
+For instance, if `PersonId` or `WorkspaceUuid` are aliased identifiers that are fully compatible with `Ref<Account>` or `string`, then there may not be a functional difference between the two fields. However, if they are different representations (e.g., IDs stored as primitives) vs reference objects, this choice has implications for serialization, usage in services, and identity resolution mechanics.
+
+Since this decision is critical to maintain correctness and consistency with the application’s model, and the available code snippet provides insufficient insight into the wider architectural or usage patterns, it is safest not to enforce an arbitrary resolution.
+
+```typescript
+import type { PersonId, Timestamp, WorkspaceUuid } from '@hcengineering/core'
+import type { NextFunction, Request, Response } from 'express'
+import type { Credentials } from 'google-auth-library'
+
+export interface WatchBase {
+<<<<<<< HEAD
+  userId: PersonId
+  workspace: WorkspaceUuid
+=======
+  userId: Ref<Account>
+  workspace: string
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+  expired: Timestamp
+  channelId: string
+  resourceId: string
+  calendarId: string | null
+}
+```

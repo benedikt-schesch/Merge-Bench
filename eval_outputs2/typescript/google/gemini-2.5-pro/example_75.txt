@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two different approaches to setting the `fontFamily` style for the `ExpandedResponseContainer`. The `HEAD` branch introduces a conditional logic to switch between a serif and a default font family based on the `messageFont` variable, which is a clear feature enhancement. The other branch uses a simpler, direct assignment of the `fontFamily` variable.
+
+The most logical resolution is to adopt the more advanced and flexible implementation from `HEAD`, as it semantically contains and enhances the functionality of the other branch. The comment from `HEAD` is also retained as it provides context for the `<Tabs>` component that follows.
+
+```typescript
+        width="80%"
+        centered
+        transitionName="animation-move-down"
+        styles={{ body: { maxHeight: '80vh', overflow: 'auto' } }}>
+        {expandedResponse && (
+          <ExpandedResponseContainer
+            style={{
+              fontFamily: messageFont === 'serif' ? 'var(--font-family-serif)' : 'var(--font-family)',
+              fontSize
+            }}>
+            {/* mode swtich tabs */}
+            <Tabs
+              tabBarExtraContent={
+                <ActionButton
+                  className="copy-expanded-button"
+                  onClick={() => {
+
+```

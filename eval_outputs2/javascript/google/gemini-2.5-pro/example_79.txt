@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The semantic intent of the `HEAD` branch is to exit with a proper status code, `1` for an error and `0` for success, which is crucial for scripting and CI/CD pipelines. The intent of the `b5d5b24...` branch is to use a refactored `options` variable instead of `program` but it incorrectly hardcodes the exit code to `0`, which would hide build failures.
+
+A proper semantic resolution combines the superior logic from `HEAD` (checking `buildError`) with the likely intentional refactoring from `b5d5b24...` (using the `options` variable).
+
+```javascript
+    console.log(colors.red('Error: ' + err.toString()))
+  })
+
+  const buildError = await build(inputPath)
+
+  if (options.buildOnce) {
+    process.exit(buildError ? 1 : 0)
+  } else {
+    watch()
+  }
+}
+
+
+```

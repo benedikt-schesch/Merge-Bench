@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same `let(:response)` statement with identical content. The only difference is in whitespace - the HEAD version has one space after `let(:response)` while the incoming change has two spaces.
+
+Since both sides have the same semantic intent (defining the same response variable with the same value), and the only difference is cosmetic spacing, I'll resolve this by keeping one version. I'll choose the version with single spacing as it's more consistent with Ruby style conventions.
+
+```ruby
+    end
+  end
+
+  describe 'when locating beverages with out a dish' do
+    let!(:beverage) { create(:coke) }
+    let(:response) { ModelHelper.response(Beverage, dish_id: nil) }
+
+    it_behaves_like 'fastapi_meta' do
+      let(:expected) { { total: 1, count: 1, offset: 0, error: false } }
+    end
+
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `bevy_ecs::system`, but with different sets of imports:
+
+- HEAD wants: `ResMut`
+- The incoming change wants: `IntoSystem, ResMut`
+
+Since both sides want `ResMut` and the incoming change additionally wants `IntoSystem`, the semantic intent appears to be to have both imports available. The resolution should include both `IntoSystem` and `ResMut`.
+
+Here's the resolved code:
+
+```rust
+use crate::{
+    update_asset_storage_system, Asset, AssetLoader, AssetServer, AssetStage, Handle, HandleId,
+    RefChange,
+};
+use bevy_app::{App, EventWriter, Events};
+use bevy_ecs::{
+    system::{IntoSystem, ResMut},
+    world::FromWorld,
+};
+use bevy_utils::HashMap;
+use crossbeam_channel::Sender;
+use std::fmt::Debug;
+
+/// Events that happen on assets of type `T`
+
+```

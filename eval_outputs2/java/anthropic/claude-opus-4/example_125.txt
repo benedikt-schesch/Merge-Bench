@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to provide the same dependency but with different naming:
+
+- HEAD: Uses `ChangeRepositoryStarUseCase` (both as return type and class name)
+- Other branch: Uses `ChangeRepositoryStarRepository` (both as return type and class name)
+
+This appears to be a naming refactor where one branch renamed the class from `Repository` to `UseCase` pattern. Since both sides are semantically trying to achieve the same thing (providing a dependency for changing repository star status), and the conflict is purely about naming, I cannot determine which naming convention is preferred without more context about the codebase's architecture decisions.
+
+Here's the snippet with the conflict preserved:
+
+```java
+    return new GenericRepository<>(null, api);
+  }
+
+  @Provides
+  @PerActivity
+<<<<<<< HEAD
+  ChangeRepositoryStarUseCase provideChangeRepositoryStarRepository() {
+    return new ChangeRepositoryStarUseCase();
+=======
+  ChangeRepositoryStarRepository provideChangeRepositoryStarRepository() {
+    return new ChangeRepositoryStarRepository();
+>>>>>>> 46751d2846d926dab116569835f3660a6297da86
+  }
+
+  @Provides
+  @PerActivity
+<<<<<<< HEAD
+
+```

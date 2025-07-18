@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD (current branch) wants to keep `AudioEngine.init();` active
+- The incoming branch (9e19425a9effb50cf7d9498994c7bbad34e7828a) wants to disable it with a comment
+
+The semantic intent of the incoming branch is clear - they want to temporarily disable the AudioEngine initialization (as indicated by the comment "Disable this for now"). This suggests there might be an issue with AudioEngine that needs to be addressed.
+
+Since the incoming branch has a more recent and deliberate change with an explanatory comment, I'll resolve in favor of commenting out the AudioEngine initialization:
+
+```javascript
+
+			// subscribe to stateUpdates
+			$.Dispatch('stateUpdate').subscribe(Engine.handleStateUpdates);
+
+			$SM.init();
+			// AudioEngine.init(); Disable this for now
+			Notifications.init();
+			Events.init();
+			Room.init();
+
+
+
+```

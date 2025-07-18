@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same method definition, but with different intents:
+
+- **HEAD (current branch)**: Defines `cosine_distance` as an instance method
+- **Incoming change**: Defines `cosine_distance` as a class method (with `self.`) and adds YARD documentation
+
+Based on the semantic intent and the fact that the incoming change includes documentation (suggesting it's a more complete/refined version), the most reasonable resolution would be to accept the incoming change. However, since you've asked me to return the snippet with the conflict if the intent is ambiguous, and there could be valid reasons for either choice depending on the broader codebase design, I'll return the original snippet unchanged:
+
+```ruby
+      # angle between them (http://en.wikipedia.org/wiki/Cosine_similarity).
+      # 
+      # Parameters a and b are vectors with continuous attributes.
+      #
+      # D = sum(a[i] * b[i]) / sqrt(sum(a[i]**2)) * sqrt(sum(b[i]**2))
+<<<<<<< HEAD
+      def cosine_distance(a,b)
+=======
+      # @param a [Object]
+      # @param b [Object]
+      # @return [Object]
+      def self.cosine_distance(a,b)
+>>>>>>> 753f2ec0c999c414bbd1f295a5719f7687c78f13
+        dot_product = 0.0
+        norm_a = 0.0
+        norm_b = 0.0
+        magnitude = 0.0
+        
+```

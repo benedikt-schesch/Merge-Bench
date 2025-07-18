@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the `allowReconnection` call, but they have different approaches:
+
+- **HEAD**: Simply calls `await this.allowReconnection(client, 1);`
+- **Incoming change**: Wraps the same call in a try-catch block and resolves `onLeaveFinished` promise in the catch block
+
+The semantic intent appears to be:
+1. Both sides want to allow reconnection when a client leaves
+2. The incoming change adds error handling and ensures that `onLeaveFinished` is resolved even if `allowReconnection` throws an error
+
+Since the incoming change provides more robust error handling and ensures the promise resolution, it seems to be the more complete solution. Here's the resolved code:
+
+```typescript
+                return onJoinFinished;
+              }
+              async onLeave(client) {
+                onLeaveCalled = Date.now();
+                // if left early - allow reconnection should be no-op
+                try {
+                  await this.allowReconnection(client, 1);
+                } catch (e) {
+                  onLeaveFinished.resolve(true);
+                }
+              }
+              onDispose() { onRoomDisposed.resolve(true); }
+            });
+
+            // Close WebSocket connetion before `onJoin` completes
+
+```

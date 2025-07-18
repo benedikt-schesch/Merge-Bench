@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The `HEAD` version of the code formats the terminal mode value by checking if it starts with 'A' for "auto". The other branch extends this logic by adding a check for 'N' to be displayed as "(don't send)". Since the second version is a superset of the first and adds a new, non-conflicting feature, the correct resolution is to merge both intents by using the code from the second branch.
+
+```c
+      dlg_update_start(ctrl, dlg);
+      dlg_listbox_clear(ctrl, dlg);
+      for (val = conf_get_str_strs(conf, CONF_ttymodes, NULL, &key);
+           val != NULL;
+           val = conf_get_str_strs(conf, CONF_ttymodes, key, &key)) {
+        char *disp = dupprintf(
+            "%s\t%s",
+            key,
+            (val[0] == 'A') ? "(auto)"
+                            : ((val[0] == 'N') ? "(don't send)" : val + 1));
+        dlg_listbox_add(ctrl, dlg, disp);
+        sfree(disp);
+      }
+      dlg_update_done(ctrl, dlg);
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add different annotation interfaces to what appears to be a collection of binding annotations. The HEAD branch wants to add `ServerDiscoveryPort` while the other branch wants to add `AllowBlankCards`.
+
+Since these are two different annotations serving different purposes (one appears to be for server discovery configuration and the other for allowing blank cards), and they don't conflict in terms of functionality, the semantic intent is to include both annotations.
+
+Here's the resolved code:
+
+```java
+  public @interface BannedNicks {
+  }
+
+  @BindingAnnotation
+  @Retention(RetentionPolicy.RUNTIME)
+  public @interface ServerDiscoveryPort {
+  }
+
+  @BindingAnnotation
+  @Retention(RetentionPolicy.RUNTIME)
+  public @interface AllowBlankCards {
+  }
+
+  @BindingAnnotation
+  @Retention(RetentionPolicy.RUNTIME)
+
+```

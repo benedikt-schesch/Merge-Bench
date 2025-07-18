@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import logging functionality, but they're using different logging frameworks:
+
+- HEAD (current branch) is using Log4j 2.x (org.apache.logging.log4j)
+- The incoming branch is using Log4j 1.x (org.apache.log4j)
+
+Since Log4j 2.x is the newer version and Log4j 1.x is deprecated/has known security vulnerabilities, the semantic intent appears to be updating the logging framework. The HEAD version with Log4j 2.x should be preferred.
+
+Here's the resolved code:
+
+```java
+import net.socialgamer.cah.RequestWrapper;
+import net.socialgamer.cah.data.ConnectedUsers;
+import net.socialgamer.cah.data.QueuedMessage;
+import net.socialgamer.cah.data.QueuedMessage.MessageType;
+import net.socialgamer.cah.data.User;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+
+
+```

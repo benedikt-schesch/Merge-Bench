@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires understanding the semantic intent of both changes.
+
+*   **`HEAD` version:** This branch introduces a flag, `process_as_code`, which is set to `True` within the `else` block. This flag is then immediately checked in an `if` statement that follows the `if/elif/else` structure. The code to handle a line as code is executed within this `if` block.
+*   **`bbeee06f1222fa47439717d2e4b642a41e9d7f4b` version:** This branch removes the flag and the extra `if` statement.
+
+**Analysis:**
+
+The logic in both branches is functionally equivalent. The `if(process_as_code)` block in `HEAD` will only ever execute if the preceding `else` block was entered. This is the same outcome as simply placing the code directly inside the `else` block.
+
+The change in the `bbeee...` branch is a classic refactoring: it simplifies the code by removing a redundant variable and an unnecessary conditional statement, making the control flow more direct and easier to read. The intent is to execute the code-handling logic if and only if the line is not a documentation comment, which is what nesting the logic directly in the `else` block achieves.
+
+Therefore, the most semantically correct resolution is to adopt the cleaner, more direct implementation from the `bbeee...` branch.
+
+```python
+                save(docs_text, code_text)
+                has_code = docs_text = code_text = ''
+            docs_text += re.sub(comment_matcher, "", line) + "\n"
+
+        else:
+            if code_text and any(line.lstrip().startswith(x)
+                                 for x in ['class ', 'def ', '@']):
+                if not code_text.lstrip().startswith("@"):
+                    save(docs_text, code_text)
+                    code_text = has_code = docs_text = ''
+
+```

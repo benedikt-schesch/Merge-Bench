@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+I've analyzed the semantic merge conflict in the import statements. The conflict arises from both branches updating different parts of the gRPC middleware imports, likely due to a version migration (v1 to v2). 
+
+The resolution maintains the updated v2 packages from the right side while preserving the testing packages from the left side. Here's the resolved version:
+
+```go
+
+import (
+	"context"
+	"testing"
+
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
+	grpc_testing "github.com/grpc-ecosystem/go-grpc-middleware/testing"
+	pb_testproto "github.com/grpc-ecosystem/go-grpc-middleware/testing/testproto"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+```
+
+Key changes made:
+1. Kept the v2 recovery import from right side (`interceptors/recovery`)
+2. Preserved the testing packages (`grpc_testing`, `pb_testproto`) from left side
+3. Maintained all common imports unchanged
+4. Removed the obsolete v1 recovery import since it's superseded by v2
+5. Kept consistent aliasing for testing packages
+
+This resolution:
+- Maintains compatibility with v2 middleware
+- Preserves test functionality
+- Avoids duplicate imports
+- Keeps proper package aliases required by test code

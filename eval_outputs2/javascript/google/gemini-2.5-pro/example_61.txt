@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises from what appears to be a refactoring of an API. Both sides of the merge aim to achieve the same goal: disabling a feature and updating the UI accordingly.
+
+*   The `HEAD` branch uses a namespaced API (`Settings.set`, `Icon.set`). This is a common and desirable refactoring pattern that improves code organization and scalability.
+*   The `a9ce98f97aaed5e50c711de3913c3138d4188b24` branch uses an older, "flat" API (`set_settings`, `set_icon`).
+
+The most logical resolution is to adopt the newer, refactored API from the `HEAD` branch, as the corresponding background methods have likely been updated as well, rendering the old API obsolete. The commented-out code in the other branch can be safely discarded as it's not active, and the idea may have been abandoned or implemented elsewhere.
+
+```javascript
+                $power_spinning.classList.add('hidden');
+                $power_static.classList.remove('hidden');
+            }, 1000);
+        }
+        else {
+            await BG.exec('Settings.set', {id: 'enabled', value: false});
+            await BG.exec('Icon.set', {status: 'off'});
+            $power_btn.classList.add('off');
+        }
+    });
+
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict is on the `shutdown_hooks` field within a struct definition.
+
+-   **HEAD** defines the type as `Vec<Box<dyn FnOnce() -> BoxFuture<'static, ()>>>`.
+-   **The incoming change** defines the type as `Vec<Box<dyn FnOnce() -> BoxFuture<'static, ()> + Send>>`.
+
+The only difference is the addition of the `+ Send` trait bound to the boxed closure. In concurrent Rust, the `Send` trait is a marker indicating that a type can be safely transferred between threads. Adding this bound to the shutdown hook closure is a common and necessary refinement in multi-threaded applications (like a server) to ensure thread safety. It allows the shutdown hooks to be executed by a different thread than the one they were created on. This is a stricter, but safer, requirement.
+
+The semantic intent of the incoming change is to improve thread safety. This is a progressive change that should be kept.
+
+```rust
+    make_codec: MkC,
+    stat_tracer: Vec<TraceFn>,
+    #[cfg(feature = "multiplex")]
+    multiplex: bool,
+    span_provider: SP,
+    shutdown_hooks: Vec<Box<dyn FnOnce() -> BoxFuture<'static, ()> + Send>>,
+    _marker: PhantomData<Req>,
+}
+
+impl<S, Req>
+    Server<
+
+```

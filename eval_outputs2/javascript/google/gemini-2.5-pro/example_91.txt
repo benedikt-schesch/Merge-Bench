@@ -1,0 +1,14 @@
+<think>
+No reasoning found</think>
+This type of conflict typically occurs in auto-generated manifest files, such as those produced by webpack. The hashes (`e45a4de...` and `8202947...`) are fingerprints of the file content for `index.js` and `index.css`. The conflict arose because the source files that generate these assets were changed independently in both branches.
+
+A simple textual merge is not possible, as neither `HEAD` nor the incoming branch has the "correct" version for the final merged code. The correct resolution is to merge the source code first, and then regenerate this manifest file as part of a build process. Since this cannot be done automatically, the conflict is considered ambiguous.
+
+```javascript
+<<<<<<< HEAD
+window.WEBPACK_ASSETS = {"index.js":{"js":"index@e45a4de49431db58f52c.js","css":"index@e45a4de49431db58f52c.css"},"lib":{"js":"lib@aaed0f9bfcc4ff921c5a.js"},"lib2":{"js":"lib2@819909a89ca45b94d9bf.js"},"lib3":{"js":"lib3@93b22d7460620277a5da.js"},"manifest":{"js":"manifest@f2f4bd774d6c221b3d5f.js"}}
+=======
+window.WEBPACK_ASSETS = {"index.js":{"js":"index@8202947f0c05ff5e96d8.js","css":"index@8202947f0c05ff5e96d8.css"},"lib":{"js":"lib@aaed0f9bfcc4ff921c5a.js"},"lib2":{"js":"lib2@819909a89ca45b94d9bf.js"},"lib3":{"js":"lib3@93b22d7460620277a5da.js"},"manifest":{"js":"manifest@f2f4bd774d6c221b3d5f.js"}}
+>>>>>>> 4d24c397483d2703e85c6977236270f52edf2d70
+
+```

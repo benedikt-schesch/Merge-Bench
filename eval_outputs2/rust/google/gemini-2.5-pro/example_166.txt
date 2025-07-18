@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Resolving the conflict requires understanding the semantic intent of both changes.
+
+*   **HEAD** uses a borrowed reference `&'a ValidModule<...>` and a `MappingContext`. The lifetime `'a` suggests this `WasmiModule` is tied to the lifetime of the `ValidModule` from which it is created.
+*   **The other branch (`f9b24f80...`)** uses a shared, atomically reference-counted pointer `Arc<ValidModule<...>>` and an `EventHandlerContext`. The `Arc` decouples the lifetimes, allowing the new `WasmiModule` and the original `ValidModule` to be managed independently, which is a common and robust pattern in concurrent or asynchronous Rust. The context object has also been changed to `EventHandlerContext`, likely as part of a related refactoring to use a more specific or appropriate context type.
+
+The most sensible resolution is to combine these intents. The move to `Arc` is a clear improvement for lifetime management and concurrency, and the switch to `EventHandlerContext` is likely a deliberate API evolution. Both changes can and should be applied together.
+
+```rust
+    S: Store + Send + Sync + 'static,
+    U: Sink<SinkItem = Box<Future<Item = (), Error = ()> + Send>> + Clone + Send + Sync + 'static,
+{
+    /// Creates a new wasmi module
+    pub fn from_valid_module_with_ctx(
+        valid_module: Arc<ValidModule<T, L, S, U>>,
+        ctx: EventHandlerContext,
+    ) -> Result<Self, FailureError> {
+        let logger = valid_module.logger.new(o!("component" => "WasmiModule"));
+
+        // Build import resolver
+        let mut imports = ImportsBuilder::new();
+
+```

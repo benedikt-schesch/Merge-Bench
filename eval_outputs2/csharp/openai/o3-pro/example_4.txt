@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```java
+	/// </summary>
+	/// <param name="context">Validation Context</param>
+	/// <param name="cancellation">Cancellation token</param>
+	/// <returns>A ValidationResult object containing any validation failures.</returns>
+	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
+		ArgumentNullException.ThrowIfNull(context);
+		context.IsAsync = true;
+		return await ValidateInternalAsync(context, useAsync: true, cancellation);
+	}
+
+	private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
+```

@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are modifying the function signature for `agent_select_result`. The conflict is about the return type:
+
+- HEAD version: `static int agent_select_result(int fd, int event)`
+- Other version: `static void agent_select_result(int fd, int event)`
+
+Without more context about how this function is used (especially whether callers expect a return value), I cannot determine which return type is semantically correct. The intent is ambiguous without seeing:
+1. How this function is called
+2. Whether the function body returns any values
+3. What the broader changes in each branch were trying to achieve
+
+Therefore, I'm returning the snippet with the conflict unresolved:
+
+```c
+  close(conn->fd);
+  del234(agent_pending_queries, conn);
+  sfree(conn);
+}
+
+<<<<<<< HEAD
+static int agent_select_result(int fd, int event)
+=======
+static void agent_select_result(int fd, int event)
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+{
+  agent_pending_query *conn;
+
+  assert(event == 1); /* not selecting for anything but R */
+
+
+```

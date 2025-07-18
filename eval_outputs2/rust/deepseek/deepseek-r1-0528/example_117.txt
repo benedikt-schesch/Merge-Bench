@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises due to differences in the function signature and body implementation for `__traverse__`. The HEAD branch uses a simpler `Result` type and includes explicit body handling with `$($body)*`, while the other branch uses an absolute path `$crate::_detail::Result` and directly inserts `$body` as the function body. 
+
+Both changes are semantically valid but represent different approaches:
+1. **HEAD branch** suppresses unused `$py` variable and expands body tokens
+2. **Other branch** uses explicit error type path and expects `$body` to contain full implementation
+
+Since these changes conflict structurally and the exact intent behind each approach is unclear without broader context, the conflict cannot be automatically resolved. The snippet is preserved with conflict markers:
+
+```rust
+            $crate::py_coerce_item!{
+                impl $class {
+                    fn __traverse__(&$slf,
+                    $py: $crate::Python,
+                    $visit: $crate::py_class::gc::VisitProc)
+<<<<<<< HEAD
+                    -> Result<(), $crate::py_class::gc::TraverseError> {
+                        let _ = $py;
+                        $($body)*
+                    }
+=======
+                    -> $crate::_detail::Result<(), $crate::py_class::gc::TraverseError>
+                    $body
+>>>>>>> f2fa212f7ae068505676a86e36b38a4af977bd77
+                }
+            }
+        }
+        $members $props
+    }};
+```

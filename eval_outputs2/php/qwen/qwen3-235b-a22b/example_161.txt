@@ -1,0 +1,78 @@
+<think>
+No reasoning found</think>
+In order to appropriately resolve this merge conflict from a semantic perspective, we must carefully analyze the intent behind both branches and assess whether the conflict can be resolved without deeper ambiguity in the structure or dependencies of the project.
+
+---
+
+### Summary of the Conflict
+
+- **HEAD (Current branch)**:
+  - Uses `namespace Mantis\tests\rest;`, which entails an object-oriented design where classes are fully namespaced.
+  - Imports `Mantis\tests\MantisCoreBase` with a `use` statement, indicating a reliance on autoloading or bundled namespace resolution.
+  - Omits explicit `require_once` directives.
+
+- **Theirs (Other branch, `efa5c907...`)**:
+  - Omits any namespace declaration and uses old-style explicit `require_once` statements.
+    - `'RestBase.php'`: likely contains class or functionality required for REST testing in this file.
+    - `'Mantis/MantisCoreBase.php'`: implies a directory structure where the `MantisCoreBase` is not namespaced or only namespaced under `Mantis`.
+
+---
+
+### Semantic Intent
+
+Both versions are aiming to include:
+
+1. The `RestBase` functionality.
+2. The `MantisCoreBase` functionality.
+
+The primary difference lies in the mechanism used to access these:
+
+- One branch assumes a modern PHP project utilizing autoloading and namespaces.
+- The other is likely working in a test environment that requires explicit file inclusion.
+
+Additionally, a key point of contention lies in the namespace path used to reference `MantisCoreBase`:
+
+- `Mantis\tests\MantisCoreBase`: suggests the class may reside within the tests suite.
+- `Mantis/MantisCoreBase.php`: implies the class is loaded from a separate, internal source—possibly in a base directory tied to the `Mantis` namespace.
+
+---
+
+### Resolver Dilemma
+
+If `MantisCoreBase` belongs to the `Mantis` namespace in a non-test source tree, then the class referenced by `Mantis\tests\MantisCoreBase` is likely a different `MantisCoreBase`—either a mock, stub, or test-specific override.
+
+This indicates a **semantic divergence** in **which class** is being referenced—not just how it's being included—and constitutes unclear intent without knowing which `MantisCoreBase` is desired for this test context.
+
+Likewise, the lack of a `require_once 'RestBase.php'` in HEAD is another divergence—an indication that this file might be pulled in through an autoloader or elsewhere, but it’s not clear from this segment alone.
+
+---
+
+### Resolution Outcome
+
+Given the ambiguity in intent and the possibility of including different implementations of `MantisCoreBase` (and potentially missing `RestBase`), **the safest action** is to **leave the conflict markers intact**, as the provided information is insufficient to confidently assert that one branch's logic supersedes the other.
+
+---
+
+### Final Output (Conflict Preserved)
+
+```php
+ * @package Tests
+ * @copyright Copyright 2024 MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @link https://mantisbt.org
+ */
+
+<<<<<<< HEAD
+namespace Mantis\tests\rest;
+
+use Mantis\tests\MantisCoreBase;
+=======
+require_once 'RestBase.php';
+require_once dirname( __DIR__ ) . '/Mantis/MantisCoreBase.php';
+>>>>>>> efa5c907b3a50ac0823e1f30ca5bd61e796eb5a2
+
+/**
+ * Tests for Filters and Issues matching Filter REST API endpoints.
+ *
+ * @group REST
+ */
+```

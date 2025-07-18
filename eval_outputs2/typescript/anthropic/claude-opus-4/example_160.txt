@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import components and utilities, but with some differences:
+
+- HEAD imports `AddIcon` from `../Icons`
+- The other branch imports `Icon` from `'graphcool-styles'` and also imports `Props as TabProps` from the Tab component
+- The other branch also imports `withProps` from `../../styled` while HEAD doesn't
+
+Since both sides seem to have valid but different requirements, and without more context about which icons are actually being used in the component, I cannot determine the correct resolution with certainty. The intent is ambiguous - it's unclear whether the component needs `AddIcon`, `Icon`, or both, and whether `withProps` and `TabProps` are actually used.
+
+Here's the snippet with the conflict preserved:
+
+```typescript
+import * as React from 'react'
+<<<<<<< HEAD
+import { styled } from '../../styled'
+import { AddIcon } from '../Icons'
+import Tab from './Tab'
+=======
+import { styled, withProps } from '../../styled'
+import { Icon } from 'graphcool-styles'
+import Tab, { Props as TabProps } from './Tab'
+>>>>>>> 12024762524541de5d687fd81465b0c71569c83c
+import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
+import {
+  getSessionsArray,
+  getSelectedSessionIdFromRoot,
+
+```

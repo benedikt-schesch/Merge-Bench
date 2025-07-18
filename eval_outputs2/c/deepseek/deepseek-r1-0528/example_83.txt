@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on analyzing the intent of both changes:
+
+1. The HEAD change uses standard type-checking to load gai_strerror from wship6_module
+2. The other branch specifically avoids type-checking and loads from winsock_module instead, with a comment about type issues
+
+The resolution maintains the other branch's version since:
+- The comment indicates awareness of type compatibility issues
+- winsock_module is more appropriate for gai_strerror (standard socket function)
+- The NO_TYPECHECK version prevents potential crashes from signature mismatches
+
+Here's the resolved snippet:
+
+```c
+      logevent(NULL, "WSH IPv6 support detected");
+#endif
+      GET_WINDOWS_FUNCTION(wship6_module, getaddrinfo);
+      GET_WINDOWS_FUNCTION(wship6_module, freeaddrinfo);
+      GET_WINDOWS_FUNCTION(wship6_module, getnameinfo);
+      /* See comment above about type check */
+      GET_WINDOWS_FUNCTION_NO_TYPECHECK(winsock_module, gai_strerror);
+    } else {
+#ifdef NET_SETUP_DIAGNOSTICS
+      logevent(NULL, "No IPv6 support detected");
+#endif
+    }
+
+```

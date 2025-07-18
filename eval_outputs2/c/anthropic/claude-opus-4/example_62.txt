@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the case where `val` exists but with different approaches:
+
+- HEAD assumes that if we're in the `else` branch, we should call `do_mode` with `val + 1`
+- The incoming change adds a check to ensure `val[0] == 'V'` before calling `do_mode`, and includes a comment explaining that it ignores 'N' or unknown future values
+
+The incoming change is more defensive and explicit about when to process the value, which seems like the better approach as it prevents potential issues with unexpected values.
+
+Here's the resolved conflict:
+
+```c
+      val = get_ttymode(ssh->frontend, mode->mode);
+      if (val) {
+        do_mode(data, mode, val);
+        sfree(val);
+      }
+    } else if (val[0] == 'V') {
+      do_mode(data, mode, val + 1); /* skip the 'V' */
+    } /* else 'N', or something from the future we don't understand */
+  }
+}
+
+static int ssh_channelcmp(void *av, void *bv)
+{
+```

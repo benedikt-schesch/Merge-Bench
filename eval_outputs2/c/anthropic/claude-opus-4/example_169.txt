@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze the semantic intent of both sides:
+
+- The HEAD branch adds a `return 1;` statement after the if block
+- The other branch (4348393f5...) removes this return statement
+
+Since this appears to be at the end of a function (given that the next line starts a new function `x11_sent`), and considering that both sides seem to have valid intentions, I cannot determine with certainty which behavior is correct without more context about the function's purpose and return type.
+
+Therefore, I'm returning the snippet with the conflict preserved:
+
+```c
+  if (sshfwd_write(xconn->c, data, len) > 0) {
+    xconn->throttled = 1;
+    xconn->no_data_sent_to_x_client = FALSE;
+    sk_set_frozen(xconn->s, 1);
+  }
+<<<<<<< HEAD
+
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void x11_sent(Plug plug, int bufsize)
+{
+  struct X11Connection *xconn = (struct X11Connection *)plug;
+
+```

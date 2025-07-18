@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding a new method `is_finished()` while the other branch adds a trait implementation. Both changes are compatible since they modify different parts of the code. The resolution keeps the new method and places the trait implementation after it.
+
+```rust
+        }
+        let (read_slice, remaining) = self.slice.split_at(length);
+        self.slice = remaining;
+        Ok(read_slice)
+    }
+
+    #[inline]
+    pub(crate) fn is_finished(&self) -> bool {
+        self.slice.is_empty()
+    }
+}
+
+impl<'storage> Reader for SliceReader<'storage> {
+    #[inline(always)]
+    fn read(&mut self, bytes: &mut [u8]) -> Result<(), DecodeError> {
+```

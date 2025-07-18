@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to validate that the schema raises an error when given a set containing `None`. 
+
+The HEAD side uses a try-except pattern to catch the `MultipleInvalid` exception and assert the error message, while the incoming change uses pytest's context manager to catch the exception and assert that there's exactly one error.
+
+Since the code is already using pytest's `with pytest.raises()` context manager (which is the modern pytest way), the incoming change is more consistent with that pattern. The HEAD side's try-except-else pattern is redundant when we're already using the context manager.
+
+Here's the resolved conflict:
+
+```python
+    schema(set(['abc']))
+    schema(set([42, 'abc']))
+
+    with pytest.raises(MultipleInvalid, match="invalid value in set") as ctx:
+        schema(set([None]))
+    assert len(ctx.value.errors) == 1
+
+
+def test_frozenset_of_integers_and_strings():
+    schema = Schema(frozenset([int, str]))
+    with raises(Invalid, 'expected a frozenset'):
+
+```

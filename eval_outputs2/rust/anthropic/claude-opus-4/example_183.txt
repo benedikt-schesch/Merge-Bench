@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic goal - they want to handle the result of `Http::fetch_text(&url).await` and convert it to a message. The only difference is:
+
+- HEAD: Directly uses the match expression
+- The other branch: Assigns the result of the match expression to a variable `msg`
+
+Since the code snippet doesn't show what happens after this match expression, and both versions achieve the same semantic intent (converting the HTTP result to a Msg), I cannot determine which approach is correct without more context. The conflict needs to be resolved based on what the code does after this match expression (e.g., does it need to use `msg` later, or is it immediately returned?).
+
+Here is the code snippet with the conflict preserved:
+
+```rust
+    }
+
+    fn fetch_page(&self) -> Cmd<Msg> {
+        let url = format!("{}?page={}&per_page={}", DATA_URL, self.page, PER_PAGE);
+        Cmd::new(async move {
+<<<<<<< HEAD
+            match Http::fetch_text(&url).await {
+=======
+            let msg = match Http::fetch_text(&url).await {
+>>>>>>> 4673a4d76c7c700966297bc9131217215d922db9
+                Ok(v) => match serde_json::from_str(&v) {
+                    Ok(data1) => Msg::ReceivedData(data1),
+                    Err(err) => Msg::JsonError(err),
+                },
+                Err(e) => Msg::RequestError(e),
+```

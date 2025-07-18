@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+I'll help resolve this merge conflict while preserving the surrounding context exactly as provided. After analyzing both sides of the conflict, I notice the key difference is in the arguments passed to `init_info`:
+
+1. **HEAD version** passes two arguments: `&mut world.components, &mut world.storages`
+2. **Incoming branch** passes one argument: `&mut world.components`
+
+The presence of `&mut world.storages` in HEAD suggests a recent change where storage information is needed for bundle initialization. The subsequent `get_bundle_spawner` call uses `&mut world.components` but not `&mut world.storages`, which might indicate that:
+- `init_info` requires storage access for initialization
+- The spawner only needs component information later
+
+Since both branches modify the same line and the HEAD version includes additional functionality (storages access), I'll keep the HEAD version as it appears to be a more complete implementation that maintains compatibility with the subsequent spawner call.
+
+Here's the resolved code:
+
+```rust
+        world.flush();
+
+        let (lower, upper) = iter.size_hint();
+        let length = upper.unwrap_or(lower);
+
+        let bundle_info = world
+            .bundles
+            .init_info::<I::Item>(&mut world.components, &mut world.storages);
+        world.entities.reserve(length as u32);
+        let mut spawner = bundle_info.get_bundle_spawner(
+            &mut world.entities,
+            &mut world.archetypes,
+            &mut world.components,
+```
+
+Key resolution points:
+1. Maintained the HEAD implementation which includes both arguments
+2. Preserved all surrounding context exactly as provided
+3. Kept the multi-line formatting for readability
+4. Ensured the subsequent spawner call remains unchanged as it works with both implementations
+
+This resolution assumes the HEAD change was intentional and that the `init_info` function in the current codebase requires both parameters. If this assumption is incorrect, manual verification would be needed.

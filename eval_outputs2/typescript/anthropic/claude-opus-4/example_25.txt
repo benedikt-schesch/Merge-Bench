@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import necessary dependencies, but they're importing different things:
+
+- HEAD side: Imports `resolve` from "path", `IpcEvents` from "shared/IpcEvents", and worker-related imports
+- Other side: Imports `Server` from "arrpc" and `IpcCommands` from "shared/IpcEvents"
+
+The intent appears to be that both sides need their respective imports. The key observation is that one side uses `IpcEvents` while the other uses `IpcCommands` from the same module, which suggests they might both be needed or that there was a rename.
+
+Based on the context (the file appears to be related to Discord RPC/arrpc functionality), it seems like we need imports from both sides. Here's the resolved version:
+
+```typescript
+ * SPDX-License-Identifier: GPL-3.0
+ * Vesktop, a desktop app aiming to give you a snappier Discord Experience
+ * Copyright (c) 2023 Vendicated and Vencord contributors
+ */
+
+import { resolve } from "path";
+import Server from "arrpc";
+import { IpcEvents, IpcCommands } from "shared/IpcEvents";
+import { MessageChannel, Worker } from "worker_threads";
+
+import { sendRendererCommand } from "./ipcCommands";
+import { Settings } from "./settings";
+import { ArrpcEvent, ArrpcHostEvent } from "./utils/arrpcWorkerTypes";
+
+
+```

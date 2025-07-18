@@ -1,0 +1,59 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD (current branch) is trying to add a class property `$configResolver` and implement a `setUp()` method that initializes this property
+- The incoming change (8a08444b80) is trying to add a `tearDown()` method
+
+Both changes appear to be complementary rather than conflicting in intent. The setUp() method initializes the test environment, while tearDown() would clean it up. Both are standard test lifecycle methods.
+
+However, I notice an issue: the incoming change has `parent::setUp();` inside the `tearDown()` method, which is incorrect - it should be `parent::tearDown();`.
+
+Here's the resolved conflict:
+
+```php
+use Config;
+use TestCase;
+
+class TestConfigResolver extends TestCase
+{
+    /** @var ConfigResolver */
+    protected $configResolver;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configResolver = App::make('Indatus\Dispatcher\ConfigResolver');
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
+
+
+```
+
+Wait, I need to reconsider. Looking more carefully at the conflict, the incoming change has the `parent::setUp()` call inside what's labeled as `tearDown()`, which seems like a mistake. Given this ambiguity and the fact that the code seems incorrect, I should return the conflict as-is:
+
+```php
+use Config;
+use TestCase;
+
+class TestConfigResolver extends TestCase
+{
+<<<<<<< HEAD
+    /** @var ConfigResolver */
+    protected $configResolver;
+
+    public function setUp()
+=======
+    public function tearDown()
+>>>>>>> 8a08444b80550a21aa79eb24c96872111fe9cd01
+    {
+        parent::setUp();
+        $this->configResolver = App::make('Indatus\Dispatcher\ConfigResolver');
+    }
+
+
+```

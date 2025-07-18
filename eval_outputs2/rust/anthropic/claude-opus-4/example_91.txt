@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD branch is adding module documentation, imports from `crate::storage::Storages` and `crate::system::Resource`, and re-exporting `bevy_ecs_macros::Component`
+- The other branch (65e834ce) is simply importing `SparseSetIndex` from `crate::storage`
+
+Both sides want to import `SparseSetIndex`, but HEAD has additional imports and module setup. The semantic intent is to keep all the imports and module documentation from HEAD since it's more complete and includes everything the other branch needs.
+
+Here's the resolved version:
+
+```rust
+//! Types for declaring and storing [`Component`]s.
+
+use crate::{
+    storage::{SparseSetIndex, Storages},
+    system::Resource,
+};
+pub use bevy_ecs_macros::Component;
+use std::{
+    alloc::Layout,
+    any::{Any, TypeId},
+};
+use thiserror::Error;
+```

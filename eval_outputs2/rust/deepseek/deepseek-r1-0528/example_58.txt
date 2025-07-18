@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Based on the provided code snippet, I'll return the exact content with the merge conflict markers preserved since the intent appears ambiguous. The conflict revolves around whether the `storage_type` field should be included in the clone implementation, and without seeing the full struct definition or additional context, it's unclear if this field exists in both branches or was added/removed in one branch.
+
+Here's the original snippet with conflict markers maintained:
+
+```rust
+}
+
+impl<T> Clone for ChangeTrackersFetch<T> {
+    fn clone(&self) -> Self {
+        Self {
+<<<<<<< HEAD
+=======
+            storage_type: self.storage_type,
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+            table_ticks: self.table_ticks,
+            entity_table_rows: self.entity_table_rows,
+            entities: self.entities,
+            sparse_set: self.sparse_set,
+            marker: self.marker,
+```
+
+**Reasoning for preserving conflict:**
+1. The conflict shows `storage_type` being added in one branch but absent in the other
+2. Without knowing the struct definition of `ChangeTrackersFetch<T>`, we can't determine if:
+   - `storage_type` is a new field being added (resolve by keeping it)
+   - `storage_type` was removed in HEAD (resolve by omitting it)
+   - The field exists in both versions but was forgotten in the clone impl (resolve by keeping it)
+3. The surrounding fields are identical in both branches, suggesting the conflict is isolated to this specific field
+4. Semantic intent is unclear without broader context

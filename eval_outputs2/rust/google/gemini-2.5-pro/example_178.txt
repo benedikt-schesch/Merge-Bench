@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Both sides of this merge conflict are attempting to achieve the same goal: parse lines of output from `rustc`, and for any line that is not valid JSON representing a `RustcOutput` struct, print it to standard output and filter it out.
+
+The `HEAD` version uses a custom helper function `RustcOutput::deserialize_json`, while the other version uses the more direct and idiomatic `serde_json::from_str`. The `if let` construct in the second version is also slightly more concise for this use case than the `match`.
+
+Given that both achieve the same semantic outcome, the version using the standard library function directly is preferable as it's more direct and removes a layer of abstraction.
+
+```rust
+}
+
+fn get_last_artifact(out: &str) -> Option<PathBuf> {
+    let last = out
+        .lines()
+        .filter_map(|line| {
+            if let Ok(line) = serde_json::from_str::<RustcOutput>(line) {
+                Some(line)
+            } else {
+                // Pass through invalid lines
+                println!("{}", line);
+                None
+            }
+        })
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to check if the platform is Darwin (macOS), but using different approaches:
+
+- HEAD uses: `RUBY_PLATFORM.downcase.include?("darwin")`
+- The incoming change uses: `platform?("darwin")`
+
+The incoming change appears to be using a more abstracted helper method `platform?` which is likely defined elsewhere in the codebase. This is generally a better practice as it encapsulates the platform detection logic and makes the code more maintainable.
+
+Both sides have the same intent - to only run the test on Darwin/macOS platforms. The comment in the incoming change `# Only run test if it's darwin` confirms this intent.
+
+Here's the resolved code:
+
+```ruby
+require File.expand_path('../../teststrap',__FILE__)
+
+if platform?("darwin") # Only run test if it's darwin
+  context "MacCore" do
+    # Stub out the initialization
+    setup do
+      terminal = Object.new
+      stub(terminal).windows { true }
+
+```

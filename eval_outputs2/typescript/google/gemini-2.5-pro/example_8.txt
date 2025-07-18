@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+        'vue-query composables like "uesQuery()" should only be used inside a "setup()" function or a running effect scope. They might otherwise lead to memory leaks.',
+      )
+    }
+  }
+
+  const client = queryClient || useQueryClient()
+  const options = computed(() => {
+    return client.defaultMutationOptions(cloneDeepUnref(mutationOptions))
+  })
+  const observer = new MutationObserver(client, options.value)
+  const state = reactive(observer.getCurrentResult())
+
+```

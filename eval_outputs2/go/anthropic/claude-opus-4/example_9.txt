@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to configure terminal input behavior by setting VMIN and VTIME parameters, while the other branch has removed these lines entirely.
+
+The semantic intent here appears to be:
+- HEAD wants to configure the terminal to wake up when at least 1 byte arrives (VMIN=1) with no timeout (VTIME=0)
+- The other branch seems to have decided these settings are not needed or should be handled elsewhere
+
+Without more context about why the other branch removed these lines, I cannot determine which approach is correct. The conflict represents a fundamental disagreement about whether these terminal parameters should be set here.
+
+Here is the snippet with the conflict preserved:
+
+```go
+	newtios.Lflag &^= syscall.ECHO | syscall.ECHONL | syscall.ICANON |
+		syscall.ISIG | syscall.IEXTEN
+	newtios.Cflag &^= syscall.CSIZE | syscall.PARENB
+	newtios.Cflag |= syscall.CS8
+
+<<<<<<< HEAD
+	// We wake up only when at least 1 byte has arrived
+	newtios.Cc[syscall.VMIN] = 1
+	newtios.Cc[syscall.VTIME] = 0
+=======
+>>>>>>> a221f2faf4f9a059c8eba8f91c5d0dbd9845a985
+	tios = uintptr(unsafe.Pointer(&newtios))
+
+	ioc = uintptr(syscall.TIOCSETA)
+	if _, _, e1 := syscall.Syscall6(syscall.SYS_IOCTL, fd, ioc, tios, 0, 0, 0); e1 != 0 {
+		e = e1
+```

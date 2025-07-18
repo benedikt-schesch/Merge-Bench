@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to format the display string for TTY modes, but they have different approaches:
+
+- HEAD: Simple ternary operator checking if `val[0] == 'A'` to show "(auto)" or `val + 1`
+- The other branch: Extended logic that also checks for `val[0] == 'N'` to show "(don't send)"
+
+The semantic intent is clear: the second branch is adding support for an additional mode ('N' for "don't send") while maintaining the existing 'A' for "(auto)" functionality. This is an enhancement that should be preserved.
+
+Here's the resolved code:
+
+```c
+      dlg_update_start(ctrl, dlg);
+      dlg_listbox_clear(ctrl, dlg);
+      for (val = conf_get_str_strs(conf, CONF_ttymodes, NULL, &key);
+           val != NULL;
+           val = conf_get_str_strs(conf, CONF_ttymodes, key, &key)) {
+        char *disp = dupprintf(
+            "%s\t%s",
+            key,
+            (val[0] == 'A') ? "(auto)"
+                            : ((val[0] == 'N') ? "(don't send)" : val + 1));
+        dlg_listbox_add(ctrl, dlg, disp);
+        sfree(disp);
+      }
+      dlg_update_done(ctrl, dlg);
+
+```

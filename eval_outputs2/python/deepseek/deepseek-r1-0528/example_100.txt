@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+I've analyzed the semantic merge conflict and resolved it by preserving the necessary compatibility code while removing unnecessary duplication. The original context had two identical `try-except` blocks for Python 2/3 compatibility, but one was redundant. Here's the resolved version:
+
+```python
+
+try:
+    range = xrange
+except NameError:
+    pass
+
+
+def guess_prefix(directory=None):
+    """Attempts to find the base directory where IVRE components are
+    installed.
+```
+
+**Resolution reasoning:**
+1. Both sides try to provide Python 2/3 compatibility by aliasing `xrange` to `range`
+2. The duplicate block in the HEAD was redundant as it contained identical code to the existing block above the conflict
+3. The other branch correctly removed this duplication 
+4. The solution keeps one copy of the compatibility code for semantic correctness while maintaining intended functionality
+5. Blank lines are preserved exactly as in the original surrounding context
+
+The resolution maintains the original functionality while removing unnecessary code duplication that might cause confusion or maintenance issues.

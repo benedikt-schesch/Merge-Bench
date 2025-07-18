@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD branch has commented out the httpparser import
+- The incoming branch (7dea42d7b9709f2c68032e56d8d67995336c9378) has httpparser uncommented and also adds mongoparser and mysqlparser imports
+
+The semantic intent appears to be:
+- HEAD intentionally commented out httpparser (possibly due to some issue or temporary disabling)
+- The incoming branch wants to add parser support for multiple databases (http, mongo, mysql)
+
+Since the HEAD branch explicitly commented out httpparser rather than removing it, this suggests there might be a reason to keep it disabled. The safest resolution is to keep httpparser commented but add the new parsers:
+
+```go
+
+	"github.com/miekg/dns"
+	"go.keploy.io/server/pkg/hooks"
+	"go.keploy.io/server/pkg/models"
+	genericparser "go.keploy.io/server/pkg/proxy/integrations/genericParser"
+	// "go.keploy.io/server/pkg/proxy/integrations/httpparser"
+	"go.keploy.io/server/pkg/proxy/integrations/mongoparser"
+	"go.keploy.io/server/pkg/proxy/integrations/mysqlparser"
+	"go.keploy.io/server/pkg/proxy/util"
+	"go.uber.org/zap"
+
+	"time"
+)
+
+```

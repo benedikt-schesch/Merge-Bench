@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import packages from the `grpc-ecosystem/go-grpc-middleware` project, but they represent different versions:
+
+- HEAD is using the v1 API with the old import paths
+- The other branch is using the v2 API with the new import paths under `/v2/`
+
+Since the incoming change (5ca0c417) is moving to v2 of the middleware library, and this appears to be an intentional upgrade, I'll resolve this by accepting the v2 imports:
+
+```go
+
+import (
+	"context"
+	"testing"
+
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/testing/testpb"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+
+```

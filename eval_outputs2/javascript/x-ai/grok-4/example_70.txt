@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```javascript
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'input=' + encodeURIComponent(src_url) + '&lang=' + lang,
+        });
+        document.querySelector('#audio-response').value = res;
+
+        let delay = parseInt(settings.recaptcha_solve_delay_time);
+        delay = isNaN(delay) ? 1000 : delay;
+        const delta = settings.recaptcha_solve_delay ? (delay - (Time.time() - solve_start)) : 0;
+        if (delta > 0) {
+            await Time.sleep(delta);
+        }
+
+        submit();
+
+```

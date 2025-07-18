@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add fields to what appears to be a window-related struct. The conflict shows:
+
+- HEAD wants to add: `physical_cursor_position: Option<DVec2>,`
+- The other branch wants to add: `cursor_position: Option<Vec2>,` and `raw_window_handle: RawWindowHandleWrapper,`
+
+Based on the semantic intent, both sides want to track cursor position (though with slightly different names and types), and the other branch additionally wants to add a raw window handle field. The resolution should include both the cursor position field (choosing the most appropriate one) and the raw window handle field.
+
+Looking at the naming, `physical_cursor_position` with `DVec2` (likely double-precision) seems more specific than `cursor_position` with `Vec2`. However, without more context about the codebase's conventions, it's difficult to determine which is more appropriate.
+
+Since I cannot determine with certainty which cursor position implementation is preferred without understanding the broader codebase context and the specific requirements, I'll return the snippet with the conflict unchanged:
+
+```rust
+    vsync: bool,
+    resizable: bool,
+    decorations: bool,
+    cursor_visible: bool,
+    cursor_locked: bool,
+<<<<<<< HEAD
+    physical_cursor_position: Option<DVec2>,
+=======
+    cursor_position: Option<Vec2>,
+    raw_window_handle: RawWindowHandleWrapper,
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    focused: bool,
+    mode: WindowMode,
+    #[cfg(target_arch = "wasm32")]
+    pub canvas: Option<String>,
+    command_queue: Vec<WindowCommand>,
+```

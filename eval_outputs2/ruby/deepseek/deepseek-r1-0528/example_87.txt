@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+```ruby
+  new_command_runner(*args) do
+    program :help_formatter, Commander::HelpFormatter::Base
+  end.run!    
+  @output.string
+end
+
+RSpec.configure do |c|
+  c.before(:each) do
+    allow(Commander::UI).to receive(:enable_paging)
+  end
+end
+
+```
+
+The resolution combines both changes:
+1. Preserves the command runner functionality from HEAD
+2. Includes the RSpec configuration from the other branch since it:
+   - Adds test setup unrelated to core functionality
+   - Properly places spec configuration outside core code
+   - Doesn't conflict with existing implementation
+   - Maintains the blank line spacing from the original branch version
+
+The changes are semantically compatible as one is production code and the other is test support code. The blank line after `end` is preserved from the test branch to maintain separation between the production code and test configuration.

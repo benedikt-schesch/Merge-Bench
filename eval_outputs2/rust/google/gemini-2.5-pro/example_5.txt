@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```rust
+            event::Event::GetCurrentPlayback => {
+                self.update_current_playback_state(state)?;
+                false
+            }
+            event::Event::RefreshToken => {
+                let expires_at = state.player.read().unwrap().auth_token_expires_at;
+                if std::time::SystemTime::now() > expires_at {
+                    state.player.write().unwrap().auth_token_expires_at = self.refresh_token()?;
+                }
+                false
+                // let expires_at = state.player.read().unwrap().auth_token_expires_at;
+                // if SystemTime::now() > expires_at {
+                //     state.player.write().unwrap().auth_token_expires_at =
+                //         self.refresh_token().await?;
+
+```

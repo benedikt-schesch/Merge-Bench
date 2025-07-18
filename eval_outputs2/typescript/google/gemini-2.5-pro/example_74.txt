@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The `HEAD` version passes arguments directly, while the incoming change ensures all arguments are converted to strings before being passed to the locator method. This is a defensive measure to prevent errors if an argument is not a string (e.g., `null`, `undefined`, or a number). Since Playwright's locator methods generally expect string arguments, converting them explicitly is a safe and beneficial improvement. This resolution adopts the more robust approach.
+
+```typescript
+      try {
+        await (
+          locator[method as keyof Locator] as unknown as (
+            ...args: string[]
+          ) => Promise<void>
+        )(...args.map((arg) => arg?.toString() || ""));
+      } catch (e) {
+        this.logger({
+          category: "action",
+          message: "error performing method",
+          level: 1,
+
+```

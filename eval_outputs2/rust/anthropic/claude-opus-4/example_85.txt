@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same method `spawn_bundle` for `ChildBuilder`, but with different lifetime parameter orderings:
+
+- HEAD: `impl<'w, 's, 'a> ChildBuilder<'w, 's, 'a>` and returns `EntityCommands<'w, 's, '_>`
+- Other branch: `impl<'s, 'w, 'a> ChildBuilder<'s, 'w, 'a>` and returns `EntityCommands<'s, 'w, '_>`
+
+The only difference is the order of lifetime parameters `'w` and `'s`. Since the actual implementation is identical and the lifetime parameter order in the impl block should match the struct definition of `ChildBuilder`, I need to check which order is correct.
+
+Given that both sides have the same implementation logic and the conflict is only about lifetime parameter ordering, this appears to be a formatting or refactoring difference. Without access to the struct definition of `ChildBuilder`, I cannot definitively determine which ordering is correct.
+
+Since I cannot determine the correct resolution with certainty, I'll return the snippet with the conflict preserved:
+
+```rust
+            }
+        }
+    }
+}
+
+<<<<<<< HEAD
+impl<'w, 's, 'a> ChildBuilder<'w, 's, 'a> {
+    pub fn spawn_bundle(&mut self, bundle: impl Bundle) -> EntityCommands<'w, 's, '_> {
+=======
+impl<'s, 'w, 'a> ChildBuilder<'s, 'w, 'a> {
+    pub fn spawn_bundle(&mut self, bundle: impl Bundle) -> EntityCommands<'s, 'w, '_> {
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+        let e = self.commands.spawn_bundle(bundle);
+        self.push_children.children.push(e.id());
+        e
+    }
+
+
+```

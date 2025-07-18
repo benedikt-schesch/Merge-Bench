@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from different initializations in the `write_cache` function. The HEAD version initializes `cache_map` using `HashMap::default()`, while the other branch initializes it with `HashMap::new()` and adds a `pending_removed_modules` vector. 
+
+The key insight is that:
+1. Both initializations for `cache_map` are functionally equivalent in Rust
+2. The loop logic requires `pending_removed_modules` to exist
+3. The semantics require both the map and vector to be initialized
+
+The resolution keeps the HEAD's more explicit `default()` initialization while adding the necessary vector from the other branch. The resulting code maintains both functionalities without conflicts.
+
+```rust
+
+    None
+  }
+
+  fn write_cache(&self) {
+    let mut cache_map = HashMap::default();
+    let mut pending_removed_modules = vec![];
+    for entry in self.cached_modules.iter() {
+      let module = entry.value();
+      if module.is_expired {
+        pending_removed_modules.push(module.module.id.clone());
+        continue;
+
+```

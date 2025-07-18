@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+The conflict involves two different approaches to including dependencies:
+1. HEAD branch uses namespaces and autoloading
+2. Other branch uses direct file includes
+
+The intent appears to be:
+- HEAD branch wants to use class-based autoloading via namespaces
+- Other branch wants to include specific dependency files
+
+Since these approaches are fundamentally different and I don't have enough context to determine:
+1. Whether RestBase.php has been converted to use namespaces
+2. The autoloading configuration
+3. The actual contents of the included files
+
+The conflict cannot be safely resolved automatically. Here's the original snippet with conflict markers preserved:
+
+```php
+ * @package Tests
+ * @copyright Copyright 2024 MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @link https://mantisbt.org
+ */
+
+<<<<<<< HEAD
+namespace Mantis\tests\rest;
+
+use Mantis\tests\Mantis\MantisCoreBase;
+=======
+require_once 'RestBase.php';
+require_once dirname( __DIR__ ) . '/Mantis/MantisCoreBase.php';
+>>>>>>> efa5c907b3a50ac0823e1f30ca5bd61e796eb5a2
+
+/**
+ * Tests for Filters and Issues matching Filter REST API endpoints.
+ *
+ * @group REST
+```

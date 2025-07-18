@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle PHP version compatibility for including "php_logos.h", but with slightly different approaches.
+
+The HEAD version uses `ZEND_ENGINE_2_5` as the condition, while the incoming change uses `PHP_VERSION_ID < 50500` and also adds includes for "php.h" and "php_ini.h".
+
+Since both sides have the same intent (conditional inclusion of php_logos.h for older PHP versions) and the incoming change appears more comprehensive with additional necessary includes and a more standard version check approach, here's the resolved version:
+
+```c
+
+#ifndef ZEND_ENGINE_2_5
+#include "php_logos.h"
+#endif
+
+#include "php.h"
+#include "php_ini.h"
+#if PHP_VERSION_ID < 50500
+   #include "php_logos.h"
+#endif
+#include "main/fopen_wrappers.h"
+#include "ext/standard/info.h"
+#include "ext/standard/php_incomplete_class.h"
+#include "ext/standard/md5.h"
+
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet with the conflict addressed based on semantic intent. Both changes are preserved as they appear to serve different purposes: the `SetName` modification adds new parameters for enhanced functionality, while the condition check combines both cases (multiple/non-trivial instances and generic functions) since both require special handling.
+
+```go
+			objName := fc.objectName(o)
+			varDecl := &Decl{
+				FullName: funcVarDeclFullName(o),
+				Vars:     []string{objName},
+			}
+			varDecl.Dce().SetName(o, nil, nil)
+			if len(instances) > 1 || !instances[0].IsTrivial() || o.Type().(*types.Signature).TypeParams().Len() != 0 {
+				varDecl.DeclCode = fc.CatchOutput(0, func() {
+					fc.Printf("%s = {};", objName)
+					if o.Exported() {
+						fc.Printf("$pkg.%s = %s;", encodeIdent(fun.Name.Name), objName)
+					}
+```
+
+**Resolution rationale:**
+1. **`SetName` call:** The version with extra parameters (`o, nil, nil`) is preserved since it likely extends functionality while maintaining backward compatibility (passing `nil` where values aren't needed).
+2. **Condition check:** Combined using `||` because:
+   - `len(instances) > 1 || !instances[0].IsTrivial()` handles multi-instance/non-trivial cases
+   - `o.Type().(*types.Signature).TypeParams().Len() != 0` handles generic functions
+   - Both conditions trigger the same special initialization behavior, so either should execute the block.
+
+The context before/after the conflict is preserved exactly, including spacing and structure.

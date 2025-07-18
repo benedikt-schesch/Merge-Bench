@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in the logic handling the return value of `pty_real_select_result`. The HEAD branch accumulates results in `ret` using short-circuit evaluation (`ret = ret && ...`), while the other branch calls the function without using its return value. 
+
+This is a semantic conflict because:
+1. The HEAD branch preserves error accumulation logic where `ret` tracks combined success/failure
+2. The other branch discards the return value entirely
+3. The variable `ret` exists in HEAD's context but may be unused in the other branch
+
+Since we can't determine whether:
+- The return value should be ignored (other branch)
+- The error accumulation is required (HEAD)
+- The function's interface changed between branches
+
+The conflict requires manual resolution. Here's the exact output preserving all context:
+
+```c
+      pid = waitpid(-1, &status, WNOHANG);
+
+      pty = find234(ptys_by_pid, &pid, pty_find_by_pid);
+
+      if (pty)
+<<<<<<< HEAD
+        ret = ret && pty_real_select_result(pty, -1, status);
+=======
+        pty_real_select_result(pty, -1, status);
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+    } while (pid > 0);
+  } else {
+    pty = find234(ptys_by_fd, &fd, pty_find_by_fd);
+
+    if (pty)
+
+```

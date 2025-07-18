@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - creating database columns for what appears to be a nested set model (with left, right, and parent_id columns).
+
+The key differences are:
+- HEAD uses `self::` to reference the constants and adds `->default(0)` to the LFT and RGT columns
+- The other branch uses `static::` to reference the constants and doesn't set default values
+
+Since both sides are semantically trying to achieve the same thing, and the code below the conflict uses `static::` (in `$table->index(static::getDefaultColumns());`), I'll resolve this by:
+1. Using `static::` for consistency with the rest of the codebase
+2. Including the `->default(0)` from HEAD as it provides a sensible default for the nested set columns
+
+Here's the resolved code:
+
+```php
+     *
+     * @param \Illuminate\Database\Schema\Blueprint $table
+     */
+    public static function columns(Blueprint $table)
+    {
+        $table->unsignedInteger(static::LFT)->default(0);
+        $table->unsignedInteger(static::RGT)->default(0);
+        $table->unsignedInteger(static::PARENT_ID)->nullable();
+
+        $table->index(static::getDefaultColumns());
+    }
+
+    /**
+```

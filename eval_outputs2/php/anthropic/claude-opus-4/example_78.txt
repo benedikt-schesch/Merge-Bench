@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side)**: Converts the function name to lowercase when generating the `recki_if_` function call.
+
+**Incoming changes (right side)**: Adds special handling for the `strlen` function to use a `.length` property instead of a function call, and keeps the original function name case for other functions.
+
+Both changes appear to be intentional improvements that should be combined. The semantic intent is:
+1. Handle `strlen` specially as a property access for performance
+2. For all other functions, use lowercase naming convention for the `recki_if_` functions
+
+Here's the resolved code:
+
+```php
+                    }
+                    $code .= "validReturn);\n";
+                    $code .= "if (*validReturn != SUCCESS) { return; }\n";
+                    break;
+                case 'functioncall':
+                    if ($func[$i][1] == 'strlen') {
+                        $code .= $scope[$func[$i][count($func[$i]) - 1]] . ' = ' . $scope[$func[$i][2]] . '.length;';
+                        break;
+                    }
+                    $code .= $scope[$func[$i][count($func[$i]) - 1]] . ' = recki_if_' . strtolower($func[$i][1]) . '(';
+                    for ($j = 2; $j < count($func[$i]) - 1; $j++) {
+                        $code .= $scope[$func[$i][$j]] . ', ';
+                    }
+                    $code .= "validReturn);\n";
+                    $code .= "if (*validReturn != SUCCESS) { return; }\n";
+
+```

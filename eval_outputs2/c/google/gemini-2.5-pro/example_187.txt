@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The `HEAD` side of the conflict is empty, meaning no changes were made at this location. The `d7c8f2a...` side introduces a new "pre-initialization" hook. This hook allows for an optional, platform-specific function (`gpio_init_pre`) to run before the main GPIO initialization logic. If this pre-initialization step fails, the entire function aborts early.
+
+The intents do not conflict. One side does nothing, while the other adds a new, self-contained feature at the beginning of the function. The correct semantic resolution is to incorporate the new feature.
+
+The `printf` statement appears to be for debugging but is included in the incoming change. A safe merge preserves this, as its removal would be a separate refactoring step.
+
+```c
+}
+
+mraa_gpio_context
+mraa_gpio_init_raw(int pin)
+{
+    if (advance_func.gpio_init_pre != NULL) {
+        printf("Actually entering\n");
+        if (advance_func.gpio_init_pre(pin) != MRAA_SUCCESS)
+            return NULL;
+    }
+    if (pin < 0)
+        return NULL;
+
+    char bu[MAX_SIZE];
+    int length;
+
+```

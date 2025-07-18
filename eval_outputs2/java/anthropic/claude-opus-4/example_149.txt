@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to create a `GruntParser` object, but they differ in the constructor arguments:
+
+- HEAD: `new GruntParser(new StringReader(script))`
+- Incoming change: `new GruntParser(new StringReader(script), myPig)`
+
+The incoming change adds a second parameter `myPig` to the constructor. This appears to be an API change where the GruntParser now requires or accepts an additional parameter (likely a Pig instance for context).
+
+Since the incoming change represents an evolution of the API (adding functionality rather than removing it), and assuming `myPig` is available in the current scope, the semantically correct resolution would be to use the version with both parameters.
+
+Here's the resolved code:
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "describe b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+```

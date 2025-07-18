@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict in the Catmull-Rom curve implementation. The key semantic issue is determining the correct starting point for the curve segment. Based on standard Catmull-Rom spline behavior where curves are defined between control points v1 and v2 (with v0 and v3 providing tangent information), the branch version returning `v1` is correct.
+
+Here's the resolved code preserving all context and formatting:
+
+```c
+      
+      __forceinline CatmullRomCurveT(const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3)
+        : v0(v0), v1(v1), v2(v2), v3(v3) {}
+
+      __forceinline Vertex begin() const {
+        return v1;
+      }
+
+      __forceinline Vertex end() const {
+        return v2;
+      }
+
+```
+
+Rationale:
+1. The curve segment should logically start at `v1` and end at `v2` (consistent with `end()`)
+2. `v0` and `v3` are control points that influence the curve's shape but aren't segment endpoints
+3. The branch change (d70beac) correctly implements Catmull-Rom semantics
+4. All surrounding context and formatting is preserved exactly as provided

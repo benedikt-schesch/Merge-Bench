@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import from `@testing-library/react`, but with different sets of functions:
+
+- HEAD: imports `render` and `waitFor`
+- Incoming change: imports `fireEvent`, `render`, and `waitFor`
+
+Additionally, HEAD includes an import from `vitest` (`vi`), while the incoming change doesn't have this import.
+
+The semantic intent appears to be:
+- Both sides need `render` and `waitFor` from `@testing-library/react`
+- The incoming change also needs `fireEvent`
+- HEAD needs `vi` from `vitest`
+
+The resolution should include all the required imports from both sides:
+
+```typescript
+import * as React from 'react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { vi } from 'vitest'
+
+import { QueryClient, useQueries, useQuery } from '@tanstack/react-query'
+import { persistQueryClientSave } from '@tanstack/query-persist-client-core'
+
+import { PersistQueryClientProvider } from '../PersistQueryClientProvider'
+
+```

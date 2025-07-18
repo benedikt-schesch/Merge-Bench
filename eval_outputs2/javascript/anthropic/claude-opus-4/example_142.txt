@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+**HEAD (current branch):**
+- Calls `clearLineMeasurementCache(cm)`
+- Clears `cachedCharWidth` and `cachedTextHeight`
+
+**Incoming branch (e1cfb7fd):**
+- Directly manipulates `measureLineCache.length` and `measureLineCachePos`
+- Clears `cachedCharWidth`, `cachedTextHeight`, AND `cachedPaddingH`
+
+The semantic intent appears to be:
+1. Both sides want to clear measurement-related caches
+2. The incoming branch is more thorough by also clearing `cachedPaddingH`
+3. The HEAD version delegates the line measurement cache clearing to a function, while the incoming version does it inline
+
+The most complete resolution would be to use the function call approach (cleaner code) while also clearing `cachedPaddingH` (more thorough):
+
+```javascript
+    for (var i = 0; i < cm.display.view.length; i++)
+      clearLineMeasurementCacheFor(cm.display.view[i]);
+  }
+
+  function clearCaches(cm) {
+    clearLineMeasurementCache(cm);
+    cm.display.cachedCharWidth = cm.display.cachedTextHeight = cm.display.cachedPaddingH = null;
+    if (!cm.options.lineWrapping) cm.display.maxLineChanged = true;
+    cm.display.lineNumChars = null;
+  }
+
+  function pageScrollX() { return window.pageXOffset || (document.documentElement || document.body).scrollLeft; }
+
+```

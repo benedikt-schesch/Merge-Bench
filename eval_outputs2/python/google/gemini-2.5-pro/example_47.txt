@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```python
+    schema = Schema({"number": Number(scale=2, yield_decimal=True)})
+    try:
+        schema({"number": '12345678901.234'})
+    except MultipleInvalid as e:
+        assert (
+            str(e) == "Scale must be equal to 2 for dictionary value @ data['number']"
+        )
+    else:
+        assert False, "Did not raise Invalid for String"
+
+
+def test_number_when_valid_precision_n_scale_none_yield_decimal_true():
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The changes from both branches have been merged based on their semantic intent. The HEAD change ensures pending PJAX requests are aborted when navigating back/forward, while the other branch introduces a variable to track the previous state. These changes are complementary and have been combined with proper formatting.
+
+```javascript
+// popstate handler takes care of the back and forward buttons
+//
+// You probably shouldn't use pjax on pages with other pushState
+// stuff yet.
+function onPjaxPopstate(event) {
+  // Hitting back or forward should override any pending PJAX request.
+  if (!initialPop) {
+    abortXHR(pjax.xhr)
+  }
+
+  var previousState = pjax.state
+  var state = event.state
+
+  if (state && state.container) {
+    // When coming forward from a separate history session, will get an
+    // initial pop with a state we are already at. Skip reloading the current
+```

@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze the semantic intent of both sides:
+
+**HEAD (current branch):**
+- Calls `pty_real_select_result()` and uses its return value
+- Performs a logical AND operation with `ret`
+- Returns the combined result
+
+**Incoming change (commit 4348393...):**
+- Simply calls `pty_real_select_result()` without capturing its return value
+- Doesn't return anything
+
+The key difference is that HEAD cares about the return value and propagates it, while the incoming change treats it as a void operation. Without more context about the function's return type and purpose, I cannot definitively resolve this conflict as the intent is ambiguous - one side wants to track and return a result while the other doesn't.
+
+Here's the snippet with the conflict preserved:
+
+```c
+    } while (pid > 0);
+  } else {
+    pty = find234(ptys_by_fd, &fd, pty_find_by_fd);
+
+    if (pty)
+<<<<<<< HEAD
+      ret = ret && pty_real_select_result(pty, event, 0);
+  }
+
+  return ret;
+=======
+      pty_real_select_result(pty, event, 0);
+  }
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void pty_uxsel_setup(Pty pty)
+{
+  int rwx;
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Based on analyzing the merge conflict, both changes appear necessary and complementary:
+
+1. The HEAD branch adds a test-specific helper `mount`
+2. The other branch adds the Vue dependency needed for Vuex
+
+Here's the resolved version with both imports preserved:
+
+```javascript
+import Vue from 'vue'
+import { mount } from './support/helpers'
+import Vuex, { mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers } from '../../src/index'
+
+describe('Helpers', () => {
+  it('mapState (array)', () => {
+    const store = new Vuex.Store({
+```
+
+Reasoning:
+- Vue import is required for Vuex functionality
+- mount import appears to be a test utility needed for component mounting
+- Both are independent imports serving different purposes
+- Order doesn't affect functionality (Vue import first follows common convention)
+- No duplication or logical conflicts exist between these imports

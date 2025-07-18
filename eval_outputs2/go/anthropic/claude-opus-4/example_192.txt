@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add a `terraformProvider.Install` call with a function that parses workloads from revision, while the other branch appears to have removed it or never had it.
+
+From the surrounding context, I can see:
+1. Other providers (kube, oam, multicluster) are being installed
+2. The pattern suggests this is setting up various providers for handling different types of workloads
+3. The terraform provider installation follows the same pattern as others
+
+Given that HEAD is adding terraform provider support (which is a common requirement in cloud-native applications) and the other branch simply doesn't have it, the most reasonable semantic resolution is to include the terraform provider installation. This appears to be an additive change that extends functionality rather than a conflicting change.
+
+Here's the resolved code:
+
+```go
+	kube.Install(handlerProviders, h.r.Client, h.Dispatch, h.Delete)
+	oamProvider.Install(handlerProviders, app, h.applyComponentFunc(
+		appParser, appRev, af), h.renderComponentFunc(appParser, appRev, af))
+	taskDiscover := tasks.NewTaskDiscover(handlerProviders, h.r.pd, h.r.Client, h.r.dm)
+	multiclusterProvider.Install(handlerProviders, h.r.Client, app)
+	terraformProvider.Install(handlerProviders, app, func(comp common.ApplicationComponent) (*appfile.Workload, error) {
+		return appParser.ParseWorkloadFromRevision(comp, appRev)
+	})
+	var tasks []wfTypes.TaskRunner
+	for _, step := range af.WorkflowSteps {
+		options := &wfTypes.GeneratorOptions{
+			ID: generateStepID(step.Name, app.Status.Workflow),
+		}
+
+```

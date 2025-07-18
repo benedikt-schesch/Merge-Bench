@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+```javascript
+        $power_static.classList.add('hidden');
+
+        if ($power_btn.classList.contains('off')) {
+            $power_btn.classList.remove('off');
+            $power_spinning.classList.remove('hidden');
+<<<<<<< HEAD
+            await BG.exec('Settings.set', {id: 'enabled', value: true});
+            await BG.exec('Icon.set', {status: 'on'});
+=======
+            await BG.exec('set_settings', {id: 'enabled', value: true});
+            await BG.exec('set_icon', 'on');
+            // await BG.exec('set_badge', {global: true, text: 'ON', color: '#00FF00'});
+>>>>>>> a9ce98f97aaed5e50c711de3913c3138d4188b24
+            last_anim = setTimeout(() => {
+                $power_spinning.classList.add('hidden');
+                $power_static.classList.remove('hidden');
+            }, 1000);
+        }
+
+```
+
+The conflict remains unresolved due to ambiguity in the background API calls:
+1. The conflicting BG method names (`Settings.set` vs `set_settings`, `Icon.set` vs `set_icon`) suggest API refactoring
+2. Parameters differ significantly (object vs string arguments)
+3. The commented badge setting introduces additional uncertainty
+4. Both implementations achieve similar semantic goals (enable feature, update icon) but through incompatible interfaces
+
+Without knowing which API version is current, resolution risks breaking functionality. The conflict requires:
+- Checking recent API changes in the codebase
+- Verifying which BG methods exist in current implementation
+- Potentially migrating one side to the other's API format
+- Deciding whether to include the badge-commented line
+
+Preserving the conflict markers ensures safe manual resolution.

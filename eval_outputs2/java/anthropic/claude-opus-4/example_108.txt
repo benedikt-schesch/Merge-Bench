@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to import the same three static imports, just in different orders:
+
+1. `someInfo` from `org.fest.assertions.test.TestData`
+2. `failBecauseExpectedAssertionErrorWasNotThrown` from `org.fest.test.TestFailures`
+3. `emptyArray` from `org.fest.util.LongArrayFactory`
+
+Since both sides have the same imports and the only difference is the ordering, I can resolve this by keeping all three imports in a consistent order. Following common Java conventions, I'll order them alphabetically by package name:
+
+```java
+ * Copyright @2010-2011 the original author or authors.
+ */
+package org.fest.assertions.internal.longarrays;
+
+import static org.fest.assertions.error.ShouldBeNullOrEmpty.shouldBeNullOrEmpty;
+import static org.fest.assertions.test.TestData.someInfo;
+import static org.fest.test.TestFailures.failBecauseExpectedAssertionErrorWasNotThrown;
+import static org.fest.util.LongArrayFactory.emptyArray;
+
+import static org.mockito.Mockito.verify;
+
+import org.junit.Test;
+
+
+```

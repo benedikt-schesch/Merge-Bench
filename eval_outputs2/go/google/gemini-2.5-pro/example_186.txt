@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```go
+		// checking whether the provided testset match with a recorded testset.
+		if _, ok := initialisedValues.SessionsMap[sessionIndex]; !ok {
+			t.logger.Info("no testset found with: ", zap.Any("name", sessionIndex))
+			continue
+		}
+		testRunStatus := t.RunTestSet(sessionIndex, path, testReportPath, appCmd, options.AppContainer, options.AppNetwork, options.Delay, 0, ys, loadedHooks, testReportFS, nil, options.ApiTimeout, ctx, options.NoiseConfig, false)
+		switch testRunStatus {
+		case models.TestRunStatusAppHalted:
+			testRes = false
+			exitLoop = true
+		case models.TestRunStatusFaultUserApp:
+
+```

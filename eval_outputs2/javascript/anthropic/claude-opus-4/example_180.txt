@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import modules, but with different approaches:
+
+- **HEAD**: Uses ES6 module syntax with `.js` file extensions
+- **Other branch (141ac96)**: Uses ES6 module syntax without file extensions and includes an additional import (`endsWith` from `'../../util/str'`)
+
+The semantic intent appears to be:
+1. Both sides want to use ES6 imports
+2. The other branch adds a new utility function `endsWith` that HEAD doesn't have
+3. The file extension difference suggests different module resolution strategies
+
+Since the additional `endsWith` import in the other branch represents new functionality that should be preserved, and modern JavaScript tooling can handle both with/without extensions, I'll merge by keeping all imports and using the `.js` extension pattern from HEAD for consistency:
+
+```javascript
+import { isExternal, noop } from '../../util/core.js';
+import { on } from '../../util/dom.js';
+import { endsWith } from '../../util/str.js';
+import { parseQuery, cleanPath, replaceSlug } from '../util.js';
+import { History } from './base.js';
+
+function replaceHash(path) {
+  const i = location.href.indexOf('#');
+  location.replace(location.href.slice(0, i >= 0 ? i : 0) + '#' + path);
+}
+
+```

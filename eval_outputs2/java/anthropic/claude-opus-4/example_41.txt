@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - logging a message when resetting the game due to too few players. The only difference is the formatting:
+
+- HEAD version has the string split across two lines
+- The other branch has it on a single line
+
+Since both versions have identical content and the single-line version is more concise and readable, I'll resolve by keeping the single-line version:
+
+```java
+      // this seems terrible
+      if (players.size() == 0) {
+        gameManager.destroyGame(id);
+      }
+      if (players.size() < 3 && state != GameState.LOBBY) {
+        logger.info(String.format("Resetting game %d due to too few players after someone left.", id));
+        resetState(true);
+      } else if (wasJudge) {
+        synchronized (roundTimerLock) {
+          final SafeTimerTask task = new SafeTimerTask() {
+            @Override
+
+```

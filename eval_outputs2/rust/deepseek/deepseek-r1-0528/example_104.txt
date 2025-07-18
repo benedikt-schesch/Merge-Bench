@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict involves an import statement where both branches have similar imports but with one key difference. The HEAD branch includes `binary::TAsyncBinaryProtocol` while the other branch does not. Since the HEAD branch explicitly added this import and the other branch made no changes to it (only reformatting existing imports), the resolution keeps `binary::TAsyncBinaryProtocol` to preserve the HEAD branch's intentional addition.
+
+Here's the resolved code snippet:
+
+```rust
+use std::fmt::{self, Display, Formatter};
+
+use pilota::thrift::{
+    binary::TAsyncBinaryProtocol, Error as PilotaError, Message, ProtocolError,
+    TAsyncInputProtocol, TFieldIdentifier, TInputProtocol, TLengthProtocol, TOutputProtocol,
+    TStructIdentifier, TType, TransportError,
+};
+use volo::loadbalance::error::{LoadBalanceError, Retryable};
+
+use crate::AnyhowError;
+```

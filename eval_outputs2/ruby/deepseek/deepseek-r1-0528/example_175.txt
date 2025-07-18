@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing method signatures: one uses a required positional argument, while the other uses an optional keyword argument. Since the method body requires `target_url` to be provided (as it's passed directly to the request), and there's no handling for a `nil` case, the intent is ambiguous. 
+
+The change to a keyword argument might be part of a broader refactoring effort, but without additional context about callers or whether `target_url` should be optional, it's unclear which approach to favor. Both versions could be valid depending on external factors not visible in this snippet.
+
+Here's the unresolved conflict preserved exactly as provided:
+
+```ruby
+          ##
+          # Retrieve a single page of InstalledAddOnInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of InstalledAddOnInstance
+<<<<<<< HEAD
+          def get_page(target_url)
+=======
+          def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return InstalledAddOnPage.new(@version, response, @solution)
+```

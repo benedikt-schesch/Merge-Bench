@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires understanding the semantic intentions of both changes.
+
+*   **HEAD** defines the method with a standard positional argument: `def get_page(target_url)`. This makes the `target_url` argument mandatory.
+*   **The incoming change** refactors the method to use a keyword argument: `def get_page(target_url: nil)`. Using keyword arguments is often a deliberate choice to improve code clarity. However, it also makes the argument optional with a default of `nil`.
+
+The method's body immediately uses `target_url` in an API request, which will likely fail if the URL is `nil`. The documentation also describes `target_url` as a required parameter. Therefore, the most robust resolution is to combine the intents of both branches: adopt the modern keyword argument syntax from the incoming change while preserving the mandatory nature of the argument from HEAD.
+
+In modern Ruby (2.1+), this is achieved by defining a required keyword argument, which raises an `ArgumentError` if not provided.
+
+```ruby
+          ##
+          # Retrieve a single page of CommandInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of CommandInstance
+          def get_page(target_url:)
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return CommandPage.new(@version, response, @solution)
+```

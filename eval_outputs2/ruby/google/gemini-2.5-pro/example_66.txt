@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Both sides of this merge conflict are attempting to achieve the exact same goal: to minify the CSS data by removing whitespace (spaces and newlines) that immediately follows a semicolon (`;`) or an opening curly brace (`{`).
+
+*   The `HEAD` version accomplishes this by capturing the preceding character (`{` or `;`) and then putting it back in the replacement string (`\1`).
+*   The `6fc88aeac...` version uses a regular expression lookbehind (`?<=[;{]`) to find whitespace that is preceded by these characters without including them in the match. This is a slightly more idiomatic and efficient way to express the same logic in a regular expression.
+
+Since both implementations are semantically identical, I will resolve the conflict by choosing the lookbehind version, as it is a cleaner implementation of the shared intent.
+
+```ruby
+    # TEMPLATE CSS LOADING
+
+    def inline_stylesheet(name, media='all')
+      path = File.expand_path("../template/#{name}.css", __FILE__)
+      data = File.read(path)
+      data.gsub!(/(?<=[;{]) *\n/m, '')
+      data.gsub!(/(?<=[;{]) +/m, '')
+      data.gsub!(/[; ]+\}/, '}')
+      data.gsub!(/^/, '  ')
+      "<style type='text/css' media='#{media}'>\n#{data}  </style>"
+    end
+
+
+```

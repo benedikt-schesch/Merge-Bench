@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The merge conflict resolution is ambiguous due to significant differences in the implementation approaches. The key points of uncertainty are:
+
+1. **Return Type Handling**:  
+   The HEAD branch wraps `simpl_power` in `Transformed::yes()` while the other branch doesn't. This suggests fundamental differences in how transformation results are handled.
+
+2. **Argument Passing**:  
+   The HEAD branch clones `info` with `<&S>::clone(&info)` while the other branch uses `info` directly. This indicates potential divergence in ownership handling or type signatures.
+
+Without additional context about:
+- The expected return type of the match arm
+- The current signature of `simpl_power`
+- The type and ownership requirements of `info`
+- How other similar functions (like `Concat`) are handled
+
+I cannot safely resolve this conflict. Here's the preserved snippet with the conflict markers:
+
+```rust
+
+            // power
+            Expr::ScalarFunction(ScalarFunction {
+                func_def: ScalarFunctionDefinition::BuiltIn(BuiltinScalarFunction::Power),
+                args,
+<<<<<<< HEAD
+            }) => Transformed::yes(simpl_power(args, <&S>::clone(&info))?),
+=======
+            }) => simpl_power(args, info)?,
+>>>>>>> 767760b84c71b9af8b2d8cdee9cd5c099b57b462
+
+            // concat
+            Expr::ScalarFunction(ScalarFunction {
+                func_def: ScalarFunctionDefinition::BuiltIn(BuiltinScalarFunction::Concat),
+                args,
+
+```

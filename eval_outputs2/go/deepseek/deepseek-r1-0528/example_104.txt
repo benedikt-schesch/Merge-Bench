@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_2(rctx, inboundMarshaler, server, req, pathParams)
+```
+
+**Resolution Explanation:**  
+The conflict involves different arguments for `runtime.AnnotateIncomingContext`. The solution preserves the 4-argument version from the incoming branch because:
+1. The method path `"/grpc.gateway.examples.internal.helloworld.Greeter/SayHello"` explicitly identifies the RPC endpoint
+2. This matches standard grpc-gateway patterns where handlers specify full method paths
+3. The surrounding handler logic (`local_request_Greeter_SayHello_2`) confirms this is for the `SayHello` method
+4. Modern grpc-gateway versions require this argument for proper context annotation
+
+The HEAD version (3 arguments) appears to be from older code that omitted the method path, which is now required for correct functionality. The resolution maintains compatibility with updated grpc-gateway semantics while preserving the handler's intent.

@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to export modules related to breakpoints, but with some differences:
+
+**HEAD side:**
+- Exports a specific type `_EuiThemeBreakpoint` aliased as `EuiBreakpointSize`
+- Exports from `./current_breakpoint`
+- Exports from `./current_breakpoint_hook`
+- Exports from `./is_within_hooks`
+
+**Incoming side:**
+- Exports from `./breakpoint`
+- Exports from `./current_breakpoint`
+- Exports from `./current_breakpoint_hook`
+- Exports from `./useIsWithinBreakpoints`
+
+The semantic intent appears to be:
+1. Both sides want to export current breakpoint functionality
+2. HEAD wants to export a specific type from the global styling system
+3. HEAD has `is_within_hooks` while incoming has `useIsWithinBreakpoints` (likely a rename)
+4. Incoming has a general `./breakpoint` export while HEAD has a specific type export
+
+Resolving by combining both intents:
+
+```typescript
+ * 2.0 and the Server Side Public License, v 1; you may not use this file except
+ * in compliance with, at your election, the Elastic License 2.0 or the Server
+ * Side Public License, v 1.
+ */
+
+export type { _EuiThemeBreakpoint as EuiBreakpointSize } from '../../global_styling/variables/breakpoint';
+export * from './breakpoint';
+export * from './current_breakpoint';
+export * from './current_breakpoint_hook';
+export * from './useIsWithinBreakpoints';
+```

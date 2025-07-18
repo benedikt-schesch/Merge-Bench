@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, I've resolved the conflict by preserving both changes while maintaining proper spacing and context. The other branch adds a global constant that's explicitly documented as harmless, so it can be safely included after the macro definition before the main function.
+
+Here's the resolved snippet:
+
+```c
+  modalfatalbox("random_byte called in testbn");
+  return 0;
+}
+
+#define fromxdigit(c) ((c) > '9' ? ((c)&0xDF) - 'A' + 10 : (c) - '0')
+
+/* For Unix in particular, but harmless if this main() is reused elsewhere */
+const int buildinfo_gtk_relevant = FALSE;
+
+int main(int argc, char **argv)
+{
+  char *buf;
+  int line = 0;
+```
+
+Key resolution points:
+1. Preserved the `fromxdigit` macro from HEAD unchanged
+2. Kept the added comment and global constant from the other branch
+3. Maintained the blank line spacing after the macro for readability
+4. Preserved the original spacing before the `main` function declaration
+5. The added constant is:
+   - Marked `const` (safe for global scope)
+   - Explicitly documented as harmless
+   - Unix-specific but portable
+   - Doesn't conflict with existing HEAD content
+
+The solution maintains both branches' semantics while keeping the code structure clean and consistent.

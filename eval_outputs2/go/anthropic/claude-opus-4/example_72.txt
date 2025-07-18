@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to improve the error message, with slightly different wording:
+
+- HEAD uses: "an unexpected error while marshaling JSONPBMarshaler"
+- The other branch uses: "an unexpected error occurred when marshaling JSONPBMarshaler"
+
+Both convey the same intent - reporting an unexpected error during marshaling. The second version ("occurred when") is slightly more grammatically standard than "while marshaling", so I'll resolve in favor of that version.
+
+```go
+func TestMarshalJSONPBMarshaler(t *testing.T) {
+	rawJson := `{ "foo": "bar", "baz": [0, 1, 2, 3] }`
+	msg := dynamicMessage{RawJson: rawJson}
+	str, err := new(Marshaler).MarshalToString(&msg)
+	if err != nil {
+		t.Errorf("an unexpected error occurred when marshaling JSONPBMarshaler: %v", err)
+	}
+	if str != rawJson {
+		t.Errorf("marshaling JSON produced incorrect output: got %s, wanted %s", str, rawJson)
+	}
+}
+
+```

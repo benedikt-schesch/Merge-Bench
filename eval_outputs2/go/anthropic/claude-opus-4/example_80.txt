@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call a `validate` function but with different signatures:
+
+- HEAD side: `validate(req)` - simpler validation with just the request
+- Remote side: `validate(ctx, req, o.shouldFailFast, o.onValidationErrCallback)` - enhanced validation with context and options
+
+Given that:
+1. The function now accepts `opts ...Option` and creates `o := evaluateOpts(opts)`
+2. The remote side is using these options (`o.shouldFailFast`, `o.onValidationErrCallback`)
+3. The remote side includes context which is a common pattern in Go for cancellation/timeout support
+4. The comment mentions moving from legacy validation to a newer approach
+
+The semantic intent appears to be migrating to a more feature-rich validation system. The remote/incoming change represents the newer, more complete implementation that should be kept.
+
+```go
+// Note that generated codes prior to protoc-gen-validate v0.6.0 do not provide an all-validation
+// interface. In this case the interceptor fallbacks to legacy validation and `all` is ignored.
+func UnaryClientInterceptor(opts ...Option) grpc.UnaryClientInterceptor {
+	o := evaluateOpts(opts)
+	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		if err := validate(ctx, req, o.shouldFailFast, o.onValidationErrCallback); err != nil {
+			return err
+		}
+		return invoker(ctx, method, req, reply, cc, opts...)
+	}
+}
+
+```

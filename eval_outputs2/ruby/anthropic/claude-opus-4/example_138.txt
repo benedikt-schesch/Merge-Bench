@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to require similar files but with some differences:
+
+- HEAD side: requires "parser", "writer", and "reader"
+- Other side: requires "parse", "writer", and "smarter_csv"
+
+The semantic intent appears to be including the necessary components for CSV parsing/reading functionality. The conflict seems to be about:
+1. "parser" vs "parse" - likely the same functionality with different file names
+2. "reader" vs "smarter_csv" - possibly reorganized code where "reader" functionality moved to "smarter_csv"
+
+Without more context about the codebase structure and which files actually exist, I cannot definitively resolve this conflict. The safest approach is to return the snippet with the conflict markers intact:
+
+```ruby
+require 'smarter_csv/header_transformations'
+require 'smarter_csv/header_validations'
+require "smarter_csv/headers"
+require "smarter_csv/hash_transformations"
+
+<<<<<<< HEAD
+require "smarter_csv/parser"
+require "smarter_csv/writer"
+require "smarter_csv/reader"
+=======
+require "smarter_csv/parse"
+require "smarter_csv/writer"
+require "smarter_csv/smarter_csv"
+>>>>>>> 107cb87ba60df917420faa409875591766d8ca8e
+
+# load the C-extension:
+case RUBY_ENGINE
+when 'ruby'
+  begin
+
+```

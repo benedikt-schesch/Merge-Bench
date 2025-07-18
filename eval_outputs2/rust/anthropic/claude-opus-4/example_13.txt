@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+**HEAD (left side)**: 
+- Creates a `PipelineStatePropagator` with the plan
+- Calls `transform_up` on the pipeline object
+- Extracts the plan from the resulting state data
+- Returns the processed plan
+
+**Incoming changes (right side)**:
+- Directly calls `transform_up` on the plan
+- Returns the result directly
+
+The semantic intent appears to be that HEAD introduced a new abstraction layer (`PipelineStatePropagator`) for handling the transformation, while the incoming changes use the direct approach. Since HEAD seems to be a more recent refactoring that wraps the transformation in a pipeline state propagator (likely for additional state management capabilities), I'll resolve in favor of HEAD's approach as it appears to be the intended architecture moving forward.
+
+```rust
+    fn optimize(
+        &self,
+        plan: Arc<dyn ExecutionPlan>,
+        config: &ConfigOptions,
+    ) -> Result<Arc<dyn ExecutionPlan>> {
+        let pipeline = PipelineStatePropagator::new_default(plan);
+        let state = pipeline
+            .transform_up(&|p| check_finiteness_requirements(p, &config.optimizer))?
+            .data;
+        Ok(state.plan)
+    }
+
+    fn name(&self) -> &str {
+        "PipelineChecker"
+    }
+
+```

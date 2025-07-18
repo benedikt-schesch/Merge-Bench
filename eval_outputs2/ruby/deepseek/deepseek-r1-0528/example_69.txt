@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+I'll help resolve this merge conflict while preserving the context exactly. Here's the analysis:
+
+The conflict occurs after an update operation where both branches want to display output only when not in quiet mode. However, the two branches implement different behaviors:
+
+1. **HEAD branch**: Calls `stats(path)` method
+2. **Other branch**: Prints advisory count message directly
+
+These appear to be conflicting implementations rather than complementary changes. Since:
+- The `stats` method's implementation isn't visible
+- The advisory count message references a specific database
+- Both are trying to occupy the same logical position
+- The intent isn't clearly reconcilable
+
+I'll keep the conflict markers since the semantics are ambiguous:
+
+```ruby
+          exit 1
+        when nil
+          say "Skipping update", :yellow
+        end
+
+<<<<<<< HEAD
+        stats(path) unless options.quiet?
+=======
+        unless options.quiet?
+          puts "ruby-advisory-db: #{Database.new.size} advisories"
+        end
+>>>>>>> d26e0fd4ff525414e8c814ce549e3fd639e0329d
+      end
+
+      desc 'version', 'Prints the bundler-audit version'
+      def version
+        database = Database.new
+```
+
+The surrounding context is preserved exactly as provided, including spacing and indentation. The conflict remains because we can't determine whether:
+1. The `stats` method should be replaced
+2. The output should be combined
+3. One approach should supersede the other
+
+Without seeing the implementation of `stats()` or having more context about the desired output, this conflict requires human decision-making.

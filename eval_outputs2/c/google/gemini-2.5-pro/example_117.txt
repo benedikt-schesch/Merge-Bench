@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Based on the surrounding code, the function where the conflict occurs is likely a callback that is expected to have a `void` return type. This is a common pattern in event-driven systems like the one PuTTY's backend interface uses. The function signature for `telnet_closing` in PuTTY is indeed `void`.
+
+- **HEAD's intent:** To indicate a successful or normal closure by returning a status code of `0`. However, returning an integer value from a `void` function is a compile-time error in C.
+- **The other branch's intent:** To simply exit the function. For a `void` function, falling off the end of the function is the correct way to return.
+
+The semantically correct resolution is to adopt the change from the branch that removes the `return 0;`, as it aligns with the function's `void` return type. The function correctly handles the error case by calling `connection_fatal` and then implicitly returns on the normal path.
+
+```c
+  if (error_msg) {
+    logevent(telnet->frontend, error_msg);
+    connection_fatal(telnet->frontend, "%s", error_msg);
+  }
+  /* Otherwise, the remote side closed the connection normally. */
+}
+
+static void telnet_receive(Plug plug, int urgent, char *data, int len)
+{
+  Telnet telnet = (Telnet)plug;
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `getWorkspaceInfo` but with different parameters:
+
+- HEAD (left side): calls with just `rawToken`
+- Incoming (right side): calls with `ctx`, `rawToken`, and a boolean expression `token.email !== systemAccountEmail`
+
+The semantic intent appears to be that the method signature for `getWorkspaceInfo` has been updated to require additional parameters - specifically a context (`ctx`) and a boolean flag that checks if the token email is not the system account email.
+
+Here's the resolved conflict:
+
+```typescript
+  ): Promise<AddSessionResponse> {
+    const { workspace: workspaceUuid } = token
+
+    let workspaceInfo: WorkspaceInfoWithStatus | undefined
+    try {
+      workspaceInfo = await this.getWorkspaceInfo(ctx, rawToken, token.email !== systemAccountEmail)
+    } catch (err: any) {
+      this.updateConnectErrorInfo(token)
+      return { error: err }
+    }
+
+
+```
+
+The resolution accepts the incoming changes since they represent an evolution of the API that adds necessary context and authorization checking.

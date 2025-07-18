@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch added a `char buf[4096];` declaration, while the other branch (4348393f562c8011ebca43d6198e98638aa115b5) removed or didn't include this line.
+
+Without more context about how `buf` is used later in the function, I cannot determine the correct resolution. The buffer might be needed for subsequent operations in the HEAD branch, or it might have been removed in the other branch because it's no longer needed.
+
+Here's the snippet with the conflict preserved:
+
+```c
+                      (HANDLE, LPVOID, DWORD, LPDWORD));
+
+static void init_winfuncs(void)
+{
+  static int initialised = FALSE;
+<<<<<<< HEAD
+  char buf[4096];
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  if (initialised)
+    return;
+  {
+    HMODULE winspool_module = load_system32_dll("winspool.drv");
+<<<<<<< HEAD
+
+```

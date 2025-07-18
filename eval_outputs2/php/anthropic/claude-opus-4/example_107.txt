@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import the same classes, just in different orders. The HEAD version has the imports in a specific order, while the incoming change has them in a different order plus an additional `Response` import.
+
+The semantic intent of both sides is to have all the necessary imports. The incoming change adds the `Response` import which seems to be needed, and both sides want the same other imports.
+
+Here's the resolved version that preserves the context and resolves the conflict by including all imports in a logical order:
+
+```php
+ * file that was distributed with this source code.
+ */
+
+namespace FOS\OAuthServerBundle\Security\EntryPoint;
+
+use OAuth2\OAuth2;
+use OAuth2\OAuth2AuthenticateException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+
+```

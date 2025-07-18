@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add HTTP client functionality to the Spotify client, but with different approaches:
+
+- HEAD uses `reqwest::Client` (async client)
+- The other branch uses `reqwest::blocking::Client` (blocking client) and also adds an `oauth: SpotifyOAuth` field
+
+Since the struct already has `session` and `spotify` fields for Spotify functionality, and the incoming branch is adding OAuth support along with a blocking HTTP client, it seems the intent is to enhance the client with both HTTP capabilities and OAuth support. The choice between async and blocking client depends on the overall architecture, but given that OAuth is being added with a blocking client, it suggests the codebase might be using synchronous operations.
+
+Here's the resolved conflict, preserving both the HTTP client and OAuth functionality:
+
+```rust
+
+/// A spotify client
+pub struct Client {
+    session: Session,
+    spotify: Spotify,
+    http: reqwest::blocking::Client,
+    oauth: SpotifyOAuth,
+}
+
+impl Client {
+    /// creates the new `Client` given a spotify authorization
+    pub fn new(session: Session, spotify: Spotify) -> Self {
+
+```

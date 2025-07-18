@@ -1,0 +1,50 @@
+<think>
+No reasoning found</think>
+The provided code snippet contains a merge conflict that cannot be resolved without additional context regarding the testing framework in use (Vitest vs Jest) and the intended structure of the `useQuery` call. The conflict arises from two competing versions of the same code block, and both introduce changes that are semantically significant but ambiguous in intent based on the provided information.
+
+---
+
+### Conflicting Points
+
+1. **Mock Implementation (vi.fn() vs jest.fn()):**  
+   The code is mocking a function `simpleFetcher`, but the framework used for testing is unclear—either **Vitest** (which uses `vi`) or **Jest** (which uses `jest`). The intent behind choosing one over the other depends on the project setup or conventions, which is not specified.
+
+2. **Structure of `useQuery` Call:**  
+   - One version calls `useQuery` with the **legacy tuple-style API**: passing `queryKey` and `queryFn` as separate arguments.
+   - The other version correctly uses the **single configuration-object style**, where both the query key and function are embedded within the reactive options object.
+
+   Since the rest of the code following the conflict uses the configuration style (`reactive(...)`), it aligns logically with the configuration object approach. However, without clear intent, it's not certain if this structure was intentional in the HEAD version or was an oversight in the conflicting branch.
+
+---
+
+### Resolution
+
+Per instruction, only the conflicting portion itself should be resolved if the semantics and intent are clear. In this case, **the intent is ambiguous** between the two implementations, both in terms of testing library and how `useQuery` should be structured.
+
+---
+
+### Final Output
+
+Therefore, the original merge conflict is preserved as-is:
+
+```typescript
+      queryFn: simpleFetcher,
+    })
+
+    const enabled = computed(() => !!data.value)
+
+<<<<<<< HEAD
+    const dependentQueryFn = vi.fn().mockImplementation(simpleFetcher)
+    const { fetchStatus, status } = useQuery(
+=======
+    const dependentQueryFn = jest.fn().mockImplementation(simpleFetcher)
+    const { fetchStatus, status } = useQuery(
+      ['dependant2'],
+      dependentQueryFn,
+>>>>>>> 3d6408484cb0d4287365fdd6ec93753ac0f44388
+      reactive({
+        queryKey: ['dependant2'],
+        queryFn: dependentQueryFn,
+        enabled,
+      }),
+```

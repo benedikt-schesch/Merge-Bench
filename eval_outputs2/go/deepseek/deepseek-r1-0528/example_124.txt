@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by combining both changes while preserving the intent of each branch. The conflict arises from one branch adding a new flag (`openAPIConfiguration`) while the other branch doesn't have it. Since these are independent features, we can safely include both.
+
+Here's the resolved code snippet:
+
+```go
+	useFQNForOpenAPIName       = flag.Bool("fqn_for_openapi_name", false, "if set, the object's OpenAPI names will use the fully qualify name from the proto definition (ie my.package.MyMessage.MyInnerMessage")
+	useGoTemplate              = flag.Bool("use_go_templates", false, "if set, you can use Go templates in protofile comments")
+	disableDefaultErrors       = flag.Bool("disable_default_errors", false, "if set, disables generation of default errors. This is useful if you have defined custom error handling")
+	enumsAsInts                = flag.Bool("enums_as_ints", false, "whether to render enum values as integers, as opposed to string values")
+	simpleOperationIDs         = flag.Bool("simple_operation_ids", false, "whether to remove the service prefix in the operationID generation. Can introduce duplicate operationIDs, use with caution.")
+	openAPIConfiguration       = flag.String("openapi_configuration", "", "path to OpenAPI Configuration in YAML format")
+	generateUnboundMethods     = flag.Bool("generate_unbound_methods", false, "generate swagger metadata even for RPC methods that have no HttpRule annotation")
+)
+
+// Variables set by goreleaser at build time
+var (
+```
+
+Resolution reasoning:
+1. Both flags (`simpleOperationIDs` and `openAPIConfiguration`) serve different purposes and can coexist
+2. The new `openAPIConfiguration` flag is added in its natural position before `generateUnboundMethods`
+3. All comments and spacing are preserved exactly as in the original
+4. The conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) are removed
+5. Both features are maintained - operation ID simplification from HEAD branch and OpenAPI configuration from the other branch
+
+This maintains backward compatibility while adding the new configuration option, satisfying the semantic intent of both branches.

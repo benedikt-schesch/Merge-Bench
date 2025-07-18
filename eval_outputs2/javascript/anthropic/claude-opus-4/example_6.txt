@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - getting the current timestamp to pass to the callback function. The conflict is purely about the implementation approach:
+
+- `HEAD` uses `new Date().getTime()`
+- The other branch uses `Date.now()`
+
+Both methods return the same value (current timestamp in milliseconds since Unix epoch). `Date.now()` is more modern, concise, and slightly more performant since it doesn't create a Date object. Since the intent is identical and `Date.now()` is the better approach, I'll resolve with that version:
+
+```javascript
+            window.mozRequestAnimationFrame     ||
+            window.oRequestAnimationFrame       ||
+            window.msRequestAnimationFrame      ||
+            function(callback) {
+              return window.setTimeout(function() {
+                callback(Date.now());
+              }, 16);
+            };
+          return requestAnimationFrame.call(window, callback, element);
+        },
+        cancelAnimationFrame = function(id) {
+```

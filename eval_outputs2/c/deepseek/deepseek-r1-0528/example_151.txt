@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Based on the provided context and conflict markers, I'll resolve this by preserving both intents: the functions should be loaded unconditionally except when Coverity static analysis is being performed. Here's the resolved snippet:
+
+```c
+  GET_WINDOWS_FUNCTION(winsock_module, WSAGetLastError);
+  GET_WINDOWS_FUNCTION(winsock_module, WSAEnumNetworkEvents);
+  GET_WINDOWS_FUNCTION(winsock_module, WSAStartup);
+  GET_WINDOWS_FUNCTION(winsock_module, WSACleanup);
+  GET_WINDOWS_FUNCTION(winsock_module, closesocket);
+#ifndef COVERITY
+  GET_WINDOWS_FUNCTION(winsock_module, ntohl);
+  GET_WINDOWS_FUNCTION(winsock_module, htonl);
+  GET_WINDOWS_FUNCTION(winsock_module, htons);
+  GET_WINDOWS_FUNCTION(winsock_module, ntohs);
+  GET_WINDOWS_FUNCTION(winsock_module, gethostname);
+#endif
+```
+
+**Resolution reasoning:**
+1. The `HEAD` version wants these functions loaded unconditionally
+2. The other branch (4348393) wants to exclude them only during Coverity analysis
+3. Wrapping the functions in `#ifndef COVERITY` satisfies both intents:
+   - Normal builds get all functions (original HEAD behavior)
+   - Coverity builds skip these functions (other branch's requirement)
+4. Note: Preserved the apparent typo in `winsock_module` (with 'i') for `ntohl` to maintain exact original formatting

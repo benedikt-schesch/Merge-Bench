@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different error handling approaches for `StandardError` in the same rescue block. The HEAD version uses a `log_exception` method and passes only the error message to `job.reschedule`, while the other branch adds detailed logging directly and passes both message and backtrace to `job.reschedule`.
+
+Since the intent is ambiguous (the HEAD version's `log_exception` method isn't defined in this snippet, and the other branch introduces new logging logic), I cannot safely resolve this conflict without more context. Both versions:
+1. Differ in `job.reschedule` arguments
+2. Have different logging implementations
+3. Contain unique error-handling details
+
+Here's the unchanged snippet with conflict markers:
+
+```ruby
+
+          return job
+        rescue LockError
+          # We did not get the lock, some other worker process must have
+          logger.warn "* [JOB] failed to aquire exclusive lock for #{job.name}"
+<<<<<<< HEAD
+        rescue StandardError => e 
+          job.reschedule e.message        
+          log_exception(job, e)
+=======
+        rescue StandardError => e
+          job.reschedule e.message, e.backtrace
+          logger.error "* [JOB] #{job.name} failed with #{e.class.name}: #{e.message} - #{job.attempts} failed attempts"
+          logger.error(e)
+>>>>>>> 757f585266696d3fc1610b36df65548ab0a58919
+          return job
+        end
+      end
+
+      nil
+
+```

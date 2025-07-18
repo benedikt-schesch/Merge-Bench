@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```c
+      /* This is so the ALT-Numpad and dead keys work correctly. */
+      keys_unicode[0] = 0;
+
+      return p - output;
+    }
+    /* If we're definitely not building up an ALT-54321 then clear it */
+    if (!left_alt)
+      keys_unicode[0] = 0;
+    /* If we will be using alt_sum fix the 256s */
+    else if (keys_unicode[0] && (in_utf(term) || ucsdata.dbcs_screenfont))
+      keys_unicode[0] = 10;
+```
+
+**Resolution Rationale:**  
+The conflict was purely about comment spelling correction ("definitly" → "definitely"). Both branches functionally agree on the subsequent code logic. The corrected spelling improves readability without altering behavior, making this a safe resolution. The semantic intent of clearing `keys_unicode[0]` when not building ALT-codes remains unchanged.

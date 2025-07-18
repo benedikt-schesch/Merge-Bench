@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add a new variable declaration `char *lua;` while the other branch (72bfaf80b3ff531c0bf994fbbacbdbf29e5d21ca) doesn't have this addition.
+
+Based on the context, this appears to be a simple additive change where HEAD is introducing a new variable that will likely be used later in the function. Since this is just adding a variable declaration and doesn't conflict with any other changes, the resolution should include the variable declaration from HEAD.
+
+Here's the resolved code:
+
+```c
+	tupid_t newdt;
+	struct tup_entry *oldtent = tf->curtent;
+	int old_dfd = tf->cur_dfd;
+	struct tup_entry *srctent = NULL;
+	struct tup_entry *newtent;
+	char *lua;
+
+	if(get_path_elements(file, &pg) < 0)
+		goto out_err;
+	if(pg.pg_flags & PG_HIDDEN) {
+		fprintf(tf->f, "tup error: Unable to include file with hidden path element.\n");
+
+```

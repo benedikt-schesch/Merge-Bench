@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+```python
+    schema(set(['abc']))
+    schema(set([42, 'abc']))
+
+    with pytest.raises(MultipleInvalid, match="invalid value in set") as ctx:
+        schema(set([None]))
+<<<<<<< HEAD
+    except MultipleInvalid as e:
+        assert str(e) == "invalid value in set"
+    else:
+        assert False, "Did not raise Invalid"
+=======
+    assert len(ctx.value.errors) == 1
+>>>>>>> 1fcf849f16279d43010c89c5d8cf69d5de96a800
+
+
+def test_frozenset_of_integers_and_strings():
+    schema = Schema(frozenset([int, str]))
+    with raises(Invalid, 'expected a frozenset'):
+
+```

@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+**HEAD side**: Adds a `@rolled_back = true` flag when rollback occurs
+**Other side**: Adds a `@failure = true` flag when rollback occurs, and also adds a new `close` method that calls `success` before `super`
+
+Both sides are trying to track the transaction state, but using different variable names (`@rolled_back` vs `@failure`). The other side also introduces transaction lifecycle management with the `close` method.
+
+Since both sides have the same intent (marking the transaction state on rollback) and the other side provides additional functionality (the `close` method), I'll merge them by:
+1. Keeping both state flags (they might be used elsewhere in the codebase)
+2. Including the `close` method from the other side
+
+```ruby
+module ActiveGraph
+  module Transaction
+    def rollback
+      super
+      @rolled_back = true
+      @failure = true
+    end
+
+    def close
+      success
+      super
+    end
+
+    def after_commit(&block)
+      after_commit_registry << block
+    end
+
+```

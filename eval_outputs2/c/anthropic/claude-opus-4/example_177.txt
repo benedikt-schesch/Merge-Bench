@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the context and intent of both sides.
+
+The code appears to be handling a SOCKS proxy connection error case where either the command is not CONNECT or a reserved field is nonzero. In this error path, the code:
+1. Sets a generic failure reply
+2. Writes the reply to the socket
+3. Closes the connection (`pfd_close(pf)`)
+4. Returns from the function
+
+The conflict is about what to return:
+- HEAD wants to `return 1;` (indicating an error/failure)
+- The other branch wants to `return;` (void return)
+
+Without seeing the function signature, I cannot definitively resolve this conflict as the correct resolution depends on whether the function returns an int/bool (error code) or void. The semantic intent could be valid for either case depending on the broader codebase design.
+
+Here is the snippet with the conflict preserved:
+
+```c
+          if (pf->socksbuf[1] != 1 || pf->socksbuf[2] != 0) {
+            /* Not CONNECT or reserved field nonzero - error */
+            reply[1] = 1; /* generic failure */
+            sk_write(pf->s, (char *)reply, lenof(reply));
+            pfd_close(pf);
+<<<<<<< HEAD
+            return 1;
+=======
+            return;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+          }
+          /*
+           * Now we have a viable connect request. Switch
+           * on atype.
+           */
+```

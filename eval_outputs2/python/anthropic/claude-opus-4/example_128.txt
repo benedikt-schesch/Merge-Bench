@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar things with some differences:
+
+1. **HEAD side**: Uses regular strings (no `u` prefix) and ends with a closing parenthesis
+2. **5c84a7c6 side**: Uses unicode strings (with `u` prefix) and adds a new parameter `mobile_number_portable_region=True`
+
+The semantic intent appears to be:
+- Both sides want to define the same number formats
+- The incoming change (5c84a7c6) wants to add the `mobile_number_portable_region=True` parameter
+- The unicode string prefix difference is likely a Python 2/3 compatibility issue
+
+Since modern Python 3 treats all strings as unicode by default, the `u` prefix is unnecessary but harmless. The key semantic change is the addition of the `mobile_number_portable_region` parameter.
+
+Here's the resolved code:
+
+```python
+    uan=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='800\\d{5}', possible_number_pattern='\\d{8}', example_number='80012345'),
+    national_prefix='0',
+    national_prefix_for_parsing='0',
+    number_format=[NumberFormat(pattern='(\\d{2})(\\d{3})(\\d{4})', format='\\1 \\2 \\3', leading_digits_pattern=['[235]'], national_prefix_formatting_rule='0\\1'),
+        NumberFormat(pattern='(\\d{3})(\\d{5})', format='\\1 \\2', leading_digits_pattern=['8'], national_prefix_formatting_rule='0\\1')],
+    mobile_number_portable_region=True)
+```

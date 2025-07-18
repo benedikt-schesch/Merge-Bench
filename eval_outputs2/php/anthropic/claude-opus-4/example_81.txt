@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- **HEAD (left side)**: Wants to serve a development collection if the production collection wasn't served
+- **Right side (9b5f2feb)**: Wants to return either `array_to_newlines($response)` or an HTML comment about a missing manifest entry
+
+The context suggests this is handling asset collection serving, with production vs development modes. The right side seems to be handling a response that should have been set earlier in the code (likely in the `serveProductionCollection` method).
+
+Based on the semantic intent, it appears the right side is trying to handle the response from production collection serving, while the left side wants to fall back to development collection serving. These aren't mutually exclusive - they're handling different scenarios.
+
+However, without seeing more context about where `$response` comes from and what the full logic flow is, I cannot confidently resolve this conflict. The intent is ambiguous because:
+1. It's unclear if `$response` is set by `serveProductionCollection`
+2. The two branches seem to handle different cases that might both be valid
+
+Therefore, I'm returning the snippet with the conflict preserved:
+
+```php
+            {
+                return $this->serveProductionCollection($collection, $group, $format);
+            }
+        }
+
+<<<<<<< HEAD
+        return $this->serveDevelopmentCollection($collection, $group, $format);
+=======
+            return array_to_newlines($response);
+        }
+        else
+        {
+            return '<!-- Basset could not find manifest entry for collection: '.$collection->getIdentifier().' -->';
+        }
+>>>>>>> 9b5f2feb01c73ac06ef28d0a97e30cb4065be310
+    }
+
+    /**
+     * Serve a production collection.
+     *
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD (current branch)**: Uses `markdownToTxt()` to convert the token text to plain text before assigning to `index[slug].body`
+- **Incoming branch**: Assigns the token text directly without any conversion
+
+The context shows that earlier in the code (in the `if` branch), `markdownToTxt()` is being used when appending to the body. This suggests that the intent is to store plain text (not markdown) in the index body.
+
+The HEAD version maintains consistency with the earlier usage and ensures that markdown formatting is stripped from the text before storing it in the index. This is likely the correct semantic intent.
+
+```javascript
+        index[slug].body += '\n' + markdownToTxt(token.text || '');
+      } else {
+        token.text = getTableData(token);
+        token.text = getListData(token);
+
+        index[slug].body = markdownToTxt(token.text || '');
+      }
+
+      index[slug].path = path;
+      index[slug].indexKey = indexKey;
+    }
+
+```

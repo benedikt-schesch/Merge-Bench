@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflict involves minor formatting differences in the `unless` line. Both versions check if `affected_rows == 1` and raise an error if not. The HEAD version has a blank line above the check, while the other branch has trailing whitespace. The blank line improves readability without affecting functionality, and the trailing whitespace is unnecessary. The resolution keeps the blank line and removes the trailing whitespace.
+
+Here's the resolved snippet:
+
+```ruby
+          SET `locked_at`=#{quote_value(now)} 
+          WHERE #{self.class.primary_key} = #{quote_value(id)} AND (`locked_by`=#{quote_value(worker)})
+        end_sql
+
+      end
+
+      unless affected_rows == 1
+        raise LockError, "Attempted to aquire exclusive lock failed"
+      end
+
+      self.locked_at    = now
+      self.locked_by    = worker
+```

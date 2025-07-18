@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Based on the provided context, I cannot safely resolve this conflict. The intent behind using `ex/ey` (HEAD) vs `event->x/event->y` (other branch) is ambiguous without more context about their origin and relationship. Both versions appear to calculate character coordinates from pixel coordinates, but it's unclear if these are equivalent values or represent different semantic meanings.
+
+Here's the original snippet with conflict markers preserved as requested:
+
+```c
+  }
+
+  if (raw_mouse_mode && act != MA_CLICK && act != MA_RELEASE)
+    return TRUE; /* we ignore these in raw mouse mode */
+
+<<<<<<< HEAD
+  x = (ex - inst->window_border) / inst->font_width;
+  y = (ey - inst->window_border) / inst->font_height;
+=======
+  x = (event->x - inst->window_border) / inst->font_width;
+  y = (event->y - inst->window_border) / inst->font_height;
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+
+  term_mouse(inst->term,
+             button,
+             translate_button(button),
+             act,
+``` 
+
+To resolve this conflict, we would need to know:
+1. How `ex`/`ey` are declared and initialized in HEAD
+2. Whether `event->x`/`event->y` contain equivalent values to `ex`/`ey`
+3. If there was any coordinate transformation happening elsewhere
+4. Which branch represents the more recent/mainline development
+
+Without this information, any resolution would be speculative.

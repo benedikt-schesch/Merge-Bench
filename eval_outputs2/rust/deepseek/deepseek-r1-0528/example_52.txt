@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, I've resolved the conflict by selecting the `Resource` trait bound since it aligns with Bevy's event system design where events are stored as resources. Here's the resolved snippet:
+
+```rust
+    &event_instance.event
+}
+
+/// Reads events of type `T` in order and tracks which events have already been read.
+#[derive(SystemParam)]
+pub struct EventReader<'w, 's, T: Resource> {
+    last_event_count: Local<'s, (usize, PhantomData<T>)>,
+    events: Res<'w, Events<T>>,
+}
+
+/// Sends events of type `T`.
+```
+
+### Resolution Reasoning:
+1. **Semantic Analysis**: The `Events<T>` type in Bevy is stored as a resource (`Res`), meaning `T` should be `Resource`-bounded to maintain API consistency
+2. **Field Alignment**: The `events: Res<'w, Events<T>>` field confirms events are resources
+3. **Design Intent**: Events in Bevy are global resources, not components tied to specific entities
+4. **Conflict Context**: The `HEAD` version correctly reflects Bevy's event system semantics
+
+The `Component` bound from the other branch would be semantically incorrect since events aren't stored as components in Bevy's ECS model.

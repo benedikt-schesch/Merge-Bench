@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+```c
+			ifdebug(SCARY_THINGS) logger(LOG_DEBUG, _("Purging node %s (%s)"), n->name,
+					   n->hostname);
+
+			for(snode = n->subnet_tree->head; snode; snode = snext) {
+				snext = snode->next;
+				s = snode->data;
+				if(!tunnelserver)
+					send_del_subnet(broadcast, s);
+				subnet_del(n, s);
+			}
+
+			for(enode = n->edge_tree->head; enode; enode = enext) {
+				enext = enode->next;
+
+```
+
+Reasoning:
+1. Preserved the cast removal from the feature branch (`s = snode->data;`) as this appears to be a type system improvement
+2. Kept the tunnelserver condition (`if(!tunnelserver)`) which adds important behavior control
+3. Maintained the critical `subnet_del()` call from both branches
+4. Preserved all surrounding context and indentation exactly as provided
+
+The resolution maintains both semantic improvements:
+- The type cast removal suggests better type safety was implemented in the feature branch
+- The tunnelserver condition adds necessary control logic without altering the core deletion functionality
+
+Note: The edge_tree loop remains unchanged as it wasn't part of the conflict.

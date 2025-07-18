@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals that both sides are attempting to perform the exact same logical operation: if the file size indicated in the header is greater than zero, read the contents of the file. The only difference between the two branches is code formatting (spacing, indentation, and brace style).
+
+The incoming change (`10a45c5ee31b38c26b22b5ecede065827a04dc09`) uses a coding style that is more consistent with modern PHP standards like PSR-12 (e.g., a space after the `if` keyword and 4-space indentation). Given that the semantics are identical, the cleaner, more standardized formatting is the better choice for the merge.
+
+```php
+          return PclZip::errorCode();
+        }
+
+        // ----- Read the file content
+        $v_content = '';
+        if ($p_header['size'] > 0) {
+            $v_content = @fread($v_file, $p_header['size']);
+        }
+
+        // ----- Close the file
+        @fclose($v_file);
+
+        // ----- Calculate the CRC
+
+```

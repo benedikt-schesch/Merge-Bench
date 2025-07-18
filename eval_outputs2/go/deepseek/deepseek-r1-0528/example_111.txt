@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises because one branch calls `runtime.AnnotateIncomingContext` with 3 arguments while the other uses 4 arguments including a method name. Since the method name (`"/grpc.gateway.examples.internal.helloworld.Greeter/SayHello"`) matches the handler function `local_request_Greeter_SayHello_8`, it's semantically required for proper context annotation in gRPC gateway. The 4-argument version is the correct resolution.
+
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_8(rctx, inboundMarshaler, server, req, pathParams)
+```

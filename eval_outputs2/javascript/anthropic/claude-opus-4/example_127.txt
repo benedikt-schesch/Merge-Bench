@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add different `require` statements after the `server, proxy` variable declaration. The HEAD branch wants to add `AxiosError` while the other branch wants to add `FormData` and `formidable`. 
+
+Since both additions appear to be necessary imports for different functionality and there's no semantic conflict between them (they're just adding different dependencies), the resolution should include both sets of requires.
+
+```javascript
+var assert = require('assert');
+var fs = require('fs');
+var path = require('path');
+var pkg = require('./../../../package.json');
+var server, proxy;
+var AxiosError = require('../../../lib/core/AxiosError');
+var FormData = require('form-data');
+var formidable = require('formidable');
+
+describe('supports http with nodejs', function () {
+
+  afterEach(function () {
+    if (server) {
+
+```

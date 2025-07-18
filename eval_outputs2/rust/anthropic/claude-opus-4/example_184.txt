@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic goal - they both want to return the `msg` value that was created from the match expression. The only difference is stylistic:
+
+- HEAD version: Uses implicit return (the match expression is the last expression in the block)
+- The other branch: Explicitly assigns to `msg` and then returns it
+
+Since both achieve the same result, I'll resolve this by choosing the more concise and idiomatic Rust style (implicit return):
+
+```rust
+                Ok(v) => match serde_json::from_str(&v) {
+                    Ok(data1) => Msg::ReceivedData(data1),
+                    Err(err) => Msg::JsonError(err),
+                },
+                Err(e) => Msg::RequestError(e),
+            }
+        })
+    }
+}
+
+impl Application for App {
+
+```

@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by analyzing the semantic intent. The conflict is about the type used for the `output` field in the test struct. Both sides are trying to represent a timestamp, but use different package names:
+
+- HEAD uses `timestamp.Timestamp`
+- The other branch uses `timestamppb.Timestamp`
+
+Based on standard Go protobuf conventions:
+1. `timestamppb` is the official package name for protobuf timestamps
+2. The `timestamppb` package (`google.golang.org/protobuf/types/known/timestamppb`) is the current standard
+3. The `timestamp` package appears to be either a legacy or custom implementation
+
+The change to `timestamppb` likely represents:
+- A package upgrade
+- Improved naming consistency
+- Better adherence to protobuf standards
+
+Here's the resolved version:
+
+```go
+
+func TestConvertTimestamp(t *testing.T) {
+	specs := []struct {
+		name    string
+		input   string
+		output  *timestamppb.Timestamp
+		wanterr bool
+	}{
+		{
+			name:  "a valid RFC3339 timestamp",
+			input: `"2016-05-10T10:19:13.123Z"`,
+```
+
+Resolution rationale:
+1. Kept the semantic intent (timestamp type)
+2. Chose the more standard package name (`timestamppb`)
+3. Maintained pointer consistency (`*timestamppb.Timestamp`)
+4. Preserved all other context and spacing
+5. Removed merge conflict markers
+
+The resolution aligns with modern protobuf usage in Go while maintaining the test's functionality.

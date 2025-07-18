@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is adding two variable declarations for `FieldDescriptorProto_Type_name` and `FieldDescriptorProto_Type_value`
+2. The incoming branch is adding a compile-time assertion comment and constant to ensure proto package version compatibility
+
+These changes appear to be addressing different concerns and both should be kept. The HEAD changes are extending the field descriptor proto type mappings, while the incoming changes are adding a version compatibility check. Both are valid and non-conflicting in terms of functionality.
+
+Here's the resolved version:
+
+```go
+const FieldDescriptorProto_TYPE_SFIXED32 = descriptorpb.FieldDescriptorProto_TYPE_SFIXED32
+const FieldDescriptorProto_TYPE_SFIXED64 = descriptorpb.FieldDescriptorProto_TYPE_SFIXED64
+const FieldDescriptorProto_TYPE_SINT32 = descriptorpb.FieldDescriptorProto_TYPE_SINT32
+const FieldDescriptorProto_TYPE_SINT64 = descriptorpb.FieldDescriptorProto_TYPE_SINT64
+
+var FieldDescriptorProto_Type_name = descriptorpb.FieldDescriptorProto_Type_name
+var FieldDescriptorProto_Type_value = descriptorpb.FieldDescriptorProto_Type_value
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+
+type FieldDescriptorProto_Label = descriptorpb.FieldDescriptorProto_Label
+
+const FieldDescriptorProto_LABEL_OPTIONAL = descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL
+const FieldDescriptorProto_LABEL_REQUIRED = descriptorpb.FieldDescriptorProto_LABEL_REQUIRED
+
+```

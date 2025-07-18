@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set the `output_file` field, but there's a duplication issue.
+
+In the HEAD version:
+- `output_file: Some(format_output_name(name))` is already set on line 4
+- It uses `..Default::default()` to fill in any remaining fields
+
+In the incoming change:
+- It tries to add `output_file: Some(format_output_name(name))` again, which would be a duplicate
+
+Since both sides want the same `output_file` value and it's already present before the conflict, the resolution should keep the HEAD version which avoids duplication and uses the spread operator for remaining fields.
+
+```rust
+      &compiler,
+      AssertCompilerResultConfig {
+        entry_name: Some(entry_name.clone()),
+        output_file: Some(format_output_name(name)),
+        ignore_emitted_field: false,
+        ..Default::default()
+      },
+    );
+  }
+}
+
+
+```

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from different approaches to initializing the query and iterating over the normalized match object. Both versions share the same core functionality but differ in implementation details. Here's the semantically resolved version:
+
+```javascript
+
+  return newMatch;
+}
+
+async function total(match, params) {
+  const normalizedMatch = normalizeMatch(match);
+  const query = knex("links");
+  
+  Object.entries(normalizedMatch).forEach(([key, value]) => {
+    query.andWhere(key, ...(Array.isArray(value) ? value : [value]));
+  });
+
+  if (params?.search) {
+    query.andWhereRaw(
+
+```
+
+Key resolution points:
+1. Uses `const` for both `normalizedMatch` and `query` since neither variable gets reassigned
+2. Preserves the optimized approach of storing `normalizeMatch(match)` in a variable
+3. Maintains consistent spacing and coding style
+4. Keeps the array/argument handling logic unchanged
+5. The solution combines the best aspects of both versions while maintaining identical functionality
+
+The resolution maintains:
+- The efficiency of computing `normalizeMatch` once
+- Proper use of immutable variables (`const`)
+- Readability through descriptive variable names
+- Identical query-building logic
+- Unchanged surrounding context

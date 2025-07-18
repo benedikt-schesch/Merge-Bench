@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic goal - they're both constraining the generic type `S` to implement the `Debug` trait. The only difference is:
+
+- HEAD uses `fmt::Debug` (fully qualified path)
+- The incoming change uses just `Debug` (assuming `Debug` is in scope)
+
+Since both refer to the same trait (`std::fmt::Debug`), and the shorter form `Debug` appears to be the preferred style in this codebase (as evidenced by the incoming change), I'll resolve this by using the simpler `Debug` bound.
+
+```rust
+    #[allow(clippy::type_complexity)]
+    variable_defs: HashMap<Scope<'a>, Vec<&'a (Spanning<&'a str>, VariableDefinition<'a, S>)>>,
+    current_scope: Option<Scope<'a>>,
+}
+
+impl<'a, S: Debug> VariableInAllowedPosition<'a, S> {
+    fn collect_incorrect_usages<'me>(
+        &'me self,
+        from: &Scope<'a>,
+        var_defs: &[&'a (Spanning<&'a str>, VariableDefinition<S>)],
+        ctx: &mut ValidatorContext<'a, S>,
+```

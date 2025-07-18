@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes, the conflict arises from a refactoring where types were renamed from `swagger*` to `openapi*` to better reflect OpenAPI terminology. The functionality remains identical, so we should adopt the refactored naming for consistency. Here's the resolved version:
+
+```go
+				}
+				if !reg.GetDisableDefaultErrors() {
+					errDef, hasErrDef := fullyQualifiedNameToOpenAPIName(".google.rpc.Status", reg)
+					if hasErrDef {
+						// https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#responses-object
+						operationObject.Responses["default"] = openapiResponseObject{
+							Description: "An unexpected error response.",
+							Schema: openapiSchemaObject{
+								schemaCore: schemaCore{
+									Ref: fmt.Sprintf("#/definitions/%s", errDef),
+								},
+							},
+						}
+
+```
+
+Key resolution points:
+1. Both versions implement identical functionality for error response handling
+2. The refactored naming (`openapiResponseObject`, `openapiSchemaObject`) better aligns with OpenAPI standards
+3. The schema structure and reference logic remains unchanged
+4. The comment about OpenAPI specification remains relevant and unchanged
+
+The resolution maintains the intended behavior while adopting the improved naming convention from the incoming branch.

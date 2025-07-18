@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call the same function with the same arguments, but they disagree on the function name:
+
+- HEAD version: `LBItemFromPt`
+- Other version: `p_LBItemFromPt`
+
+The `p_` prefix typically indicates a function pointer or a dynamically loaded function (often used when dealing with Windows APIs that might not be available on all systems). Since this appears to be a Windows API function (`LBItemFromPt` is a Windows ComCtl32 function), the `p_` version is likely the correct one if the codebase is using dynamic loading for compatibility reasons.
+
+Given that the semantics and intent are identical (both are calling the same function with the same parameters), and the `p_` prefix suggests a deliberate architectural decision for dynamic loading, I'll resolve this in favor of the `p_LBItemFromPt` version:
+
+```c
+         * FIXME: this causes scrollbar glitches if the count of
+         *        listbox contains >= its height. */
+        hdl->dummyitem =
+            SendDlgItemMessage(hwnd, hdl->listid, LB_ADDSTRING, 0, (LPARAM) "");
+
+        hdl->srcitem = p_LBItemFromPt(dlm->hWnd, dlm->ptCursor, TRUE);
+        hdl->dragging = 0;
+        /* XXX hack Q183115 */
+        SetWindowLongPtr(hwnd, DWLP_MSGRESULT, TRUE);
+        ret |= 1;
+        break;
+
+```

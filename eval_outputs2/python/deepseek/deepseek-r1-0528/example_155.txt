@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+I'll resolve the merge conflict by analyzing the intent of both changes. The conflict occurs around a print statement added in one branch but not present in the other.
+
+```python
+        """ Gets also the imports within flow statements """
+        i = self.imports
+        for s in self.statements:
+            if isinstance(s, Scope):
+                i += s.get_imports() 
+        return i 
+
+    def add_global(self, name):
+        """
+        Global means in these context a function (subscope) which has a global
+```
+
+**Resolution reasoning:**
+1. The print statement `print 'geti', i` appears to be a debugging artifact
+2. The method's purpose is to return imports, not to produce output
+3. Keeping the print statement would introduce side effects to a getter method
+4. The HEAD version (without print) maintains cleaner code and proper separation of concerns
+5. Debugging statements should typically be removed before merging into main branches
+
+The resolved version maintains the core functionality while removing the debugging output that was likely temporary. The spacing and context are preserved exactly as in the original snippet outside the conflict markers.

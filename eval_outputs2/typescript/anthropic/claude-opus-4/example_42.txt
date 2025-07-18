@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Imports several components including `AvatarDropdown`, `AvatarName`, `Footer`, `Question`, and `SelectLang` from `@/components`
+- **Incoming branch (100a96a...)**: Appears to have removed this import line entirely
+
+The semantic intent here seems to be:
+- The current branch wants to use these components from `@/components`
+- The incoming branch either doesn't need these components or has moved/refactored them elsewhere
+
+Without more context about why the incoming branch removed these imports, and given that the rest of the file continues with other imports that both sides seem to agree on, I cannot determine the correct resolution. The conflict could be due to:
+1. The components being genuinely not needed anymore
+2. The components being imported elsewhere or in a different way
+3. A refactoring that hasn't been completed
+
+Since the intent is ambiguous, I'm returning the snippet with the conflict preserved:
+
+```typescript
+<<<<<<< HEAD
+import { AvatarDropdown, AvatarName, Footer, Question, SelectLang } from '@/components';
+=======
+>>>>>>> 100a96a18d4f820a91b9a6cb23d4bf0200b44ea7
+import { LinkOutlined } from '@ant-design/icons';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import { SettingDrawer } from '@ant-design/pro-components';
+import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import { history, Link } from '@umijs/max';
+```

@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the constructor parameter type for the `_message` field. The conflict is about which type definition to use:
+
+- HEAD uses `types.MessageDefinition`
+- The incoming change uses `types.ApiMessageDefinition`
+
+Without more context about the codebase and the intent behind these changes, I cannot determine which type is correct or if there's a way to reconcile them. The conflict appears to be a legitimate naming/type change that requires human decision about which type system to use.
+
+Here's the snippet with the conflict preserved:
+
+```typescript
+import { Module, ReExportVariableModule } from '../../module'
+import * as strings from '../../strings'
+import * as types from './typings'
+
+class MessageModule extends Module {
+<<<<<<< HEAD
+  public constructor(name: string, private _message: types.MessageDefinition) {
+=======
+  public constructor(
+    name: string,
+    private _message: types.ApiMessageDefinition
+  ) {
+>>>>>>> 2df15ac6924fdfb93d9f36cc4acbbb1042845bc6
+    super({
+      path: `${name}.ts`,
+      exportName: strings.varName(name),
+    })
+  }
+
+```

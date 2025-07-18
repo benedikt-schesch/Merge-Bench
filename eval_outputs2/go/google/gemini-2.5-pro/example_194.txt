@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```go
+				g.Expect(k8sClient.List(workerCtx, deploys, client.InNamespace(namespace))).Should(Succeed())
+				g.Expect(len(deploys.Items)).Should(Equal(2))
+				deploys = &v13.DeploymentList{}
+				g.Expect(k8sClient.List(workerCtx, deploys, client.InNamespace(prodNamespace))).Should(Succeed())
+				g.Expect(len(deploys.Items)).Should(Equal(2))
+				// check component revision
+				compRevs := &v13.ControllerRevisionList{}
+				g.Expect(k8sClient.List(workerCtx, compRevs, client.InNamespace(prodNamespace))).Should(Succeed())
+				g.Expect(len(compRevs.Items)).Should(Equal(2))
+			}, time.Minute).Should(Succeed())
+			Expect(hubDeployName).Should(Equal("data-worker"))
+			// delete application
+			By("delete application")
+			Expect(k8sClient.Delete(hubCtx, app)).Should(Succeed())
+
+```

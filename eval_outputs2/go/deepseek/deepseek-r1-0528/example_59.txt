@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from both branches adding environment variables but with different intents. The HEAD branch adds a cross-compile path if present, while the other branch enforces Go module off mode. Since these are independent concerns, both changes should be preserved. The resolution maintains the cross-compile path logic followed by the module setting.
+
+```go
+	for _, arch := range androidArchs {
+		env := androidEnv[arch]
+		// Add the generated packages to GOPATH for reverse bindings.
+		gopath := fmt.Sprintf("GOPATH=%s%c%s", tmpdir, filepath.ListSeparator, goEnv("GOPATH"))
+		env = append(env, gopath)
+		if cenv[arch] != "" {
+			env = append(env, cenv[arch]) // Add the Cross Compile PATH Env
+		}
+		// gomobile-bind does not support modules yet.
+		env = append(env, "GO111MODULE=off")
+		toolchain := ndk.Toolchain(arch)
+
+		err := goBuildAt(
+			filepath.Join(tmpdir, "src"),
+			"./gobind",
+```

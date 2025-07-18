@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to mock the same service, but they're using different namespaces:
+
+- HEAD (current branch): `Indatus\Dispatcher\Services\ScheduleService`
+- Incoming change: `Indatus\Dispatcher\Drivers\Cron\ScheduleService`
+
+The key insight is that on line 11, the code is binding the mock to the container using the namespace from HEAD: `'Indatus\Dispatcher\Services\ScheduleService'`. This suggests that the correct namespace to use for the mock should match what's being registered in the container.
+
+Based on this semantic understanding, the conflict should be resolved by keeping the HEAD version to maintain consistency between the mock creation and the container binding.
+
+```php
+            function ($m) use ($scheduledCommand, $scheduler) {
+                $item = m::mock('Indatus\Dispatcher\QueueItem');
+                $item->shouldReceive('getCommand')->once()->andReturn($scheduledCommand);
+                $m->shouldReceive('flush')->once()->andReturn([$item]);
+            });
+        $scheduleService = m::mock('Indatus\Dispatcher\Services\ScheduleService');
+        $scheduleService->shouldReceive('getQueue')->once()->andReturn($queue);
+        $this->app->instance('Indatus\Dispatcher\Services\ScheduleService', $scheduleService);
+
+        $commandService = m::mock('Indatus\Dispatcher\Services\CommandService[runnableInEnvironment,run]',
+            [$scheduleService],
+
+```

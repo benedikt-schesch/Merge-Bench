@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+1. **HEAD (left side)**: Declares `funcSpec` as a `String`
+2. **Right side**: Declares `funcSpec` as a `FuncSpec` object
+
+Looking at the usage context:
+- `funcSpec` is retrieved from `definedFunctions.get(alias)`
+- It's then passed to `instantiateFuncFromSpec(funcSpec)`
+- There's also a fallback case that calls `instantiateFuncFromSpec(alias)` where `alias` appears to be a String
+
+The conflict seems to be about whether `definedFunctions` stores String values or FuncSpec objects. Given that:
+1. The method `instantiateFuncFromSpec` is called with both `funcSpec` and `alias` (a String) in different branches
+2. The method name suggests it takes a specification to instantiate from
+
+It appears the HEAD version (using String) is more consistent with the fallback behavior where `alias` (a String) is passed to the same method. The right side's attempt to use `FuncSpec` type would likely require different handling or method signatures.
+
+Here's the resolved code:
+
+```java
+        }
+        return resolveClassName(className);
+    }
+  
+    public Object instantiateFuncFromAlias(String alias) throws IOException {
+        String funcSpec;
+        if (definedFunctions != null && (funcSpec = definedFunctions.get(alias))!=null)
+            return instantiateFuncFromSpec(funcSpec);
+        else
+            return instantiateFuncFromSpec(alias);
+    }
+
+```

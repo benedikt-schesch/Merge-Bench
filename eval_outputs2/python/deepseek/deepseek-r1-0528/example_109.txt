@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different branches adding distinct keys to the same dictionary. Both `'start'` and `'sortby'` are valid keys with different purposes, so they should coexist. Here's the resolved snippet:
+
+```python
+                   'pub': self.pub or '',
+                   'ylo': self.timeframe[0] or '',
+                   'yhi': self.timeframe[1] or '',
+                   'patents': '0' if self.include_patents else '1',
+                   'citations': '0' if self.include_citations else '1',
+                   'start': self.start or '0',
+                   'sortby': '1' if self.sort_by_date else '0'}
+
+        for key, val in urlargs.items():
+            urlargs[key] = quote(encode(val))
+
+        # The following URL arguments must not be quoted, or the
+```
+
+**Resolution rationale:**  
+1. Both keys (`start` and `sortby`) serve different aren aren't mutually exclusive
+2. The dictionary syntax allows multiple key-value pairs to coexist
+3. No overlapping functionality exists between the two additions
+4. The comma after `'start'` line ensures proper syntax when adding `'sortby'`
+
+The conflict is resolved by including both changes while maintaining dictionary structure and syntax.

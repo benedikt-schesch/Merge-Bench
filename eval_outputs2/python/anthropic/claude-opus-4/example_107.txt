@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD (current branch) is adding `self.start = 0` - likely for pagination/offset functionality
+- The incoming branch is adding `self.sort_by_date = False` - for controlling result sorting
+
+These two additions appear to be completely independent features that don't conflict semantically. Both are initialization of different attributes in what appears to be a class constructor or initialization method. The logical resolution is to keep both additions.
+
+```python
+        self.author = None
+        self.pub = None
+        self.timeframe = [None, None]
+        self.include_patents = True
+        self.include_citations = True
+        self.start = 0
+        self.sort_by_date = False
+
+    def set_words(self, words):
+        """Sets words that *all* must be found in the result."""
+        self.words = words
+
+
+```

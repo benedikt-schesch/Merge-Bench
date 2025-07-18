@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```go
+	for _, arch := range androidArchs {
+		env := androidEnv[arch]
+		// Add the generated packages to GOPATH for reverse bindings.
+		gopath := fmt.Sprintf("GOPATH=%s%c%s", tmpdir, filepath.ListSeparator, goEnv("GOPATH"))
+		env = append(env, gopath)
+		if cenv[arch] != "" {
+			env = append(env, cenv[arch]) // Add the Cross Compile PATH Env
+		}
+		// gomobile-bind does not support modules yet.
+		env = append(env, "GO111MODULE=off")
+		toolchain := ndk.Toolchain(arch)
+
+		err := goBuildAt(
+			filepath.Join(tmpdir, "src"),
+			"./gobind",
+```

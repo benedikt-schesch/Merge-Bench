@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD (current branch): Lists default processors as `%w(Gd2 ImageScience Rmagick MiniMagick)`
+- Incoming branch: Lists default processors as `%w(CoreImage ImageScience Rmagick MiniMagick)`
+
+The key difference is:
+- HEAD has `Gd2` as the first processor
+- Incoming branch has `CoreImage` as the first processor
+
+Both sides share the same remaining processors: `ImageScience Rmagick MiniMagick`
+
+Since this appears to be a configuration for image processing libraries, and both sides seem to want different primary processors while agreeing on the fallback options, the semantic intent seems to be to support both processors. The most inclusive resolution would be to include both `Gd2` and `CoreImage` in the list.
+
+However, since you've asked me to return the snippet unchanged if the intent is ambiguous, and without more context about which processor should take precedence or whether both should be included, I'll return the original snippet with the conflict markers:
+
+```ruby
+module Technoweenie # :nodoc:
+  module AttachmentFu # :nodoc:
+<<<<<<< HEAD
+    @@default_processors = %w(Gd2 ImageScience Rmagick MiniMagick)
+=======
+    @@default_processors = %w(CoreImage ImageScience Rmagick MiniMagick)
+>>>>>>> 42d80cdb7d71816d60fb89d7d5e670b63635fa94
+    @@tempfile_path      = File.join(RAILS_ROOT, 'tmp', 'attachment_fu')
+    @@content_types      = ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png', 'image/jpg']
+    mattr_reader :content_types, :tempfile_path, :default_processors
+    mattr_writer :tempfile_path
+
+
+```

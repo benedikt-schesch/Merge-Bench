@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```ruby
+
+              if am_master
+                handle_delayed_items
+                update_schedule if dynamic
+              end
+<<<<<<< HEAD
+            rescue *INTERMITTENT_ERRORS => e
+=======
+
+              was_master = am_master
+            rescue Errno::EAGAIN, Errno::ECONNRESET, Redis::CannotConnectError => e
+>>>>>>> ca3a0810426fc92cb884046a59141360e028b2b9
+              log! e.message
+              release_master_lock
+            end
+            poll_sleep
+          end
+
+```

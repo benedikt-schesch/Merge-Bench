@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from a refactoring of how file system entries are handled and a formatting change. The `HEAD` branch uses a custom `DirEntry` and `ReadDir` from within `gleam_core`, while the other branch replaces this with the `DirEntry` from the popular `ignore` crate, which is specialized for this task. The second branch also formats the `use` statements according to Rust conventions.
+
+The semantic intent of the second branch is to replace the custom implementation with a standard, robust library (`ignore`). This is a clear improvement. The `HEAD` branch's `DirEntry` and `ReadDir` are now superseded. The commented-out `flate2` import appears to be a remnant of a previous implementation attempt and can be safely removed.
+
+The resolution is to adopt the changes from the second branch, which uses `ignore::DirEntry` and has cleaner formatting.
+
+```rust
+use gleam_core::{
+    error::{Error, FileIoAction, FileKind},
+    io::{
+        CommandExecutor, FileSystemIO, FileSystemWriter, OutputFile, WrappedReader, WrappedWriter,
+    },
+    Result,
+};
+use ignore::DirEntry;
+use lazy_static::lazy_static;
+use std::{
+    ffi::OsStr,
+    fmt::Debug,
+    fs::File,
+
+```

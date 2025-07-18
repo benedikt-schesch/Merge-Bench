@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_9(rctx, inboundMarshaler, server, req, pathParams)
+```
+
+### Resolution Reasoning:
+1. **Semantic Intent**: Both branches aim to annotate the incoming context with gRPC metadata
+2. **Parameter Significance**: The method path (`/grpc.gateway.../SayHello`) provides explicit routing information required for proper gateway operation
+3. **Compatibility**: The 4-parameter version is the current standard in grpc-gateway implementations
+4. **Error Handling**: The error handling remains identical in both branches
+5. **Downstream Usage**: The `local_request_Greeter_SayHello_9` call expects method-specific annotations
+
+The resolved version maintains critical routing information while preserving the original error handling and context cancellation behavior. The method path parameter ensures correct gateway routing and matches the pattern used elsewhere in the codebase.

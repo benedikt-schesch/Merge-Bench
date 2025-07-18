@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```rust
+      farmfe_core::module::ModuleType::Js => {}
+      farmfe_core::module::ModuleType::Jsx => {
+        // Do nothing, jsx should be handled by other plugins
+      }
+      farmfe_core::module::ModuleType::Ts => {
+<<<<<<< HEAD
+        program.mutate(&mut typescript(
+          default_config(&context.config.script),
+          unresolved_mark,
+=======
+        program.visit_mut_with(&mut typescript(
+          default_config(&context.config.script, param.module_id),
+>>>>>>> 24a95b48172836d31c55697037d5dada7d9c1ef7
+          top_level_mark,
+        ));
+      }
+      farmfe_core::module::ModuleType::Tsx => {
+        let comments: SingleThreadedComments = param.meta.as_script().comments.clone().into();
+```

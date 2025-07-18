@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch adds a `preventDefault` parameter with a default value of `true`, while the other branch doesn't have this parameter.
+
+Since this appears to be a keyboard event listener hook, adding a `preventDefault` option makes semantic sense - it would allow callers to control whether the default browser behavior should be prevented when handling keyboard events. The default value of `true` suggests that in most cases, preventing default behavior is desired.
+
+Given that one side is adding functionality (the `preventDefault` parameter) and the other side has no changes to this line, the most appropriate resolution is to keep the addition from HEAD.
+
+Here's the resolved code:
+
+```typescript
+};
+
+export default function useKeyboardListener(
+  keys: string[],
+  listener: (key: string | null, modifiers: KeyModifiers) => void,
+  preventDefault: boolean = true,
+) {
+  const keyDownListener = useCallback(
+    (e: KeyboardEvent) => {
+      // @ts-expect-error we know this field exists
+      if (!e || e.target.tagName == "INPUT") {
+
+```

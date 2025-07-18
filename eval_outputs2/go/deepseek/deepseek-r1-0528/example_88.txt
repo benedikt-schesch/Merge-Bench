@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Based on the semantic equivalence of `any` and `interface{}` in Go (since Go 1.18), I recommend keeping `any` as it's more concise while maintaining identical functionality. Here's the resolved snippet:
+
+```go
+		}
+	}
+	return lastErr
+}
+
+func (s *serverStreamingRetryingStream) receiveMsgAndIndicateRetry(m any) (bool, error) {
+	err := s.getStream().RecvMsg(m)
+	if err == nil || err == io.EOF {
+		return false, err
+	}
+	if isContextError(err) {
+```
+
+Key resolution points:
+1. `any` is a built-in alias for `interface{}` in Go ([specification reference](https://go.dev/ref/spec#Interface_types))
+2. Both versions are semantically identical
+3. `any` is preferred in modern Go code for better readability
+4. The function behavior remains unchanged
+5. File path differences in conflict markers are irrelevant to code functionality and were removed per merge conflict resolution standards
+
+The resolution maintains:
+- Identical functionality
+- Go best practices
+- Context spacing and formatting
+- Semantic intent of both branches

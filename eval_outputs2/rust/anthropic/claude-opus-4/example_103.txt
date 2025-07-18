@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same function parameter, but one side (HEAD) has the trait bound `FnOnce() -> BoxFuture<'static, ()> + 'static` while the other side adds `Send` to make it `FnOnce() -> BoxFuture<'static, ()> + 'static + Send`.
+
+The semantic intent here is clear: the second branch is adding a `Send` constraint to ensure the hook function can be safely sent across thread boundaries. This is a common requirement in async Rust code, especially for shutdown hooks that might be called from different threads.
+
+Since this appears to be adding a necessary constraint for thread safety without removing any functionality, the resolution should include the `Send` bound:
+
+```rust
+    ///
+    /// Hook functions will be called just before volo's own gracefull existing code starts,
+    /// in reverse order of registration.
+    pub fn register_shutdown_hook(
+        mut self,
+        hook: impl FnOnce() -> BoxFuture<'static, ()> + 'static + Send,
+    ) -> Self {
+        self.shutdown_hooks.push(Box::new(hook));
+        self
+    }
+
+
+```

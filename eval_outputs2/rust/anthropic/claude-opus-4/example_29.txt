@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle different variants of the `PubGrubPackage` enum in a match statement.
+
+The key differences are:
+1. The HEAD version has a `Package` variant with 4 parameters: `(name, _extra, None, _)`
+2. The incoming change adds handling for an `Extra` variant and has a `Package` variant with only 3 parameters: `(name, _extra, None)`
+
+Based on the pattern, it appears that:
+- The incoming change added support for handling the `Extra` variant (which makes semantic sense as it follows the pattern of handling different package types)
+- There's a discrepancy in the number of parameters for the `Package` variant
+
+Since the HEAD version has 4 parameters and the incoming has 3, and both sides seem to want to handle the case where the third parameter is `None`, I'll preserve the HEAD's 4-parameter version while adding the `Extra` variant handling from the incoming change.
+
+```rust
+        request_sink: &tokio::sync::mpsc::Sender<Request>,
+    ) -> Result<(), ResolveError> {
+        match package {
+            PubGrubPackage::Root(_) => {}
+            PubGrubPackage::Python(_) => {}
+            PubGrubPackage::Extra(_, _, _) => {}
+            PubGrubPackage::Package(name, _extra, None, _) => {
+                // Verify that the package is allowed under the hash-checking policy.
+                if !self.hasher.allows_package(name) {
+                    return Err(ResolveError::UnhashedPackage(name.clone()));
+                }
+
+
+```

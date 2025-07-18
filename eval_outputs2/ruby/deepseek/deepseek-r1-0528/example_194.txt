@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around the method signature for `get_page`. The HEAD version uses a required positional argument `target_url`, while the other branch uses an optional keyword argument with a default `nil` value. 
+
+The method body uses `target_url` without nil-checking, which could lead to errors if called without an argument in the keyword version. The comment indicates `target_url` is a required API-generated URL. 
+
+Since both branches agree on the requirement of `target_url` but disagree on argument passing semantics, and the surrounding context doesn't resolve this ambiguity, the conflict remains unresolved.
+
+```ruby
+            ##
+            # Retrieve a single page of OriginationUrlInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of OriginationUrlInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return OriginationUrlPage.new(@version, response, @solution)
+```

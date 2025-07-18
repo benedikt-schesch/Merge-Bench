@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD version simply returns `MRAA_SUCCESS` after the write operation
+- The incoming change adds a conditional check for a post-write callback function (`advance_func.gpio_write_post`) and calls it if it exists
+
+The semantic intent appears to be that the incoming change wants to add support for a post-write hook/callback mechanism that can be executed after the GPIO write operation completes successfully. This is a common pattern for extensibility.
+
+Since both sides want the write operation to succeed, and the incoming change adds additional functionality without breaking the existing behavior, the resolution should include the callback check.
+
+Here's the resolved code:
+
+```c
+    int length = snprintf(bu, sizeof(bu), "%d", value);
+    if (write(dev->value_fp, bu, length*sizeof(char)) == -1) {
+        return MRAA_ERROR_INVALID_HANDLE;
+    }
+
+    if (advance_func.gpio_write_post != NULL)
+        return advance_func.gpio_write_post(dev,value);
+    return MRAA_SUCCESS;
+}
+
+static mraa_result_t
+mraa_gpio_unexport_force(mraa_gpio_context dev)
+
+```

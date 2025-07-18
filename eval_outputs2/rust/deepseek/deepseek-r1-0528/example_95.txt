@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Based on analyzing the semantic intent behind both changes:
+
+1. The HEAD version passes `app` by value while the incoming branch passes it by reference (`&app`)
+2. The incoming branch adds two new parameters: `file_system_index` and `file_system_display`
+3. The surrounding context shows other sections (`Cpu`, `Network`) use the original parameter style
+4. The `Graphics` section maintains the original formatting style
+
+The resolution preserves the incoming branch's functional changes (reference and new parameters) while matching the formatting style of the surrounding context. Here's the resolved version:
+
+```rust
+                                Section::Cpu => render_cpu(app, v_section, &mut f, view, &selected),
+                                Section::Network => {
+                                    render_net(app, v_section, &mut f, view, &selected)
+                                }
+                                Section::Disk => {
+                                    render_disk(
+                                        &app,
+                                        v_section,
+                                        &mut f,
+                                        view,
+                                        &selected,
+                                        file_system_index,
+                                        file_system_display,
+                                    )
+                                }
+                                Section::Graphics => render_graphics(
+                                    app,
+                                    v_section,
+                                    &mut f,
+```

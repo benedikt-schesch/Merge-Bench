@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in how routes are defined between the two branches. The HEAD branch uses the modern `Www::Application.routes.draw` syntax, while the other branch uses the legacy `ActionController::Routing::Routes.draw` approach. 
+
+The resolution preserves the modern routing syntax from HEAD while incorporating the `:auth_sources` resource and route comments from the other branch. The resource declaration is converted to the modern DSL syntax (removing `map.` prefix), and the sample route in comments is updated to use `match` for consistency with the modern syntax.
+
+Here's the resolved code:
+
+```ruby
+Www::Application.routes.draw do
+  resources :auth_sources
+
+  # The priority is based upon order of creation: first created -> highest priority.
+  
+  # Sample of regular route:
+  #   match 'products/:id', :controller => 'catalog', :action => 'view'
+  # Keep in mind you can assign values other than :controller and :action
+
+  match '/' => 'projects#dashboard', :as => :home
+  match ':controller/service.wsdl' => '#wsdl'
+
+  resources :hosts
+```

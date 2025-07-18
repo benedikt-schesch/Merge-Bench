@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to pass arguments to what appears to be a function call. The conflict shows:
+
+- HEAD (current branch) is passing two `None` values
+- The incoming branch (e6e89b04147f8ce611e5ffb5b142225e081e7caa) is passing `package.readme_source`
+
+Based on the context and the semantic intent, it appears that:
+1. The function signature was likely modified to accept additional parameters
+2. The incoming branch has `package.readme_source` which seems to be a meaningful value that should be preserved
+3. The HEAD branch might have been using `None` as placeholders or defaults
+
+The most sensible resolution would be to keep the `package.readme_source` from the incoming branch and add `None` for any additional parameter that HEAD was trying to add. This preserves the meaningful data while accommodating the function signature change.
+
+```rust
+    version_or_latest == VersionOrLatest::Latest,
+    repo,
+    readme,
+    package.runtime_compat,
+    registry_url,
+    package.readme_source,
+    None,
+  )
+  .map_err(|e| {
+    error!("failed to generate docs: {}", e);
+    ApiError::InternalServerError
+  })?
+```

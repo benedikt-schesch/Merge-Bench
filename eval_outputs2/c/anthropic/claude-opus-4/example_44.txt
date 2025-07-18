@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (the branch being merged in) is adding a global variable declaration `bool tunnelserver = false;` while HEAD doesn't have this addition.
+
+Since this appears to be a simple addition of a new variable declaration and there's no conflicting code in HEAD at this location, the semantic intent seems clear - to introduce this new global variable. The resolution should include this addition.
+
+Here's the resolved code:
+
+```c
+#include "meta.h"
+#include "protocol.h"
+#include "utils.h"
+#include "xalloc.h"
+
+bool tunnelserver = false;
+
+/* Jumptable for the request handlers */
+
+static bool (*request_handlers[])(connection_t *) = {
+		id_h, metakey_h, challenge_h, chal_reply_h, ack_h,
+		status_h, error_h, termreq_h,
+
+```

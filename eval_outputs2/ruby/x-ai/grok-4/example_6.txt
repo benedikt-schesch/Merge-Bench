@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```ruby
+
+  def pop(timeout = 0.5, options = {})
+    options, timeout = timeout, 0.5 if Hash === timeout
+    timeout = options.fetch :timeout, timeout
+
+<<<<<<< HEAD
+    deadline = current_time + timeout
+=======
+    deadline = ::Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+>>>>>>> 3e7513c1df257fe5124dfadc825a444110eb349b
+    @mutex.synchronize do
+      loop do
+        raise ConnectionPool::PoolShuttingDownError if @shutdown_block
+        return fetch_connection(options) if connection_stored?(options)
+
+
+```

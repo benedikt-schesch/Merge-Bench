@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the import of MD5 hashing functionality with fallback support for older Python versions.
+
+The HEAD side is creating a simple alias `hashFactory = hashlib.md5`, while the incoming changes are creating a wrapper function `new()` and also extracting the `digest_size`.
+
+The semantic intent appears to be:
+- Both sides want to provide MD5 hashing capability
+- Both sides want to handle the ImportError fallback to the deprecated `md5` module
+- The incoming changes provide a more complete interface with a `new()` function and `digest_size` attribute
+
+Here's the resolved conflict that preserves both intents:
+
+```python
+>>>>>>> b9658a26003ebfcfce1804a2363a29354799b47e
+
+try:
+    # The md5 module is deprecated in Python 2.6, so use hashlib when possible.
+    import hashlib
+    hashFactory = hashlib.md5
+
+    def new(data=b("")):
+         return hashlib.md5(data)
+    digest_size = new().digest_size
+
+except ImportError:
+    import md5
+    hashFactory = md5
+
+```

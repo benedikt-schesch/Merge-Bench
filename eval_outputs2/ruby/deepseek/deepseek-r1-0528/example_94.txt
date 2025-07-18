@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in how the `ActionView::Helpers::AssetTagHelper` module is included. Both branches include this module, but the HEAD branch adds explanatory comments about *why* it's being included early. Since the comments provide valuable context about Rails' initialization order and potential issues with `alias_method_chain`, they should be preserved while keeping the actual module inclusion from both branches.
+
+Here's the resolved snippet:
+
+```ruby
+module PhotosHelper
+
+  # Rails automatically includes this, but not until after this file,
+  # so the :image_path won't exist for the alias_method_chain call, below.
+  # Thus, we include it now:
+  include ActionView::Helpers::AssetTagHelper
+
+  def image photo, size = :square, img_opts = {}
+    return image_tag(image_path( photo, size), :class => size) if photo.image.blank?
+    img_tag = image_tag(image_path( photo, size), {:title=>photo.caption, :alt=>photo.caption, :class=>size}.merge(img_opts))
+    img_tag
+<<<<<<< HEAD
+```
+
+Key resolution points:
+1. Kept the HEAD version's comments explaining the early inclusion necessity
+2. Preserved the blank line spacing from both versions (1 line above/below the include block)
+3. Maintained identical module inclusion (`include ActionView::Helpers::AssetTagHelper`)
+4. Left the trailing conflict marker (`<<<<<<< HEAD`) as-is since it appears to be incomplete in the original snippet
+
+The conflict at the end of the file remains unresolved because the provided snippet doesn't show the full conflict context.

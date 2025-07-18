@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes:
+
+1. The Flow type annotation `: any` added to `console.error` appears to be a branch-specific change for type safety
+2. The snapshot format change from `Array [` to `[` is a modernization of Jest's snapshot output
+3. The core error message content remains identical in both versions
+
+The resolution keeps the type annotation from the branch while maintaining the modern snapshot format:
+
+```javascript
+    :before {
+      content: '\00d7';
+    }
+  `
+
+  expect((console.error: any).mock.calls[0]).toMatchInlineSnapshot(`
+    [
+      "You have illegal escape sequence in your template literal, most likely inside content's property value.
+    Because you write your CSS inside a JavaScript string you actually have to do double escaping, so for example "content: '\\00d7';" should become "content: '\\\\00d7';".
+    You can read more about this here:
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#ES2018_revision_of_illegal_escape_sequences",
+    ]
+```
+
+Key decisions:
+1. Preserved the Flow type cast `: any` from the branch since it improves type safety
+2. Kept the modern Jest snapshot format `[` instead of `Array [`
+3. Maintained identical error message content and formatting
+4. Retained all surrounding context without modification
+
+This resolution combines the type safety improvement from the branch with the updated Jest snapshot format while preserving the original error message semantics.

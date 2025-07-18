@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the method signature of `get_page`. 
+
+The HEAD version has:
+```ruby
+def get_page(target_url)
+```
+
+While the incoming change has:
+```ruby
+def get_page(target_url: nil)
+```
+
+The semantic intent here is clear: the incoming change is converting the positional parameter `target_url` to a keyword argument with a default value of `nil`. This is a common Ruby refactoring pattern that makes the API more explicit and allows for optional parameters.
+
+Since the method body uses `target_url` directly without any modification, and the incoming change maintains backward compatibility (keyword arguments can still be called positionally in Ruby), the semantic intent is to make the API more flexible while maintaining the same functionality.
+
+Here's the resolved code:
+
+```ruby
+              ##
+              # Retrieve a single page of MobileInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of MobileInstance
+              def get_page(target_url: nil)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return MobilePage.new(@version, response, @solution)
+
+```

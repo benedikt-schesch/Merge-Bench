@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the error message, with the only difference being:
+- HEAD (current branch): "launching map reduce job"
+- Incoming change: "launching job"
+
+The incoming change appears to be making the error message more generic by removing "map reduce" from the text. This is a common refactoring pattern when code is being generalized to support multiple job types beyond just MapReduce jobs.
+
+Since the intent seems to be to make the error message more generic and applicable to different types of jobs (not just MapReduce), I'll resolve this by accepting the incoming change:
+
+```java
+        public void uncaughtException(Thread thread, Throwable throwable) {
+            jobControlExceptionStackTrace = Utils.getStackStraceStr(throwable);
+            try {
+                jobControlException = getExceptionFromString(jobControlExceptionStackTrace);
+            } catch (Exception e) {
+                String errMsg = "Could not resolve error that occured when launching job: "
+                        + jobControlExceptionStackTrace;
+                jobControlException = new RuntimeException(errMsg, throwable);
+            }
+        }
+    }
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Adds a conditional check `if (preventDefault)` before calling `e.preventDefault()`
+- **Other branch**: Always calls `e.preventDefault()` without any condition
+
+The HEAD version suggests that `preventDefault` is likely a parameter or configuration option that allows the caller to control whether the default browser behavior should be prevented. This is a common pattern in event handling where you want to give users the flexibility to decide whether to prevent default behavior.
+
+The other branch seems to have made the decision to always prevent default, which is more restrictive.
+
+Since the HEAD version provides more flexibility and appears to be intentionally adding configurable behavior (rather than removing it), the semantic intent seems to be to make preventDefault optional. This is the more flexible and generally preferred approach in library/framework code.
+
+Here's the resolved conflict:
+
+```typescript
+        ctrl: e.ctrlKey || e.metaKey,
+        shift: e.shiftKey,
+      };
+
+      if (keys.includes(e.key)) {
+        if (preventDefault) e.preventDefault();
+        listener(e.key, modifiers);
+      } else if (e.key === "Shift" || e.key === "Control" || e.key === "Meta") {
+        listener(null, modifiers);
+      }
+    },
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+An expert in semantic merge conflict resolution would recognize that one branch (`bdbded5...`) is introducing a configurable option (`scalePercentBy100`) to control the behavior of the `unformat` function. The other branch (`HEAD`) has a hardcoded behavior that is now one of the two possible behaviors in the configurable version.
+
+The clear intent is to add flexibility. The new code in branch `bdbded5...` is a superset of the functionality in `HEAD`, where the `HEAD` behavior is achieved when `numeral.options.scalePercentBy100` is true. Therefore, the most logical resolution is to adopt the more flexible and configurable version.
+
+```javascript
+            }
+
+            return output;
+        },
+        unformat: function(string) {
+            var number = numeral._.stringToNumber(string);
+            if (numeral.options.scalePercentBy100) {
+                return number * 0.01;
+            }
+            return number;
+        }
+    });
+})();
+
+
+
+```

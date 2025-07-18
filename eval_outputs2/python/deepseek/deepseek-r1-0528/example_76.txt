@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing type annotations for the `path` parameter in the `_run` method. Both branches are attempting to define the same method, but with different type specifications for the `path` argument. 
+
+After analyzing the intent:
+1. The HEAD branch specifies `path` as `typing.List[str]` (list of strings)
+2. The other branch specifies `path` as `typing.List[typing.Hashable]` (list of hashable objects)
+
+The `typing.Hashable` version is more flexible since:
+- Strings are hashable, so it's backward-compatible
+- It allows other hashable types (like integers) in the path
+- This better matches typical validation path usage where paths might contain mixed types (string keys and integer indices)
+
+Resolution:
+Keep the more flexible `typing.Hashable` annotation while preserving the identical method body from both branches.
+
+Resolved code:
+```python
+            schema.required = self.required
+            self._compiled.append(schema._compile(v))
+        schema.required = old_required
+        return self._run
+
+    def _run(self, path: typing.List[typing.Hashable], value):
+        if self.discriminant is not None:
+            self._compiled = [
+                self.schema._compile(v)
+                for v in self.discriminant(value, self.validators)
+            ]
+
+```

@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to improve the error message formatting when a connection fails. 
+
+The HEAD version:
+- Uses `conf_get_str(inst->conf, CONF_host)` to get the host
+- Has the string on a single line
+
+The incoming change (4348393f):
+- Uses `conf_dest(inst->conf)` to get the destination
+- Splits the `dupprintf` call across multiple lines for better formatting
+
+The semantic intent appears to be:
+1. Both want to display an error message about connection failure
+2. The incoming change seems to be using a more appropriate function (`conf_dest` instead of `conf_get_str`) which likely provides a better representation of the connection destination
+3. The incoming change also improves code formatting
+
+The resolution should use `conf_dest(inst->conf)` as it appears to be the more semantically correct function for getting the connection destination, while keeping the improved formatting:
+
+```c
+                           &realhost,
+                           conf_get_int(inst->conf, CONF_tcp_nodelay),
+                           conf_get_int(inst->conf, CONF_tcp_keepalives));
+
+  if (error) {
+    char *msg = dupprintf(
+        "Unable to open connection to %s:\n%s", conf_dest(inst->conf), error);
+    inst->exited = TRUE;
+    fatal_message_box(inst->window, msg);
+    sfree(msg);
+    exit(0);
+  }
+
+```

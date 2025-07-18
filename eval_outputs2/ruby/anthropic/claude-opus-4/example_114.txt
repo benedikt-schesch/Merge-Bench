@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the RSpec syntax from an older style to a newer one. The conflict is about how to express that something should be false:
+
+- HEAD uses: `should be false`
+- The incoming change uses: `should be_falsey`
+
+Looking at the context and the second test case below, which appears to be incomplete in the provided snippet, the pattern suggests we should use the newer RSpec syntax consistently.
+
+The `be_falsey` matcher is the more modern RSpec syntax (RSpec 3+), while `be false` is older. Since the incoming change is updating to the newer syntax, that's likely the intent we should preserve.
+
+```ruby
+
+module XCPretty
+  describe Term do
+    it "marks unicode as unavailable" do
+      Encoding.stub(:default_external).and_return(Encoding::ASCII)
+      Term.unicode?.should be_falsey
+    end
+
+    it "marks unicode as available" do
+      Encoding.stub(:default_external).and_return(Encoding::UTF_8)
+
+```

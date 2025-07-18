@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```ruby
+module Delayed
+
+  class DeserializationError < StandardError
+  end
+
+  class Job < ActiveRecord::Base
+    MAX_ATTEMPTS = 25
+    set_table_name :delayed_jobs
+
+    cattr_accessor :worker_name
+    self.worker_name = "pid:#{Process.pid}"
+  
+
+```

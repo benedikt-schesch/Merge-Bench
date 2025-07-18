@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+The code provides a clear comment explaining the need to "Silence Rails 4 deprecation warnings in test suite". However, in **both sides of the merge conflict**, the code to silence deprecation is **commented out**, thus not fulfilling the stated intent.
+
+One branch has:
+
+```ruby
+if Rails.version >= '4'
+#  ActiveSupport::Deprecation.silenced = true
+end
+```
+
+The other has:
+
+```ruby
+# if Rails.version >= '4'
+#   ActiveSupport::Deprecation.silenced = true
+# end
+```
+
+So, although the purpose is well-defined in the comment, **both versions effectively do not silence the deprecations**, and instead introduce different commenting strategies.
+
+Because **resolving the merge conflict requires choosing between two code paths that both fail to meet the original intent**, and it is **unclear whether the silence directive should now be restored or left commented out intentionally**, this situation qualifies as **ambiguous intent**.
+
+Therefore, and per the user's instruction, the appropriate resolution is to **return the original conflicting code in full context**, unchanged apart from wrapping in a code block as needed.
+
+````markdown
+```ruby
+MissingSourceFile::REGEXPS.push([/^cannot load such file -- (.+)$/i, 1])
+
+# Silence Rails 4 deprecation warnings in test suite
+# TODO: Model.scoped is deprecated
+# TODO: Eager loading Post.includes(:comments).where("comments.title = 'foo'") becomes Post.includes(:comments).where("comments.title = 'foo'").references(:comments)
+<<<<<<< HEAD
+# TODO: has_many conditions is deprecated for a scoped block
+if Rails.version >= '4'
+#  ActiveSupport::Deprecation.silenced = true
+end
+=======
+# if Rails.version >= '4'
+#   ActiveSupport::Deprecation.silenced = true
+# end
+>>>>>>> 1bc1a86db3ca5e00b733330d7a1404ae6edd30df
+
+puts "Testing against rails #{Rails::VERSION::STRING}"
+
+RAILS_ROOT = File.dirname(__FILE__)
+```
+````

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD wants to include `auth_type` in the list of parameters: `%w[display scope auth_type]`
+- The incoming change only has: `%w[display scope]`
+
+Since HEAD is adding `auth_type` as an additional parameter to be processed alongside `display` and `scope`, and the incoming change doesn't explicitly remove it (it just doesn't have it), the semantic intent appears to be that HEAD wants to expand the functionality to also handle the `auth_type` parameter.
+
+The resolution should include all three parameters to preserve the expanded functionality from HEAD:
+
+```ruby
+      #
+      # /auth/facebook?display=popup
+      #
+      def authorize_params
+        super.tap do |params|
+          %w[display scope auth_type].each do |v|
+            if request.params[v]
+              params[v.to_sym] = request.params[v]
+            end
+          end
+
+
+```

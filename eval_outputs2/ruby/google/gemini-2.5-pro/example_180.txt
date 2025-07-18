@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+An expert in semantic merge conflict resolution would analyze the intent behind both changes.
+
+*   **HEAD** `def get_page(target_url)`: This uses a standard Ruby positional argument. The intent is to define a method that requires a `target_url` to be passed to it.
+*   **d26f64b762b4b22ee1c64a9fbc20a393520e89e0** `def get_page(target_url: nil)`: This changes the method to use a keyword argument. Using keyword arguments is a more modern and explicit style in Ruby. However, by providing a default value of `nil`, it makes the argument optional. This contradicts the method's purpose and implementation, which clearly require a URL to function, and could lead to a runtime error if called without the `target_url`.
+
+The semantic resolution is to combine the best of both intents:
+1.  Use the modern keyword argument syntax from the `d26f64b762b4b22ee1c64a9fbc20a393520e89e0` branch.
+2.  Enforce that the `target_url` is a mandatory argument, as intended by the `HEAD` branch and the method's logic.
+
+In modern Ruby (2.1+), this is achieved by defining a required keyword argument, which is written without a default value. This respects the stylistic improvement of one branch while maintaining the logical correctness of the other.
+
+```ruby
+          ##
+          # Retrieve a single page of AlertInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of AlertInstance
+          def get_page(target_url:)
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return AlertPage.new(@version, response, @solution)
+
+```

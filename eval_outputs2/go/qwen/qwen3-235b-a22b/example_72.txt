@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```go
+func TestMarshalJSONPBMarshaler(t *testing.T) {
+	rawJson := `{ "foo": "bar", "baz": [0, 1, 2, 3] }`
+	msg := dynamicMessage{RawJson: rawJson}
+	str, err := new(Marshaler).MarshalToString(&msg)
+	if err != nil {
+		t.Errorf("an unexpected error occurred when marshaling JSONPBMarshaler: %v", err)
+	}
+	if str != rawJson {
+		t.Errorf("marshaling JSON produced incorrect output: got %s, wanted %s", str, rawJson)
+	}
+}
+```

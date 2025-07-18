@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a discrepancy in the return statement after handling an unsupported address type. The HEAD branch returns `1`, while the other branch uses `return;`. Without additional context about the function's return type (e.g., `int` vs `void`), it's impossible to determine the correct resolution. Both changes are semantically valid depending on the function's signature, making the intent ambiguous.
+
+Resolved output (conflict preserved):
+```c
+             * Unknown address type. (FIXME: support IPv6!)
+             */
+            reply[1] = 8; /* atype not supported */
+            sk_write(pf->s, (char *)reply, lenof(reply));
+            pfd_close(pf);
+<<<<<<< HEAD
+            return 1;
+=======
+            return;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+          }
+        }
+      }
+
+      /*
+```

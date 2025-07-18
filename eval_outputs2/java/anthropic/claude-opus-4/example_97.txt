@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the constructor call for the `Game` class, but they're adding different parameters.
+
+- HEAD version: adds parameters ending with `formatProvider, falseProvider, formatProvider`
+- Other version: adds parameters ending with `formatProvider, falseProvider, formatProvider, falseProvider, gameOptionsProvider`
+
+The semantic intent appears to be:
+- HEAD was trying to add some parameters to the Game constructor
+- The other branch (ed08e37) was trying to add even more parameters, including everything HEAD added plus two additional ones: `falseProvider` and `gameOptionsProvider`
+
+Since the other branch includes all the parameters from HEAD plus additional ones, and this appears to be an evolution of the constructor to support more functionality, the resolution should keep the version with more parameters.
+
+```java
+  public void setUp() {
+    cuMock = createMock(ConnectedUsers.class);
+    gmMock = createMock(GameManager.class);
+    metricsMock = createMock(Metrics.class);
+    game = new Game(0, cuMock, gmMock, timer, null, null, null, metricsMock, falseProvider,
+        formatProvider, falseProvider, formatProvider, falseProvider, gameOptionsProvider);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testRemovePlayer() throws IllegalStateException, TooManyPlayersException {
+
+```

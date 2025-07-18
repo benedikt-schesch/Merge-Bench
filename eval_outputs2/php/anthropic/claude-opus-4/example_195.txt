@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that these are two completely different test files that have been conflated in the merge:
+
+1. HEAD side: `tests/Phake/Annotation/MockInitializerTypedPropertiesTest.php` - appears to be testing a MockInitializer
+2. Other side: `tests/Phake/Matchers/PHPUnit6ConstraintAdapterTest.php` - appears to be testing a PHPUnit6ConstraintAdapter
+
+These are semantically unrelated pieces of code that belong to different test classes. The conflict appears to be a result of a file rename or reorganization where Git is trying to merge content from two different test files.
+
+Since these are completely different test implementations with different purposes, I cannot semantically merge them into a single coherent implementation. The conflict needs to be resolved by choosing which test file this actually should be, or by separating them into their proper files.
+
+Here is the code snippet with the conflict preserved:
+
+```php
+    #[Mock]
+    private AnotherNamespacedClass $nativeMock;
+
+    protected function setUp(): void
+    {
+<<<<<<< HEAD:tests/Phake/Annotation/MockInitializerTypedPropertiesTest.php
+        $this->initializer = new MockInitializer();
+=======
+        $this->constraint = $this->getMockBuilder(Constraint::class)->getMock();
+        $this->adapter    = new PHPUnit6ConstraintAdapter($this->constraint);
+        $this->constraint->expects($this->any())
+            ->method('toString')
+            ->willReturn('phpunit matcher');
+>>>>>>> 78e410ae3ae8d3249e757e46cbab122d33af879e:tests/Phake/Matchers/PHPUnit6ConstraintAdapterTest.php
+    }
+
+    public function testInitialize(): void
+    {
+<<<<<<< HEAD:tests/Phake/Annotation/MockInitializerTypedPropertiesTest.php
+
+```

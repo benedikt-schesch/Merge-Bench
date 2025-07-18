@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - creating an LRU cache for micro-caching with identical configuration. The only difference is the variable name:
+- HEAD uses `pageCache`
+- The incoming change uses `microCache`
+
+Both names are reasonable and convey the same intent. Since the comment refers to "micro-cache" and "microcache", I'll resolve this by using `microCache` to maintain consistency with the terminology in the comments.
+
+```javascript
+app.use('/dist', serve('./dist', true))
+app.use('/public', serve('./public', true))
+app.use('/manifest.json', serve('./manifest.json', true))
+app.use('/service-worker.js', serve('./dist/service-worker.js'))
+
+// 1-second microcache.
+// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+const microCache = LRU({
+  max: 100,
+  maxAge: 1000
+})
+
+// since this app has no user-specific content, every page is micro-cacheable.
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the documentation for the `insert_resource` method. The conflict appears to be about:
+
+1. How to reference the `insert_resource` method (with or without `App::` prefix)
+2. Whether to reference `FromWorld` or `FromResources` trait
+
+Based on the context and modern Rust/Bevy conventions:
+- The HEAD version uses `Self::insert_resource` which is more idiomatic when documenting a method within the same type
+- `FromWorld` appears to be the more current trait name (as `FromResources` was likely renamed to `FromWorld` in newer versions)
+
+Here's the resolved version:
+
+```rust
+    }
+
+    /// Inserts a resource to the current [App] and overwrites any resource previously added of the same type.
+    ///
+    /// A resource in Bevy represents globally unique data. Resources must be added to Bevy Apps
+    /// before using them. This happens with [`insert_resource`](Self::insert_resource).
+    ///
+    /// See also `init_resource` for resources that implement `Default` or [`FromWorld`].
+    ///
+    /// ## Example
+    /// ```
+    /// # use bevy_app::prelude::*;
+    /// #
+
+```

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - rejecting when the client hasn't joined - but with different implementations:
+
+- HEAD: Uses `Deferred.reject('client not joined')` with a type cast to access the private property
+- Other branch: Uses `Promise.reject(new Error("not joined"))` with a `@ts-ignore` comment
+
+The semantic intent is the same, but the implementations differ in:
+1. Error handling approach (Deferred vs Promise)
+2. Error format (string vs Error object)
+3. TypeScript handling (type cast vs @ts-ignore)
+
+Since both achieve the same goal but I cannot determine which approach is preferred in this codebase without more context, I'm returning the conflict as-is:
+
+```typescript
+    //
+    // Return rejected promise if client has never fully JOINED.
+    //
+    // (having `_enqueuedMessages !== undefined` means that the client has never been at "ClientState.JOINED" state)
+    //
+<<<<<<< HEAD
+    if ((previousClient as unknown as ClientPrivate)._enqueuedMessages !== undefined) {
+      return Deferred.reject('client not joined');
+=======
+    if (previousClient._enqueuedMessages !== undefined) {
+      // @ts-ignore
+      return Promise.reject(new Error("not joined"));
+>>>>>>> 1a7da98cbeee551587e6119d06a39a441421827b
+    }
+
+    if (seconds === undefined) { // TODO: remove this check
+      console.warn("DEPRECATED: allowReconnection() requires a second argument. Using \"manual\" mode.");
+      seconds = "manual";
+
+```

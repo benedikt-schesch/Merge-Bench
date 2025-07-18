@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+I've analyzed the provided merge conflict. The conflict arises from differing approaches to defining the `.google.protobuf.BoolValue` type schema:
+
+1. **HEAD branch** (protoc-gen-swagger/genswagger/template.go) uses a `schemaCore` type
+2. **Other branch** (protoc-gen-openapiv2/internal/genopenapi/template.go) uses an anonymous struct
+
+The surrounding context shows both approaches are used in the codebase:
+- `.google.protobuf.DoubleValue` uses an anonymous struct
+- `.google.protobuf.Empty` uses an empty struct
+- `.google.protobuf.Struct` uses an anonymous struct
+
+This suggests both approaches are valid in the codebase, but without knowing:
+1. The definition of `schemaCore`
+2. The expected type for map values
+3. Consistency requirements across similar definitions
+
+I cannot safely resolve this conflict. The intent is ambiguous since both approaches achieve the same semantic result for this specific entry, but may have different implications for type consistency or future functionality.
+
+Here's the original code with conflict markers preserved:
+
+```go
+	},
+	".google.protobuf.DoubleValue": {
+		Type:   "number",
+		Format: "double",
+	},
+<<<<<<< HEAD:protoc-gen-swagger/genswagger/template.go
+	".google.protobuf.BoolValue": schemaCore{
+=======
+	".google.protobuf.BoolValue": {
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6:protoc-gen-openapiv2/internal/genopenapi/template.go
+		Type: "boolean",
+	},
+	".google.protobuf.Empty": {},
+	".google.protobuf.Struct": {
+		Type: "object",
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that HEAD has a `is_widget_frame()` function that the other branch (07dbd1e26d1216651e65a3147e9c3171dce485de) doesn't have. The other branch appears to have removed this function entirely.
+
+Following the existing code structure, the semantic intent seems to be:
+- HEAD wants to keep the `is_widget_frame()` function
+- The other branch wants to remove it
+
+Since there's no clear indication of which intent should take precedence, and removing functionality could break other parts of the code that might depend on `is_widget_frame()`, I'll return the conflict as is:
+
+```javascript
+(async () => {
+<<<<<<< HEAD
+    function is_widget_frame() {
+        const $widget_elem = document.querySelector('button[aria-describedby="descriptionVerify"]') ||
+            document.querySelector('#wrong_children_button') ||
+            document.querySelector('#wrongTimeout_children_button');
+        return $widget_elem !== null;
+    }
+
+=======
+>>>>>>> 07dbd1e26d1216651e65a3147e9c3171dce485de
+
+    function is_image_frame() {
+        return get_task() !== null && get_image() !== null;
+    }
+
+
+```

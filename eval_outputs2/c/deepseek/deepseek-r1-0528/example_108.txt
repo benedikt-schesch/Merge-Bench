@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two distinct changes that are semantically independent but adjacent in the code. The ambiguity arises because:
+
+1. The return type of `rlogin_receive` differs (`int` vs `void`)
+2. The presence of `return 0` in one branch affects an unrelated function
+3. The surrounding context doesn't reveal if the containing function (where `return 0` exists) should return a value
+4. The function body after the conflict doesn't show if `rlogin_receive` needs to return a value
+
+Since the semantic intent is ambiguous without broader context, the conflict is preserved unchanged.
+
+```c
+  if (error_msg) {
+    /* A socket error has occurred. */
+    logevent(rlogin->frontend, error_msg);
+    connection_fatal(rlogin->frontend, "%s", error_msg);
+  } /* Otherwise, the remote side closed the connection normally. */
+<<<<<<< HEAD
+  return 0;
+}
+
+static int rlogin_receive(Plug plug, int urgent, char *data, int len)
+=======
+}
+
+static void rlogin_receive(Plug plug, int urgent, char *data, int len)
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+{
+  Rlogin rlogin = (Rlogin)plug;
+  if (urgent == 2) {
+    char c;
+
+
+```

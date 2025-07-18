@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to import types/interfaces from similar modules but with slightly different approaches:
+
+- HEAD imports `Room` from '../Room.js' (with .js extension) and imports `IRoomCache` from './driver/api.js'
+- The other branch imports `Room` from '../Room' (without .js extension) and imports `IRoomListingData` from './driver/interfaces'
+
+Since both sides want to import the `Room` type and each side needs its specific interface (`IRoomCache` vs `IRoomListingData`), the semantic intent appears to be that both interfaces are needed. The difference in the .js extension is likely a module resolution preference.
+
+Here's the resolved conflict that preserves both intents:
+
+```typescript
+import * as matchMaker from '../MatchMaker.js';
+
+import type { Room } from '../Room.js';
+import { IRoomCache } from './driver/api.js';
+import { IRoomListingData } from './driver/interfaces';
+
+const LOBBY_CHANNEL = '$lobby';
+
+/*
+ * TODO: refactor this on v0.16
+```

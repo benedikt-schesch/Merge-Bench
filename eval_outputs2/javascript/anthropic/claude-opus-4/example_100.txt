@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add to the `defaults` object:
+
+- HEAD has `defaultFormat: '0,0'`
+- The incoming branch has both `defaultFormat: '0,0'` and `scalePercentBy100: true`
+
+Since both sides agree on `defaultFormat: '0,0'` and the incoming branch is simply adding an additional property `scalePercentBy100: true`, the semantic intent is to include both properties.
+
+Here's the resolved code:
+
+```javascript
+        locales = {},
+        defaults = {
+            currentLocale: 'en',
+            zeroFormat: null,
+            nullFormat: null,
+            defaultFormat: '0,0',
+            scalePercentBy100: true
+        },
+        options = {
+            currentLocale: defaults.currentLocale,
+            zeroFormat: defaults.zeroFormat,
+            nullFormat: defaults.nullFormat,
+
+```

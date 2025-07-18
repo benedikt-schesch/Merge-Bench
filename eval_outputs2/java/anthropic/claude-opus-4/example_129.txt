@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add different imports:
+- HEAD wants to import `BatchJobUpdateStrategy`
+- The other branch wants to import `CountSlaPolicy`
+
+Since these are different imports serving different purposes and there's no semantic conflict between them (they're just import statements for different classes), the correct resolution is to include both imports.
+
+```java
+import org.apache.aurora.common.stats.Stats;
+import org.apache.aurora.common.stats.StatsProvider;
+import org.apache.aurora.common.testing.easymock.EasyMockTest;
+import org.apache.aurora.common.util.Clock;
+import org.apache.aurora.common.util.TruncatedBinaryBackoff;
+import org.apache.aurora.gen.BatchJobUpdateStrategy;
+import org.apache.aurora.gen.CountSlaPolicy;
+import org.apache.aurora.gen.InstanceTaskConfig;
+import org.apache.aurora.gen.JobUpdate;
+import org.apache.aurora.gen.JobUpdateAction;
+import org.apache.aurora.gen.JobUpdateEvent;
+import org.apache.aurora.gen.JobUpdateInstructions;
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises from a likely dependency upgrade of the `tokio` crate.
+
+-   The `HEAD` branch includes `use tokio::prelude::Future;` and `use tokio::runtime::TaskExecutor;`. These are imports from an older version of `tokio` (v0.1).
+-   The other branch removes these imports.
+-   The context already includes `use std::future::Future;`, which is the standard library's `Future` trait used by modern `tokio` versions (v0.2 and later).
+
+The most probable intent is to upgrade `tokio` and use the standard library's `Future`, making the old `tokio` imports obsolete. Therefore, the correct resolution is to remove the conflicting lines.
+
+```rust
+use glfw::Context;
+use parking_lot::Mutex;
+use std::ffi::c_void;
+use std::future::Future;
+use std::sync::Arc;
+
+pub(crate) struct GlfwFlutterEngineHandler {
+    pub(crate) glfw: glfw::Glfw,
+    pub(crate) window: Arc<Mutex<glfw::Window>>,
+    pub(crate) resource_window: Arc<Mutex<glfw::Window>>,
+
+```

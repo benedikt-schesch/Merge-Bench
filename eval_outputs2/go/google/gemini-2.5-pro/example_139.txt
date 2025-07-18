@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+This is a semantic merge conflict arising from a project-wide renaming effort. The project appears to be rebranding from `protoc-gen-swagger` to `protoc-gen-openapiv2`, and consequently, internal variables and comments are being updated from "swagger" to "OpenAPI".
+
+*   **The `HEAD` branch** (`protoc-gen-swagger/genswagger/template.go`) uses the old package name `swagger_options` and a comment referring to the "swagger specification".
+*   **The incoming branch `0e11f6f8...`** (`protoc-gen-openapiv2/internal/genopenapi/template.go`) uses the updated package name `openapi_options` and a comment referring to the "OpenAPI specification".
+
+The functional logic of returning `"string", ""` is identical in both branches. The clear intent of the incoming branch is to align with the new project naming. Therefore, the correct resolution is to accept the changes from the incoming branch.
+
+```go
+	case openapi_options.JSONSchema_INTEGER:
+		return "integer", "int32"
+	case openapi_options.JSONSchema_NUMBER:
+		return "number", "double"
+	case openapi_options.JSONSchema_STRING:
+		// NOTE: in OpenAPI specification, format should be empty on string type
+		return "string", ""
+	default:
+		// Maybe panic?
+		return "", ""
+	}
+
+```

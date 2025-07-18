@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the case where `@view.fragment_name_with_digest` is defined, but they have different approaches:
+
+- **HEAD (left side)**: Adds a fallback condition to check for `@view.cache_fragment_name` if `fragment_name_with_digest` is defined, calling it with just the `key` parameter
+- **Right side**: Updates the existing `fragment_name_with_digest` call to include a second parameter `@view.view_cache_dependencies`
+
+The semantic intent appears to be:
+1. The right side wants to pass cache dependencies to `fragment_name_with_digest` for better cache invalidation
+2. The left side wants to support a legacy/alternative method `cache_fragment_name` as a fallback
+
+These changes are complementary rather than conflicting. The resolution should:
+- Keep the updated `fragment_name_with_digest` call with the cache dependencies parameter
+- Keep the fallback to `cache_fragment_name` for backwards compatibility
+
+Here's the resolved code:
+
+```ruby
+        @collection.each do |item|
+          key = @options[:cache].respond_to?(:call) ? @options[:cache].call(item) : item
+
+          key_with_optional_digest = nil
+          if defined?(@view.fragment_name_with_digest)
+            key_with_optional_digest = @view.fragment_name_with_digest(key, @view.view_cache_dependencies)
+          elsif defined?(@view.cache_fragment_name)
+            key_with_optional_digest = @view.cache_fragment_name(key)
+          else
+            key_with_optional_digest = key
+          end
+
+          expanded_key = @view.controller.fragment_cache_key(key_with_optional_digest)
+
+```

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by preserving the safer approach for handling the `$module->class` property from the HEAD branch while maintaining the structure. Here's the resolved snippet:
+
+```php
+    foreach($args as $key => $val) {
+        $argstr[] = "$key=" . urlencode($val);
+    }
+    $argstr = "'" . implode("&", $argstr) . "'";
+    $style = "width: {$module->width}px;";
+    $class = isset($module->class) ? $module->class : '';
+    if (isset($module->height)) $style .= " height: {$module->height}px";
+    echo "<div class='module $class' id='$module->name' style='$style'></div>\n";
+    echo "\t<script type='text/javascript'>activate_module('$module->name', $module->update, $argstr);</script>\n\n";
+}
+
+?>
+
+
+```
+
+Key resolution points:
+1. Kept the ternary check `isset($module->class)` from HEAD to prevent undefined property notices
+2. Preserved the height conditional from both branches (identical logic)
+3. Maintained the `$class` variable usage for safe output
+4. Retained the script line that was identical in both branches
+5. Preserved all original spacing and context exactly as provided
+
+The resolution ensures:
+- Safe handling of potentially missing `class` property
+- Maintains functionality from both branches
+- Avoids potential PHP notices while keeping the same output behavior
+- Preserves all surrounding context unchanged

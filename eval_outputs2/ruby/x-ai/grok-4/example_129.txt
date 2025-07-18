@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```ruby
+      end
+
+      params = filters.has_key?(:__params) ? [*filters.delete(:__params)] : []
+      filters[:__order] ||= [:created_at, :DESC]
+
+<<<<<<< HEAD
+      filters.each do |key, value|
+=======
+        type_convert = {
+          boolean: '::boolean',
+          integer: '::integer',
+          float: '::float',
+          string: '::varchar'
+        }[type]
+>>>>>>> bd2d4d7ad258c887e4f69359d0634a58149194d8
+
+        next if [:__order, :__offset, :__count, :__params].include?(key)
+
+        found_index = key.to_s.rindex('__')
+        key_root = found_index.nil? ? key : key.to_s[0...found_index].to_sym
+
+```

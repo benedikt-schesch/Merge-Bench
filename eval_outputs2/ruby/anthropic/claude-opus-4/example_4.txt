@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+1. **HEAD (left side)**: Testing that the middleware skips when `fb_sig` is `nil`
+2. **Right side**: Testing that the middleware skips when `fb_sig_user` is present (but apparently should be ignored based on the value 'ignored')
+
+The test name `test_skips_with_true_condition_without_fb_sig` suggests this test is specifically about the behavior when `fb_sig` is absent/missing. The HEAD version aligns with this intent by explicitly setting `fb_sig => nil`.
+
+The right side seems to be testing a different scenario where `fb_sig_user` is present but should be ignored, which doesn't match the test name that explicitly says "without_fb_sig".
+
+Given the test name and the pattern in the surrounding tests, the HEAD version appears to be the semantically correct choice.
+
+```ruby
+    assert_equal 200, response.status
+  end
+  
+  def test_skips_with_true_condition_without_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+    response = @page.call(:fb_sig => nil)
+    assert_equal 200, response.status
+  end
+  
+  def test_verifies_with_true_condition_with_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+
+```

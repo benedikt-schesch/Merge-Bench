@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet with both test cases preserved, maintaining the original context and spacing:
+
+```go
+		},
+		{
+			input: sql.Dialect(dialect.Postgres).
+				Select("*").
+				From(sql.Table("users")).
+				Where(sqljson.ValueIsNull("c", sqljson.Path("a"))),
+			wantQuery: `SELECT * FROM "users" WHERE ("c"->'a')::jsonb = 'null'::jsonb`,
+		},
+		{
+			input: sql.Dialect(dialect.Postgres).
+				Select("*").
+				From(sql.Table("users")).
+				Where(sqljson.StrValueContains("a", "substr", sqljson.Path("b", "c", "[1]", "d"))),
+			wantQuery: `SELECT * FROM "users" WHERE "a"->'b'->'c'->1->>'d' LIKE $1`,
+			wantArgs:  []interface{}{"%substr%"},
+		},
+		{
+			input: sql.Dialect(dialect.MySQL).
+				Select("*").
+				From(sql.Table("users")).
+
+```
+
+Resolution rationale:
+1. Both branches added valid but distinct test cases for PostgreSQL JSON operations
+2. The HEAD test case checks for `null` JSON values
+3. The other branch adds a test case for string containment in JSON values
+4. The MySQL test case remains unchanged as it wasn't part of the conflict
+5. Both test cases are preserved since they test different functionalities
+6. Spacing and formatting are maintained exactly as in the original context

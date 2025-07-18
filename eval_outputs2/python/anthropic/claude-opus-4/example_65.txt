@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - raising a `RangeInvalid` exception with an error message. The only difference is:
+
+- HEAD version: Has the closing parenthesis on the same line as the message string
+- Other version: Has the closing parenthesis on a separate line
+
+Since the conflict is purely about formatting/style and both versions are functionally identical, I'll resolve this by choosing the version that follows more common Python formatting conventions. Having the closing parenthesis on a separate line (as in the second version) is generally preferred for multi-line function calls as it makes the code more readable and easier to modify.
+
+```python
+            return v
+
+        # Objects that lack a partial ordering, e.g. None or strings will raise TypeError
+        except TypeError:
+            raise RangeInvalid(
+                self.msg or 'invalid value or type (must have a partial ordering)'
+            )
+
+    def __repr__(self):
+        return 'Range(min=%r, max=%r, min_included=%r, max_included=%r, msg=%r)' % (
+            self.min,
+            self.max,
+```

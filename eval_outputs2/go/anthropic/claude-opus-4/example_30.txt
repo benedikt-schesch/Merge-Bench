@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to create the same `bindataFileInfo` struct with identical field values except for the `modTime` field:
+
+- HEAD has: `modTime: time.Unix(1444419364, 0)`
+- The other branch has: `modTime: time.Unix(1467390283, 0)`
+
+The only other difference is a minor formatting difference in the spacing after `info:` in the asset struct initialization.
+
+Since this appears to be auto-generated code (likely from a tool like go-bindata) that embeds file information, the semantic intent of both sides is the same - to update the file information for "conf/gitignore/CraftCMS". The different timestamps likely represent when the file was regenerated on each branch.
+
+In this case, I'll choose the more recent timestamp (1467390283 is later than 1444419364) as it likely represents the most up-to-date version of the file.
+
+```go
+	bytes, err := confGitignoreCraftcmsBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/CraftCMS", size: 120, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreDm = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xd2\xd2\x4b\xc9\x4d\xe2\xd2\xd2\x2b\x2a\x4e\x06\x92\x99\x79\x25\x40\x32\x27\x1b\x48\x54\x65\x16\x70\x01\x02\x00\x00\xff\xff\x1b\x86\x0d\x57\x1d\x00\x00\x00")
+
+
+```

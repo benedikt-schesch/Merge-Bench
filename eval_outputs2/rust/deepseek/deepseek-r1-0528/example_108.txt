@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet with the merge conflict handled semantically by combining both sets of match arms:
+
+```rust
+      }
+      _ => {}
+    };
+
+    let flags = match &args.command {
+      Permissions { flags, .. } => flags,
+      Boundaries { flags } => flags,
+      Stepper { flags, .. } => flags,
+      Interpreter { flags, .. } => flags,
+      _ => unreachable!(),
+    };
+
+    RustcPluginArgs {
+      flags: Some(flags.clone()),
+```
+
+### Resolution Explanation:
+1. **Semantic Analysis**: 
+   - Both branches are trying to extract `flags` from different enum variants
+   - HEAD branch handles `Permissions` and `Interpreter` variants
+   - Incoming branch handles `Boundaries`, `Stepper` and `Interpreter` variants
+   - `Interpreter` variant exists in both, but with different field patterns
+
+2. **Conflict Resolution**:
+   - Combined all unique variants from both branches (`Permissions`, `Boundaries`, `Stepper`, `Interpreter`)
+   - Used more permissive `..` pattern for `Interpreter` to accommodate both versions
+   - Maintained all variant patterns exactly as they appeared in their respective branches
+   - Preserved the unreachable fallback since all valid cases are now handled
+
+3. **Preservation Guarantees**:
+   - Maintained original spacing and formatting
+   - Kept all surrounding context unchanged
+   - Resolved conflict by union of both branches' logic
+   - Final solution handles all cases from both versions of the code

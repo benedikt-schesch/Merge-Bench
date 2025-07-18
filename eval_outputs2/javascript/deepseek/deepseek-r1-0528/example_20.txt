@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from both branches adding different configuration options to the AJV validator initialization. The HEAD branch adds `extendRefs: 'fail'`, while the other branch adds `strict: false` with a comment and chains `.addMetaSchema()`. Both changes are compatible as they configure different aspects of the validator.
+
+The resolution combines both configuration options and preserves the method chaining from the other branch. The FIXME comment is retained for tracking purposes.
+
+```javascript
+const res = './test/resources/';
+
+const validator = new ajv.default({
+    allErrors: true,
+    verbose: true,
+    extendRefs: 'fail',
+    strict: false // FIXME: https://github.com/vega/vega/issues/3022
+  })
+  .addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
+
+addFormats(validator);
+
+const validate = validator.compile(schema);
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - asserting that there are no unexpected validation errors and providing a helpful error message if there are. The key differences are:
+
+1. **HEAD**: Uses `new Collection($unexpectedErrorKeys)` and formats across multiple lines
+2. **Other branch**: Uses `collect($unexpectedErrorKeys)` and keeps everything on one line
+
+Since both `new Collection()` and `collect()` achieve the same result in Laravel (creating a collection instance), and the multi-line format improves readability, I'll preserve the HEAD version as it's more readable:
+
+```php
+            ->map(fn ($value, $key) => is_int($key) ? $value : $key)
+            ->all();
+
+        $unexpectedErrorKeys = Arr::except($jsonErrors, $expectedErrorKeys);
+
+        PHPUnit::withResponse($this)->assertTrue(
+            count($unexpectedErrorKeys) === 0,
+            'Response has unexpected validation errors: '.(new Collection($unexpectedErrorKeys))->keys()->map(fn ($key) => "'{$key}'")->join(', ')
+        );
+
+        return $this;
+    }
+
+    /**
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `T::component_ids()` but with different parameters:
+
+- HEAD version: `T::component_ids(components, storages)`
+- Other version: `T::component_ids(components)`
+
+The HEAD version includes an additional `storages` parameter that was likely added as part of a refactoring or feature enhancement. Since the function signature at the beginning of the context shows `storages: &mut Storages` is available as a parameter, and the HEAD version is using it, this suggests the `component_ids` method was updated to require the `storages` parameter.
+
+The semantically correct resolution would be to use the HEAD version that includes both parameters:
+
+```rust
+        components: &mut Components,
+        storages: &mut Storages,
+    ) -> &'a BundleInfo {
+        let bundle_infos = &mut self.bundle_infos;
+        let id = self.bundle_ids.entry(TypeId::of::<T>()).or_insert_with(|| {
+            let component_ids = T::component_ids(components, storages);
+            let id = BundleId(bundle_infos.len());
+            // SAFE: T::component_id ensures info was created
+            let bundle_info = unsafe {
+                initialize_bundle(std::any::type_name::<T>(), component_ids, id, components)
+            };
+
+```

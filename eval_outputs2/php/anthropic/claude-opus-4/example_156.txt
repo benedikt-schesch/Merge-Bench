@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to return a success response after updating data, but with different formats:
+
+- HEAD: Returns `{"cenInfo":"updated"}` - a JSON object with a specific key
+- Other branch: Returns `"updated"` - a JSON-encoded string
+
+The semantic intent appears to be returning a success indicator. The HEAD version provides more structured data with a specific key that might be expected by the client code.
+
+Here's the resolved snippet:
+
+```php
+					$outputData[$cpName] = $cpData;
+				}
+			}
+			saveFile("$directory/$groupName/$userName/data.txt", json_encode($outputData));
+
+			echo '{"cenInfo":"updated"}';
+
+		} else if ($action === "set") {
+
+			saveFile("$directory/$groupName/$userName/data.txt", $clientData);
+
+```

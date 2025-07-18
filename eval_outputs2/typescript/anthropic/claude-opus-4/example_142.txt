@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch has added a case for "base-goerlia" (with a typo) that includes a TODO comment to remove it in the future. The other branch doesn't have this case at all.
+
+The intent appears to be:
+- HEAD wanted to maintain backward compatibility with the typo "base-goerlia" while also having the correct "base-goerli"
+- The other branch only has the correct spelling "base-goerli"
+
+Since the HEAD branch explicitly indicates this is a typo that should be removed in the future, and both branches have the correct "base-goerli" case, the semantic intent is to support both spellings temporarily. This is a common pattern for maintaining backward compatibility during a transition period.
+
+Here's the resolved code:
+
+```typescript
+            return "arbitrum-goerli.infura.io";
+        case "arbitrum-sepolia":
+            return "arbitrum-sepolia.infura.io";
+        case "base":
+            return "base-mainnet.infura.io";
+        case "base-goerlia": // @TODO: Remove this typo in the future!
+        case "base-goerli":
+            return "base-goerli.infura.io";
+        case "base-sepolia":
+            return "base-sepolia.infura.io";
+        case "bnb":
+```

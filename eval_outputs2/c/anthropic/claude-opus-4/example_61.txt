@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- The HEAD version (current branch) continues execution after printing the error message
+- The incoming change adds `return 0;` after the error message, indicating it wants to exit the function when the directory cannot be opened
+
+The semantic intent of the incoming change is clearer and more correct - if we cannot open the directory (`dirh == NULL`), we should exit the function rather than continue to the else block. This is a common error handling pattern.
+
+Here's the resolved code:
+
+```c
+  pktin = sftp_wait_for_reply(req);
+  dirh = fxp_opendir_recv(pktin, req);
+
+  if (dirh == NULL) {
+    printf("Unable to open %s: %s\n", dir, fxp_error());
+    return 0;
+  } else {
+    nnames = namesize = 0;
+    ournames = NULL;
+
+    while (1) {
+
+```

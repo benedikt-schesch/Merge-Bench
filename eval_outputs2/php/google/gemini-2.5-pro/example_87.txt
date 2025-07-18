@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```php
+        if (!is_array($xeps)) {
+            $xeps = array($xeps);
+        }
+        
+        foreach ($xeps as $xep) {
+            $filename = 'xep_'.$xep.'.php';
+            $classname = 'XEP_'.$xep;
+
+            // include xep
+            require_once JAXL_CWD.'/xep/'.$filename;
+            $this->xeps[$xep] = new $classname($this);
+
+            // add necessary requested callback on events
+            foreach ($this->xeps[$xep]->init() as $ev => $cb) {
+                $this->add_cb($ev, array($this->xeps[$xep], $cb));
+
+```

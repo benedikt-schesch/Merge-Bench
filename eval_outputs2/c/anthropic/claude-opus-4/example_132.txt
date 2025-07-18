@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the `x11_receive` function, but they disagree on:
+1. The return type (`int` vs `void`)
+2. The function body (HEAD has `return 0;` while the other branch has an empty body)
+
+Since the HEAD version returns `int` and has a `return 0;` statement, while the other branch expects `void` with no return, this appears to be a semantic conflict about what the function should do. Without more context about the intended behavior or the surrounding codebase conventions, I cannot definitively resolve this conflict.
+
+Here is the snippet with the conflict preserved:
+
+```c
+                    int port,
+                    const char *error_msg,
+                    int error_code)
+{
+}
+<<<<<<< HEAD
+static int x11_receive(Plug plug, int urgent, char *data, int len)
+{
+  return 0;
+=======
+static void x11_receive(Plug plug, int urgent, char *data, int len)
+{
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+static void x11_sent(Plug plug, int bufsize)
+{
+}
+```

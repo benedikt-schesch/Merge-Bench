@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - they both want to include the same fields and comment. The only difference is the ordering:
+
+- HEAD has the comment after `roundPermalinkFormatProvider`
+- The incoming branch has the comment before `roundPermalinkFormatProvider`
+
+Since both versions contain exactly the same content and the positioning of a comment doesn't affect functionality, I'll resolve this by keeping the HEAD's ordering (comment after the field declaration) as it groups the comment more naturally with the field that follows it.
+
+```java
+  private final Metrics metrics;
+  private final Provider<Boolean> showGameLinkProvider;
+  private final Provider<String> gamePermalinkFormatProvider;
+  private final Provider<Boolean> showRoundLinkProvider;
+  private final Provider<String> roundPermalinkFormatProvider;
+
+  // All of these delays could be moved to pyx.properties.
+  private final Provider<Boolean> allowBlankCardsProvider;
+  private final long created = System.currentTimeMillis();
+  /**
+   * Lock object to prevent judging during idle judge detection and vice-versa.
+   */
+```

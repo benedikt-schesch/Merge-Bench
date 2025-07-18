@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import geocoding-related functions, but they're organizing the imports differently:
+
+- **HEAD** imports functions directly from `phonenumbers` module and includes `_area_description_for_number` from `phonenumbers.geocoder` plus `u` from `phonenumbers.util`
+- **Other branch** imports the same functions but directly from `phonenumbers.geocoder` and adds `prefix_description_for_number` from `phonenumbers.prefix`
+
+The semantic intent appears to be:
+1. Both sides want the core geocoding functions (`description_for_number`, `country_name_for_number`, `description_for_valid_number`)
+2. HEAD wants `_area_description_for_number` (private function) and the utility function `u`
+3. The other branch wants `prefix_description_for_number`
+
+Since both sides have valid additions and the core functions can be imported from either location (they're likely re-exported), the resolution should include all unique imports from both sides:
+
+```python
+
+import unittest
+
+from phonenumbers import PhoneNumber, FrozenPhoneNumber
+from phonenumbers import geocoder
+from phonenumbers.geocoder import description_for_number, country_name_for_number
+from phonenumbers.geocoder import description_for_valid_number
+from phonenumbers.geocoder import _area_description_for_number
+from phonenumbers.prefix import prefix_description_for_number
+from phonenumbers.util import u
+
+# Allow override library geocoding metadata with the test metadata.
+REAL_GEOCODE_DATA = geocoder.GEOCODE_DATA
+REAL_GEOCODE_LONGEST_PREFIX = geocoder.GEOCODE_LONGEST_PREFIX
+from .testgeodata import GEOCODE_DATA as TEST_GEOCODE_DATA
+
+```

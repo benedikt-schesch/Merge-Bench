@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import testing utilities, but from different locations:
+
+- HEAD is importing `moduleId` utilities from a local source path
+- The incoming change is importing `resetSheets` and `resetModuleId` from a tests utilities path
+
+Based on the semantics, it appears both sides want testing utilities for resetting state. The incoming change seems more comprehensive as it includes both `resetSheets` and `resetModuleId` functions from a dedicated test utilities location, while HEAD only imports the moduleId module.
+
+Here's the resolved code:
+
+```javascript
+/* eslint-disable no-underscore-dangle */
+
+import expect from 'expect.js'
+import {createGenerateId} from '../../src'
+import {resetSheets, resetModuleId} from '../../../../tests/utils'
+
+const sheetMock = {
+  options: {
+    classNamePrefix: 'p',
+    jss: {id: 0}
+
+```

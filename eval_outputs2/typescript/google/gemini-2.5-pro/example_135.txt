@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```typescript
+        await updatePackageJSON(dir, async (packageJSON) => {
+          packageJSON.name = 'Name';
+          packageJSON.productName = 'ProductName';
+        });
+
+        await api.import({ dir });
+
+        expect(fs.existsSync(path.join(dir, 'forge.config.js'))).to.equal(true);
+
+        console.log('installing dependencies');
+        execSync(`${nodeInstaller} install`, {
+          cwd: dir,
+        });
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD (current branch): Sets up an event dispatcher on the connection
+- Incoming branch: Sets up a paginator on the connection
+
+Both sides appear to be configuring different aspects of the same connection object. These are not mutually exclusive operations - a connection can have both an event dispatcher AND a paginator. The intent seems to be to set up various components on the connection object.
+
+Given that both configurations are likely needed and don't conflict with each other semantically, the resolution should include both lines:
+
+```php
+// http://tools.ietf.org/html/rfc2822#page-14
+//
+\Carbon\Carbon::setToStringFormat('Y-m-d\TH:i:sP');
+
+// Setup paginator
+$connection->setEventDispatcher($event_dispatcher);
+$connection->setPaginator(new Hook\Pagination\Environment());
+
+// Setup Schema Grammar
+// $connection->setSchemaGrammar();
+
+
+```

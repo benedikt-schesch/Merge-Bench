@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differing intentions in defining the `LaravelLocalizationRoutes` class:
+
+- **HEAD** (likely a previous version) extends `LaravelLocalizationMiddlewareBase`, implying shared behavior from a parent class.
+- **5a4e015...** (likely a refactor or simplification) defines it as a standalone class with no parent.
+
+---
+
+Both changes aim to retain a `LaravelLocalizationRoutes` middleware with the same method signature, but they diverge in structure. Without additional context (e.g., the contents of `LaravelLocalizationMiddlewareBase` or when/why the rewrite occurred), it's ambiguous whether the parent class is fundamentally necessary. Removing inheritance might simplify code or align with new patterns, but could also remove important shared logic.
+
+Since the intent isn't clear and both implementations claim the same class, **this should be resolved by the developer who made the changes**, as they have the context needed to decide whether inheritance is necessary or intentional.
+
+```php
+namespace Mcamara\LaravelLocalization\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+<<<<<<< HEAD
+class LaravelLocalizationRoutes extends LaravelLocalizationMiddlewareBase {
+
+=======
+class LaravelLocalizationRoutes
+{
+>>>>>>> 5a4e0153f45d48bdd45683584367d53a9ff4fa05
+    /**
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+```

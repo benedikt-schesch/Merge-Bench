@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a `return 1;` statement present in the HEAD branch but absent in the other branch (4348393f). The surrounding code doesn't provide enough context to determine the function's return type or control flow requirements. Since the intent is ambiguous and we can't verify semantic correctness without knowing if the function should return a value at this point, the conflict remains unresolved.
+
+Here's the original snippet with the conflict preserved:
+
+```c
+    if (sshfwd_write(pf->c, data, len) > 0) {
+      pf->throttled = 1;
+      sk_set_frozen(pf->s, 1);
+    }
+  }
+<<<<<<< HEAD
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void pfd_sent(Plug plug, int bufsize)
+{
+  struct PortForwarding *pf = (struct PortForwarding *)plug;
+```

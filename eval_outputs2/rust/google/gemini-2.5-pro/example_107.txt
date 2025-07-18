@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```rust
+                .write()
+                .await
+                .delete_series(&series_ids, &TimeRange::all());
+
+            info!(
+                "Drop table: vnode {vnode_id} deleting {} fields in table: {db_owner}.{table}",
+                column_ids.len() * series_ids.len()
+            );
+
+            let version = self.ts_family.read().await.super_version();
+            version
+                .add_tombstone(&series_ids, &column_ids, &TimeRange::all())
+
+```

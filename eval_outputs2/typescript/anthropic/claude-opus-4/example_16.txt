@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD version has removed some type definitions that the incoming branch is trying to add. Based on the context and the pattern of type definitions in this TypeScript file, it appears the incoming branch is adding utility types `MaybeRef` and `MaybeRefOrGetter` that are commonly used in Vue.js composition API contexts.
+
+Given that:
+1. The file already has `MaybeRefDeep` type definition above
+2. The incoming types `MaybeRef` and `MaybeRefOrGetter` are simpler, more fundamental types that `MaybeRefDeep` likely depends on or complements
+3. These types follow the same naming pattern and appear to be part of the same type system
+
+The semantic intent seems to be adding these utility types to support ref-based type operations. The conflict likely arose because HEAD removed these types while another branch was adding them.
+
+Here's the resolved version that includes both the existing code and the new type definitions:
+
+```typescript
+        [Property in keyof T]: MaybeRefDeep<T[Property]>
+      }
+    : T
+>
+
+export type MaybeRef<T> = Ref<T> | T
+
+export type MaybeRefOrGetter<T> = MaybeRef<T> | (() => T)
+
+export type DeepUnwrapRef<T> = T extends UnwrapLeaf
+  ? T
+  : T extends Ref<infer U>
+  ? DeepUnwrapRef<U>
+  : T extends {}
+```

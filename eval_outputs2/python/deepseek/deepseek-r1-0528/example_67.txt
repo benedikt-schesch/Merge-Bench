@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from a formatting difference in raising an exception. Both versions achieve the same semantic intent of raising a `RangeInvalid` exception with a default message when a `TypeError` occurs. The only difference is:
+- HEAD uses multi-line formatting
+- The other branch uses a single-line format
+
+Given the context shows other single-line statements (like the `__repr__` method) and the exception message is short, the single-line format is more consistent and concise. Here's the resolved version:
+
+```python
+>>>>>>> 1fcf849f16279d43010c89c5d8cf69d5de96a800
+            return v
+
+        # Objects that have no length e.g. None or strings will raise TypeError
+        except TypeError:
+            raise RangeInvalid(self.msg or 'invalid value or type')
+
+    def __repr__(self):
+        return 'Length(min=%s, max=%s)' % (self.min, self.max)

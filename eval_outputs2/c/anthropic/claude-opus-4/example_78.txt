@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to play a sound file, but they have different approaches:
+
+- HEAD: Direct call to `PlaySound()`
+- The other branch: Checks if `p_PlaySound` exists before calling it (likely for dynamic loading/compatibility)
+
+The semantic intent of the second branch appears to be adding a safety check to ensure the PlaySound function pointer is available before using it. This is a common pattern for dynamically loaded functions or for compatibility across different Windows versions.
+
+Here's the resolved conflict that preserves the safety check while maintaining the same functionality:
+
+```c
+     * time _after_ it finishes rather than before it starts.
+     */
+    lastbeep = GetTickCount();
+  } else if (mode == BELL_WAVEFILE) {
+    Filename *bell_wavefile = conf_get_filename(conf, CONF_bell_wavefile);
+    if (!p_PlaySound ||
+        !p_PlaySound(bell_wavefile->path, NULL, SND_ASYNC | SND_FILENAME)) {
+      char buf[sizeof(bell_wavefile->path) + 80];
+      char otherbuf[100];
+      sprintf(buf,
+              "Unable to play sound file\n%s\n"
+              "Using default sound instead",
+
+```

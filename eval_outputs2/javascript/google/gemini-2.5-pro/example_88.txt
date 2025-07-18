@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Resolving the conflict requires determining which import path for `createStateLink` is correct.
+
+*   **HEAD:** `// import { createStateLink } from '../../modules/apollo-common';`
+*   **Incoming Change (65e4b1a553...):** `// import { createStateLink } from '../../modules/apollo-common/links/state.js';`
+
+Both changes keep the import commented out, indicating that the `createStateLink` functionality is not currently in use. The difference is the path. The incoming change provides a more specific path, pointing directly to `links/state.js`. This is a common pattern when code is refactored into a more organized directory structure. The incoming change is likely updating the commented-out line to reflect this new location.
+
+Therefore, the most logical resolution is to accept the more specific and updated path from the incoming change while keeping the line commented, as it is in both branches.
+
+```javascript
+>>>>>>> 65e4b1a553aad2a0474474c4f54f33063f20011e
+
+import { SchemaLink } from '@apollo/client/link/schema';
+import { GraphQLSchema } from '../graphql/index.js';
+
+// import { createStateLink } from '../../modules/apollo-common/links/state.js';
+import { ApolloLink } from 'apollo-link';
+
+import { getFragmentMatcher } from '../../modules/fragment_matcher';
+
+// @see https://www.apollographql.com/docs/react/features/server-side-rendering.html#local-queries
+
+```

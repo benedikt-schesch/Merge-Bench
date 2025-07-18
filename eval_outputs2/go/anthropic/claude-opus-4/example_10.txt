@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import the `net/mail` package, but with different approaches:
+
+- HEAD imports it as `"net/mail"` (using the standard name)
+- The other branch imports it as `stdmail "net/mail"` (using an alias)
+
+Additionally, HEAD includes `"os"` import while the other branch doesn't.
+
+Since both sides want the mail package imported, and using an alias like `stdmail` is a common practice to avoid naming conflicts (especially when there might be other mail-related imports), I'll resolve this by keeping the aliased import and the `os` import from HEAD:
+
+```go
+
+import (
+	"errors"
+	"fmt"
+	"io"
+	stdmail "net/mail"
+	"os"
+)
+
+// Sender is the interface that wraps the Send method.
+//
+// Send sends an email to the given addresses.
+
+```

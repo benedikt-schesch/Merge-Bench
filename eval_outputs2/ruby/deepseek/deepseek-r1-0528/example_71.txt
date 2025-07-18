@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+```ruby
+    @document.render(:html, :template => "public/noc_html/views", :output => "public/noc_html/index.html")
+    redirect "noc_html/index.html"
+  end
+  
+  get '/create_pdf/:filename' do
+    
+    startTime = Time.now
+    puts "///////// Starting Render: #{startTime}"
+        
+    # first render html
+    @document = AsciiDoc::AsciiDocument.new("public/#{params[:filename]}", { :debug_xml_to_file => "public/#{params[:filename]}.xml" })
+    puts "Parsed Asciidoc after: #{Time.now-startTime} seconds"
+    
+    @document.render(:html, :template => "public/noc_pdf/views", :output => "public/noc_pdf/index.html")
+```
+
+**Resolution Explanation:**  
+The conflict centered around different logging implementations for the start time. Both versions captured the start time, but with different output formats. The HEAD version:
+1. Uses Ruby's idiomatic `puts` with string interpolation
+2. Provides clearer context ("Starting Render") in the output
+3. Maintains consistent formatting with the existing time-difference log below
+
+The alternative branch version used `printf` with problematic `%g` formatting (incorrect for Time objects) and lacked descriptive context. The chosen resolution maintains:
+- Functional correctness (proper Time object handling)
+- Consistent logging style
+- Clear operational context
+- Readability through descriptive messages
+- Existing code formatting and whitespace
+
+The solution preserves all surrounding context exactly as provided while selecting the semantically superior version.

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are calling `runtime.AnnotateIncomingContext`, but they differ in the number of arguments:
+
+- HEAD version: 3 arguments - `ctx, mux, req`
+- Incoming version: 4 arguments - `ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello"`
+
+The incoming version adds a fourth parameter which appears to be the full RPC method path. This suggests that the API for `AnnotateIncomingContext` has been updated to include the method path as an additional parameter, likely for better routing or logging purposes.
+
+Since this appears to be an API update where the method now requires the RPC path, I'll resolve by accepting the incoming change with the 4-argument version:
+
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_3(rctx, inboundMarshaler, server, req, pathParams)
+
+```

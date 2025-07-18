@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from the same modules but with different selections:
+
+- **HEAD** wants: `ColumnId, SeriesId, SeriesKey, TagKey, TagValue` from models, and `raft_write_command, WritePointsResponse` from protos::kv_service, plus `protos::models as fb_models`
+- **Branch 2f331dd** wants: `ColumnId, SeriesId, SeriesKey` from models (subset of HEAD), `models::utils::unite_id`, and everything (`*`) from protos::kv_service
+
+The semantic intent seems to be:
+1. Both sides need the core types (ColumnId, SeriesId, SeriesKey)
+2. HEAD needs additional specific types (TagKey, TagValue) and specific imports from kv_service
+3. The branch needs unite_id utility and wants all kv_service imports
+
+Since HEAD is more specific about what it needs from kv_service and the branch uses a wildcard import (which would include everything HEAD needs), and both sides seem to have valid requirements, the resolution should include all the specific imports needed:
+
+```rust
+use std::sync::Arc;
+
+use models::meta_data::VnodeId;
+use models::predicate::domain::{ResolvedPredicate, TimeRange, TimeRanges};
+use models::schema::Precision;
+use models::utils::unite_id;
+use models::{ColumnId, SeriesId, SeriesKey, TagKey, TagValue};
+use protos::kv_service::{raft_write_command, WritePointsResponse};
+use protos::models as fb_models;
+use snafu::ResultExt;
+use tokio::sync::RwLock;
+use trace::{debug, error, info, warn, SpanContext, SpanExt, SpanRecorder};
+
+use crate::database::Database;
+
+```

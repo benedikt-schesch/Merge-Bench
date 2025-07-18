@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict centers around the initialization of `runningServerReg` and additional flag definitions. Since the intent behind choosing between `sync.RWMutex` and `sync.Mutex` is ambiguous without broader context (RWMutex allows concurrent reads but may be unnecessary overhead if writes dominate, while Mutex is simpler but more restrictive), and the flag definitions in HEAD might be important for functionality, I'm preserving the conflict markers. 
+
+Here's the original snippet with conflict intact:
+
+```go
+
+	hookableSignals []os.Signal
+)
+
+func init() {
+<<<<<<< HEAD
+	flag.BoolVar(&isChild, "continue", false, "listen on open fd (after forking)")
+	flag.StringVar(&socketOrder, "socketorder", "", "previous initialization order - used when more than one listener was started")
+
+	runningServerReg = sync.RWMutex{}
+=======
+	runningServerReg = sync.Mutex{}
+>>>>>>> 56dacfd03bbbdd32d163460a337666aed77ea51f
+	runningServers = make(map[string]*endlessServer)
+	runningServersOrder = []string{}
+	socketPtrOffsetMap = make(map[string]uint)
+
+	DefaultMaxHeaderBytes = 0 // use http.DefaultMaxHeaderBytes - which currently is 1 << 20 (1MB)
+
+```

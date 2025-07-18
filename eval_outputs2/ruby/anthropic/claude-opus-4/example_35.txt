@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - implementing the `sup_distance` method. The only difference is that the HEAD version has no blank line after the method definition, while the other branch has added a blank line.
+
+Since this is purely a formatting difference and both sides have the same semantic intent (implementing the sup distance/L-infinity norm calculation), I'll resolve this by keeping the version with the blank line, as it provides better readability by separating the method signature from its implementation.
+
+```ruby
+      end
+      
+      # Sup distance, or L-intinity norm
+      # Parameters a and b are vectors with continuous attributes.      
+      def sup_distance(a, b)
+
+        distance = 0.0
+        a.each_with_index do |item_a, i|
+          item_b = b[i]
+          diff = (item_a - item_b).abs
+          distance = diff if diff > distance
+
+```

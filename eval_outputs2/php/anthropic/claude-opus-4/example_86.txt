@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - determining whether to use multi-client mode for the JAXLEvent constructor. The difference is in how they check for this configuration:
+
+- HEAD version: Uses `$this->cfg['multi_client']` - checking a configuration array
+- Other version: Uses `defined('JAXL_MULTI_CLIENT')` - checking a PHP constant
+
+Since the HEAD version is using the instance configuration array (`$this->cfg`), which is more consistent with the object-oriented approach and allows for per-instance configuration, while the other version uses a global constant, I'll resolve in favor of the HEAD version as it provides more flexibility and better encapsulation.
+
+```php
+        } else {
+            $transport = new JAXLSocketClient($this->cfg['stream_context']);
+        }
+
+        // lifecycle events callback
+        $this->ev = new JAXLEvent($this->cfg['multi_client'] ? array(&$this) : array());
+
+        // initialize xmpp stream with configured transport
+        parent::__construct(
+            $transport,
+            $jid,
+
+```

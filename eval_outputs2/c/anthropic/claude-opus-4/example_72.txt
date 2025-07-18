@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call a function to draw an insert marker, with the only difference being the function name:
+- HEAD uses: `DrawInsert`
+- The incoming change uses: `p_DrawInsert`
+
+Since the conflict is simply about which function name to use and both sides have the same intent (drawing an insert marker at the same location with the same parameters), I cannot determine which is correct without more context about the codebase's naming conventions or which function is the proper one to use.
+
+Therefore, I'm returning the snippet with the conflict preserved:
+
+```c
+      case DL_DRAGGING:
+        hdl->dragging = 1;
+        dest = pl_itemfrompt(dlm->hWnd, dlm->ptCursor, TRUE);
+        if (dest > hdl->dummyitem)
+          dest = hdl->dummyitem;
+<<<<<<< HEAD
+        DrawInsert(hwnd, dlm->hWnd, dest);
+=======
+        p_DrawInsert(hwnd, dlm->hWnd, dest);
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+        if (dest >= 0)
+          SetWindowLongPtr(hwnd, DWLP_MSGRESULT, DL_MOVECURSOR);
+        else
+          SetWindowLongPtr(hwnd, DWLP_MSGRESULT, DL_STOPCURSOR);
+        ret |= 1;
+
+```

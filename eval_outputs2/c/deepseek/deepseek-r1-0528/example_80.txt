@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, both declarations are independent Windows API imports that should be preserved. The conflict is resolved by keeping both function declarations in their original formats:
+
+```c
+                      (PCtxtHandle, ULONG, PVOID));
+DECL_WINDOWS_FUNCTION(static,
+                      SECURITY_STATUS,
+                      MakeSignature,
+                      (PCtxtHandle, ULONG, PSecBufferDesc, ULONG));
+DECL_WINDOWS_FUNCTION(static, DLL_DIRECTORY_COOKIE, AddDllDirectory, (PCWSTR));
+
+typedef struct winSsh_gss_ctx {
+  unsigned long maj_stat;
+  unsigned long min_stat;
+  CredHandle cred_handle;
+```
+
+Key resolution points:
+1. `MakeSignature` declaration (multi-line format) is preserved from HEAD
+2. `AddDllDirectory` declaration (single-line format) is preserved from other branch
+3. Both declarations are complementary Windows API imports
+4. Original spacing/formatting is maintained for both declarations
+5. Struct definition remains unchanged as common context
+
+The declarations serve different purposes:
+- `MakeSignature` handles cryptographic operations
+- `AddDllDirectory` manages DLL search paths
+Both are required for complete functionality.

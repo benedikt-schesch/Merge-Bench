@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The intent of the `HEAD` branch is to export the `default` from `./withStyles` and to introduce a new `styled` component export.
+
+The intent of the other branch (`dae1bf2b...`) is to provide a named export `{withStyles}` in addition to the default export for backward compatibility.
+
+A semantic merge combines these intents. The `default` export from `./withStyles` should be exported as both the `default` for the library and as a named export `withStyles`. Additionally, the new `styled` export from the `HEAD` branch should be included.
+
+```javascript
+export {default as createUseStyles} from './createUseStyles'
+export {default as JssProvider} from './JssProvider'
+export {default as jss} from './jss'
+export {SheetsRegistry, createGenerateId} from 'jss'
+export {default as JssContext} from './JssContext'
+export {default, default as withStyles} from './withStyles'
+export {default as styled} from './styled'
+
+```

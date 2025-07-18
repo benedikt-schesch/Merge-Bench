@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call a newsletter form function, but with different function names:
+
+- HEAD (current branch): `cptui_newsletter_form();`
+- Incoming changes: `cptui_about_page_newsletter_form();`
+
+Given the context, this code is inside a function called `cptui_about_page_newsletter` (as evidenced by the add_action hook at the bottom), and it's specifically for the "about page" context. The incoming change appears to be using a more specific function name that matches the context (`cptui_about_page_newsletter_form`), while HEAD is using a more generic name (`cptui_newsletter_form`).
+
+Since this is specifically for the about page context, the more specific function name makes semantic sense and likely represents an intentional refactoring to be more explicit about the function's purpose.
+
+```php
+	}
+
+	?>
+	<h3><?php esc_html_e( 'Stay informed', 'custom-post-type-ui' ); ?></h3>
+	<?php
+	cptui_about_page_newsletter_form();
+
+	return '';
+}
+add_action( 'cptui_main_page_before_changelog', 'cptui_about_page_newsletter' );
+
+
+```

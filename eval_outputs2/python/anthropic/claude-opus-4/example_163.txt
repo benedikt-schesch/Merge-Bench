@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+1. **HEAD side**: Documents the parameter as `:Parameter externKey:` with a description saying it's "encoded as a string"
+2. **Incoming side**: Documents the parameter as `externKey:` with a description saying it's "encoded as bytes" and adds additional format information
+
+The semantic intent appears to be:
+- Both sides are documenting the `externKey` parameter
+- The incoming side provides more detailed information about supported formats
+- There's a conflict about the data type (string vs bytes)
+
+Given that RSA keys in Python cryptography libraries typically work with bytes (especially for DER format which is binary), and the incoming side provides more comprehensive documentation about the supported formats, I'll resolve this by combining the proper parameter documentation style from HEAD with the more accurate and detailed content from the incoming changes:
+
+```python
+        raise ValueError("RSA key format is not supported")
+
+    def importKey(self, externKey, passphrase=None):
+        """Import an RSA key (public or private half), encoded in standard form.
+
+        :Parameter externKey:
+            The RSA key to import, encoded as bytes.
+            The key can be in DER (PKCS#1) or in unencrypted
+            PEM format (RFC1421).
+
+            The key can be in any of the following formats:
+
+            - DER + PKCS#1 (binary)
+            - PEM + PKCS#1 (textual, according to RFC1421/3)
+
+```

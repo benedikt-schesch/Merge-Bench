@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Based on analyzing the semantic intent of both sides of the merge conflict:
+
+1. The HEAD version adds an `installers` method that accesses the current queue
+2. The other branch removes this method
+3. However, the `install` method below clearly depends on `installers` (using `installers << i`)
+4. Removing the method would break functionality in `install`
+5. Therefore, the method definition must be kept to maintain working functionality
+
+Resolved code snippet:
+```ruby
+        @install_queues.push []
+        yield
+        @install_queues.pop
+      end
+
+      def installers
+        @install_queues.last
+      end
+
+    protected
+
+      def install(i)
+        installers << i
+        i
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add environment variables to the `env` slice, but for different purposes:
+
+- **HEAD (left side)**: Adds cross-compilation PATH environment variable conditionally
+- **Right side**: Disables Go modules by setting `GO111MODULE=off`
+
+Both changes appear to be independent and complementary - one deals with cross-compilation setup and the other with Go modules configuration. The semantic intent is to properly configure the build environment, and both additions serve different aspects of that configuration.
+
+Here's the resolved conflict that includes both changes:
+
+```go
+	for _, arch := range androidArchs {
+		env := androidEnv[arch]
+		// Add the generated packages to GOPATH for reverse bindings.
+		gopath := fmt.Sprintf("GOPATH=%s%c%s", tmpdir, filepath.ListSeparator, goEnv("GOPATH"))
+		env = append(env, gopath)
+		if cenv[arch] != "" {
+			env = append(env, cenv[arch]) // Add the Cross Compile PATH Env
+		}
+		// gomobile-bind does not support modules yet.
+		env = append(env, "GO111MODULE=off")
+		toolchain := ndk.Toolchain(arch)
+
+		err := goBuildAt(
+			filepath.Join(tmpdir, "src"),
+			"./gobind",
+```

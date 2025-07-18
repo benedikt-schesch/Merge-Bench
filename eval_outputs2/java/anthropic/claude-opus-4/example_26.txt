@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch has three import statements that were removed in the other branch (5463b8f87d835f29ccb1c4feedad7ffad49380f6).
+
+The conflict appears to be about whether to keep these imports:
+- `org.spout.api.util.StringMap`
+- `org.spout.api.util.StringUtil`
+- `org.spout.cereal.config.ConfigurationException`
+
+Without seeing how these imports are used in the rest of the file, I cannot determine whether they should be kept or removed. The intent is ambiguous - the HEAD branch may have added code that requires these imports, or the other branch may have cleaned up unused imports.
+
+Here is the code snippet with the conflict preserved:
+
+```java
+import org.spout.api.plugin.security.PluginSecurityManager;
+import org.spout.api.plugin.services.ServiceManager;
+import org.spout.api.protocol.Protocol;
+import org.spout.api.scheduler.TaskManager;
+import org.spout.api.scheduler.TaskPriority;
+<<<<<<< HEAD
+import org.spout.api.util.StringMap;
+import org.spout.api.util.StringUtil;
+import org.spout.cereal.config.ConfigurationException;
+=======
+
+>>>>>>> 5463b8f87d835f29ccb1c4feedad7ffad49380f6
+import org.spout.engine.command.AnnotatedCommandExecutorTest;
+import org.spout.engine.command.ClientCommands;
+import org.spout.engine.command.CommonCommands;
+import org.spout.engine.command.InputCommands;
+import org.spout.engine.command.MessagingCommands;
+
+```

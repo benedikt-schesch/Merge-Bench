@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD version (current branch) simply closes the drive and returns `MRAA_SUCCESS`
+- The incoming change adds a conditional check for `advance_func.gpio_mode_post` and calls it if it exists
+
+The semantic intent appears to be:
+- Both sides want to close the drive
+- The incoming change wants to add a post-processing hook that can be called after the main operation
+- This follows a common pattern in driver/hardware abstraction layers where platform-specific operations can be performed
+
+Since both changes are complementary (closing the drive + optional post-processing), the resolution should include both:
+
+```c
+        return MRAA_ERROR_INVALID_RESOURCE;
+
+    }
+
+    close(drive);
+    if (advance_func.gpio_mode_post != NULL)
+        return advance_func.gpio_mode_post(dev,mode);
+    return MRAA_SUCCESS;
+}
+
+mraa_result_t
+mraa_gpio_dir(mraa_gpio_context dev, gpio_dir_t dir)
+
+```

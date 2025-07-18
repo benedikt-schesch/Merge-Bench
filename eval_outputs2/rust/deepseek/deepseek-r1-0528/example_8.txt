@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict arises from both branches modifying imports from `datafusion_common`. The HEAD branch adds a specific import for `Transformed` and `TransformedResult`, while the other branch introduces a grouped import that includes `TreeNode` and `TreeNodeRewriter`. The semantic intent is to combine both sets of imports into a single grouped import statement for clarity and efficiency.
+
+Here's the resolved code:
+```rust
+use arrow::{
+    array::{new_null_array, AsArray},
+    datatypes::{DataType, Field, Schema},
+    record_batch::RecordBatch,
+};
+use datafusion_common::{
+    cast::{as_large_list_array, as_list_array},
+    tree_node::{TreeNode, TreeNodeRewriter, Transformed, TransformedResult},
+};
+use datafusion_common::{
+
+```
+
+Key changes made:
+1. Removed the conflict markers
+2. Merged the standalone import from HEAD (`Transformed, TransformedResult`) into the grouped import
+3. Preserved the original structure and spacing of the grouped import
+4. Maintained the incomplete trailing import as-is since it's outside the conflict scope
+
+This resolution:
+- Avoids duplicate imports of `datafusion_common::tree_node`
+- Combines all required items from both branches
+- Maintains Rust's idiomatic grouped import style
+- Preserves all surrounding context exactly as provided

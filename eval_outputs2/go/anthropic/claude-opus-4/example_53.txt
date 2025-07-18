@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to create the same `asset` structure, but with different timestamps in the `modTime` field.
+
+The differences are:
+- HEAD: `modTime: time.Unix(1444419364, 0)`
+- Incoming: `modTime: time.Unix(1467390283, 0)`
+
+The only other difference is minor spacing after `info:` in the struct initialization (HEAD has two spaces, incoming has one space).
+
+Since this appears to be auto-generated code (likely from a tool like go-bindata based on the function names and structure), the timestamp difference likely reflects when the file was last regenerated. The incoming change has a more recent timestamp (1467390283 vs 1444419364 when converted to dates).
+
+In this case, I'll preserve the more recent timestamp and use the consistent single-space formatting from the incoming change:
+
+```go
+	bytes, err := confGitignoreLinuxBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/Linux", size: 118, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreLithium = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xca\xc9\x4c\x2a\x4a\x2c\xca\x4c\x2d\xd6\xd7\xe2\x2a\x4a\x2d\xce\x2f\x2d\x4a\x06\xb2\x4b\x72\x0b\x80\x7c\x40\x00\x00\x00\xff\xff\x1a\xab\xaa\xaa\x1c\x00\x00\x00")
+
+
+```

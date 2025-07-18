@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differing generic lifetime parameter orders in the `ChildBuilder` struct definition. Both versions aim to define the same struct with the same fields but with swapped lifetimes:
+
+- The `HEAD` version uses the order `<'w, 's, 'a>`, implying the lifetimes are tied to `World`, `System`, and a borrow, in this conventional interpretation.
+- The `65e834ce8d51` commit version swaps `<'s, 'w, 'a>`, potentially mirroring a different interpretation or order convention for the same.
+
+Semantically, if the `Commands` struct accepts generic lifetimes in an interchangeable order (e.g., it's defined internally without assumptions about their order), both versions are valid, and the difference doesn't affect any deeper logic. However, if there's an underlying codebase assumption or ergonomic design where `World` comes before `System` (or vice versa) consistently, this could make one version more appropriate than the other.
+
+In light of this context, the intent of both sides is indeterminate solely based on the given snippet, especially without insight into the `Commands` definition or how `ChildBuilder` is used elsewhere in the project.
+
+Per the user's instructions, since the intent is ambiguous, the conflict remains unresolved.
+
+```rust
+pub struct PushChildren {
+    parent: Entity,
+    children: SmallVec<[Entity; 8]>,
+}
+
+<<<<<<< HEAD
+pub struct ChildBuilder<'w, 's, 'a> {
+    commands: &'a mut Commands<'w, 's>,
+=======
+pub struct ChildBuilder<'s, 'w, 'a> {
+    commands: &'a mut Commands<'s, 'w>,
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    push_children: PushChildren,
+}
+
+impl Command for PushChildren {
+    fn write(self, world: &mut World) {
+```

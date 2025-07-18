@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two different approaches to watching the Vuex store state for strict mode enforcement. The HEAD version uses a composition API-style `watch` function, while the other branch uses Vue's instance-based `$watch` method. Both implementations share the same semantic intent: to monitor state changes and ensure mutations only occur within proper mutation handlers. 
+
+Since the conflict involves different reactivity mechanisms that could correspond to different Vue versions (Composition API vs Options API), and without additional context about the Vue version or framework conventions, it's ambiguous which implementation should be preferred. The conflict must be resolved manually based on project-specific requirements.
+
+Here is the unchanged snippet with conflict markers:
+
+```javascript
+    )
+  }
+}
+
+function enableStrictMode (store) {
+<<<<<<< HEAD
+  watch(() => store._state.data, () => {
+=======
+  store._vm.$watch(function () { return this._data.$$state }, () => {
+>>>>>>> ce0c88a81703017cad63e4b5a913eff6349f585a
+    if (__DEV__) {
+      assert(store._committing, `do not mutate vuex store state outside mutation handlers.`)
+    }
+  }, { deep: true, flush: 'sync' })
+}
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Resolving this merge conflict requires understanding the semantic intent of both changes.
+
+*   **HEAD (`<<<`):** The line `name = Net::IMAP.decode_utf7(name.to_s)` is intended to handle mailbox names that contain non-ASCII characters. IMAP uses a modified version of UTF-7 to encode such names. This change ensures that any given name is decoded into a standard UTF-8 string before being used internally (e.g., as a key in a hash).
+
+*   **Incoming Change (`>>>`):** The line `name = labels.localize(name)` is designed to add a layer of abstraction for common mailbox names. For example, it could translate a user-friendly symbol like `:inbox` or `:trash` into the actual folder name used by the server (e.g., "INBOX", "Boîte de réception", "[Gmail]/Trash"). This is a common feature for email clients that support multiple languages or services with different standard folder names.
+
+Both changes aim to canonicalize the `name` argument before it's used, but they address different concerns: one for encoding and the other for localization. They are not mutually exclusive and, in fact, are complementary. A robust implementation would handle both scenarios.
+
+The correct resolution is to apply both transformations. The logical order is to first localize the name (to convert a symbol like `:inbox` to a string like `"INBOX"`) and then ensure the resulting string is properly decoded.
+
+```ruby
+      #     mailbox.count(:all)
+      #     ...
+      #   end
+      def mailbox(name, &block)
+        @mailbox_mutex.synchronize do
+          name = labels.localize(name)
+          name = Net::IMAP.decode_utf7(name.to_s)
+          mailbox = (mailboxes[name] ||= Mailbox.new(self, name))
+          switch_to_mailbox(mailbox) if @current_mailbox != mailbox
+
+          if block_given?
+            mailbox_stack << @current_mailbox
+
+```

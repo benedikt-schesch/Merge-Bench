@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD (current branch): Destructures `label` and `display` from props
+- Incoming change: Destructures `label` and `onChange` from props
+
+Both sides want `label`, but they differ on the second property. Without more context about the component's purpose and the `IBaseCustomLabelProps` interface, I cannot determine which properties should actually be destructured or if perhaps all three properties should be included.
+
+Since the intent is ambiguous without knowing:
+1. What properties `IBaseCustomLabelProps` actually contains
+2. Whether this is a breaking change where `display` was replaced by `onChange`
+3. Or if both properties should coexist
+
+I'm returning the snippet with the conflict unresolved:
+
+```typescript
+}
+
+/** @deprecated */
+export function CustomLabel(props: IBaseCustomLabelProps): JSX.Element | null {
+    const context = useContext(AppContext);
+<<<<<<< HEAD
+    const { label, display } = props;
+=======
+    const { label, onChange } = props;
+>>>>>>> a5aac53666a8983bb54bba93a196daee2dc4a61c
+
+    function getLocale(name: string) {
+        return context.localeService?.t(name);
+    }
+
+
+```

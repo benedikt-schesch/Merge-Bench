@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two different changes to the `t.RunTestSet` function call.
+
+- **HEAD**'s Intent: This side makes a straightforward call to `t.RunTestSet`, passing a general `options.NoiseConfig` for noise configuration. The parameters like `initialisedValues.YamlStore` and `initialisedValues.Ctx` are passed directly.
+
+- **Branch `7d204435...`'s Intent**: This side introduces a more sophisticated feature for noise configuration. It allows for a global noise setting (`options.GlobalNoise`) to be combined with or overridden by a test-set-specific noise setting (`options.TestsetNoise`). This is a clear semantic enhancement. This side also appears to use shortened local variables (`ys`, `loadedHooks`, `ctx`, etc.), likely defined earlier in the function for readability as part of a refactor that accompanied the feature addition.
+
+**Resolution:**
+The branch `7d204435...` contains a deliberate feature enhancement that provides more granular control over test execution. Its intent is a superset of HEAD's. The most logical resolution is to accept the changes from the feature branch in their entirety, as they represent the more advanced and desired state of the code.
+
+```go
+		// checking whether the provided testset match with a recorded testset.
+		if _, ok := initialisedValues.SessionsMap[sessionIndex]; !ok {
+			t.logger.Info("no testset found with: ", zap.Any("name", sessionIndex))
+			continue
+		}
+		noiseConfig := options.GlobalNoise
+		if tsNoise, ok := options.TestsetNoise[sessionIndex]; ok {
+			noiseConfig = JoinNoises(options.GlobalNoise, tsNoise)
+		}
+		testRunStatus := t.RunTestSet(sessionIndex, path, testReportPath, appCmd, options.AppContainer, options.AppNetwork, options.Delay, 0, ys, loadedHooks, testReportFS, nil, options.ApiTimeout, ctx, noiseConfig, false)
+
+		switch testRunStatus {
+		case models.TestRunStatusAppHalted:
+			testRes = false
+			exitLoop = true
+		case models.TestRunStatusFaultUserApp:
+
+```

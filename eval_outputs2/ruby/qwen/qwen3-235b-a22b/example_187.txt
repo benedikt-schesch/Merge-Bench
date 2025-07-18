@@ -1,0 +1,51 @@
+<think>
+No reasoning found</think>
+The merge conflict in this code snippet arises from differences in how the `get_page` method expects to receive the `target_url` parameter — one branch defines it as a positional argument (`target_url`), while the other defines it as a keyword argument with a default value of `nil` (`target_url: nil`).
+
+---
+
+### Understanding the Semantic Intent
+
+Let's consider the **intent and the semantics** of both approaches:
+
+- `def get_page(target_url)` — the `target_url` is a required parameter that must be passed when invoking the method. This ensures that the `domain.request` has a valid URL to work with.
+  
+- `def get_page(target_url: nil)` — the parameter is a keyword argument and is optional due to the assigned default value. However, in the body of the method, the `target_url` is directly passed to the `request` function, implying it's **required** — passing `nil` would result in an invalid request or an error, depending on how `@version.domain.request` is implemented.
+
+This means that the addition of a `nil` default seems inconsistent with the **functional requirement** of the method to receive a valid `target_url` to make the API call.
+
+---
+
+### Resolution Based on Semantic Intent
+
+Given that:
+
+- The method uses `target_url` directly and assumes it is present,
+- The `nil` default would likely result in an error without additional logic to handle fallback values or construct URLs from `@solution` (which is not shown),
+- Converting to keyword arguments could improve clarity and align with modern Ruby practices, but only **if the parameter remains required**,
+
+---
+
+### Final Merge Decision
+
+The correct semantic resolution is to switch to **required keyword arguments** without a default (`target_url:`), ensuring clarity and correctness in how the method is used. This aligns with both clarity in method signature and required parameters needed for the implementation.
+
+---
+
+### Resolved Code Snippet
+
+Here is the fully preserved code with the resolved conflict:
+
+```ruby
+              ##
+              # Retrieve a single page of MemberInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of MemberInstance
+              def get_page(target_url:)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return MemberPage.new(@version, response, @solution)
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflict involves a trivial whitespace difference in initializing `parent_info`. Both sides set it to `NULL`, with the only difference being a trailing space in the branch version. Since the trailing space doesn't affect functionality and the surrounding code context remains identical, I've resolved it by keeping the version without the trailing space for consistency.
+
+Here's the resolved snippet:
+
+```c
+*/
+static int store_property_access_check(Bucket * p, zend_class_entry * from)
+{
+    zend_class_entry *parent = from->parent;
+    zend_property_info* child_info = (zend_property_info*)p->pData;
+    zend_property_info* parent_info = NULL;
+
+#ifdef ZEND_ENGINE_2_2
+    return (child_info->ce != from);
+#endif
+
+
+```

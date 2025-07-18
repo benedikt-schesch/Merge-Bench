@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see two completely different pieces of functionality being added in the same location:
+
+1. **HEAD side**: Adds a `reload_page` method that redirects to the current page using the referer
+2. **Other side**: Adds a deprecated `params` method with a comment about warning in version 8.0
+
+These two additions appear to be independent features that both sides want to add to the codebase. Since they don't conflict semantically (they serve different purposes), the resolution should include both methods.
+
+Here's the resolved code:
+
+```ruby
+      # internal redirect
+      def redirect(location)
+        throw :halt, [302, {"Location" => "#{request.base_url}#{location}"}, []]
+      end
+
+      def reload_page
+        current_location = request.referer.gsub(request.base_url, "")
+        redirect current_location
+      end
+
+    # deprecated, will warn in 8.0
+    def params
+      indifferent_hash = Hash.new { |hash, key| hash[key.to_s] if Symbol === key }
+
+      # stuff after ? or form input
+      # uses String keys, no Symbols!
+      def url_params(key)
+        warn { "URL parameter `#{key}` should be accessed via String, not Symbol (at #{caller(3..3).first})" } if key.is_a?(Symbol)
+
+```

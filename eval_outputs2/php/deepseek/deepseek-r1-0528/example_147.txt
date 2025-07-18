@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to handling responses in the password change functionality. The HEAD version added success feedback while the branch version improved error handling. Both changes are valid and can coexist by preserving the success message from HEAD and the enhanced error handling from the branch.
+
+Here's the resolved version:
+
+```php
+
+		} else if ($action === "changePass") {
+			if ($userName !== "default") {
+				$newPass = $_POST['newPass'];
+				saveFile("$directory/$groupName/$userName/pass.txt", $newPass);
+				echo '{"cenInfo":"password changed"}';
+			} else {
+				echo json_encode("Cannot modify default user's password");
+			}
+		} else if ($action === "getOther") {
+
+			$otherUser = $_POST['otherUser'];
+
+
+```
+
+Key resolution points:
+1. Kept the success message `{"cenInfo":"password changed"}` from HEAD to provide user feedback
+2. Used the branch's improved error handling with:
+   - `json_encode()` for proper JSON formatting
+   - More accurate error message text
+   - Removal of unnecessary JSON key for simplicity
+3. Maintained consistent response formats (JSON strings)
+4. Preserved all surrounding context exactly as provided

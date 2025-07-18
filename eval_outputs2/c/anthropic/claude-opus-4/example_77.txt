@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to fix a typo in the same comment. The conflict is purely about spelling:
+
+- HEAD has: "definitly"
+- The incoming change has: "definitely" (which is the correct spelling)
+
+Since both sides have the same intent - to have this comment in the code - and the incoming change has the correct spelling, the resolution should use the correctly spelled version.
+
+```c
+      /* This is so the ALT-Numpad and dead keys work correctly. */
+      keys_unicode[0] = 0;
+
+      return p - output;
+    }
+    /* If we're definitely not building up an ALT-54321 then clear it */
+    if (!left_alt)
+      keys_unicode[0] = 0;
+    /* If we will be using alt_sum fix the 256s */
+    else if (keys_unicode[0] && (in_utf(term) || ucsdata.dbcs_screenfont))
+      keys_unicode[0] = 10;
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch (current) has nothing after the `define('BASE_PATH',BASE_DIR);` line
+2. The incoming branch is trying to add two new configuration constants:
+   - `SITE_TITLE` - for defining the site's title
+   - A commented out `DEBUG_ENABLED` constant
+
+Both changes appear to be compatible - the incoming branch is simply adding new configuration options that don't conflict with the existing BASE_PATH definition. The intent seems to be expanding the configuration file with additional settings.
+
+Here's the resolved version:
+
+```php
+
+// If URL-Rewriting does not work then set
+// define('BASE_PATH',BASE_DIR.'/index.php');
+// If URL-Rewriting works, then leave the line below as is
+define('BASE_PATH',BASE_DIR);
+define('SITE_TITLE', 'Your Site');
+// define('DEBUG_ENABLED', true);
+
+```

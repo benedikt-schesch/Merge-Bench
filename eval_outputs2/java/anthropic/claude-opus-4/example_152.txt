@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- HEAD version: `GruntParser parser = new GruntParser(new StringReader(script));`
+- Incoming change: `GruntParser parser = new GruntParser(new StringReader(script), myPig);`
+
+The conflict is about whether the GruntParser constructor should take one parameter (just the StringReader) or two parameters (StringReader and myPig).
+
+The incoming change adds a `myPig` parameter to the constructor. This suggests that the GruntParser now requires a reference to a Pig instance, likely for better integration or to access Pig-specific functionality. This is a common pattern where parsers need access to the context they're operating in.
+
+Since the incoming change appears to be adding necessary functionality (passing the Pig instance to the parser), and this would be a breaking change if not included, the semantic intent seems to be that the parser now requires this additional parameter to function correctly.
+
+Here's the resolved code:
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "dump b;"
+                          + "store b into '/tmp/output1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+```

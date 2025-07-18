@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different approaches to resolving the scheduler class:
+
+1. **HEAD version** uses:
+   - `$this->app->make()` for container resolution
+   - `$this->getDriver()` for driver name resolution
+   - Non-fully-qualified `ReflectionException`
+
+2. **Branch version** uses:
+   - `App` facade for container resolution
+   - `Config::get('dispatcher::driver')` for driver name
+   - Fully-qualified `\ReflectionException`
+
+The intent is ambiguous because:
+- It's unclear whether `$this->getDriver()` or config-based driver resolution should be used
+- The container access method (`$this->app` vs `App` facade) has architectural implications
+- The exception handling differs in namespace resolution
+
+Without knowing the broader context of the application's architecture or the implementation of `getDriver()`, this conflict cannot be safely resolved. Both versions represent semantically different approaches to dependency resolution and configuration handling.
+
+Here's the original code with conflict markers preserved:
+
+```php
+     * @return \Indatus\Dispatcher\Scheduling\Schedulable
+     */
+    public function resolveSchedulerClass()
+    {
+        try {
+<<<<<<< HEAD
+            return $this->app->make($this->getDriver().'\\Scheduler', [$this]);
+        } catch (ReflectionException $e) {
+            return $this->app->make('Indatus\Dispatcher\Drivers\\'.$this->getDriver().'\\Scheduler', [$this]);
+=======
+            return App::make(Config::get('dispatcher::driver').'\\Scheduler', [$this]);
+        } catch (\ReflectionException $e) {
+            return App::make('Indatus\Dispatcher\Drivers\\'.$this->getDriver().'\\Scheduler', [$this]);
+>>>>>>> 8a08444b80550a21aa79eb24c96872111fe9cd01
+        }
+    }
+
+    /**
+     * Resolve a class based on the driver configuration
+```

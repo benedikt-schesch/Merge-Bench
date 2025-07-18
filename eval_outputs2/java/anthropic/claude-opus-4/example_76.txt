@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - they're both putting the same data into the map with the same key and value. The only difference is the formatting:
+
+- HEAD has the code split across two lines
+- The other branch has it on a single line
+
+Since both versions are semantically identical and achieve the same intent, I'll resolve this by choosing the more readable two-line format from HEAD:
+
+```java
+   *
+   * @param data A map of data being returned to a client request.
+   */
+  public void maybeAddPermalinkToData(final Map<ReturnableData, Object> data) {
+    if (showGameLinkProvider.get() && null != currentUniqueId) {
+      data.put(AjaxResponse.GAME_PERMALINK,
+          String.format(gamePermalinkFormatProvider.get(), currentUniqueId));
+    }
+  }
+
+  /**
+   * Add a player to the game.
+
+```

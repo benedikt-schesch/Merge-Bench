@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (left side)**: Uses `dir` in the printf statement
+- **Right side (commit 4348393...)**: Uses `cmd->words[i]` in the printf statement
+
+The semantic issue here is that `dir` is the result of `canonify(cmd->words[i])`, but the code has already checked that `dir` is NULL (in the `if (!dir)` condition). So using `dir` in the printf statement would be printing NULL, which is incorrect.
+
+The right side correctly uses `cmd->words[i]` to show the original input that failed to canonify, which provides more useful error information to the user.
+
+Here's the resolved code:
+
+```c
+
+  ret = 1;
+  for (i = 1; i < cmd->nwords; i++) {
+    dir = canonify(cmd->words[i]);
+    if (!dir) {
+      printf("%s: canonify: %s\n", cmd->words[i], fxp_error());
+      return 0;
+    }
+
+    req = fxp_mkdir_send(dir);
+    pktin = sftp_wait_for_reply(req);
+
+```

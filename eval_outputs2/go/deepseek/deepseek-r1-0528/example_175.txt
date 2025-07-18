@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a function signature change where the two branches have different parameters. The HEAD branch has fewer parameters, while the other branch adds `logStr`, `reqTimestampMock`, and `logger`. Since the function body uses none of these parameters in the visible context, the intent is ambiguous - we can't determine if these parameters are required for functionality elsewhere in the function.
+
+Here's the original snippet with conflict preserved:
+
+```go
+
+	}
+
+}
+
+<<<<<<< HEAD
+func recordMessage(h *hooks.Hook, requestBuffer, responseBuffer []byte, mongoRequests []models.MongoRequest, mongoResponses []models.MongoResponse, opReq Operation, ctx context.Context) {
+=======
+func recordMessage(h *hooks.Hook, requestBuffer, responseBuffer []byte, logStr string, mongoRequests []models.MongoRequest, mongoResponses []models.MongoResponse, opReq Operation, ctx context.Context, reqTimestampMock time.Time, logger *zap.Logger) {
+>>>>>>> 7d20443551e8827b2d4cf431a63d30a5d3a16091
+	// // capture if the wiremessage is a mongo operation call
+
+	shouldRecordCalls := true
+	name := "mocks"
+	meta1 := map[string]string{
+```

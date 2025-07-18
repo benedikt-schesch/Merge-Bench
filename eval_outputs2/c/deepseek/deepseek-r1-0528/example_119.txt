@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and determined that the intent is ambiguous without additional context about the data type of `term->esc_args[i]`. Since we don't have information about whether these values should be treated as signed or unsigned integers, I'm returning the snippet with the conflict markers intact as instructed.
+
+```c
+              char lbuf[64];
+              strcpy(term->id_string, "\033[?");
+              for (i = 1; i < term->esc_nargs; i++) {
+                if (i != 1)
+                  strcat(term->id_string, ";");
+<<<<<<< HEAD
+                sprintf(lbuf, "%d", term->esc_args[i]);
+=======
+                sprintf(lbuf, "%u", term->esc_args[i]);
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+                strcat(term->id_string, lbuf);
+              }
+              strcat(term->id_string, "c");
+            }
+#if 0
+```

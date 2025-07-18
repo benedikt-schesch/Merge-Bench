@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is implementing `PartialEq<ConflictKind> for ConflictKindRef<'a>`
+2. The other branch is implementing `PartialEq<ConflictPackage> for ConflictPackageRef<'_>`
+
+These appear to be two different trait implementations for different types that were added in parallel. The conflict seems to be a result of both branches adding implementations in the same location, but they're for different types entirely (`ConflictKind`/`ConflictKindRef` vs `ConflictPackage`/`ConflictPackageRef`).
+
+Since these are implementations for different types and both seem intentional, the semantic resolution would be to keep both implementations. Here's the resolved code:
+
+```rust
+    fn from(group: &'a GroupName) -> ConflictKindRef<'a> {
+        ConflictKindRef::Group(group)
+    }
+}
+
+impl<'a> PartialEq<ConflictKind> for ConflictKindRef<'a> {
+    fn eq(&self, other: &ConflictKind) -> bool {
+        other.as_ref() == *self
+    }
+}
+
+impl PartialEq<ConflictPackage> for ConflictPackageRef<'_> {
+    fn eq(&self, other: &ConflictPackage) -> bool {
+        other.as_ref() == *self
+    }
+}
+
+impl<'a> PartialEq<ConflictKindRef<'a>> for ConflictKind {
+
+```

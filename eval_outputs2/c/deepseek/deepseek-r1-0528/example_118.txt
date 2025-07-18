@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The merge conflict involves the presence of a `return 1;` statement after `do_telnet_read()`. Both branches' intent is ambiguous without knowing the function signature (missing from context). Since the function could reasonably be either `void` (no return needed) or `int` (return required), this cannot be safely resolved automatically. The conflict is preserved.
+
+```c
+  Telnet telnet = (Telnet)plug;
+  if (urgent)
+    telnet->in_synch = TRUE;
+  telnet->session_started = TRUE;
+  do_telnet_read(telnet, data, len);
+<<<<<<< HEAD
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void telnet_sent(Plug plug, int bufsize)
+{
+  Telnet telnet = (Telnet)plug;
+
+```

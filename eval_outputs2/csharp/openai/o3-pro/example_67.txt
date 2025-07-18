@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+        public virtual Task<string> StartIncrementalCopyAsync(Uri sourceSnapshot, AccessCondition destAccessCondition, BlobRequestOptions options, OperationContext operationContext, CancellationToken cancellationToken)
+        {
+            CommonUtility.AssertNotNull("sourceSnapshot", sourceSnapshot);
+            BlobRequestOptions modifiedOptions = BlobRequestOptions.ApplyDefaults(options, BlobType.Unspecified, this.ServiceClient);
+            return Executor.ExecuteAsync(
+<<<<<<< HEAD
+                this.StartCopyImpl(this.attributes, sourceSnapshot, default(string) /* contentMD5 */, true /*incrementalCopy */, false /* syncCopy */, default(PremiumPageBlobTier?) /* premiumPageBlobTier */, default(StandardBlobTier?) /* standardBlockBlobTier */, null /* sourceAccessCondition */, destAccessCondition, modifiedOptions),
+=======
+                this.StartCopyImpl(this.attributes, sourceSnapshot, default(string) /* contentMD5 */, true /*incrementalCopy */, false /* syncCopy */, null /* pageBlobTier */, default(RehydratePriority?) /* rehydratePriority */, null /* sourceAccessCondition */, destAccessCondition, modifiedOptions),
+>>>>>>> 9922329d470641d8227971a5b967e5c1ab90ff63
+                modifiedOptions.RetryPolicy,
+                operationContext,
+                cancellationToken);
+        }
+
+
+```

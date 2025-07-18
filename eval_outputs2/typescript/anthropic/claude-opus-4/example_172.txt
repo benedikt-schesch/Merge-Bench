@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `getWorkspaceInfo` method call, but with different parameters:
+
+- HEAD version: `this.getWorkspaceInfo(workspace.token, connected)`
+- Incoming version: `this.getWorkspaceInfo(this.ctx, workspace.token, connected)`
+
+The semantic intent appears to be that the incoming change is adding a context parameter (`this.ctx`) as the first argument to the method call, while HEAD has the original signature. This is a common pattern when refactoring code to pass context objects through method calls.
+
+Here's the resolved version that preserves the semantic intent of both changes:
+
+```typescript
+              connected = true
+              break
+            }
+          }
+          void this.getWorkspaceInfo(this.ctx, workspace.token, connected).catch(() => {
+            // Ignore
+          })
+        } catch (err: any) {
+          // Ignore
+        }
+
+```

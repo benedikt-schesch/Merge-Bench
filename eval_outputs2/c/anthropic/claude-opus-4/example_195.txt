@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one branch (HEAD) has no additional code after the `platform_type` declaration, while the other branch adds a new variable `mraa_adv_func advance_func;`.
+
+Since this appears to be adding a new feature (advanced functions) and doesn't conflict with the existing code semantically, the resolution should include both the existing code and the new addition.
+
+Here's the resolved code:
+
+```c
+#include "version.h"
+
+//static mraa_pininfo_t* pindata;
+static mraa_board_t* plat = NULL;
+static mraa_platform_t platform_type = MRAA_UNKNOWN_PLATFORM;
+mraa_adv_func advance_func;
+
+const char *
+mraa_get_version()
+{
+    return gVERSION;
+
+```

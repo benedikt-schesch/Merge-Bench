@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet with the merge conflict handled by preserving both implementations since they serve different types and purposes:
+
+```rust
+    fn eq(&self, other: &ConflictKindRef<'a>) -> bool {
+        self.as_ref() == *other
+    }
+}
+
+impl<'a> hashbrown::Equivalent<ConflictKind> for ConflictKindRef<'a> {
+    fn equivalent(&self, key: &ConflictKind) -> bool {
+        key.as_ref() == *self
+    }
+}
+
+impl hashbrown::Equivalent<ConflictPackage> for ConflictPackageRef<'_> {
+    fn equivalent(&self, key: &ConflictPackage) -> bool {
+        key.as_ref() == *self
+    }
+}
+
+/// An error that occurs when the given conflicting set is invalid somehow.
+```
+
+### Resolution Reasoning:
+1. **Different Types**: The HEAD implementation handles `ConflictKind`/`ConflictKindRef`, while the other branch handles `ConflictPackage`/`ConflictPackageRef`
+2. **Semantic Independence**: Both implementations are valid and serve distinct purposes (no overlap in functionality)
+3. **Preservation**: Maintained both implementations exactly as they appeared in their respective branches
+4. **Ordering**: Kept HEAD's implementation first since it appeared first in the conflict, followed by the other branch's implementation
+5. **Formatting**: Preserved original spacing and syntax, including:
+   - Lifetime annotations (`'a` vs `'_`)
+   - Trait bounds
+   - Method implementations
+   - Comment positioning
+
+The conflict arose because two separate features added similar trait implementations for different types at the same location. Since there's no actual overlap in functionality, both can coexist safely.

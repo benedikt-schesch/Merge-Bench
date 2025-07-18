@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD side has: `modelist`, `valradio`, `valbox`, `addbutton`, `rembutton`, `listbox`
+- Other side has: `valradio`, `valbox`, `setbutton`, `listbox`
+
+Both sides share: `valradio`, `valbox`, `listbox`
+
+The semantic intent appears to be:
+- HEAD is implementing a more complete UI with a mode list, add/remove buttons
+- The other branch has a simpler version with just a set button
+
+Since HEAD has a superset of functionality (including all the controls from the other branch plus additional ones), and the naming suggests `setbutton` might be functionally similar to `addbutton`, the most semantically correct resolution would be to keep HEAD's version as it preserves the most functionality.
+
+Here's the resolved code:
+
+```c
+    }
+  }
+}
+
+struct ttymodes_data {
+  union control *modelist, *valradio, *valbox;
+  union control *addbutton, *rembutton, *listbox;
+};
+
+static void ttymodes_handler(union control *ctrl,
+                             void *dlg,
+                             void *data,
+
+```

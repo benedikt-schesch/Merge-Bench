@@ -1,0 +1,77 @@
+<think>
+No reasoning found</think>
+The merge conflict appears to center around how the `max` value is calculated and returned for some display or scaling logic, likely related to graph or dataset visualizations. Both sides aim to increase the `max` value—likely to provide visual padding—but do so differently in terms of logic and percentage applied.
+
+---
+
+### **Examining the Two Versions**
+
+#### **`HEAD` Version**
+```javascript
+return max + (max - self.options.minY) * 0.2;
+```
+This returns `max` plus **20% of the difference between `max` and `minY`**. This is a **dynamic padding**—larger range between `max` and `minY` results in more padding, smaller range results in less padding.
+
+#### **`c973213a` Version**
+```javascript
+var m = _.max(setMax, getMax);
+
+max = m*1.2;
+max *=1.2
+
+return max;
+```
+This picks the **maximum between `setMax` and `getMax`**, then multiplies the result **twice** by `1.2`, effectively applying a **44% increase** (1.2 * 1.2 = 1.44).
+
+---
+
+### **Semantic Similarity and Divergence**
+
+- **Similarity:** Both versions aim to calculate a padded/adjusted `max` value for display purposes (e.g., setting y-axis range in a graph).
+- **Divergence:**
+  - `HEAD` uses a single `max` value derived from the dataset and introduces padding **proportional to the dataset's spread** (`max - minY`).
+  - `c973213a` uses the higher of two values (`setMax`, `getMax`), then **adds a fixed 44% padding**, which is a **proportional increase** of the result.
+
+---
+
+### **Ambiguity in Intent**
+
+Without further context:
+- It's unclear whether `self.options.minY` is fixed or dynamic.
+- It's unknown whether `setMax` and `getMax` are alternative or complementary max calculation strategies.
+- It's ambiguous whether the visual display needs padding proportional to the full data range (i.e., `HEAD`) or a flat padding rate on a possibly derived max (i.e., `c973213a`).
+
+---
+
+### **Resolution Verdict**
+
+Since **both sides are semantically trying to address the same goal** (adjust a maximum value with padding for display), but approach it in **fundamentally different ways** without clarity on which one is more appropriate in the broader context, **the intent appears ambiguous**.
+
+Thus, the **conflict should be preserved** to allow further clarification or inspection.
+
+---
+
+### ✅ Final Output (Conflict Preserved)
+
+```javascript
+            max = current;
+          }
+        }
+      }
+
+<<<<<<< HEAD
+      return max + (max - self.options.minY) * 0.2;
+=======
+      var m = _.max(setMax, getMax);
+
+      max = m*1.2;
+      max*=1.2
+
+      return max;
+>>>>>>> c973213a79bffd07d0ed9175030d09539b8c1d3f
+    }
+
+    function formatYLabel(value, max, min, numLabels, wholeNumbersOnly, abbreviate) {
+      var fixed = (max/numLabels<1 && value!=0 && !wholeNumbersOnly) ? 2 : 0
+      var res = value.toFixed(fixed)
+```

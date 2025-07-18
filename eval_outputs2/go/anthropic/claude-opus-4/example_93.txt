@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic goal - allowing/handling unknown fields when unmarshaling JSON data. However, they're using different libraries:
+
+- HEAD is using `jsonpb.Unmarshaler` with `AllowUnknownFields: true`
+- The incoming change is using `protojson.UnmarshalOptions` with `DiscardUnknown: true`
+
+The incoming change also includes:
+1. A minor comment improvement (adding a comma)
+2. A file path change (from `protoc-gen-grpc-gateway/descriptor/` to `internal/descriptor/`)
+
+Based on the context, it appears the incoming change is likely a migration from the older `jsonpb` package to the newer `protojson` package (which is the recommended approach in newer versions of protobuf-go).
+
+Here's the resolved conflict:
+
+```go
+	jsonContents, err := yaml.YAMLToJSON(yamlFileContents)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert gRPC API Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
+	}
+
+	// As our GrpcAPIService is incomplete, accept unknown fields.
+	unmarshaler := protojson.UnmarshalOptions{
+		DiscardUnknown: true,
+	}
+
+	serviceConfiguration := apiconfig.GrpcAPIService{}
+	if err := unmarshaler.Unmarshal(jsonContents, &serviceConfiguration); err != nil {
+		return nil, fmt.Errorf("failed to parse gRPC API Configuration from YAML in '%v': %v", yamlSourceLogName, err)
+```

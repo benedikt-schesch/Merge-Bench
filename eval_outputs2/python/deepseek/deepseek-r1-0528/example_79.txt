@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I'll resolve the conflict by merging the usage strings from both branches, preserving the new `--print-completion` option from the feature branch and the `--dry-run` option from HEAD. Here's the resolved snippet:
+
+```python
+
+    def test_help(self):
+        result = run_command.run_command(self.tmp_dir, "trash-empty",
+                                         ['--help'])
+        self.assertEqual(["""\
+usage: trash-empty [-h] [--print-completion {bash,zsh,tcsh}] [--version]
+                   [--trash-dir TRASH_DIR] [--all-users] [-i] [-f] [--dry-run]
+                   [days]
+
+Purge trashed files.
+
+positional arguments:
+```
+
+This resolution:
+1. Keeps the new `--print-completion` option from the feature branch
+2. Preserves the `--dry-run` option from HEAD
+3. Maintains all other options from both branches
+4. Keeps the positional `[days]` argument
+5. Preserves the exact formatting and indentation of the usage string
+6. Maintains the surrounding context exactly as provided
+
+The merged usage string now includes all options from both branches while maintaining the semantic meaning of both changes - supporting shell completion configuration and dry-run functionality.

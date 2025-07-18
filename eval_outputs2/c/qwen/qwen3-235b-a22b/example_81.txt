@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+```c
+  {
+    static int tried_usernameex = FALSE;
+    if (!tried_usernameex) {
+      /* Not available on Win9x, so load dynamically */
+      HMODULE secur32 = load_system32_dll("secur32.dll");
+<<<<<<< HEAD
+=======
+      /* If MIT Kerberos is installed, the following call to
+         GET_WINDOWS_FUNCTION makes Windows implicitly load
+         sspicli.dll WITHOUT proper path sanitizing, so better
+         load it properly before */
+      HMODULE sspicli = load_system32_dll("sspicli.dll");
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+      GET_WINDOWS_FUNCTION(secur32, GetUserNameExA);
+      tried_usernameex = TRUE;
+    }
+  }
+```

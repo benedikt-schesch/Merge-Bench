@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+I'll help resolve this semantic merge conflict while preserving the surrounding context exactly as provided. The conflict involves choosing the correct namespace for listing ControllerRevision resources.
+
+```go
+
+	for _, curComp := range h.app.Status.AppliedResources {
+		crList := &appsv1.ControllerRevisionList{}
+		listOpts := []client.ListOption{client.MatchingLabels{
+			oam.LabelControllerRevisionComponent: curComp.Name,
+		}, client.InNamespace(h.getComponentRevisionNamespace(ctx))}
+		_ctx := multicluster.ContextWithClusterName(ctx, curComp.Cluster)
+		if err := h.r.List(_ctx, crList, listOpts...); err != nil {
+			return err
+		}
+		needKill := len(crList.Items) - h.r.appRevisionLimit - len(compRevisionInUse[curComp.Name])
+```
+
+**Resolution Reasoning:**
+1. The HEAD version `h.getComponentRevisionNamespace(ctx)` is semantically superior because:
+   - It explicitly handles namespace determination through a dedicated method
+   - Allows potential custom namespace logic beyond just using the app namespace
+   - Maintains consistency with the context-aware pattern used elsewhere (`_ctx` handling)
+
+2. The branch version `h.app.Namespace` is more restrictive and might not account for:
+   - Multi-cluster scenarios where component revisions could be in different namespaces
+   - Potential future namespace customization requirements
+
+3. Both versions agree on:
+   - Component label matching (`oam.LabelControllerRevisionComponent`)
+   - Cluster context handling (`multicluster.ContextWithClusterName`)
+   - ControllerRevision listing logic
+
+The resolved version maintains the flexible namespace determination while keeping all surrounding context and spacing identical to the original snippet.

@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to add provider names to a conditional check that handles providers that don't return the root in legacy receipts. 
+
+The HEAD branch has:
+- CloudflareProvider
+- AnkrProvider
+- PocketProvider
+- AlchemyProvider
+
+The incoming branch has:
+- CloudflareProvider
+- AnkrProvider
+- PocketProvider
+- BlockscoutProvider
+
+The semantic intent is to include all providers that don't return the root in legacy receipts. Since both sides are adding different providers (AlchemyProvider vs BlockscoutProvider), the resolution should include both to preserve the intent from both sides.
+
+```typescript
+            const receipt = await provider.getTransactionReceipt(test.hash)
+            assert.ok(receipt != null, "receipt != null");
+
+            // Cloudflare doesn't return the root in legacy receipts; but it isn't
+            // *actually* that important, so we'll give it a pass...
+            if (providerName === "CloudflareProvider" ||
+              providerName === "AnkrProvider" ||
+              providerName === "PocketProvider" ||
+              providerName === "AlchemyProvider" ||
+              providerName === "BlockscoutProvider") {
+                test = Object.assign({ } , test, { root: undefined });
+            }
+
+            //if (providerName === "PocketProvider") {
+            //}
+
+```

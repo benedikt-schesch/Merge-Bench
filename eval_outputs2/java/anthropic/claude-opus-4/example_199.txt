@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Adds three new fields:
+  - `jobOutputFile` - a String to track Pig Script Output
+  - `jobConf` - a JobConf object for the currently executing Map-Reduce job
+  - Includes empty lines for spacing
+
+- **Incoming branch (1488b22...)**: Removes these fields entirely and goes directly to the `properties` field
+
+Since both sides have valid intentions (HEAD wants to add functionality, incoming wants to keep it clean), and without more context about the project's requirements, I cannot determine which side should take precedence. The conflict represents a fundamental disagreement about whether these fields should exist in the codebase.
+
+Here is the same snippet with the conflict preserved:
+
+```java
+    // handle to the back-end
+    transient private ExecutionEngine executionEngine;
+   
+    private String jobName = JOB_NAME_PREFIX;    // can be overwritten by users
+  
+<<<<<<< HEAD
+    // Pig Script Output
+    private String jobOutputFile = "";
+    
+    // JobConf of the currently executing Map-Reduce job
+    JobConf jobConf;
+    
+=======
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    private Properties properties;
+    
+    /**
+     * a table mapping function names to function specs.
+     */
+```

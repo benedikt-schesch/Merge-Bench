@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```php
+                            ),
+                            'fields' => array('Answer.id')
+                        )
+                    ),
+                    'fields' => array(
+						"match(content, title) against(" . $escapedNeedle ." IN BOOLEAN MODE) as relevance",
+                        'Post.title', 'Post.views', 'Post.url_title', 'Post.public_key',
+                        'Post.timestamp', 'User.username', 'User.public_key', 'User.image',
+                        'User.reputation'),
+                    'order' => 'relevance DESC',
+                    'limit' => $record . ',' . 15)
+```

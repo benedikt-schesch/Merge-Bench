@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to format the docstring for the Worker class. The only difference is how the line break is handled:
+
+- HEAD version: Has a line break after "Worker" and before "class"
+- The other version: Keeps "Worker class and" on the same line
+
+Both versions have the same semantic intent - they're documenting the Worker class. The other version appears to have better formatting by keeping "Worker class and" together on one line, which reads more naturally.
+
+Here's the resolved version:
+
+```python
+
+
+logger = logging.getLogger(__name__)
+
+class Worker(object):
+    """Defines a worker. The ``pyres_worker`` script instantiates this Worker class and
+    passes a comma-separated list of queues to listen on.::
+
+       >>> from pyres.worker import Worker
+       >>> Worker.run([queue1, queue2], server="localhost:6379")
+
+    """
+
+```

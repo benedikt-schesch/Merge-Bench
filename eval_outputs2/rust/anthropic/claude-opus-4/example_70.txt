@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD version: Uses `T: Resource` as the type constraint
+- Other version: Uses `T: Component` as the type constraint
+
+The conflict appears to be about what type constraint should be applied to the generic type `T` in the `SystemParamFetch` implementation for `ResState<T>`. Given that this is implementing a system parameter fetch for `ResState<T>` which returns `Res<'w, T>`, and `Res` typically represents a resource in game engines/ECS systems, the semantically correct choice would be `T: Resource`.
+
+Here's the resolved snippet:
+
+```rust
+    }
+
+    fn default_config() {}
+}
+
+impl<'w, 's, T: Resource> SystemParamFetch<'w, 's> for ResState<T> {
+    type Item = Res<'w, T>;
+
+    #[inline]
+    unsafe fn get_param(
+        state: &'s mut Self,
+
+```

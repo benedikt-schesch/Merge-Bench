@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict arises because one branch introduced a type variable `IndexT` and defined `_nested_getitem` with dictionary-specific typing, while the other branch modified the function signature to be more generic. The merged version keeps the more flexible function signature (accepting any `data` type and hashable path elements), which aligns best with the function's implementation that handles multiple indexable types. The unused `IndexT` from HEAD is safely removed as the branch's implementation renders it obsolete.
+
+```python
+# fmt: on
+
+MAX_VALIDATION_ERROR_ITEM_LENGTH = 500
+
+
+def _nested_getitem(
+    data: typing.Any, path: typing.List[typing.Hashable]
+) -> typing.Optional[typing.Any]:
+    for item_index in path:
+        try:
+            data = data[item_index]
+        except (KeyError, IndexError, TypeError):
+            # The index is not present in the dictionary, list or other
+```

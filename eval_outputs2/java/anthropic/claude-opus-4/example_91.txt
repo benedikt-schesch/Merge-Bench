@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add configuration settings to a builder. Let me analyze the intent:
+
+- The BASE/HEAD side wants to add `insecureIdAllowed` configuration
+- The incoming side wants to add `gameChatEnabled` configuration
+- Both sides also reference `broadcastingUsers`/`BroadcastConnectsAndDisconnects.class`
+
+The semantic intent is to include both new configuration options. Here's the resolved conflict:
+
+```java
+        .getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+    builder.append(String.format("cah.COOKIE_DOMAIN = '%s';\n", cookieDomain));
+    boolean globalChatEnabled = injector.getInstance(Key.get(Boolean.class, GlobalChatEnabled.class));
+    builder.append(String.format("cah.GLOBAL_CHAT_ENABLED = %b;\n", globalChatEnabled));
+    boolean gameChatEnabled = injector.getInstance(Key.get(Boolean.class, GameChatEnabled.class));
+    builder.append(String.format("cah.GAME_CHAT_ENABLED = %b;\n", gameChatEnabled));
+    boolean insecureIdAllowed = injector.getInstance(Key.get(Boolean.class, InsecureIdAllowed.class));
+    builder.append(String.format("cah.INSECURE_ID_ALLOWED = %b;\n", insecureIdAllowed));
+    boolean broadcastingUsers = injector.getInstance(Key.get(Boolean.class, BroadcastConnectsAndDisconnects.class));
+    builder.append(String.format("cah.BROADCASTING_USERS = %b;\n", broadcastingUsers));
+
+
+```

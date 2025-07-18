@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `datafusion_common::tree_node` and `datafusion_common`, but with some differences:
+
+- HEAD imports: `TreeNode`, `TreeNodeRecursion` from `tree_node` and `plan_err`, `DataFusionError`, `Result` from `datafusion_common`
+- The other branch imports: `TreeNode`, `VisitRecursion` from `tree_node` and `plan_err`, `Result` from `datafusion_common`
+
+The semantic intent appears to be:
+- Both sides want `TreeNode`, `plan_err`, and `Result`
+- HEAD wants `TreeNodeRecursion` and `DataFusionError`
+- The other branch wants `VisitRecursion` instead of `TreeNodeRecursion`
+
+Based on typical refactoring patterns, it seems like `TreeNodeRecursion` might have been renamed to `VisitRecursion` in the other branch. The safe resolution would be to include all the imports that either side needs, which means including both recursion types (in case they're actually different) and keeping `DataFusionError` since HEAD needs it.
+
+```rust
+// specific language governing permissions and limitations
+// under the License.
+
+use crate::analyzer::check_plan;
+use crate::utils::collect_subquery_cols;
+use datafusion_common::tree_node::{TreeNode, TreeNodeRecursion, VisitRecursion};
+use datafusion_common::{plan_err, DataFusionError, Result};
+use datafusion_expr::expr_rewriter::strip_outer_reference;
+use datafusion_expr::utils::split_conjunction;
+use datafusion_expr::{
+    Aggregate, BinaryExpr, Cast, Expr, Filter, Join, JoinType, LogicalPlan, Operator,
+    Window,
+```

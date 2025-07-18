@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the conflict is about whether to include a debug print statement or not.
+
+The HEAD version (current branch) has clean code without any print statement.
+The incoming change (commit 118908f3118ef557502dd35ca10a98ca547f3ce1) adds a debug print statement `print 'geti', i`.
+
+Since this appears to be a debug print statement (indicated by the informal message 'geti') that was likely used during development, the semantically correct resolution would be to remove it and keep the clean version without the print statement.
+
+Here's the resolved code:
+
+```python
+        """ Gets also the imports within flow statements """
+        i = self.imports
+        for s in self.statements:
+            if isinstance(s, Scope):
+                i += s.get_imports() 
+        return i 
+
+    def add_global(self, name):
+        """
+        Global means in these context a function (subscope) which has a global
+
+```

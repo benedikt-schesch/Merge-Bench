@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different timestamps being set for the `modTime` attribute in the `bindataFileInfo` constructor. Both versions agree on all other aspects of the data structure, including the file name, size, and mode. The difference solely lies in the specific Unix timestamp used.
+
+In the context of binary assets (like embedded files), timestamps are often hardcoded for consistency across builds or deployments, even if they are arbitrary. As no contextual justification for the specific values has been provided, and both timestamps are valid, choosing one over the other would be speculative and potentially disruptive to the codebase.
+
+When the intent between such metadata changes is ambiguous—especially in the absence of a semantic rationale—it is safest to retain the conflict rather than apply an arbitrary resolution. Therefore, the appropriate action is to return the original snippet **unmodified**, preserving the merge conflict markup to ensure no assumptions are made.
+
+```go
+	bytes, err := confGitignoreEclipseBytes()
+	if err != nil {
+		return nil, err
+	}
+
+<<<<<<< HEAD
+	info := bindataFileInfo{name: "conf/gitignore/Eclipse", size: 458, mode: os.FileMode(420), modTime: time.Unix(1444419364, 0)}
+	a := &asset{bytes: bytes, info:  info}
+=======
+	info := bindataFileInfo{name: "conf/gitignore/Eclipse", size: 458, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+>>>>>>> 73fedc727538381d4e1048ee03be6b45e977a076
+	return a, nil
+}
+
+var _confGitignoreEiffelstudio = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x52\x56\x08\xc9\x48\x55\x48\xce\xcf\x2d\xc8\xcc\x49\x2c\xc9\xcc\xcf\x53\x48\xc9\x2c\x4a\x4d\x2e\xc9\xaf\xe4\x72\xf5\x74\x73\x77\xf5\x2b\xe6\x02\x04\x00\x00\xff\xff\x6b\x6c\xf5\x49\x23\x00\x00\x00")
+```

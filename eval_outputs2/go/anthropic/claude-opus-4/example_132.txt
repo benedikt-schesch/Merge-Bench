@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD (current branch): Uses `UpdateMaskPaths`
+- Incoming change: Uses `UpdateMask`
+
+This appears to be a naming convention conflict for what seems to be the same field. Without more context about the codebase conventions or the specific API being implemented, I cannot definitively determine which name is correct. The field appears to be related to partial updates (common in REST/gRPC APIs), but both names could be valid depending on the API specification.
+
+Since the intent is ambiguous and I cannot determine which naming convention is correct without more context, I'm returning the snippet with the conflict preserved:
+
+```go
+
+@return interface{}
+*/
+
+type ABitOfEverythingServiceUpdateV2Opts struct { 
+<<<<<<< HEAD
+	UpdateMaskPaths optional.Interface
+=======
+	UpdateMask optional.Interface
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6
+}
+
+func (a *ABitOfEverythingServiceApiService) ABitOfEverythingServiceUpdateV2(ctx context.Context, abeUuid string, body ExamplepbABitOfEverything, localVarOptionals *ABitOfEverythingServiceUpdateV2Opts) (interface{}, *http.Response, error) {
+	var (
+		localVarHttpMethod = strings.ToUpper("Put")
+
+```

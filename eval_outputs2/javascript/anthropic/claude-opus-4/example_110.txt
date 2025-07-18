@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set up testing imports, but they're using different testing frameworks:
+
+- HEAD is using Node.js's built-in `node:test` framework with `node:assert`
+- The incoming change is using the `uvu` testing framework
+
+Given the context, it appears the codebase is transitioning from `uvu` to Node.js's built-in testing framework (which is a common modernization pattern). The HEAD version represents the newer approach using Node.js built-in modules.
+
+Since the rest of the code appears to be written to work with both node and browser environments (as evidenced by the imports of `index.browser.js` and `index.js`), I'll resolve in favor of the HEAD version which uses the more modern Node.js built-in testing framework:
+
+```javascript
+import { equal, match, notEqual, ok } from 'node:assert'
+import { after, before, describe, test } from 'node:test'
+
+import * as browser from '../index.browser.js'
+import * as node from '../index.js'
+
+for (let type of ['node', 'browser']) {
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic intent - they both want to define a `get_page` method that takes a `target_url` parameter. The only difference is in the method signature syntax:
+
+- HEAD uses positional parameter syntax: `def get_page(target_url)`
+- The other branch uses keyword argument syntax: `def get_page(target_url: nil)`
+
+Since the method body uses `target_url` directly without any nil checks or default value handling, and the comment indicates this is an "API-generated URL", it appears this should be a required parameter. The positional parameter syntax from HEAD is more appropriate for a required parameter.
+
+Here's the resolved code:
+
+```ruby
+            ##
+            # Retrieve a single page of OutgoingCallerIdInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of OutgoingCallerIdInstance
+            def get_page(target_url)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return OutgoingCallerIdPage.new(@version, response, @solution)
+
+```

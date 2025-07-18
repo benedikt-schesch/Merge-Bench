@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `setRootPath()`, but they differ in whether to pass an argument:
+
+- HEAD (current branch): calls `setRootPath()` with no arguments
+- The incoming change: calls `setRootPath(rootExecutionRelPath)` with an argument
+
+Without seeing the function signature of `setRootPath()` or understanding the broader context of what `rootExecutionRelPath` represents, I cannot determine which version is semantically correct. The conflict appears to be a fundamental disagreement about whether `setRootPath()` should take a parameter or not.
+
+Here is the code snippet with the conflict preserved:
+
+```go
+
+	viper.AutomaticEnv()
+}
+
+func initGitConfig() {
+<<<<<<< HEAD
+	setRootPath()
+=======
+	setRootPath(rootExecutionRelPath)
+>>>>>>> 491b8436429d0457828901831e2c6c6d758a4d60
+	setGitHooksPath(getHooksPathFromGitConfig())
+}
+
+func getRootPath() string {
+	return rootPath
+
+```

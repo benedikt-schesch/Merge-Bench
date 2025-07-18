@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - resizing the buffer to accommodate the new size. The difference is:
+
+- HEAD: Directly uses `oldlen + size` in the `sresize` call
+- The other branch: First calculates `newsize = oldlen + size`, then uses `newsize` in the `sresize` call
+
+Since both approaches achieve the exact same result (resizing the buffer to `oldlen + size`), and the second approach with the intermediate variable `newsize` is slightly more readable and follows a common pattern of computing values before using them, I'll resolve by choosing the second approach:
+
+```c
+    } else {
+      /* This is the pre-C99 glibc error condition: <0 means the
+       * buffer wasn't big enough, so we enlarge it a bit and hope. */
+      size += 512;
+    }
+    newsize = oldlen + size;
+    buf = sresize(buf, newsize, char);
+  }
+}
+
+char *dupvprintf(const char *fmt, va_list ap)
+{
+
+```

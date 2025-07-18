@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to calculating `page_width`. Both versions aim to compute the width by scaling the document format width by a percentage. The key difference is that one branch explicitly converts `self.document.format.width` to `f64` using `f64::from()`, while the other relies on implicit conversion through multiplication with a float.
+
+After analyzing:
+1. Explicit conversion (`f64::from()`) is safer and more explicit
+2. It ensures proper floating-point arithmetic regardless of the original type
+3. The result is identical to the HEAD version when the width is already float
+4. The calculation logic remains semantically consistent with both branches' intent
+
+Here's the resolved version preserving all context:
+
+```rust
+        pos: na::Vector2<f64>,
+        bytes: Vec<u8>,
+    ) -> oneshot::Receiver<anyhow::Result<Vec<Stroke>>> {
+        let (oneshot_sender, oneshot_receiver) = oneshot::channel::<anyhow::Result<Vec<Stroke>>>();
+
+        let page_width = (f64::from(self.document.format.width)
+            * (self.pdf_import_width_perc / 100.0))
+            .round() as i32;
+
+        let pdf_import_as_vector = self.pdf_import_as_vector;
+
+        rayon::spawn(move || {
+            let result = || -> anyhow::Result<Vec<Stroke>> {
+```

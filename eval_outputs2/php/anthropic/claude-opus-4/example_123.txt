@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic intent - they both want to check if a string value matches a factory pattern and return the captured group if it does.
+
+The only difference between the two versions is the code style:
+- HEAD version uses same-line opening brace (more common in modern PHP)
+- The other version uses next-line opening brace
+
+Since both versions have identical logic and the same-line brace style is more consistent with modern PHP coding standards, I'll resolve this by keeping the HEAD version:
+
+```php
+     * @param  string $value
+     * @return mixed
+     */
+    protected function hasRelationshipAttribute($value)
+    {
+        if (is_string($value) && preg_match('/^factory:(.+)$/i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        return false;
+    }
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding a new configuration directive `cache_purge_response_type` while the other branch doesn't include this change. Since the added directive doesn't conflict with any other changes and appears to be a valid addition to the configuration array, the resolution keeps the new directive while maintaining proper array formatting.
+
+Resolved code:
+```c
+        0,
+        NULL
+    },
+# endif /* NGX_HTTP_UWSGI */
+
+    { ngx_string("cache_purge_response_type"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+      ngx_http_cache_purge_response_type_conf,
+      NGX_HTTP_LOC_CONF_OFFSET,
+      0,
+      NULL },
+
+    ngx_null_command
+};
+
+static ngx_http_module_t  ngx_http_cache_purge_module_ctx = {
+    NULL,                                  /* preconfiguration */
+```

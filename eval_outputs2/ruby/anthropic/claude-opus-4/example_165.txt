@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same method `get_page`, but with different parameter signatures:
+
+- HEAD version: `def get_page(target_url)` - uses positional parameter
+- Incoming version: `def get_page(target_url: nil)` - uses keyword parameter with default value
+
+Given the context and Ruby conventions, the incoming change appears to be modernizing the method signature to use keyword arguments, which is a common Ruby best practice. The default value of `nil` also suggests this might be part of making the API more flexible.
+
+Since both versions have the same intent (defining a method to retrieve a page using a target URL), and the keyword argument version is more flexible and follows modern Ruby conventions, I'll resolve this by keeping the incoming change:
+
+```ruby
+              ##
+              # Retrieve a single page of DependentPhoneNumberInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of DependentPhoneNumberInstance
+              def get_page(target_url: nil)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return DependentPhoneNumberPage.new(@version, response, @solution)
+
+```

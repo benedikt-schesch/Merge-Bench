@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side):**
+- Converts `externKey` to bytes using `tobytes()`
+- Also converts `passphrase` to bytes if it's not None
+
+**Incoming change (right side):**
+- Checks if `externKey` is unicode and starts with "-----" (PEM format)
+- If so, encodes it to ASCII bytes
+
+Both sides are trying to ensure that `externKey` is in bytes format before processing, but they're handling it differently. The incoming change is more specific about handling unicode PEM keys, while HEAD is more general.
+
+The semantic intent of both sides is to ensure proper byte conversion, with the incoming change adding specific handling for unicode PEM keys. The resolution should incorporate both approaches:
+
+```python
+        :Type passphrase: string
+        
+        :Raise ValueError/IndexError/TypeError:
+            When the given key cannot be parsed (possibly because the pass phrase is wrong).
+        """
+        if isinstance(externKey, unicode) and externKey.startswith("-----"):
+            # Convert unicode to bytes for PEM encoded keys
+            externKey = externKey.encode('ascii')
+        else:
+            externKey = tobytes(externKey)
+        if passphrase is not None:
+            passphrase = tobytes(passphrase)
+
+        if externKey.startswith(b('-----')):
+                # This is probably a PEM encoded key
+                lines = externKey.replace(b(" "),b('')).split()
+                keyobj = None
+
+
+```

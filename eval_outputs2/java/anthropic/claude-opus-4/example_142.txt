@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side):**
+- Uses `MiniGenericCluster` as the parameter type
+- Has consistent indentation (spaces)
+- No Windows-specific path handling
+
+**Right side (8923da8...):**
+- Uses `MiniCluster` as the parameter type
+- Uses tabs for indentation
+- Adds Windows-specific path handling to convert backslashes to forward slashes
+
+The semantic intent appears to be:
+1. Both sides want a method to copy files from cluster to local
+2. The right side adds Windows compatibility for file paths
+3. There's a disagreement on the cluster parameter type (`MiniGenericCluster` vs `MiniCluster`)
+
+Since I cannot determine which cluster type is correct without more context about the codebase, and the Windows path handling seems like a valuable addition, I'll return the snippet with the conflict intact:
+
+```java
+            throw new IOException(e);
+        }
+
+    }
+
+<<<<<<< HEAD
+    static public void copyFromClusterToLocal(MiniGenericCluster cluster,
+            String fileNameOnCluster, String localFileName) throws IOException {
+=======
+	static public void copyFromClusterToLocal(MiniCluster cluster, String fileNameOnCluster, String localFileName) throws IOException {
+        if(Util.WINDOWS){
+            fileNameOnCluster = fileNameOnCluster.replace('\\','/');
+            localFileName = localFileName.replace('\\','/');
+        }
+>>>>>>> 8923da8cd49c041d99fd5996ddf807f54915c79e
+	    File parent = new File(localFileName).getParentFile();
+	    if (!parent.exists()) {
+	        parent.mkdirs();
+	    }
+	    PrintWriter writer = new PrintWriter(new FileWriter(localFileName));
+
+```

@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to compile a logical plan into a physical plan, but they're using different execution engines:
+
+- HEAD is using `HExecutionEngine`
+- The incoming branch is using `MRExecutionEngine` and adds an optimization step before compilation
+
+Without more context about which execution engine should be used in this codebase, I cannot definitively resolve this conflict. The semantic intent is unclear - are we migrating from MRExecutionEngine to HExecutionEngine, or vice versa? Should we keep the optimization step?
+
+Here's the snippet with the conflict preserved:
+
+```java
+    }
+
+    public static PhysicalPlan buildPp(PigServer pigServer, String query)
+    throws Exception {
+        LogicalPlan lp = buildLp( pigServer, query );
+<<<<<<< HEAD
+        return ((HExecutionEngine)pigServer.getPigContext().getExecutionEngine()).compile(lp,
+=======
+        lp.optimize(pigServer.getPigContext());
+        return ((MRExecutionEngine)pigServer.getPigContext().getExecutionEngine()).compile(lp, 
+>>>>>>> d95d3beb3c320c98d0af2ce3bcd2f3b656bdc98d
+                pigServer.getPigContext().getProperties());
+    }
+
+    public static LogicalPlan parse(String query, PigContext pc) throws FrontendException {
+        Map<String, String> fileNameMap = new HashMap<String, String>();
+
+```

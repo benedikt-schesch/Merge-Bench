@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```php
+
+    /**
+     * @param \Phake\IMock|class-string $object
+     */
+    public function __construct(
+        \Phake\IMock|string $object,
+        string $method,
+        ?\Phake\Matchers\IChainableArgumentMatcher $argumentMatcher,
+        IVerifierMode $verificationMode
+    ) {
+        $this->object           = $object;
+        $this->method           = $method;
+
+```
+
+**Resolution Reasoning:**  
+The conflict involves parameter type declarations. The HEAD branch adds type hints (`\Phake\IMock|string` and `string`) while the other branch uses untyped parameters. The docblock already specifies `@param \Phake\IMock|class-string $object` which aligns perfectly with the HEAD version's type declaration. The `string` type for `$method` is semantically correct since method names are strings. Preserving the type declarations improves type safety and maintains consistency with the existing docblock. The surrounding context remains unchanged as requested.

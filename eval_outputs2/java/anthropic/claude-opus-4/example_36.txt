@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same method signature, but with different parameters:
+
+- HEAD version: removes the `commandName` parameter
+- Other version: keeps the `commandName` parameter
+
+Since the first method in the context (the one that creates a `UsagePrinter`) includes the `commandName` parameter, and it's calling this conflicted method, it seems the intent is to keep the `commandName` parameter for consistency.
+
+Here's the resolved code:
+
+```java
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, StringBuilder out)
+    {
+        usage(programName, groupName, commandName, command, new UsagePrinter(out, columnSize));
+    }
+
+    public void usage(@Nullable String programName, @Nullable String groupName, String commandName, CommandMetadata command, UsagePrinter out)
+    {
+        //
+        // NAME
+        //
+        out.append("NAME").newline();
+
+
+```

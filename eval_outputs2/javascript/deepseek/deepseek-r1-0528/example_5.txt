@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a polyfill for `Date.now` added in one branch. Since this polyfill is safe (it only adds functionality if missing) and doesn't conflict with existing code, it should be included. The resolved snippet preserves all context while incorporating the polyfill.
+
+```javascript
+>>>>>>> be83c580c37d0c6182b008a7bf086541530398b8
+ */
+
+;(function(exports) {
+
+  // Date.now polyfill
+  Date.now = Date.now || function() { return new Date().getTime(); };
+
+  var Util = {
+    extend: function() {
+      arguments[0] = arguments[0] || {};
+      for (var i = 1; i < arguments.length; i++)
+      {
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```php
+    }
+
+    /**
+     * @depends testInitialize
+     */
+    #[\PHPUnit\Framework\Attributes\Depends('testInitialize')]
+    public function testNamespaceAliasOnVar(): void
+    {
+        $this->initializer->initialize($this);
+
+        $this->assertInstanceOf(\Phake\IMock::class, $this->shortNameMock1);
+    }
+
+``` 
+
+The conflict was resolved by combining both the traditional PHPDoc `@depends` annotation and the modern `#[Depends(...)]` attribute syntax, while preserving the `: void` return type. This ensures backward compatibility for the annotation and forward compatibility for the attribute, maintaining consistent test method signature conventions. The function body remained unchanged as both versions were identical there.

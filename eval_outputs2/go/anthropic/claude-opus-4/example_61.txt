@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see both sides are trying to compare `ext` with `want`, but they're using different approaches:
+
+- HEAD uses `reflect.DeepEqual(*ext, want)` - dereferencing `ext` and comparing directly with `want`
+- The incoming change uses `proto.Equal(ext, &want)` - passing `ext` directly and taking the address of `want`
+
+The semantic intent is to compare two protobuf messages for equality. The incoming change using `proto.Equal` is the better approach because:
+1. It's the proper way to compare protobuf messages (handles proto-specific equality semantics)
+2. The error message below already uses `&want`, suggesting `want` is not a pointer
+
+Here's the resolved code:
+
+```go
+		}
+		ext := e.(*pb.ComplexExtension)
+		if ext == nil {
+			t.Fatalf("[%s] Invalid extension", test.name)
+		}
+		if !proto.Equal(ext, &want) {
+			t.Errorf("[%s] Wrong value for ComplexExtension: got: %s want: %s\n", test.name, ext, &want)
+		}
+	}
+}
+
+
+```

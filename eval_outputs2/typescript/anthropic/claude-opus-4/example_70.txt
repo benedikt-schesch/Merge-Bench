@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a type `GetChannelByName` but with slight differences:
+
+1. **HEAD**: Uses `BaseChannelDefinition` which is defined locally in this file as `common.BaseIntegration['channels'][string]`
+2. **Incoming change**: Uses `common.ChannelDefinition` directly from the common types
+
+The semantic intent appears to be the same - both are trying to cast the channel to a proper channel definition type. The incoming change seems to be using a more direct approach by referencing `common.ChannelDefinition` which is likely the canonical definition from the types module, while HEAD creates a local alias.
+
+Given that the incoming change is more direct and avoids creating an unnecessary local type alias, I'll resolve in favor of the incoming change:
+
+```typescript
+import * as common from '../types'
+
+type BaseChannelDefinition = common.BaseIntegration['channels'][string]
+type GetChannelByName<
+  TIntegration extends common.BaseIntegration,
+  TChannelName extends keyof TIntegration['channels'],
+> = utils.Cast<TIntegration['channels'][TChannelName], common.ChannelDefinition>
+
+/**
+ * @deprecated Integration's should no longer use their name as prefix for event types or tags.
+ */
+type WithRequiredPrefix<TTags extends string, TPrefix extends string> = string extends TTags
+
+```

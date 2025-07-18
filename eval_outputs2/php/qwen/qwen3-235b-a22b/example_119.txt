@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+The conflict in the provided code arises from two divergent updates to the `use` statements at the top of the file:
+
+- The `HEAD` branch adds several statements from `Kris\LaravelFormBuilder`, `Orchestra\Testbench`, and `PHPUnit`.
+- The incoming commit (`5e4cb54`) replaces this block with a single statement importing `Symfony\Component\EventDispatcher\EventDispatcher`.
+
+---
+
+Since no code is shown beyond the start of a `getAccessorAttribute` method, there is no explicit usage to guide resolution. In such cases, where the intent is ambiguous and there is insufficient context to determine whether one or both sets of imports are necessary, it's safest not to assume. Merging blind could result in unnecessary dependencies or omissions.
+
+Therefore, without further information about how the conflicting classes are used (or should be used) in the rest of the file, it's appropriate to **leave the merge conflict as-is** to allow for human clarification.
+
+---
+
+Here is the full snippet, unchanged from the provided input, as per the guidelines:
+
+```php
+
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Validation\Factory;
+use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Filters\FilterResolver;
+<<<<<<< HEAD
+use Kris\LaravelFormBuilder\Form;
+use Kris\LaravelFormBuilder\FormBuilder;
+use Kris\LaravelFormBuilder\FormHelper;
+use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Constraint\IsIdentical;
+=======
+use Symfony\Component\EventDispatcher\EventDispatcher;
+>>>>>>> 5e4cb5418b945ce8083a1f65922fbf0d409ef721
+
+class TestModel extends Model {
+    protected $fillable = ['m', 'f'];
+
+    public function getAccessorAttribute($value)
+
+```

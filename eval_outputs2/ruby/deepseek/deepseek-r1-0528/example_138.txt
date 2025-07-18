@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+The merge conflict involves requiring different files from the `smarter_csv` library. Both branches agree on requiring `smarter_csv/writer`, but differ on other dependencies:
+
+1. **HEAD branch** requires:
+   - `parser` (likely core parsing logic)
+   - `reader` (file reading functionality)
+
+2. **Other branch** requires:
+   - `parse` (likely an alternative/core parsing module)
+   - `smarter_csv` (main entry point)
+
+Since these appear to be distinct components with no clear indication of deprecation/replacement, and both sets of dependencies seem semantically important for different aspects of functionality, I'm unable to safely resolve this conflict automatically. The conflict requires human judgment to determine whether:
+- These are complementary components that should all be required
+- One branch's dependencies supersede the other's
+- There's overlap between `parser`/`parse` or `reader`/`smarter_csv`
+
+Here's the original snippet with conflict markers preserved:
+
+```ruby
+require 'smarter_csv/header_transformations'
+require 'smarter_csv/header_validations'
+require "smarter_csv/headers"
+require "smarter_csv/hash_transformations"
+
+<<<<<<< HEAD
+require "smarter_csv/parser"
+require "smarter_csv/writer"
+require "smarter_csv/reader"
+=======
+require "smarter_csv/parse"
+require "smarter_csv/writer"
+require "smarter_csv/smarter_csv"
+>>>>>>> 107cb87ba60df917420faa409875591766d8ca8e
+
+# load the C-extension:
+case RUBY_ENGINE
+when 'ruby'
+  begin
+
+```

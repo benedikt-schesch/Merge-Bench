@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the unformat function for what appears to be percentage handling in a numeral formatting library.
+
+The HEAD version simply multiplies the parsed number by 0.01 (converting percentage to decimal).
+
+The incoming change introduces a conditional behavior based on a `scalePercentBy100` option - if this option is true, it multiplies by 0.01 (same as HEAD), otherwise it returns the number as-is.
+
+The semantic intent appears to be:
+- HEAD: Always convert percentages to decimals (divide by 100)
+- Incoming: Make the percentage scaling configurable via an option
+
+The incoming change is more flexible and includes the HEAD behavior as a special case, so the resolution should accept the incoming change:
+
+```javascript
+            }
+
+            return output;
+        },
+        unformat: function(string) {
+            var number = numeral._.stringToNumber(string);
+            if (numeral.options.scalePercentBy100) {
+                return number * 0.01;
+            }
+            return number;
+        }
+    });
+})();
+
+
+
+```

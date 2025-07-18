@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (left side)**: Simply generates code for the expression and stores it
+- **Right side**: Also generates code but adds support for mutable variables by creating stores when `self.mutable` is true
+
+The semantic intent appears to be adding mutability support to variable definitions. The right side's changes are a superset of HEAD's functionality - it preserves the original behavior for non-mutable variables while adding new functionality for mutable ones.
+
+Here's the resolved conflict:
+
+```rust
+        if !context.definitions.contains_key(&self.variable) {
+            if matches!(self.expr.as_ref(), hir::Ast::Lambda(_)) {
+                context.current_function_name = Some(self.variable);
+            }
+
+            let mut value = self.expr.codegen(context, builder);
+            if self.mutable {
+                value = context.create_stores(value, builder);
+            }
+            context.definitions.insert(self.variable, value);
+        }
+        Value::unit()
+    }
+}
+
+```

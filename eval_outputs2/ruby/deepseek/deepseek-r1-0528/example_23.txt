@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+I'll return the code snippet with the conflict markers intact since the intent behind the changes is ambiguous. Both sides seem to be modifying the mailbox name processing, but without more context about the purpose of `labels.localize` versus `Net::IMAP.decode_utf7`, I can't determine the correct resolution or if both operations are needed.
+
+```ruby
+      #     mailbox.count(:all)
+      #     ...
+      #   end
+      def mailbox(name, &block)
+        @mailbox_mutex.synchronize do
+<<<<<<< HEAD
+          name = Net::IMAP.decode_utf7(name.to_s)
+=======
+          name = labels.localize(name)
+>>>>>>> 90b1739798b8d0c0d3057011c38315c3543af816
+          mailbox = (mailboxes[name] ||= Mailbox.new(self, name))
+          switch_to_mailbox(mailbox) if @current_mailbox != mailbox
+
+          if block_given?
+            mailbox_stack << @current_mailbox
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in constant reference (`self` vs `static`) and column definitions (presence of `default(0)`). The resolution combines both intents:
+
+1. Uses `static::` for late static binding (consistent with `static::getDefaultColumns()` call below)
+2. Retains `default(0)` for LFT/RGT columns to ensure data integrity
+3. Preserves nullable parent ID from both versions
+
+Resolved code:
+```php
+     *
+     * @param \Illuminate\Database\Schema\Blueprint $table
+     */
+    public static function columns(Blueprint $table)
+    {
+        $table->unsignedInteger(static::LFT)->default(0);
+        $table->unsignedInteger(static::RGT)->default(0);
+        $table->unsignedInteger(static::PARENT_ID)->nullable();
+
+        $table->index(static::getDefaultColumns());
+    }
+
+    /**
+
+```

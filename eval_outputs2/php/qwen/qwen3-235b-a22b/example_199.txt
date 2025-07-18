@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```php
+    public function mock(
+        string|array $mockedClassList,
+        ClassGenerator\MockClass $mockGenerator,
+        CallRecorder\Recorder $callRecorder,
+        Stubber\IAnswer $defaultAnswer,
+        ?array $constructorArgs = null
+    ): IMock {
+        $mockedClassList = (array) $mockedClassList;
+
+        foreach ($mockedClassList as $mockedClass) {
+            if (!class_exists($mockedClass, true) && !interface_exists($mockedClass, true)) {
+                throw new \InvalidArgumentException("The class / interface [{$mockedClass}] does not exist. Check the spelling and make sure it is loadable.");
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict appears in the `createCalendarClient` function. One branch (`HEAD`) defines the function taking only a `user` and uses `user.userId` to retrieve an existing client. The other branch adds a new optional `stayAlive` boolean parameter and uses `user.email` to retrieve the client.
+
+The intent of the second branch seems to be an enhancement. It adds a new `stayAlive` capability and changes the client lookup key from `userId` to `email`. Using an email address as the key for a calendar client is a common and semantically sound pattern, as calendar systems are often user-facing and identify users by email. This change is likely an intentional improvement or bug fix. The addition of the optional `stayAlive` parameter is a non-breaking enhancement.
+
+Therefore, the most logical resolution is to accept the changes from the second branch, as it adds functionality and likely uses the more appropriate key for lookup.
+
+```typescript
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+    await instance.initClient(workspace)
+    return instance
+  }
+
+  async createCalendarClient (user: User, stayAlive: boolean = false): Promise<CalendarClient> {
+    const current = this.getCalendarClient(user.email)
+    if (current !== undefined) {
+      if (current instanceof Promise) {
+        return await current
+      }
+      return current
+```

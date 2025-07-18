@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same code but with slightly different changes:
+
+- HEAD: Changes the format string from `u'\\1 \\2'` to `'\\1 \\2'` (removing the unicode prefix)
+- The other branch: Adds a new parameter `mobile_number_portable_region=True` while keeping the unicode prefix
+
+The semantic intent appears to be:
+1. HEAD wants to modernize the string format (likely for Python 3 where unicode prefixes are unnecessary)
+2. The other branch wants to add a new configuration parameter for mobile number portability
+
+Both changes are valuable and don't conflict in their intent - they're addressing different aspects of the code. The resolution should include both changes:
+
+```python
+    voip=PhoneNumberDesc(national_number_pattern='3550\\d{4}', possible_number_pattern='\\d{8}', example_number='35501234'),
+    pager=PhoneNumberDesc(national_number_pattern='7117\\d{4}', possible_number_pattern='\\d{8}', example_number='71171234'),
+    uan=PhoneNumberDesc(national_number_pattern='501\\d{5}', possible_number_pattern='\\d{8}', example_number='50112345'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    number_format=[NumberFormat(pattern='(\\d{4})(\\d{4})', format='\\1 \\2')],
+    mobile_number_portable_region=True)
+```

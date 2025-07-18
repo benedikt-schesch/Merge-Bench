@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD** (current branch): When a write error occurs, it logs the error and then calls `fatalbox()` to terminate the program with an error message.
+- **Other branch**: When a write error occurs, it notifies the plug layer about the closing event and returns 0.
+
+The key difference is in error handling strategy:
+- HEAD takes a fatal approach - terminate the program
+- The other branch takes a graceful approach - notify and return
+
+Without more context about the overall error handling strategy of the codebase, I cannot definitively resolve this conflict. The two approaches are fundamentally different in their philosophy (fatal vs. graceful error handling).
+
+Here's the code snippet with the conflict preserved:
+
+```c
+    int len, ret;
+
+    bufchain_prefix(&ps->pending_output_data, &data, &len);
+    ret = write(ps->to_cmd, data, len);
+    if (ret < 0 && errno != EWOULDBLOCK) {
+<<<<<<< HEAD
+      /* We're inside the Unix frontend here, so we know
+       * that the frontend handle is unnecessary. */
+      logevent(NULL, strerror(errno));
+      fatalbox("%s", strerror(errno));
+=======
+      plug_closing(ps->plug, strerror(errno), errno, 0);
+      return 0;
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+    } else if (ret <= 0) {
+      break;
+    } else {
+      bufchain_consume(&ps->pending_output_data, ret);
+      sent += ret;
+```

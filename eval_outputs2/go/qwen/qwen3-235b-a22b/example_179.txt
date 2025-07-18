@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```go
+		mongoRequests = append(mongoRequests, models.MongoRequest{
+			Header:    &requestHeader,
+			Message:   mongoRequest,
+			ReadDelay: int64(readRequestDelay),
+		})
+		logStr += fmt.Sprintf("after reading request from client: %v\n", time.Since(started))
+		// write the request message to the mongo server
+		_, err = destConn.Write(requestBuffer)
+		if err != nil {
+			logger.Error("failed to write the request buffer to mongo server", zap.Error(err), zap.String("mongo server address", destConn.RemoteAddr().String()))
+			return
+		}
+```

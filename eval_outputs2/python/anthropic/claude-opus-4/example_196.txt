@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - they want to split the content by newlines after removing carriage returns. The only difference is the spacing around the comma in the `replace()` method call.
+
+Since both versions are functionally identical and this is purely a formatting difference, I'll preserve the conflict as-is since there's no semantic difference to resolve:
+
+```python
+    global STOP_WORDS
+    abs_path = os.path.normpath(os.path.join(os.getcwd(), stop_words_path))
+    if not os.path.exists(abs_path):
+        raise Exception("jieba: path does not exist: " + abs_path)
+    content = open(abs_path,'rb').read().decode('utf-8')
+<<<<<<< HEAD
+    lines = content.replace("\r", "").split('\n')
+=======
+    lines = content.replace("\r","").split('\n')
+>>>>>>> 5c487dbcbab279f6744e0f2ee126fbc5aa7b8e43
+    for line in lines:
+        STOP_WORDS.add(line)
+
+def extract_tags(sentence, topK=20, withWeight=False):
+    """
+
+```

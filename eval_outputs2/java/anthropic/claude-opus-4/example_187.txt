@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (left side)**: Simply assigns the input stream directly to `this.in`
+- **Right side**: Adds logic to conditionally wrap the input stream in a BufferedInputStream, except when it's a CBZip2InputStream (to avoid problems with split records)
+
+The semantic intent of the right side is clear: it wants to add buffering to improve performance, but recognizes that CBZip2InputStream shouldn't be buffered due to issues with split records. This is a meaningful enhancement over the simple assignment in HEAD.
+
+Here's the resolved conflict:
+
+```java
+    long pos;
+    InputStream in;
+    final int bufSize = 1024;
+    
+    public BufferedPositionedInputStream(InputStream in, long pos) {
+		// Don't buffer a bzip stream as it will cause problems for split
+		// records.
+		if (in instanceof CBZip2InputStream) this.in = in;
+		else this.in = new BufferedInputStream(in, bufSize);
+        this.pos = pos;
+    }
+    
+    public BufferedPositionedInputStream(InputStream in){
+        this(in,0);
+
+```

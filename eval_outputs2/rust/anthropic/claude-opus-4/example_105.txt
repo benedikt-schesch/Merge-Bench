@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `get_or_download_idl` but with different parameters:
+
+- HEAD version: Added an `ignore_unused` field to the `LocalIdl` struct and calls `get_or_download_idl(idl)?`
+- The other branch: Calls `get_or_download_idl(idl, &*DEFAULT_DIR)?` without the `ignore_unused` field
+
+The semantic intent appears to be:
+1. HEAD wants to support an `ignore_unused` field in the `LocalIdl` struct
+2. The other branch wants to pass a default directory parameter to `get_or_download_idl`
+
+The proper resolution should include both changes - the `ignore_unused` field from HEAD and the additional `&*DEFAULT_DIR` parameter from the other branch:
+
+```rust
+            for idl in entry.idls {
+                let LocalIdl {
+                    path,
+                    includes,
+                    touch,
+                    ignore_unused,
+                } = get_or_download_idl(idl, &*DEFAULT_DIR)?;
+
+                builder = builder
+                    .add_service(path.clone())
+                    .includes(includes)
+                    .touch([(path, touch)])
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing trait bounds on `T` for `EventWriter`. In Bevy's ECS:
+- `Resource` indicates global data storage
+- `Component` indicates entity-attached data
+
+Events are stored in a global resource (`Events<T>`), not as components. The `HEAD` version correctly uses `T: Resource` since:
+1. `Events<T>` is always a resource
+2. Event types don't need component capabilities
+3. `Resource` bound satisfies `Events<T>`'s requirements
+
+Here's the resolved snippet preserving all context:
+
+```rust
+    events: Res<'w, Events<T>>,
+}
+
+/// Sends events of type `T`.
+#[derive(SystemParam)]
+pub struct EventWriter<'w, 's, T: Resource> {
+    events: ResMut<'w, Events<T>>,
+    #[system_param(ignore)]
+    marker: PhantomData<&'s usize>,
+}
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on the provided context and analyzing the intent behind both changes, the conflict arises from two different Redis access patterns while the semantic purpose remains the same. Here's the resolved version:
+
+```ruby
+      end
+
+      hn = Socket.gethostname
+      key = "#{hn}:#{$$}"
+      pdata = {"pid" => $$, "hostname" => hn, "started_at" => Time.now.to_i}
+      Sidekiq.redis do |conn|
+        conn.sadd("processes", [key])
+        conn.hmset(key, "info", Sidekiq.dump_json(pdata), "busy", 0, "beat", Time.now.to_f)
+      end
+
+      s = "#{key}:work"
+      data = Sidekiq.dump_json({"payload" => "{}", "queue" => "default", "run_at" => Time.now.to_i})
+```
+
+Resolution rationale:
+1. `Sidekiq.redis` is preferred over `@cfg.redis` as it's the standard Sidekiq connection method and matches the `Sidekiq.dump_json` helper used later
+2. The Redis `sadd` array syntax `[key]` is maintained as:
+   - It's functionally equivalent to the scalar version
+   - Explicitly denotes collection semantics
+   - Aligns with Redis command documentation
+3. The HMET call remains unchanged as both versions were identical
+4. The surrounding context is preserved exactly as provided
+
+The resolution maintains consistency with Sidekiq's Redis access patterns while preserving the intended behavior of registering a process in Redis.

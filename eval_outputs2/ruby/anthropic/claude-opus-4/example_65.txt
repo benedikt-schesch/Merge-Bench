@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are calculating a `diff` value, but they have different approaches:
+
+- HEAD (current branch): `diff = t2 - t1`
+- Incoming branch: `diff = t2 - t1 - time_in_db`
+
+The incoming branch is subtracting `time_in_db` from the time difference calculation, which suggests it's trying to exclude database time from the overall time measurement. This appears to be a semantic improvement to get a more accurate measure of non-database processing time.
+
+Since the incoming change seems to be a refinement of the time calculation (excluding database time for more accurate performance measurement), and this aligns with the subsequent logic that adjusts `chunksize` based on the `diff` value, I'll resolve in favor of the incoming change:
+
+```ruby
+			retry
+		end
+
+		t2 = Time.now
+
+		diff = t2 - t1 - time_in_db
+
+		new_chunksize = if retries > 0
+			chunksize
+		elsif diff > 3.0
+			(chunksize / 3).ceil
+		elsif diff > 1.1
+
+```

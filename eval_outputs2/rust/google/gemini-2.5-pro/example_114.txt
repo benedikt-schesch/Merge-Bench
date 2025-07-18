@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```rust
+  state: &mut OpState,
+  persistent: bool,
+) -> Result<&Connection, AnyError> {
+  let conn = if persistent {
+    if state.try_borrow::<LocalStorage>().is_none() {
+      let path = state.try_borrow::<OriginStorageDir>().ok_or_else(|| {
+        DomExceptionNotSupportedError::new(
+          "LocalStorage is not supported in this context.",
+        )
+      })?;
+      std::fs::create_dir_all(&path.0)?;
+
+```

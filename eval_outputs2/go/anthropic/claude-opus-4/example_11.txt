@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD has version "3.0.0-dev" - indicating active development on version 3.0.0
+- The incoming change has version "2.15.2" - which appears to be a stable release version
+
+Since HEAD is on a development version (3.0.0-dev) that is a major version ahead of the incoming stable version (2.15.2), the semantic intent appears to be that HEAD should be kept as it represents the forward development path. The incoming change likely represents a patch release on the 2.x branch.
+
+```go
+
+	"golang.org/x/net/publicsuffix"
+)
+
+// Version # of resty
+const Version = "3.0.0-dev"
+
+// New method creates a new Resty client.
+func New() *Client {
+	return NewWithTransportSettings(nil)
+}
+
+```

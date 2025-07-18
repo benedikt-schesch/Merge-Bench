@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add different imports from `useElectron()`:
+
+- HEAD wants to add `getPageTitle`
+- The incoming branch wants to add `addIpcListener` and `removeIpcListener`
+
+Since both sides are adding different, non-conflicting functionality (page title handling vs IPC listener handling), the semantic intent is to include all of these imports. Here's the resolved version:
+
+```typescript
+    addDownloadItem,
+    addDownloadItems,
+    downloadItemsNow,
+    downloadNow,
+    getLocalIP,
+    getPageTitle,
+    addIpcListener,
+    removeIpcListener,
+  } = useElectron();
+  const appStore = useAppStore(useShallow(appStoreSelector));
+  const { t } = useTranslation();
+  const [localIP, setLocalIP] = useState<string>("");
+  const newFormRef = useRef<DownloadFormRef>(null);
+
+```

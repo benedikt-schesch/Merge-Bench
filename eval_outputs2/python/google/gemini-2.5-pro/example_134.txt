@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals the following intents:
+*   **HEAD:** The intent is to add a `number_format` list as a parameter to the parent object.
+*   **Incoming Branch (`5c84a7c...`):** The intent is to add the same `number_format` list (using Python 2-style `u` string prefixes) and *also* to add a `mobile_number_portable_region=True` parameter.
+
+Both branches introduce the `number_format` parameter, while the incoming branch also introduces a new, distinct parameter `mobile_number_portable_region`.
+
+The correct semantic resolution is to combine these changes. We will include the `number_format` list and also add the `mobile_number_portable_region` parameter. For the `number_format` list itself, we will use the version from `HEAD` as it uses modern Python 3 string syntax (without the `u` prefix), which is cleaner and preferred unless Python 2 compatibility is a strict requirement.
+
+```python
+    voip=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    pager=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    uan=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    number_format=[NumberFormat(pattern='(\\d{3})(\\d{4})', format='\\1-\\2', leading_digits_pattern=['[1-57-9]']),
+        NumberFormat(pattern='(\\d{4})(\\d{4})', format='\\1-\\2', leading_digits_pattern=['6'])],
+    mobile_number_portable_region=True)
+
+```

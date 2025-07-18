@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+This merge conflict is in the `number_format` list for a phone number definition, likely within the `python-phonenumbers` library.
+
+*   **HEAD** introduces a formatting rule for 8-digit numbers starting with '7' as `(7XX)(XX)(XXX)`, formatted `XXX XX XXX`.
+*   **The other branch (`5c84a7c...`)**, which appears to be from an automated upstream data synchronization, introduces a different formatting rule for 8-digit numbers starting with '7' as `(7XXX)(XXXX)`, formatted `XXXX XXXX`. It also adds the `u` prefix to format strings for Python 2 compatibility.
+
+The intent of both sides is to add a specific format for numbers starting with '7'. Given that the `5c84a7c...` change comes from an official upstream data source, its formatting rule is considered more authoritative. Additionally, the inclusion of the `u` prefix is a good practice for maintaining Python 2 compatibility in a library of this nature. Therefore, the resolution is to accept the changes from the `5c84a7c...` branch entirely.
+
+```python
+    voip=PhoneNumberDesc(national_number_pattern='275\\d{4}', possible_number_pattern='\\d{7}', example_number='2751234'),
+    pager=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    uan=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    number_format=[NumberFormat(pattern='(\\d{3})(\\d{4})', format=u'\\1 \\2', leading_digits_pattern=['[1-689]']),
+        NumberFormat(pattern='(7\\d{3})(\\d{4})', format=u'\\1 \\2', leading_digits_pattern=['7'])])
+
+```

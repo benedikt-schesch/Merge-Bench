@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict centers around the line `connopen = 1;` added in HEAD but absent in the other branch. Without broader context about the purpose of `connopen` or why it was removed in the other branch, the intent is ambiguous. For example:
+
+1. If `connopen` tracks connection state, keeping it might be critical
+2. If the state is now managed elsewhere (e.g., in `ldisc_create`), removing it might be intentional
+
+Since the semantics can't be definitively resolved, the conflict is preserved as instructed:
+
+```c
+    }
+    back->provide_logctx(backhandle, logctx);
+    ldisc_create(conf, NULL, back, backhandle, NULL);
+    sfree(realhost);
+  }
+<<<<<<< HEAD
+  connopen = 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+
+  /*
+   * Set up the initial console mode. We don't care if this call
+   * fails, because we know we aren't necessarily running in a
+   * console.
+```

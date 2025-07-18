@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch adds a check for component revisions after checking deployments, while the other branch (47a565d00d0bde2f49b1a615defd1089a2bae9c2) doesn't have this additional check.
+
+The semantic intent appears to be:
+- Both sides want to check that deployments are empty in both hub and worker contexts
+- HEAD additionally wants to verify that controller revisions are also cleaned up in the worker context
+
+Since this appears to be in a test file checking cleanup/deletion scenarios, the additional validation in HEAD seems intentional and valuable for ensuring complete cleanup. The other branch likely just didn't have this additional check yet.
+
+Here's the resolved conflict, keeping the additional component revision check from HEAD:
+
+```go
+				g.Expect(k8sClient.List(hubCtx, deploys, client.InNamespace(namespace))).Should(Succeed())
+				g.Expect(len(deploys.Items)).Should(Equal(0))
+				deploys = &v13.DeploymentList{}
+				g.Expect(k8sClient.List(workerCtx, deploys, client.InNamespace(namespace))).Should(Succeed())
+				g.Expect(len(deploys.Items)).Should(Equal(0))
+				// check component revision
+				compRevs := &v13.ControllerRevisionList{}
+				g.Expect(k8sClient.List(workerCtx, compRevs, client.InNamespace(prodNamespace))).Should(Succeed())
+				g.Expect(len(compRevs.Items)).Should(Equal(0))
+			}, time.Minute).Should(Succeed())
+		})
+
+		It("Test create EnvBinding Application with trait disable and without workflow, delete env, change env and add env", func() {
+			// This test is going to cover multiple functions, including
+
+```

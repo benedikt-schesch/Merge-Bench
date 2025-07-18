@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises from diverging imports for carrier-related functions. The HEAD branch imports `description_for_number` and `description_for_valid_number`, while the other branch imports `name_for_number`, `name_for_valid_number`, and `safe_display_name`. Semantic analysis suggests:
+
+1. The `name_*` functions likely replace `description_*` (renamed for clarity)
+2. `safe_display_name` is a new function added in the other branch
+3. The test requires backward compatibility for `description_*` references
+
+Resolution maintains both functionalities by:
+- Importing all new functions (`name_*` and `safe_display_name`)
+- Creating aliases for `description_*` using the new `name_*` functions
+- Preserving test compatibility while incorporating new features
+
+Here's the resolved snippet:
+
+```python
+
+import unittest
+
+from phonenumbers import PhoneNumber, FrozenPhoneNumber
+from phonenumbers import carrier
+from phonenumbers.carrier import name_for_number, name_for_valid_number, safe_display_name
+description_for_number = name_for_number
+description_for_valid_number = name_for_valid_number
+
+# Allow override library carrier metadata with the test metadata.
+REAL_CARRIER_DATA = carrier.CARRIER_DATA
+REAL_CARRIER_LONGEST_PREFIX = carrier.CARRIER_LONGEST_PREFIX
+from .testcarrierdata import CARRIER_DATA as TEST_CARRIER_DATA
+
+```

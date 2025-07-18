@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are modifying the usage string for a command-line application. The conflict is in the `printf` statement within the `usage` function.
+
+Comparing both versions:
+- HEAD version includes: `[-u/--unbuffered]` option
+- The incoming change (05f934d5...) does not include this option
+- Everything else in the format string is identical
+
+Since the HEAD version appears to be adding a new command-line option (`-u/--unbuffered`) that wasn't present in the other branch, and this seems to be an intentional feature addition, the semantic intent would be to keep this new option.
+
+Here's the resolved code:
+
+```c
+        exit(1);
+    }
+}
+
+void usage(const char* app) {
+    printf("usage: %s [-d/--debug] [-i/--id device_id] -b/--bundle bundle.app [-a/--args arguments] [-t/--timeout timeout(seconds)] [-u/--unbuffered] [-x path to Xcode's Developer directory]\n", app);
+}
+
+int main(int argc, char *argv[]) {
+    static struct option longopts[] = {
+        { "debug", no_argument, NULL, 'd' },
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to update the documentation reference to the `add_plugins` method. The conflict is about how to format this reference:
+
+- HEAD version: `[`add_plugins`](Self::add_plugins)`
+- Other version: `[`App::add_plugins`]`
+
+The HEAD version uses the more explicit link syntax with `(Self::add_plugins)` which creates a proper rustdoc link to the method on the current type. The other version uses just square brackets which is less explicit.
+
+Since this is Rust documentation and the HEAD version provides a more complete and proper rustdoc link format, I'll resolve in favor of HEAD:
+
+```rust
+    /// Adds a single plugin
+    ///
+    /// One of Bevy's core principles is modularity. All Bevy engine features are implemented
+    /// as plugins. This includes internal features like the renderer.
+    ///
+    /// Bevy also provides a few sets of default plugins. See [`add_plugins`](Self::add_plugins).
+    ///
+    /// ## Example
+    /// ```
+    /// # use bevy_app::prelude::*;
+    /// #
+```

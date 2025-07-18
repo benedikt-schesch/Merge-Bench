@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Comparing `p` with `email` (which is obtained from `this.getEmail()`)
+- **Other branch**: Comparing `p` with `me`
+
+The key insight is that this code is mapping attendees and checking if an attendee is "self" (the current user). The `me` parameter is already available in the function scope (from `this.getAttendees(event, me)`), and it appears the other branch is trying to use this existing parameter directly rather than calling `this.getEmail()` again.
+
+Since `me` is already available as a parameter and likely represents the current user's email, using `me` is more efficient and cleaner than calling `this.getEmail()` again. This aligns with the DRY principle and makes the code more consistent.
+
+Here's the resolved code:
+
+```typescript
+    }
+    const attendees = this.getAttendees(event, me)
+    if (attendees.length > 0) {
+      const email = this.getEmail()
+      res.attendees = attendees.map((p) => {
+        if (p === me) {
+          return { email: p, responseStatus: 'accepted', self: true }
+        }
+        return { email: p }
+      })
+    }
+
+```

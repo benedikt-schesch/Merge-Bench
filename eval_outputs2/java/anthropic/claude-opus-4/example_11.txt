@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add code after the `addAsyncManager` call, but they're adding different functionality:
+
+- HEAD: Continues directly to the threshold warning logic
+- The incoming branch: Adds a conditional check to start a mesh generator thread if running on the client platform
+
+Both changes appear to be intentional additions that serve different purposes and don't conflict semantically. The incoming change adds client-specific initialization logic, while the existing code handles region count warnings. These can coexist.
+
+Here's the resolved version:
+
+```java
+		if (current != null) {
+			return current;
+		}
+		
+		((SpoutScheduler)Spout.getScheduler()).addAsyncManager(region);
+
+		if (Spout.getEngine().getPlatform() == Platform.CLIENT) {
+			region.startMeshGeneratorThread();
+		}
+
+		int threshold = warnThreshold.get();
+		if (regionsLoaded.getAndIncrement() > threshold) {
+			Spout.getLogger().info("Warning: number of spout regions exceeds " + threshold + " when creating (" +
+                x + ", " + y + ", " + z + ")");
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes:
+
+1. The HEAD version directly declares the parameter without a comment
+2. The other branch adds a helpful comment explaining why `NonSend` is required
+3. Both branches agree on the actual parameter type and name
+
+The comment provides valuable context about the `NonSend` requirement, so we should preserve it while keeping the parameter declaration. The resolved version maintains the comment from the other branch while keeping the parameter declaration from both branches.
+
+Here's the resolved snippet:
+
+```rust
+use bevy::window::WindowId;
+use bevy::winit::WinitWindows;
+use winit::window::Icon;
+
+fn set_window_icon(
+    // we have to use `NonSend` here
+    windows: NonSend<WinitWindows>,
+) {
+    let primary = windows.get_window(WindowId::primary()).unwrap();
+
+    // here we use the `image` crate to load our icon data from a png file
+```

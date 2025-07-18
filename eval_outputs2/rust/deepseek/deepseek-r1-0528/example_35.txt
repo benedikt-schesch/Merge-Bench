@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict involves the import of `std::path` types. Both changes modify the same line of imports but have different intentions:
+
+1. **HEAD branch** imports both `Path` and `PathBuf`
+2. **Other branch** (7d41e7d) imports only `Path`
+
+Since the surrounding context doesn't show how these imports are used later in the file, we can't determine whether `PathBuf` is actually needed. The intent is ambiguous without seeing the full usage in the codebase. 
+
+Here's the original snippet with the conflict preserved:
+
+```rust
+use std::fmt::{Debug, Display, Formatter};
+#[cfg(feature = "pyo3")]
+use std::hash::{Hash, Hasher};
+#[cfg(feature = "pyo3")]
+use std::ops::Deref;
+<<<<<<< HEAD
+use std::path::{Path, PathBuf};
+=======
+use std::path::Path;
+>>>>>>> 7d41e7d260b0681eea5c310f288ac43f331b4c8d
+use std::str::FromStr;
+
+#[cfg(feature = "pyo3")]
+use pyo3::{
+    create_exception, exceptions::PyNotImplementedError, pyclass, pyclass::CompareOp, pymethods,
+```

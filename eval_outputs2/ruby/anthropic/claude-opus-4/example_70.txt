@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent from both sides:
+
+- **HEAD (current branch)**: Wants to include two require statements for `bundler/audit/results/insecure_source` and `bundler/audit/results/unpatched_gem`
+- **Incoming branch (d26e0fd4...)**: Does not include these two require statements
+
+Since this appears to be a difference in dependencies where one side has added new functionality (the results-related requires) and the other side doesn't have them, the semantic intent seems to be that HEAD has introduced new features that require these additional modules.
+
+Here's the resolved code:
+
+```ruby
+require 'bundler'
+require 'bundler/audit/configuration'
+require 'bundler/audit/database'
+require 'bundler/audit/report'
+require 'bundler/audit/results/insecure_source'
+require 'bundler/audit/results/unpatched_gem'
+require 'bundler/lockfile_parser'
+
+require 'ipaddr'
+require 'resolv'
+require 'set'
+
+```

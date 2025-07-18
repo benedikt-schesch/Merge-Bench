@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update a comment that references a field name. The conflict is about whether the field is named `spectator` (singular) or `spectators` (plural).
+
+Given the context of the method `removeSpectator` which removes a spectator from the game, and the fact that games typically can have multiple spectators, the plural form `spectators` makes more semantic sense. This appears to be a simple rename refactoring where one branch updated the field name from singular to plural.
+
+Here's the resolved code:
+
+```java
+  }
+
+  /**
+   * Remove a spectator from the game.
+   * <br/>
+   * Synchronizes on {@link #spectators}.
+   *
+   * @param user Spectator to remove from the game.
+   */
+  public void removeSpectator(final User user) {
+    logger.info(String.format("Removing spectator %s from game %d.", user.toString(), id));
+
+```

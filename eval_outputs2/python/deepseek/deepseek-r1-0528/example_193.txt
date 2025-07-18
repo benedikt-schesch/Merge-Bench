@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two independent changes: one adding a logger and another adding two configuration settings. Both changes are compatible and should be included. The logger from the HEAD branch is placed first since it's a foundational utility, followed by the new configuration settings from the other branch. The blank lines are preserved to maintain readability.
+
+Resolved code:
+```python
+    'socialregistration.forms.UserForm')
+
+INITAL_DATA_FUNCTION = getattr(settings, 'SOCIALREGISTRATION_INITIAL_DATA_FUNCTION',
+    None)
+
+logger = logging.getLogger(__name__)
+
+CONTEXT_FUNCTION = getattr(settings, 'SOCIALREGISTRATION_SETUP_CONTEXT_FUNCTION',
+    None)
+
+ALLOW_OPENID_SIGNUPS = getattr(settings, 'SOCIALREGISTRATION_ALLOW_OPENID_SIGNUPS',
+    True)
+
+
+class Setup(SocialRegistration, View):
+    """
+    Setup view to create new Django users from third party APIs.
+    """
+```

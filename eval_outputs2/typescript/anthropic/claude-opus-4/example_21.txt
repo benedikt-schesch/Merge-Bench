@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define an interface for options, but with different names and slightly different properties.
+
+The HEAD side has:
+- Interface named `Options`
+- Properties: `cwd`, `build` (plus the common ones below)
+
+The incoming side has:
+- Interface named `CreateOptions`
+- Properties: `dir`, `scope` (plus the common ones below)
+
+Both sides share common properties: `pretty`, `transpileOnly`, `logError`, `files`, `compiler`
+
+Based on the semantic intent, it appears:
+- `cwd` and `dir` likely serve the same purpose (specifying a directory)
+- `build` and `scope` seem to be different features being added by each branch
+- The interface name `CreateOptions` is more descriptive than just `Options`
+
+Here's the resolved version that combines both intents:
+
+```typescript
+export const VERSION = require('../package.json').version
+
+/**
+ * Options for creating a new TypeScript compiler instance.
+ */
+export interface CreateOptions {
+  dir?: string
+  cwd?: string | null
+  scope?: boolean | null
+  build?: boolean | null
+  pretty?: boolean | null
+  transpileOnly?: boolean | null
+  logError?: boolean | null
+  files?: boolean | null
+  compiler?: string
+```

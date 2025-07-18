@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `forge_api`, but with different sets of imports.
+
+The HEAD branch includes:
+- `AgentId`, `ChatRequest`, `ChatResponse`, `ChoiceType`, `ConfigOption`, `Conversation`, `ConversationId`, `Event`, `InterruptionReason`, `Model`, `ModelId`, `Workflow`, `API`
+
+The incoming branch (64e87367) includes:
+- `AgentId`, `AppConfig`, `ChatRequest`, `ChatResponse`, `Conversation`, `ConversationId`, `Event`, `InterruptionReason`, `Model`, `ModelId`, `Workflow`, `API`
+
+The differences are:
+- HEAD has `ChoiceType` and `ConfigOption`
+- Incoming has `AppConfig`
+
+Since both sides seem to be adding different imports that are likely needed for their respective features, the semantic intent appears to be to include all the imports from both sides. This is a common pattern in merge conflicts where different features require different imports.
+
+```rust
+
+use anyhow::{Context, Result};
+use colored::Colorize;
+use convert_case::{Case, Casing};
+use forge_api::{
+    AgentId, AppConfig, ChatRequest, ChatResponse, ChoiceType, ConfigOption, Conversation,
+    ConversationId, Event, InterruptionReason, Model, ModelId, Workflow, API,
+};
+use forge_display::{MarkdownFormat, TitleFormat};
+use forge_domain::{McpConfig, McpServerConfig, Provider, Scope};
+use forge_fs::ForgeFS;
+use forge_spinner::SpinnerManager;
+
+```

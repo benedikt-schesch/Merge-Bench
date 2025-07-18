@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around how to retrieve the `max_failures` value from the `@options` hash. Both versions aim to provide a default value of `3`, but they handle missing keys differently:
+
+1. **HEAD version** (`@options.fetch(:max_failures, 3)`):  
+   Uses `fetch` which returns the default only if the key is **absent**. This allows explicit `nil`/`false` values.
+
+2. **Branch version** (`@options[:max_failures] || 3`):  
+   Uses `||` which falls back to `3` if the value is **falsy** (`nil`/`false`). This doesn't distinguish between missing keys and explicit `nil`.
+
+### Ambiguity:
+- If `@options` might contain explicit `nil`/`false` values for `:max_failures`, the behaviors differ significantly.
+- The intent isn't clear from context (e.g., should `nil` use the default? Is `0` valid?).
+
+Since the semantics are ambiguous and we lack project-specific context, **the conflict remains unresolved**. Here's the unchanged snippet:
+
+```ruby
+    end
+
+    # Spawns the {RedisFailover::NodeWatcher} instances for each managed node.
+    def spawn_watchers
+      @watchers = [@master, @slaves, @unavailable].flatten.compact.map do |node|
+<<<<<<< HEAD
+        NodeWatcher.new(self, node, @options.fetch(:max_failures, 3))
+=======
+        NodeWatcher.new(self, node, @options[:max_failures] || 3)
+>>>>>>> 01c875aa007f4e289ef066a66ba339466a66cc3e
+      end
+      @watchers.each(&:watch)
+    end
+
+    # Searches for the master node.
+```

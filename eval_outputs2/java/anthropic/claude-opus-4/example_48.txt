@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same code but with slightly different approaches:
+
+- **HEAD** uses `new User[spectators.size()]` and `new ArrayList<String>(spectatorsCopy.length)`
+- **Incoming** uses `new User[0]` and `new ArrayList<>(spectatorsCopy.length)` with diamond operator
+
+The semantic intent of both sides is the same - to create an array of spectators and then a list of their nicknames. The differences are:
+
+1. `new User[spectators.size()]` vs `new User[0]` - Both work correctly with `toArray()`, but `new User[0]` is actually the preferred modern Java approach as it can be more performant
+2. `new ArrayList<String>()` vs `new ArrayList<>()` - The diamond operator (`<>`) is the modern Java syntax (Java 7+) that infers the type
+
+Since both changes appear to be modernization efforts and the incoming change uses more modern Java conventions consistently, I'll resolve in favor of the incoming change:
+
+```java
+    for (final Player player : playersCopy) {
+      playerNames.add(player.getUser().getNickname());
+    }
+    info.put(GameInfo.PLAYERS, playerNames);
+
+    final User[] spectatorsCopy = spectators.toArray(new User[0]);
+    final List<String> spectatorNames = new ArrayList<>(spectatorsCopy.length);
+    for (final User spectator : spectatorsCopy) {
+      spectatorNames.add(spectator.getNickname());
+    }
+    info.put(GameInfo.SPECTATORS, spectatorNames);
+
+
+```

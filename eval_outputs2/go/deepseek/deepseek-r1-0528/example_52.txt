@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing `modTime` values and a minor formatting difference in the `asset` struct initialization. Since the intent behind the timestamp change is ambiguous (could represent file modification time or generation time) and both versions are semantically valid, the conflict cannot be automatically resolved.
+
+The resolution preserves the conflict markers exactly as provided, including all spacing and context:
+
+```go
+	bytes, err := confGitignoreAppengineBytes()
+	if err != nil {
+		return nil, err
+	}
+
+<<<<<<< HEAD
+	info := bindataFileInfo{name: "conf/gitignore/AppEngine", size: 58, mode: os.FileMode(420), modTime: time.Unix(1444419364, 0)}
+	a := &asset{bytes: bytes, info:  info}
+=======
+	info := bindataFileInfo{name: "conf/gitignore/AppEngine", size: 58, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+>>>>>>> 73fedc727538381d4e1048ee03be6b45e977a076
+	return a, nil
+}
+
+var _confGitignoreAppceleratortitanium = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x52\x56\x70\x2a\xcd\xcc\x49\x51\x48\xcb\xcf\x49\x49\x2d\x52\x48\xcc\x4b\x51\xc8\xc9\x4f\x57\x48\xcb\xcc\x49\xe5\x4a\x02\xc9\xe8\x43\x28\x3d\xa0\x28\x17\x20\x00\x00\xff\xff\x9f\xf6\xb1\xea\x2d\x00\x00\x00")
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```c
+        /* XXX hack Q183115 */
+        SetWindowLongPtr(hwnd, DWLP_MSGRESULT, TRUE);
+        ret |= 1;
+        break;
+      case DL_CANCELDRAG:
+<<<<<<< HEAD
+        DrawInsert(hwnd, dlm->hWnd, -1); /* Clear arrow */
+=======
+        p_DrawInsert(hwnd, dlm->hWnd, -1); /* Clear arrow */
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+        SendDlgItemMessage(
+            hwnd, hdl->listid, LB_DELETESTRING, hdl->dummyitem, 0);
+        hdl->dragging = 0;
+        ret |= 1;
+        break;
+```
+
+**Reasoning:**  
+The conflict involves two different function calls (`DrawInsert` vs `p_DrawInsert`) with identical parameters and purpose. Without broader context to determine whether `p_DrawInsert` is a refactored version (e.g., function pointer) or an unrelated change, the intent is ambiguous. Since semantic equivalence cannot be verified, the conflict is preserved as-is.

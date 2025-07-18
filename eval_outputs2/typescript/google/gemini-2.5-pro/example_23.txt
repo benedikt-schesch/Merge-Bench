@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Resolving this merge conflict involves recognizing that the incoming branch (`3d92f25dfb00a...`) is introducing new features and refactoring existing options, making it a more evolved version of the code in `HEAD`.
+
+*   **`cwd` vs `dir`**: The `HEAD` branch uses `options.cwd`. The incoming branch refactors this to `options.dir` and uses `resolve` (presumably from the `path` module) for a more robust path. This is an intentional replacement.
+*   **`transpileOnly` vs `typeCheck`**: `HEAD` defines a `transpileOnly` boolean. The incoming branch replaces this with a `typeCheck` boolean, which has more explicit semantics and maintains backward compatibility by checking for `options.transpileOnly !== true`. This refactoring improves code clarity.
+*   **`isScoped`**: The incoming branch adds a new `isScoped` function based on a new `scope` option. This is a new feature that should be preserved.
+
+The correct resolution is to accept all the changes from the incoming branch, as it supersedes the logic in `HEAD`.
+
+```typescript
+  ].map(Number)
+
+  const ignore = options.skipIgnore ? [] : (options.ignore || ['/node_modules/']).map(str => new RegExp(str))
+
+  // Require the TypeScript compiler and configuration.
+  const cwd = options.dir ? resolve(options.dir) : process.cwd()
+  const isScoped = options.scope ? (fileName: string) => relative(cwd, fileName).charAt(0) !== '.' : () => true
+  const typeCheck = options.typeCheck === true || options.transpileOnly !== true
+  const compiler = require.resolve(options.compiler || 'typescript', { paths: [cwd, __dirname] })
+  const ts: typeof _ts = require(compiler)
+  const transformers = options.transformers || undefined
+  const readFile = options.readFile || ts.sys.readFile
+  const fileExists = options.fileExists || ts.sys.fileExists
+
+```

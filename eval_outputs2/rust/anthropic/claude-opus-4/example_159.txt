@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `gleam_core`, but with slightly different structures:
+
+- **HEAD**: Imports `Result`, `build::Package`, `build::ProjectCompiler`, and `build::Target`
+- **Other branch**: Imports `build::Options`, `build::Package`, `build::ProjectCompiler`, and `Result`
+
+The key differences are:
+1. HEAD includes `Target` but not `Options`
+2. The other branch includes `Options` but not `Target`
+3. The formatting style differs (single line vs multi-line)
+
+Given that the function `main` takes `options: &Options` as a parameter, it's clear that `Options` is needed. Looking at the semantics, it appears both sides want to import the necessary types, and we should include all of them. I'll use the multi-line format from the other branch as it's more readable when there are multiple imports.
+
+```rust
+use std::time::Instant;
+
+use gleam_core::{
+    build::{Options, Package, ProjectCompiler, Target},
+    Result,
+};
+
+use crate::{cli, fs};
+
+pub fn main(options: &Options) -> Result<Package> {
+    let manifest = crate::dependencies::download(None)?;
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs after `agent_cancel_query(conn)`, where one branch adds a `return 0;` statement while the other branch does not. Since the function's return type isn't visible in the snippet, it's ambiguous whether the function should return a value at this point. Resolving this requires knowing the function signature (which isn't provided). 
+
+Here's the original snippet with the conflict preserved:
+
+```c
+   * clean up. (Of course we don't free retbuf, since ownership
+   * of that passes to the callback.)
+   */
+  conn->callback(conn->callback_ctx, conn->retbuf, conn->retlen);
+  agent_cancel_query(conn);
+<<<<<<< HEAD
+  return 0;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+agent_pending_query *agent_query(void *in,
+                                 int inlen,
+                                 void **out,
+```

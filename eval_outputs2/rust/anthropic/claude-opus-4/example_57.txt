@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Has just the `WorldQuery` trait definition
+- **Incoming change**: Adds a type alias `QueryItem` that provides a convenient way to access the `Item` type from a `WorldQuery`'s associated `Fetch` type
+
+The semantic intent appears to be:
+- The `WorldQuery` trait defines a query with associated `Fetch` and `State` types
+- The incoming change wants to add a utility type alias that makes it easier to refer to the item type that a query yields
+- Both changes are complementary - the type alias depends on the `WorldQuery` trait and provides additional functionality
+
+Since these changes don't conflict semantically and the type alias is a useful addition that builds on top of the `WorldQuery` trait, I'll resolve by keeping both:
+
+```rust
+pub trait WorldQuery {
+    type Fetch: for<'world, 'state> Fetch<'world, 'state, State = Self::State>;
+    type State: FetchState;
+}
+
+pub type QueryItem<'w, 's, Q> = <<Q as WorldQuery>::Fetch as Fetch<'w, 's>>::Item;
+
+pub trait Fetch<'world, 'state>: Sized {
+    type Item;
+    type State: FetchState;
+
+    /// Creates a new instance of this fetch.
+
+```

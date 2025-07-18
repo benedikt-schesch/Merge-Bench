@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict involves changes to the imports from the `forge_api` module. The HEAD branch added `ChoiceType` and `ConfigOption`, while the other branch added `AppConfig` and removed `ChoiceType` and `ConfigOption`. Since the changes conflict semantically (one side adds items that the other side removes), and the intent behind these changes is ambiguous without more context, I cannot safely resolve this conflict.
+
+Here is the original snippet with the conflict preserved:
+
+```rust
+
+use anyhow::{Context, Result};
+use colored::Colorize;
+use convert_case::{Case, Casing};
+use forge_api::{
+<<<<<<< HEAD
+    AgentId, ChatRequest, ChatResponse, ChoiceType, ConfigOption, Conversation, ConversationId,
+    Event, InterruptionReason, Model, ModelId, Workflow, API,
+=======
+    AgentId, AppConfig, ChatRequest, ChatResponse, Conversation, ConversationId, Event,
+    InterruptionReason, Model, ModelId, Workflow, API,
+>>>>>>> 64e87367dc3f494f1de2be572aa12532180a4dd9
+};
+use forge_display::{MarkdownFormat, TitleFormat};
+use forge_domain::{McpConfig, McpServerConfig, Provider, Scope};
+use forge_fs::ForgeFS;
+use forge_spinner::SpinnerManager;
+
+```

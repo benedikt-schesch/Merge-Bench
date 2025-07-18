@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+This is a straightforward conflict. One side added a call to `self.hSizer_labels.Layout()`, which is a common and often necessary step in wxPython after dynamically adding widgets to a sizer to make the changes visually appear. The other side performed the same additions but omitted this call.
+
+The intent of the `HEAD` branch is to ensure the layout is immediately updated after inserting the new label and separator. This is the more complete and correct implementation. Therefore, the resolution is to accept the changes from `HEAD`.
+
+```python
+        if not (index >= 0 and index < self.GetPageCount()):
+            return
+        label = LinkStaticText(self.hSizer_panel, text, None, font_colour=wx.BLACK)
+        label.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        sline = wx.StaticLine(self.hSizer_panel, -1, style=wx.LI_VERTICAL)
+        self.hSizer_labels.Insert(index*2, label, 0, wx.RIGHT|wx.LEFT|wx.CENTER, self.lspace)
+        self.hSizer_labels.Insert(index*2+1, sline, 0, wx.EXPAND|wx.CENTER|wx.TOP|wx.BOTTOM, 5)
+        self.hSizer_labels.Layout()
+        page.Show(False)
+        szr_index = index - 1 if self.ad else index
+        self.hSizer_panels.Insert(szr_index, page, 100, wx.EXPAND)
+        self.labels.insert(index, label)
+        self.panels.insert(index, page)
+
+```

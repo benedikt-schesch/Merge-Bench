@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add new fields to the `input_device` struct:
+
+- HEAD is adding `int rotate;` - likely for handling device rotation
+- The other branch is adding `bool is_touchscreen;` - for identifying touchscreen devices
+
+Both changes appear to be independent additions that don't conflict semantically. They're both adding new device properties/capabilities to the struct. The logical resolution is to include both fields.
+
+```c
+
+struct input_device {
+  struct libevdev *dev;
+  bool is_keyboard;
+  bool is_mouse;
+  int rotate;
+  bool is_touchscreen;
+  struct mapping* map;
+  int key_map[KEY_MAX];
+  int abs_map[ABS_MAX];
+  int hats_state[3][2];
+  int fd;
+
+```

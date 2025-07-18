@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around defining the `sup_distance` method. The HEAD branch defines it as a regular instance method, while the other branch defines it as a class method (`self.sup_distance`) and adds YARD documentation. Since instance methods and class methods serve fundamentally different purposes, this represents a semantic conflict that cannot be automatically resolved without understanding the broader context of the class/module structure. 
+
+The documentation comments from the other branch (`# @param`, `# @return`) could theoretically be merged with either approach, but the core disagreement about method type (instance vs class) remains unresolved. Here's the original snippet with the conflict preserved:
+
+```ruby
+        return sum
+      end
+      
+      # Sup distance, or L-intinity norm
+      # Parameters a and b are vectors with continuous attributes.      
+<<<<<<< HEAD
+      def sup_distance(a, b)
+=======
+      # @param a [Object]
+      # @param b [Object]
+      # @return [Object]
+      def self.sup_distance(a, b)
+>>>>>>> 753f2ec0c999c414bbd1f295a5719f7687c78f13
+        distance = 0.0
+        a.each_with_index do |item_a, i|
+          item_b = b[i]
+          diff = (item_a - item_b).abs
+          distance = diff if diff > distance
+```

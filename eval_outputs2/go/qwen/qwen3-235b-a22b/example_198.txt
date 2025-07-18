@@ -1,0 +1,14 @@
+<think>
+No reasoning found</think>
+```go
+			}
+			return nil
+		), 30*time.Second, 300*time.Millisecond).Should(BeNil())
+	})
+
+	It("rollout scale up and down without rollout batches", func() {
+		By("first scale operation")
+		Expect(common.ReadYamlToObject("testdata/rollout/deployment/application.yaml", &app)).Should(BeNil())
+		app.Namespace = namespaceName
+		Expect(k8sClient.Create(ctx, &app)).Should(BeNil())
+```

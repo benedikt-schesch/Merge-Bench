@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by selecting the more general type annotation that satisfies both branches while preserving the method's intent:
+
+```python
+        self.errors.append(error)
+
+    def __str__(self) -> str:
+        return str(self.errors[0])
+
+    def prepend(self, path: typing.List[typing.Hashable]) -> None:
+        for error in self.errors:
+            error.prepend(path)
+
+
+class RequiredFieldInvalid(Invalid):
+```
+
+**Resolution Notes:**  
+1. Both branches modify the `path` parameter's type annotation
+2. `Hashable` is more general than `str` (supports strings & other hashable types)
+3. Since strings are hashable, this satisfies both branches' requirements
+4. Maintains flexibility while preserving functionality
+5. Keeps surrounding context unchanged as requested
+
+The conflict is resolved by choosing the broader type annotation (`typing.Hashable`) that allows all hashable types including strings, ensuring both branches' modifications are respected without breaking existing functionality.

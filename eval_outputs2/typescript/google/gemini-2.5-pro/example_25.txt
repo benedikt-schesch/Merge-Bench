@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+This merge conflict occurs in the import section of a TypeScript file. Let's analyze the intent of both changes to find the correct resolution.
+
+*   **`HEAD` Branch:** This side introduces imports for Node.js's built-in `path` and `worker_threads` modules. It also imports `IpcEvents`. This suggests that functionality related to file paths and worker threads is being added.
+*   **`d75ab4af...` Branch:** This side introduces an import for the `arrpc` library and `IpcCommands` from `shared/IpcEvents`. This suggests functionality related to an RPC server is being added.
+
+**Semantic Resolution:**
+
+1.  Both branches add imports for new, distinct functionalities (`worker_threads` and `arrpc`). The context line `import { ArrpcEvent, ArrpcHostEvent } from "./utils/arrpcWorkerTypes";` strongly suggests that both workers and `arrpc` are intended to be used together. Therefore, the imports from both sides should be combined.
+2.  There is a direct conflict between `import { IpcEvents }...` (HEAD) and `import { IpcCommands }...` (d75ab4af...). This is a classic example of a symbol being renamed in one branch. Given the surrounding context which includes `sendRendererCommand` and an import from `./ipcCommands`, it is highly probable that `IpcEvents` was renamed to `IpcCommands` as part of a refactor. We should adopt the `IpcCommands` name.
+
+By combining the unique imports from both sides and resolving the rename, we arrive at the correct merged code.
+
+```typescript
+ * SPDX-License-Identifier: GPL-3.0
+ * Vesktop, a desktop app aiming to give you a snappier Discord Experience
+ * Copyright (c) 2023 Vendicated and Vencord contributors
+ */
+
+import { resolve } from "path";
+import Server from "arrpc";
+import { IpcCommands } from "shared/IpcEvents";
+import { MessageChannel, Worker } from "worker_threads";
+
+import { sendRendererCommand } from "./ipcCommands";
+import { Settings } from "./settings";
+import { ArrpcEvent, ArrpcHostEvent } from "./utils/arrpcWorkerTypes";
+
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import the same modules from `@apollo/client`, just with different import styles:
+
+- HEAD: Separate imports for `ApolloClient` and `InMemoryCache`
+- The other branch: Combined import statement
+
+Since both achieve the same result (importing the necessary modules), I'll resolve this by using the more concise combined import statement, which is generally preferred in modern JavaScript:
+
+```javascript
+ * (necessary for SSR)
+ *
+ * /!\ It must be recreated on every request
+ */
+
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+import { SchemaLink } from '@apollo/client/link/schema';
+import { GraphQLSchema } from '../graphql/index.js';
+
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differences in the `MockSpec` struct initialization between two branches. The HEAD branch only includes the `Created` field, while the other branch adds two new fields (`ReqTimestampMock` and `ResTimestampMock`) while keeping `Created`. The semantic intent is to include all three fields as they represent additional timestamp metadata that should be preserved.
+
+Here's the resolved snippet preserving all fields and context:
+
+```go
+			}
+			mock.Spec = models.MockSpec{
+				Metadata: httpSpec.Metadata,
+				HttpReq:  &httpSpec.Request,
+				HttpResp: &httpSpec.Response,
+				Created:          httpSpec.Created,
+				ReqTimestampMock: httpSpec.ReqTimestampMock,
+				ResTimestampMock: httpSpec.ResTimestampMock,
+			}
+		case models.Mongo:
+			mongoSpec := spec.MongoSpec{}
+			err := m.Spec.Decode(&mongoSpec)
+			if err != nil {
+```
+
+Key resolution points:
+1. Kept all three fields (`Created`, `ReqTimestampMock`, `ResTimestampMock`) to preserve both branches' functionality
+2. Maintained the field alignment from the other branch for consistency
+3. Removed merge conflict markers while preserving surrounding context exactly
+4. Maintained original spacing and indentation throughout
+
+The resolution assumes both timestamp fields are valid additions to the struct. If these fields don't exist in the struct definition, this would cause compilation errors and require additional changes elsewhere in the codebase.

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same code section with very similar changes. The differences are:
+
+1. **HEAD**: Uses regular string literals (`'\\1 \\2 \\3'` and `'0\\1'`)
+2. **Branch 5c84a7c**: Uses unicode string literals (`u'\\1 \\2 \\3'` and `u'0\\1'`) and adds a new parameter `mobile_number_portable_region=True`
+
+Since both sides have the same number formats but the branch adds an additional parameter, the semantic intent appears to be:
+- Both sides want the same number format patterns
+- The branch additionally wants to enable mobile number portability for this region
+
+The unicode prefixes (`u''`) are likely for Python 2/3 compatibility, but in modern Python 3, regular strings are unicode by default, so the `u` prefix is optional.
+
+Here's the resolved conflict that preserves both intents:
+
+```python
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    national_prefix='0',
+    preferred_extn_prefix='#',
+    national_prefix_for_parsing='0',
+    number_format=[NumberFormat(pattern='([2-8])(\\d{3,4})(\\d{4})', format='\\1 \\2 \\3', leading_digits_pattern=['[2-7]|8[1-9]'], national_prefix_formatting_rule='0\\1'),
+        NumberFormat(pattern='([89]\\d{2})(\\d{3})(\\d{3})', format='\\1 \\2 \\3', leading_digits_pattern=['80|9'], national_prefix_formatting_rule='0\\1')],
+    mobile_number_portable_region=True)
+```

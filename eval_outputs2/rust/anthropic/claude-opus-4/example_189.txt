@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add documentation, but they're adding different things:
+
+- HEAD is adding a blank line
+- The other branch is starting a code example with ` ```txt`
+
+Since this appears to be documentation for a parser macro, and the text "for example:" suggests that a code example should follow, the most semantically correct resolution would be to include the code fence from the second branch. This makes the documentation clearer by properly formatting the example that follows.
+
+Here's the resolved version:
+
+```rust
+/// In addition to `lhs <- rhs;` performing the monadic bind, there
+/// is `lhs !<- rhs;` which is equivalent to `lhs <- no_backtracking(rhs);`.
+/// The final expression given is wrapped in an `Ok((input, expr, location))`
+///
+/// for example:
+/// ```txt
+/// parser!(basic_definition loc =
+///     name <- variable;
+///     _ <- expect(Token::Equal);
+///     value !<- expression;
+///     Expr::definition(name, value, loc, ())
+```

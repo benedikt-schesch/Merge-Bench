@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to improve the `toggleVolume` function, but with different approaches:
+
+- **HEAD**: Simple toggle functionality that checks the current state
+- **Other branch**: Adds an optional parameter to explicitly set the volume state
+
+The semantic intent is to allow toggling volume on/off, with the other branch adding the capability to explicitly set the state rather than just toggle. Both sides want to turn sound off when the condition is met.
+
+Here's the resolved conflict that combines both intents:
+
+```javascript
+			if(lang && typeof Storage != 'undefined' && localStorage) {
+				localStorage.lang = lang;
+			}
+		},
+
+		toggleVolume: function(enabled /* optional */) {
+			if (enabled == null) {
+				enabled = !$SM.get('config.soundOn');
+			}
+			if (!enabled) {
+				$('.volume').text(_('sound on.'));
+				$SM.set('config.soundOn', false);
+				AudioEngine.setMasterVolume(0.0);
+			} else {
+				$('.volume').text(_('sound off.'));
+
+```

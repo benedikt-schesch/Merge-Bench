@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+**HEAD (current branch)**: Returns a value from `plug_closing()` when there's an error, and returns 1 when there's no error.
+
+**Incoming change**: Calls `plug_closing()` when there's an error (without using its return value) and then returns void.
+
+The key difference is whether this function should return a value or be void. Looking at the context, the HEAD version seems more complete as it handles both the error case (return the result of `plug_closing()`) and the success case (return 1).
+
+However, since the incoming change suggests this function should be void (just `return;`), and without seeing the full function signature or how it's called, I cannot definitively resolve this conflict.
+
+Here's the snippet with the conflict preserved:
+
+```c
+      while (err && s->addr && sk_nextaddr(s->addr, &s->step)) {
+        err = try_connect(s);
+      }
+    }
+    if (err != 0)
+<<<<<<< HEAD
+      return plug_closing(s->plug, winsock_error_string(err), err, 0);
+    else
+      return 1;
+=======
+      plug_closing(s->plug, winsock_error_string(err), err, 0);
+    return;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  }
+
+  noise_ultralight(lParam);
+
+  switch (WSAGETSELECTEVENT(lParam)) {
+
+```

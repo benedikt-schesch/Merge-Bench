@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The provided code snippet contains a semantic merge conflict between two function definitions (`InitialiseTest` and `Test`) that have distinct return types (`InitialiseTestReturn` vs. `bool`), minor parameter differences (`[]string` vs. `*[]string` for `testsets`, and an additional `noiseConfig` map in `Test`), and partially overlapping post-signature initialization code like `stopper` setup and `models.SetMode`.
+
+The two functions appear structurally similar but represent different versions or refactorings of test initialization logic, with ambiguous intent on which should take precedence or whether both should coexist. Given the lack of explicit intent or project history to guide the decision, and because parameter divergence and differing function names suggest incompatible design choices, it is safest to retain the conflict markers to alert the user to manually resolve the discrepancy.
+
+Here is the full snippet with no modifications and preserved spacing, as requested:
+
+```go
+		logger: logger,
+		mutex:  sync.Mutex{},
+	}
+}
+
+<<<<<<< HEAD
+func (t *tester) InitialiseTest(path string, proxyPort uint32, testReportPath string, appCmd string, testsets *[]string, appContainer, appNetwork string, Delay uint64, passThorughPorts []uint, apiTimeout uint64) InitialiseTestReturn {
+	var returnVal InitialiseTestReturn
+=======
+func (t *tester) Test(path string, proxyPort uint32, testReportPath string, appCmd string, testsets []string, appContainer, appNetwork string, Delay uint64, passThorughPorts []uint, apiTimeout uint64, noiseConfig map[string]interface{}) bool {
+
+	var ps *proxy.ProxySet
+>>>>>>> 7dea42d7b9709f2c68032e56d8d67995336c9378
+
+	stopper := make(chan os.Signal, 1)
+	signal.Notify(stopper, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGKILL)
+
+	models.SetMode(models.MODE_TEST)
+```

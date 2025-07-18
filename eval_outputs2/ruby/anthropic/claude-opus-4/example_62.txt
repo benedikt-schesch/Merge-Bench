@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is adding a deprecation silencing wrapper around the test execution, while the other branch (7b5731cb74066ca5b24ac9d7d168e9bc9f23bd5e) doesn't have this addition.
+
+The semantic intent appears to be:
+- HEAD wants to silence deprecation warnings during the test execution
+- The other branch just wants the clean test without the deprecation handling
+
+Since the HEAD branch is adding functionality to handle deprecation warnings (which is likely needed for Rails 7.1.0+ compatibility), and this doesn't conflict with the intent of the test itself, I'll keep the HEAD version:
+
+```ruby
+      expectjs("Routes.inboxes()").to eq(test_routes.inboxes_path())
+      expectjs("Routes.inbox(2)").to eq(test_routes.inbox_path(2))
+    end
+
+    context "with url_links option" do
+      around(:each) do |example|
+        Rails.version >= "7.1.0" ? Rails.deprecator : ActiveSupport::Deprecation
+        deprecator_object.silence do
+          example.run
+        end
+      end
+
+      let(:_options) { { :compact => true, :url_links => true, default_url_options: {host: 'localhost'} } }
+      it "should not strip urls" do
+        expectjs("Routes.inbox(1)").to eq(test_routes.inbox_path(1))
+        expectjs("Routes.inbox_url(1)").to eq("http://localhost#{test_routes.inbox_path(1)}")
+      end
+
+```

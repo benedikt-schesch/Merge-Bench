@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - adding timing/logging functionality to track when the render process starts. The semantic intent is identical, but the implementation differs slightly:
+
+- HEAD version uses `puts` with a formatted string that includes "Starting Render:"
+- The other branch uses `printf` with a format specifier `%g` and ends with a period
+
+The HEAD version appears more consistent with the Ruby style and the existing logging pattern (note the similar `puts` statement a few lines below). Here's the resolved version:
+
+```ruby
+    @document.render(:html, :template => "public/noc_html/views", :output => "public/noc_html/index.html")
+    redirect "noc_html/index.html"
+  end
+  
+  get '/create_pdf/:filename' do
+    
+    startTime = Time.now
+    puts "///////// Starting Render: #{startTime}"
+        
+    # first render html
+    @document = AsciiDoc::AsciiDocument.new("public/#{params[:filename]}", { :debug_xml_to_file => "public/#{params[:filename]}.xml" })
+    puts "Parsed Asciidoc after: #{Time.now-startTime} seconds"
+    
+    @document.render(:html, :template => "public/noc_pdf/views", :output => "public/noc_pdf/index.html")
+
+```

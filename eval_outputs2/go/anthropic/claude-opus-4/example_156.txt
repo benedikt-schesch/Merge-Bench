@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (current branch):**
+- Calls `c.store.Update(i, c.ttlMap)`
+- The comment mentions updating expiration to prevent premature removal
+- Passes the full item `i` and `c.ttlMap` to the Update method
+
+**Incoming change:**
+- Calls `c.store.Update(keyHash, conflictHash, i.value)`
+- Only mentions updating the cost in the comment
+- Passes individual parameters: `keyHash`, `conflictHash`, and just the value from the item
+
+The semantic intent appears to be:
+- Both sides want to update the store
+- HEAD emphasizes the importance of updating expiration along with the value
+- The incoming change has refactored the Update method to take individual parameters instead of the full item
+
+Based on the context and the fact that `keyHash` and `conflictHash` are being used (which aren't defined in the visible context), it seems the incoming change represents a refactoring of the Update method signature. Since both `keyHash` and `conflictHash` variables would need to be defined somewhere above this snippet for the incoming change to work, I'll preserve the conflict as-is since I cannot determine with certainty which approach is correct without seeing the full context of the refactoring.
+
+```go
+		value:      value,
+		cost:       cost,
+		expiration: expiration,
+	}
+	// Attempt to immediately update hashmap value and set flag to update so the
+<<<<<<< HEAD
+	// cost is eventually updated. The expiration must also be immediately updated
+	// to prevent items from being prematurely removed from the map.
+	if c.store.Update(i, c.ttlMap) {
+=======
+	// cost is eventually updated.
+	if c.store.Update(keyHash, conflictHash, i.value) {
+>>>>>>> 29b4dd7a077785696ba5422081b3c301d4c1e5f1
+		i.flag = itemUpdate
+	}
+	// Attempt to send item to policy.
+	select {
+	case c.setBuf <- i:
+```

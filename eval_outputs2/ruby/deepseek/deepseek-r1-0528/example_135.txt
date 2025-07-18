@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+```ruby
+    data.flatten.size.should eq 8
+    data.each do |item|
+      # all keys should be symbols when using v1.x backwards compatible mode
+      item.keys.each{|x| x.class.should eq Symbol}
+      item[:timestamp].should eq 1381388409
+      # Ruby 2.4+ unifies Fixnum & Bignum into Integer.
+      if 0.class == Integer
+        item[:item_id].class.should eq Integer
+      else
+        item[:item_id].class.should eq Fixnum
+      end
+      item[:name].size.should be > 0
+    end
+    data[3][:parent_id].should be_nil
+    data[4][:parent_id].should be_nil
+  end
+```
+
+The resolution maintains compatibility across Ruby versions by:
+1. Keeping the comment explaining the Ruby 2.4+ Integer unification
+2. Using a runtime check (`0.class == Integer`) to determine the expected class
+3. Preserving both test expectations:
+   - Uses `Integer` for Ruby 2.4+
+   - Uses `Fixnum` for older Ruby versions
+4. Maintains all surrounding context and spacing
+5. Keeps the same indentation level for the conflict resolution block
+
+The solution addresses the semantic intent of both branches:
+- HEAD branch wanted to test for `Fixnum`
+- Other branch wanted to support newer Ruby versions with `Integer`
+- Combines both requirements with version detection

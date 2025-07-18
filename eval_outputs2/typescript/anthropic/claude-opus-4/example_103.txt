@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal of marking the system as shutting down, but with slightly different approaches:
+
+- **HEAD (current branch)**: Simply sets the state to `SHUTTING_DOWN`
+- **Incoming branch**: Adds debug logging and sets a boolean flag `isGracefullyShuttingDown` before setting the state
+
+The semantic intent of both sides is to properly handle the shutdown process. The incoming changes appear to be adding more visibility (debug logging) and an additional flag to track the shutdown state. These changes are complementary rather than conflicting.
+
+Here's the resolved code:
+
+```typescript
+export async function gracefullyShutdown(): Promise<any> {
+  if (state === MatchMakerState.SHUTTING_DOWN) {
+    return Promise.reject('already_shutting_down');
+  }
+
+  debugMatchMaking(`${processId} is shutting down!`);
+
+  isGracefullyShuttingDown = true;
+  state = MatchMakerState.SHUTTING_DOWN;
+
+  onReady = undefined;
+
+  // - lock existing rooms
+
+```

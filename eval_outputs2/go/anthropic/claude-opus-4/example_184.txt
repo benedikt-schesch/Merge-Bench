@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - loading eBPF hooks into the kernel. The main differences are:
+
+1. **HEAD**: Uses `returnVal.LoadedHooks` and passes `cfg.AppCmd`, `cfg.AppContainer`, and returns `returnVal, err`
+2. **Incoming**: Uses `loadedHooks` and passes `appCmd`, `options.AppContainer`, and returns `false`
+
+The semantic intent is clear - both want to load hooks with application command and container information. The HEAD version appears more complete as it:
+- Properly returns the error along with returnVal
+- Uses consistent configuration structure (cfg)
+- Maintains the return value pattern used elsewhere
+
+Here's the resolved code:
+
+```go
+	select {
+	case <-stopper:
+		return returnVal, errors.New("Keploy was interupted by stopper")
+	default:
+		// load the ebpf hooks into the kernel
+		if err := returnVal.LoadedHooks.LoadHooks(cfg.AppCmd, cfg.AppContainer, 0, context.Background()); err != nil {
+			return returnVal, err
+		}
+	}
+
+	select {
+	case <-stopper:
+
+```

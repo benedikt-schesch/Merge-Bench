@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+export type UseBaseQueryReturnType<
+  TData,
+  TError,
+  Result = QueryObserverResult<TData, TError>,
+> = {
+  [K in keyof Result]: Result[K] extends (...args: Array<any>) => any
+    ? Result[K]
+    : ToRef<Readonly<Result>[K]>
+} & {
+  suspense: () => Promise<Result>
+}
+
+```

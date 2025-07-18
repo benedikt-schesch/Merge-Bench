@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Based on the provided context, I'm unable to resolve this conflict semantically because:
+
+1. The conflict involves a fundamental type change (`io.Reader` vs `*os.File`)
+2. Both changes appear to be intentional and semantically different
+3. There's insufficient context to determine which type is required
+4. The choice impacts how the `in` field is used throughout the code
+5. The `out` field remains as `io.Writer`, suggesting possible inconsistency
+
+Here's the original snippet with conflict markers preserved:
+
+```go
+	ti          *Terminfo
+	h           int
+	w           int
+	fini        bool
+	cells       CellBuffer
+<<<<<<< HEAD
+	in          io.Reader
+=======
+	in          *os.File
+>>>>>>> a221f2faf4f9a059c8eba8f91c5d0dbd9845a985
+	out         io.Writer
+	curstyle    Style
+	style       Style
+	evch        chan Event
+	sigwinch    chan os.Signal
+```
+
+To resolve this, a developer should consider:
+- Whether file-specific operations (like Fd()) are needed
+- If the code needs to handle non-file readers
+- Why `out` remains an interface while `in` might be concrete
+- Any type assertions or method calls used elsewhere in the codebase
+- The broader architectural intent for I/O handling

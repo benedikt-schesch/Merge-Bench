@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises because one branch added a new function declaration (`mraa_setup_uart`) while the other branch added C++ extern guards closing (`#ifdef __cplusplus`). Both changes are valid and should be preserved. The function declaration belongs *inside* the extern "C" block for proper C++ compatibility, so the closing guards must come after the new function.
+
+Resolved code:
+```c
+ * @param pin physical pin to operate on
+ * @return out direction to setup. 1 for output 0 for input
+ */
+mraa_result_t mraa_swap_complex_gpio(int pin, int out);
+
+/** Setup uart muxes to exposes the pins physically.
+ *
+ * @param index of the uart in the board definition to expose physically
+ * @return mraa_result_t of operation
+ */
+mraa_result_t mraa_setup_uart(int index);
+
+#ifdef __cplusplus
+}
+#endif
+
+```

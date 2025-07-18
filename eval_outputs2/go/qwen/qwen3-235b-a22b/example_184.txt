@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```go
+	select {
+	case <-stopper:
+		return returnVal, errors.New("Keploy was interupted by stopper")
+	default:
+		// load the ebpf hooks into the kernel
+		if err := loadedHooks.LoadHooks(appCmd, options.AppContainer, 0, context.Background()); err != nil {
+			return returnVal, err
+		}
+	}
+
+	select {
+	case <-stopper:
+```

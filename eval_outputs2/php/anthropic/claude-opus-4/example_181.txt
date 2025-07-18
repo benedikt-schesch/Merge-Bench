@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD side (DateTime/Scheduler.php) is trying to add several `use` statements for Dispatcher-related classes
+2. The other side (Cron/Scheduler.php) is trying to add a single `use App;` statement
+3. Both sides want to keep the `use Indatus\Dispatcher\Scheduling\Schedulable;` statement
+
+Based on the semantic intent, both sides are adding necessary imports for their respective implementations. Since these are different files (DateTime/Scheduler.php vs Cron/Scheduler.php) that got merged, we should include all the use statements as they're likely all needed.
+
+Here's the resolved code:
+
+```php
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use App;
+use Indatus\Dispatcher\Day;
+use Indatus\Dispatcher\Month;
+use Indatus\Dispatcher\Scheduling\BadScheduleException;
+use Indatus\Dispatcher\Scheduling\Schedulable;
+
+class Scheduler extends Schedulable
+{
+
+```

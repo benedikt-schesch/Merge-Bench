@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Changes the parameter from `workspace: BaseWorkspaceInfo` to `workspace: WorkspaceInfoWithStatus` and uses `onlyDrop: boolean`
+- **Current branch**: Keeps `workspace: BaseWorkspaceInfo` but changes the parameter from `onlyDrop: boolean` to `cleanIndexes: boolean`
+
+The conflict appears to be about:
+1. The type of the workspace parameter (BaseWorkspaceInfo vs WorkspaceInfoWithStatus)
+2. The name/intent of the boolean parameter (onlyDrop vs cleanIndexes)
+
+Looking at the function body and the comment, there seems to be a semantic mismatch. The comment mentions "If onlyDrop is true, will drop workspace from database, otherwise remove only indexes and do full reindex." However, the function body calls `doReindexFulltext` with `cleanIndexes`, which suggests the opposite logic.
+
+Without more context about the intended behavior and the relationship between BaseWorkspaceInfo and WorkspaceInfoWithStatus, I cannot confidently resolve this conflict as it involves both architectural decisions (type change) and behavioral changes (parameter naming/logic).
+
+```typescript
+  }
+
+  /**
+   * If onlyDrop is true, will drop workspace from database, overwize remove only indexes and do full reindex.
+   */
+<<<<<<< HEAD
+  async doCleanup (ctx: MeasureContext, workspace: WorkspaceInfoWithStatus, onlyDrop: boolean): Promise<void> {
+=======
+  async doCleanup (ctx: MeasureContext, workspace: BaseWorkspaceInfo, cleanIndexes: boolean): Promise<void> {
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+    const { dbUrl } = prepareTools([])
+    const adapter = getWorkspaceDestroyAdapter(dbUrl)
+    await adapter.deleteWorkspace(ctx, sharedPipelineContextVars, workspace.uuid, workspace.dataId)
+
+    await this.doReindexFulltext(ctx, workspace, cleanIndexes)
+
+```

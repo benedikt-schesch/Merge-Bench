@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to calculate a step value by dividing the angle difference by the string length minus 1. The key difference is that the right side (179182bb) adds protection against division by zero using `max(1, ...)`.
+
+The semantic intent of both sides is the same: calculate the angular step between characters. However, the right side recognizes that if `$captcha_text` has a length of 1 or less, the original formula would cause division by zero. The `max(1, ...)` ensures we always divide by at least 1.
+
+This is a clear improvement that prevents a potential runtime error, so I'll resolve in favor of the right side:
+
+```php
+        }
+        if (mt_rand(0, 99) % 2 == 1) {
+            $angleN = -$angleN;
+        }
+
+        $step   = abs($angle0 - $angleN) / (max(1, $this->strlen($captcha_text) - 1));
+        $step   = ($angle0 > $angleN) ? -$step : $step;
+        $angle  = $angle0;
+
+        for ($c = 0; $c < $this->strlen($captcha_text); ++$c) {
+            $font     = $this->ttfFile(); // select random font from list for this character
+
+```

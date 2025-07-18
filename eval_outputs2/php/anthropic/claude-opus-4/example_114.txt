@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to set the `EXTRA_VERSION` constant, with one side having `'rc2-dev'` and the other having `'rc2'`. 
+
+Based on the context and the comment above that mentions "when this is set to 'dev' the version string will be", it appears that:
+- The HEAD side (`'rc2-dev'`) represents a development version
+- The incoming side (`'rc2'`) represents a release candidate without the development suffix
+
+Given that this appears to be a version control scenario where both sides have valid intentions (one maintaining development status, the other preparing for release), and without additional context about which direction the project should take, I'll preserve the conflict as-is:
+
+```php
+     * For example, for 3.8.0 when this is set to 'dev' the version string will be `3.8.0-dev`.
+     *
+     * @var    string
+     * @since  3.8.0
+     */
+<<<<<<< HEAD
+    public const EXTRA_VERSION = 'rc2-dev';
+=======
+    public const EXTRA_VERSION = 'rc2';
+>>>>>>> 8ab0eaace61e3f3a6dc3f63e1c87c96eddfccff5
+
+    /**
+     * Development status.
+     *
+     * @var    string
+
+```

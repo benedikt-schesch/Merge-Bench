@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `runtime.AnnotateIncomingContext`, but with different parameters:
+
+- HEAD version: calls with 3 parameters (ctx, mux, req)
+- The incoming change: calls with 4 parameters, adding a fourth parameter that appears to be the gRPC method path "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello"
+
+Based on the context and the specific method path included in the incoming change, it appears the API for `runtime.AnnotateIncomingContext` has been updated to require the full method path as a fourth parameter. This is a common pattern in gRPC gateway code where method paths are used for routing and metadata purposes.
+
+The semantic intent of both sides is the same - to annotate the incoming context - but the incoming change represents an API update that adds more specific method routing information.
+
+Here's the resolved code:
+
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_5(rctx, inboundMarshaler, server, req, pathParams)
+```

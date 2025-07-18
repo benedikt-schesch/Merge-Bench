@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- The HEAD side (current branch) wants to return 0 at the end of this function
+- The other side (branch 4348393f562c8011ebca43d6198e98638aa115b5) appears to want to remove the return statement entirely, leaving just the closing brace
+
+This appears to be at the end of a function that handles connection errors or normal closure. The comment "Otherwise, the remote side closed the connection normally" suggests this is the normal exit path.
+
+Without more context about what this function should return, and given that one side explicitly wants a return value while the other doesn't, I cannot determine the correct resolution with certainty. The ambiguity lies in whether this function should return a value or not (possibly it changed from returning int to void, or vice versa).
+
+Therefore, I'm returning the snippet with the conflict preserved:
+
+```c
+  if (error_msg) {
+    logevent(telnet->frontend, error_msg);
+    connection_fatal(telnet->frontend, "%s", error_msg);
+  }
+  /* Otherwise, the remote side closed the connection normally. */
+<<<<<<< HEAD
+  return 0;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void telnet_receive(Plug plug, int urgent, char *data, int len)
+{
+  Telnet telnet = (Telnet)plug;
+
+```

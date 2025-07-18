@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `_onLeave` method but with different changes:
+
+- **HEAD**: Changes the method from `private` to `protected` and removes the debug logging
+- **Branch (1a7da98...)**: Keeps it as `private` but adds debug logging for the sessionId
+
+The semantic intent appears to be:
+- One side wants to make this method accessible to subclasses (protected)
+- The other side wants to add debugging information
+
+Since both changes seem valuable and don't conflict in terms of functionality, I'll merge both changes - keeping the `protected` visibility modifier while also including the debug logging:
+
+```typescript
+
+    // only effectively close connection when "onLeave" is fulfilled
+    this._onLeave(client, closeCode).then(() => client.leave(closeCode));
+  }
+
+  protected async _onLeave(client: Client, code?: number): Promise<any> {
+    debugMatchMaking('onLeave, sessionId: \'%s\'', client.sessionId);
+
+    // call 'onLeave' method only if the client has been successfully accepted.
+    client.state = ClientState.LEAVING;
+
+    if (!this.clients.delete(client)) {
+
+```

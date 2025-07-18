@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD (current branch) adds a console.warn statement when a calendar is not found
+- The incoming branch (e0ec8d420647866ae4cfd29946496b49106838ce) removes that warning
+
+The semantic intent appears to be:
+- HEAD wants to provide debugging information when a calendar lookup fails
+- The incoming branch wants to handle the undefined case silently
+
+Since both sides agree on the control flow (returning undefined when calendar is not found), and the only difference is whether to log a warning, I'll resolve this by keeping the warning as it provides useful debugging information without changing the behavior:
+
+```typescript
+    id: Ref<ExternalCalendar>,
+    create: boolean = false
+  ): Promise<CalendarClient | undefined> {
+    const calendar = this.calendars.byId.get(id)
+    if (calendar === undefined) {
+      console.warn("couldn't find calendar by id", id)
+      return
+    }
+    const client = this.clients.get(calendar.externalUser)
+    if (client instanceof Promise) {
+      return await client
+```

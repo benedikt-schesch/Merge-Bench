@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side)**: Adds an `installers` method that returns the last element of `@install_queues`
+
+**Other branch (right side)**: Removes/doesn't have the `installers` method
+
+Looking at the context, particularly the `install` method below that calls `installers << i`, it's clear that the `installers` method is needed for the code to function properly. The `install` method depends on having access to an `installers` collection to append installers to it.
+
+The semantic intent appears to be that the HEAD side is providing the necessary `installers` method that the `install` method requires, while the other branch may have inadvertently removed it or never had it.
+
+Resolution: Keep the `installers` method from HEAD since it's required by the `install` method.
+
+```ruby
+        @install_queues.push []
+        yield
+        @install_queues.pop
+      end
+
+      def installers
+        @install_queues.last
+      end
+
+    protected
+
+      def install(i)
+        installers << i
+        i
+
+```

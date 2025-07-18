@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call a function to clear an arrow, with the only difference being the function name:
+- HEAD uses `DrawInsert`
+- The other branch uses `p_DrawInsert`
+
+Without more context about the codebase, it's difficult to determine which is correct. The `p_` prefix might indicate a pointer to a function, a private function, or a platform-specific implementation. Since the intent of both sides is identical (clearing the arrow by calling a DrawInsert function with the same parameters), but I cannot determine which function name is correct without additional context, I'll return the snippet with the conflict preserved:
+
+```c
+        /* XXX hack Q183115 */
+        SetWindowLongPtr(hwnd, DWLP_MSGRESULT, TRUE);
+        ret |= 1;
+        break;
+      case DL_CANCELDRAG:
+<<<<<<< HEAD
+        DrawInsert(hwnd, dlm->hWnd, -1); /* Clear arrow */
+=======
+        p_DrawInsert(hwnd, dlm->hWnd, -1); /* Clear arrow */
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+        SendDlgItemMessage(
+            hwnd, hdl->listid, LB_DELETESTRING, hdl->dummyitem, 0);
+        hdl->dragging = 0;
+        ret |= 1;
+        break;
+
+```

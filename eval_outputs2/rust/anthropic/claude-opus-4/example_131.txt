@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `FARM_CACHE_VERSION` constant, but with different version numbers:
+- HEAD (current branch): "0.6.0"
+- Incoming change: "0.4.10"
+
+Since version "0.6.0" is higher than "0.4.10", and in typical version update scenarios we want to keep the higher/newer version, I'll resolve this by keeping the HEAD version.
+
+```rust
+
+use std::path::{Path, PathBuf};
+
+use crate::config::Mode;
+
+const FARM_CACHE_VERSION: &str = "0.6.0";
+const FARM_CACHE_MANIFEST_FILE: &str = "farm-cache.json";
+
+// TODO make CacheStore a trait and implement DiskCacheStore or RemoteCacheStore or more.
+#[derive(Default)]
+pub struct CacheStore {
+
+```

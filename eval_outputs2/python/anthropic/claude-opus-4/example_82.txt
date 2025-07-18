@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD (current branch) has a try/except block that falls back to `distutils.core.setup` if `setuptools` is not available
+- The incoming change (117eb0b1...) simply imports from `setuptools` directly without any fallback
+
+Given the context and modern Python packaging practices:
+- `setuptools` is now the standard and is almost always available
+- `distutils` is deprecated and was removed in Python 3.12
+- The code already requires Python 3+ (as shown by the version check at the top)
+- For Python 3+, `setuptools` is the recommended approach
+
+The intent of both sides seems to be to import the `setup` function, with HEAD being more defensive about it. However, since the code already requires Python 3 and `setuptools` is standard in modern Python environments, the simpler approach without the try/except is more appropriate.
+
+Here's the resolved code:
+
+```python
+import sys
+
+if sys.version_info[0] < 3:
+    sys.exit('Python < 3 is unsupported.')
+
+from setuptools import setup
+
+url_template = 'https://github.com/asciinema/asciinema/archive/v%s.tar.gz'
+requirements = []
+
+setup(
+```

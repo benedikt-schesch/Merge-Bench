@@ -1,0 +1,45 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD side:**
+- Creates two optimizers: `JoinSelection` and `AggregateStatistics`
+- Creates a new `SessionConfig` instance
+- Applies both optimizations sequentially, passing `&cfg` as the second parameter
+- Uses explicit Arc<dyn ExecutionPlan> types
+
+**Other side (01bcf7c43...):**
+- Only uses the `JoinSelection` optimizer
+- Uses `SessionConfig::default().options()` directly without creating a variable
+- Doesn't specify explicit types (relies on type inference)
+
+The semantic intent appears to be:
+- HEAD wants to apply multiple optimizations (join + aggregate statistics)
+- The other side simplified the code but only kept join optimization
+- There's also a difference in how the SessionConfig is handled
+
+Since HEAD adds the aggregate statistics optimization which seems like an intentional enhancement, and the conflict seems to be about different approaches to the same goal, I'll preserve HEAD's approach but note that there's ambiguity about whether the aggregate statistics optimization should be included.
+
+```rust
+            &input_locations,
+        )?;
+
+        // Optimize plan based on new resolved statistics
+        let optimize_join = JoinSelection::new();
+<<<<<<< HEAD
+        let optimize_aggregate = AggregateStatistics::new();
+
+        let cfg: SessionConfig = SessionConfig::new();
+
+        let plan: Arc<dyn ExecutionPlan> = optimize_join.optimize(plan, &cfg)?;
+        let plan: Arc<dyn ExecutionPlan> = optimize_aggregate.optimize(plan, &cfg)?;
+=======
+        let plan = optimize_join.optimize(plan, SessionConfig::default().options())?;
+>>>>>>> 01bcf7c43e0e8ac729099d83fcc50017c276ebc4
+
+        Ok(ResolvedStage::new(
+            self.stage_id,
+            self.stage_attempt_num,
+            plan,
+
+```

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+			LuaLib.LuaInsert(luaState, errindex);
+			return errindex;
+		}
+
+		/// <summary>
+		/// <para>Return a debug.traceback() call result (a multi-line string, containing a full stack trace, including C calls.</para>
+		/// <para>Note: it won't return anything unless the interpreter is in the middle of execution - that is, it only makes sense to call it from a method called from Lua, or during a coroutine yield.</para>
+		/// </summary>
+		public string GetDebugTraceback()
+		{
+			int oldTop = LuaLib.LuaGetTop(luaState);
+			LuaLib.LuaGetGlobal(luaState, "debug"); // stack: debug
+```

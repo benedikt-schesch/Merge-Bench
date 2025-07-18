@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+**HEAD side:**
+- Exports a default export from './withStyles'
+- Also exports a named export 'styled' from './styled'
+
+**Other side (dae1bf2b42e46270f3625b5d1dabaccea2aeda17):**
+- Exports 'withStyles' as a named export
+- Also exports 'withStyles' as the default export
+- Includes a comment indicating this is for backwards compatibility
+
+The semantic intent appears to be:
+- Both sides want to export withStyles functionality
+- The other side explicitly wants to maintain backwards compatibility by providing both named and default exports
+- HEAD side also wants to export 'styled' functionality
+
+The resolution should preserve both the backwards compatibility pattern and include the styled export:
+
+```javascript
+export {default as createUseStyles} from './createUseStyles'
+export {default as JssProvider} from './JssProvider'
+export {default as jss} from './jss'
+export {SheetsRegistry, createGenerateId} from 'jss'
+export {default as JssContext} from './JssContext'
+export {default as withStyles} from './withStyles'
+export {default as styled} from './styled'
+
+// Kept for backwards compatibility.
+export default withStyles
+
+```

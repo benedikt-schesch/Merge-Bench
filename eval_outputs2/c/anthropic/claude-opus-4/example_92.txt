@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the conflict is about whether to include a line that sets the widget name for the drawing area.
+
+The HEAD branch has no additional line after creating the drawing area, while the incoming branch adds a line to set the widget's name to "drawing-area".
+
+Since setting a widget name is generally a non-destructive operation that can be useful for styling or debugging purposes, and it doesn't conflict with the intent of either side, I'll resolve this by including the line from the incoming branch.
+
+Here's the resolved code:
+
+```c
+    compound_text_atom = gdk_atom_intern("COMPOUND_TEXT", FALSE);
+  if (!utf8_string_atom)
+    utf8_string_atom = gdk_atom_intern("UTF8_STRING", FALSE);
+
+  inst->area = gtk_drawing_area_new();
+  gtk_widget_set_name(GTK_WIDGET(inst->area), "drawing-area");
+
+#if GTK_CHECK_VERSION(2, 0, 0)
+  inst->imc = gtk_im_multicontext_new();
+#endif
+
+
+```

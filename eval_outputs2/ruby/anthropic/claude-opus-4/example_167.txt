@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD** (current branch): Defines `get_page` with `target_url` as a positional parameter
+- **Incoming branch**: Defines `get_page` with `target_url` as a keyword parameter with a default value of `nil`
+
+The semantic intent appears to be about how the `target_url` parameter should be passed to the method. The incoming change is moving from positional to keyword arguments, which is a common Ruby pattern for improving API clarity and flexibility.
+
+Since the method body uses `target_url` directly without any nil checks or conditional logic, and given that this appears to be retrieving a page from a specific URL, having `target_url` as a required parameter makes more sense semantically. However, the keyword argument style is generally preferred in modern Ruby for its clarity.
+
+The best resolution would be to use keyword arguments but make it required:
+
+```ruby
+              ##
+              # Retrieve a single page of DocumentPermissionInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of DocumentPermissionInstance
+              def get_page(target_url:)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return DocumentPermissionPage.new(@version, response, @solution)
+
+```

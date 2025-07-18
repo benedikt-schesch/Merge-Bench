@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to document the same package, but with different approaches:
+
+- The HEAD version has a minimal package declaration
+- The incoming version adds a brief description of the validator as "a generic request contents validator server-side middleware for gRPC"
+
+Both versions then continue with the same "Request Validator Middleware" section. The semantic intent is to provide package documentation, and the incoming version adds valuable context about what the validator does.
+
+Here's the resolved version that combines both intents:
+
+```go
+// Licensed under the Apache License 2.0.
+
+/*
+Package validator
+
+`validator` is a generic request contents validator server-side middleware for gRPC.
+
+# Request Validator Middleware
+
+Validating input is important, and hard. It also causes a lot of boilerplate code. This middleware
+checks for the existence of a `Validate` method on each of the messages of a gRPC request. This
+includes the single request of the `Unary` calls, as well as each message of the inbound Stream calls.
+
+```

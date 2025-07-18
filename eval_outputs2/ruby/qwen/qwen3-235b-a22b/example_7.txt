@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict arises between two different approaches for calculating the remaining time before a deadline, with distinct uses of a time-related method: one leverages a presumably already defined `current_time` variable or method, while the other explicitly uses `::Process.clock_gettime(Process::CLOCK_MONOTONIC)` to achieve a more predictable and potentially more robust behavior, especially in timeout scenarios.  
+
+Since the semantics and definition of `current_time` are not available within the given snippet and no additional contextual information is provided about its usage or semantics, the intent behind either branch remains ambiguous. This ambiguity makes it unsafe to deterministically choose one side of the merge without risking disruption to the intended logic or consistency of the codebase.  
+
+Per the instructions, if the intent is ambiguous, we must return the snippet in its conflicted state.
+
+```ruby
+        return fetch_connection(options) if connection_stored?(options)
+
+        connection = try_create(options)
+        return connection if connection
+
+<<<<<<< HEAD
+        to_wait = deadline - current_time
+=======
+        to_wait = deadline - ::Process.clock_gettime(Process::CLOCK_MONOTONIC)
+>>>>>>> 3e7513c1df257fe5124dfadc825a444110eb349b
+        raise Timeout::Error, "Waited #{timeout} sec" if to_wait <= 0
+        @resource.wait(@mutex, to_wait)
+      end
+    end
+  end
+```

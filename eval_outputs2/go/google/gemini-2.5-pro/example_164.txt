@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Resolving the conflict requires understanding the intended variables to be passed to the `decodePostgresOutgoing` function.
+
+The `HEAD` branch uses `p.hooks` and `p.logger`. These are fields on the `PostgresParser` struct instance `p`. This is consistent with the `MODE_RECORD` case, which also passes `p.hooks` and `p.logger` to a similar function.
+
+The other branch (`7dea4...`) uses `h` and `logger`. These variables are not defined within the scope of the `ProcessOutgoing` function, which would lead to a compilation error.
+
+The semantic intent is clearly to use the `hooks` and `logger` associated with the current `PostgresParser` instance. Therefore, the version from `HEAD` is the correct one.
+
+```go
+func(p *PostgresParser) ProcessOutgoing(requestBuffer []byte, clientConn, destConn net.Conn, ctx context.Context) {
+	switch models.GetMode() {
+	case models.MODE_RECORD:
+		encodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	case models.MODE_TEST:
+		decodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	default:
+		p.logger.Info("Invalid mode detected while intercepting outgoing http call", zap.Any("mode", models.GetMode()))
+	}
+
+}
+
+```

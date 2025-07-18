@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a function, but with different names and return types:
+
+- HEAD: `InitialiseTest` function that returns `InitialiseTestReturn`
+- The other branch: `Test` function that returns `bool`
+
+Additionally, the parameter `testsets` differs:
+- HEAD: `testsets *[]string` (pointer to slice)
+- Other branch: `testsets []string` (slice)
+
+The other branch also adds a new parameter `noiseConfig map[string]interface{}` and declares a variable `ps *proxy.ProxySet`.
+
+Without more context about the intent of both changes, I cannot determine which approach should be used or if they should be merged differently. The conflict appears to represent a fundamental design decision about whether this should be an initialization function or a test execution function.
+
+Here is the snippet with the conflict preserved:
+
+```go
+		logger: logger,
+		mutex:  sync.Mutex{},
+	}
+}
+
+<<<<<<< HEAD
+func (t *tester) InitialiseTest(path string, proxyPort uint32, testReportPath string, appCmd string, testsets *[]string, appContainer, appNetwork string, Delay uint64, passThorughPorts []uint, apiTimeout uint64) InitialiseTestReturn {
+	var returnVal InitialiseTestReturn
+=======
+func (t *tester) Test(path string, proxyPort uint32, testReportPath string, appCmd string, testsets []string, appContainer, appNetwork string, Delay uint64, passThorughPorts []uint, apiTimeout uint64, noiseConfig map[string]interface{}) bool {
+
+	var ps *proxy.ProxySet
+>>>>>>> 7dea42d7b9709f2c68032e56d8d67995336c9378
+
+	stopper := make(chan os.Signal, 1)
+	signal.Notify(stopper, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGKILL)
+
+	models.SetMode(models.MODE_TEST)
+
+```

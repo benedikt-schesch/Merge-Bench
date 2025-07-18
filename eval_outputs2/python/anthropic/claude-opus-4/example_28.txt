@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to check if `schema` is a mapping type, but they're using different approaches:
+
+- HEAD uses `_Mapping`
+- The other branch uses `collections.abc.Mapping`
+
+The intent is the same - to check if the schema is a mapping type. The difference is likely due to import style preferences or refactoring. Since `collections.abc.Mapping` is more explicit and follows Python's standard practice of using the abstract base classes from `collections.abc`, I'll resolve this by using the more explicit version.
+
+```python
+            return lambda p, v: self._compiled(p, v)
+        elif hasattr(schema, "__voluptuous_compile__"):
+            return schema.__voluptuous_compile__(self)
+        if isinstance(schema, Object):
+            return self._compile_object(schema)
+        if isinstance(schema, collections.abc.Mapping):
+            return self._compile_dict(schema)
+        elif isinstance(schema, list):
+            return self._compile_list(schema)
+        elif isinstance(schema, tuple):
+            return self._compile_tuple(schema)
+```

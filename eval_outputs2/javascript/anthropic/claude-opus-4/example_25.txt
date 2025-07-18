@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to configure the same `basedir` property, but the right side (from commit f0b94b1) also adds an additional `directMode: true` property.
+
+Since both sides agree on the `basedir: resolve('./dist')` setting, and the right side is adding an additional configuration option rather than conflicting with the intent of the left side, the semantic resolution would be to keep both the `basedir` property and the new `directMode` property.
+
+Here's the resolved code:
+
+```javascript
+    cache: LRU({
+      max: 1000,
+      maxAge: 1000 * 60 * 15
+    }),
+    // this is only needed when vue-server-renderer is npm-linked
+    basedir: resolve('./dist'),
+    directMode: true
+  }))
+}
+
+let renderer
+
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+An analysis of the merge conflict reveals two distinct intents that are not mutually exclusive.
+
+*   **HEAD branch intent:** To explicitly include `ActionView::Helpers::AssetTagHelper` and add a detailed comment explaining why this is necessary due to Rails' load order. The surrounding blank lines improve readability.
+*   **539da52f... branch intent:** To explicitly include `ActionView::Helpers::AssetTagHelper`.
+
+The semantic resolution is to combine these intents. Both branches add the same `include` statement. The `HEAD` branch adds valuable context in the form of a comment explaining a non-obvious piece of code, which is crucial for future maintainability. The blank line at the end, indicated by the malformed `<<<<<<< HEAD` marker, is also a reasonable stylistic addition for code separation. Therefore, adopting the version from the `HEAD` branch fulfills the intentions of both sides while providing the most clarity and best coding practice.
+
+```ruby
+module PhotosHelper
+  
+  # Rails automatically includes this, but not until after this file,
+  # so the :image_path won't exist for the alias_method_chain call, below.
+  # Thus, we include it now:
+  include ActionView::Helpers::AssetTagHelper
+  
+  def image photo, size = :square, img_opts = {}
+    return image_tag(image_path( photo, size), :class => size) if photo.image.blank?
+    img_tag = image_tag(image_path( photo, size), {:title=>photo.caption, :alt=>photo.caption, :class=>size}.merge(img_opts))
+    img_tag
+
+```

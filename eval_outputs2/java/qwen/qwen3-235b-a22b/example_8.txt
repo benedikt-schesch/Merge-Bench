@@ -1,0 +1,61 @@
+<think>
+No reasoning found</think>
+The code conflict presents a fundamental divergence in the design and architecture of the `SpoutMetaPlugin` class as it relates to its relationship with the `Plugin` type.
+
+---
+
+### Conflict Overview
+
+There are two incompatible changes:
+
+- **`HEAD`** version **implements** `Plugin`, implying that `Plugin` is an interface.
+- **`77ca2cb8`** version **extends** `Plugin`, suggesting that `Plugin` is a class — likely an abstract base class — and the subclass must inherit from it.
+
+These two Java constructs — implementing an interface vs. extending a class — are mutually exclusive in a single class declaration and represent fundamentally different design philosophies. This conflict can only be resolved once it is known which construct (`interface` or `abstract class`) the type `org.spout.api.plugin.Plugin` embodies in the Spout API version being used.
+
+---
+
+### Semantic Ambiguity
+
+From the code snippet provided, there is no definitive evidence (e.g., method overrides, abstract fields, or additional usage) that clarifies the nature of `Plugin`. Additionally:
+
+- One branch adds new imports (`PluginLoader`, `Protocol`), likely in support of its design choice.
+- The other branch introduces a constructor with parameterized initialization, often seen with extensible base classes.
+
+Each change makes logical sense *within its own context*, but merging them requires one semantic assumption to take precedence over the other.
+
+---
+
+### Resolution Decision
+
+Given the ambiguity and the lack of additional contextual information about the Spout API or other classes in the system, it's impossible to make a confident semantic merge decision. Attempting to resolve this without that clarity would risk introducing a logical inconsistency or breaking changes later in the codebase.
+
+---
+
+### Final Output
+
+As per instructions, the conflicted snippet is returned unchanged to reflect the unresolved semantic ambiguity.
+
+```java
+
+import org.spout.api.Engine;
+import org.spout.api.Spout;
+import org.spout.api.plugin.Plugin;
+import org.spout.api.plugin.PluginDescriptionFile;
+<<<<<<< HEAD
+import org.spout.api.plugin.PluginLoader;
+import org.spout.api.protocol.Protocol;
+
+public final class SpoutMetaPlugin implements Plugin {
+	private PluginDescriptionFile pdf;
+	private Engine engine;
+	private PluginDictionary dictionary; // TODO extend this dictionary to load translation from a different location
+=======
+>>>>>>> 77ca2cb827b0a0b10f18d609fa5fd707c62376f7
+
+public final class SpoutMetaPlugin extends Plugin {
+	public SpoutMetaPlugin(Engine engine) {
+		this.engine = engine;
+		file = new File(engine.getClass().getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20", " "));
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - checking that console.error and console.warn were not called. The differences are:
+
+1. **HEAD**: Uses `Array []` in the snapshot
+2. **Other branch**: Uses `[]` in the snapshot and adds TypeScript type casting `(console.error: any)`
+
+The semantic intent is identical - both want to assert that no console errors or warnings occurred. The differences appear to be:
+- The snapshot format changed from `Array []` to `[]` (likely a Jest update)
+- TypeScript type annotations were added to avoid type checking issues
+
+Since both achieve the same test assertion, I'll resolve this by using the more recent pattern (from the other branch) which appears to have the updated snapshot format and TypeScript annotations:
+
+```javascript
+    render(<StyledDivWithId />, {
+      hydrate: true,
+      container: safeQuerySelector('#root')
+    })
+
+    expect((console.error: any).mock.calls).toMatchInlineSnapshot(`[]`)
+    expect((console.warn: any).mock.calls).toMatchInlineSnapshot(`[]`)
+  })
+
+  test('no hydration mismatch for css prop when using useId', async () => {
+    const finalHTML = await disableBrowserEnvTemporarily(() => {
+      resetAllModules()
+
+```

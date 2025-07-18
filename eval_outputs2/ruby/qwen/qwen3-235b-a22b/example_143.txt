@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```ruby
+
+          return job
+        rescue LockError
+          # We did not get the lock, some other worker process must have
+          logger.warn "* [JOB] failed to aquire exclusive lock for #{job.name}"
+        rescue StandardError => e
+          job.reschedule e.message, e.backtrace
+          logger.error "* [JOB] #{job.name} failed with #{e.class.name}: #{e.message} - #{job.attempts} failed attempts"
+          logger.error(e)
+          log_exception(job, e)
+          return job
+        end
+      end
+
+      nil
+
+```

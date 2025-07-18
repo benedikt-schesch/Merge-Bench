@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different test methods being added at the same location. The HEAD branch adds `testImportKey3` while the incoming branch adds `testImportKey3unicode`. Both tests verify RSA key imports with slightly different setups and assertions. 
+
+After analyzing:
+1. Both tests are valid and test different scenarios (regular PEM vs unicode/bytes handling)
+2. The tests can coexist as they serve different purposes
+3. The surrounding context remains unchanged
+4. Assertions after the conflict markers belong to both tests
+
+Here's the resolved version preserving both tests with their original implementations:
+
+```python
+        key = self.rsa.importKey(self.rsaPublicKeyDER)
+        self.failIf(key.has_private())
+        self.assertEqual(key.n, self.n)
+        self.assertEqual(key.e, self.e)
+
+    def testImportKey3(self):
+        key = self.rsa.importKey(self.rsaKeyPEM)
+        self.failUnless(key.has_private())
+        self.assertEqual(key.n, self.n)
+        self.assertEqual(key.e, self.e)
+        self.assertEqual(key.d, self.d)
+        self.assertEqual(key.p, self.p)
+        self.assertEqual(key.q, self.q)
+
+    def testImportKey3unicode(self):
+        key = RSA.importKey(b(self.rsaKeyPEM))
+        self.assertEqual(key.has_private(),True) # assert_
+        self.assertEqual(key.n, self.n)
+        self.assertEqual(key.e, self.e)
+        self.assertEqual(key.d, self.d)
+        self.assertEqual(key.p, self.p)
+        self.assertEqual(key.q, self.q)
+```

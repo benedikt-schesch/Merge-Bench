@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+**HEAD version:**
+- Sets `img_opts` to a new hash with title, alt, and class, then merges the passed-in `img_opts`
+- This means passed-in options will override the defaults
+
+**Other version:**
+- Merges the defaults into `img_opts`, then merges `img_opts` again (which is redundant)
+- The double merge of `img_opts` appears to be a mistake
+
+Both versions want the passed-in `img_opts` to take precedence over the defaults, but HEAD's approach is cleaner and more straightforward. The other version's double merge is unnecessary and confusing.
+
+Here's the resolved conflict:
+
+```ruby
+module ProfilesHelper
+  include Avatar::View::ActionViewSupport
+  
+  def icon profile, size = :small, img_opts = {}
+    return "" if profile.nil?
+    img_opts = {:title => profile.full_name, :alt => profile.full_name, :class => size}.merge(img_opts)
+    link_to(avatar_tag(profile, {:size => size, :file_column_version => size}, img_opts))
+  end
+  
+  def location_link profile = @p
+    return profile.location if profile.location == Profile::NOWHERE
+    link_to h(profile.location), search_profiles_path.add_param('search[location]' => profile.location)
+
+```

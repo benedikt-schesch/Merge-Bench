@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - they're asserting that the error message equals a specific string. The only difference is the formatting:
+
+- HEAD has the assertion on a single line
+- The incoming change splits it across multiple lines with parentheses for better readability
+
+Since both sides have the same semantic intent and the incoming change provides better code formatting (following Python style guidelines for long lines), I'll resolve by keeping the incoming change's formatting.
+
+```python
+    schema = Schema({"number": Number(scale=2, yield_decimal=True)})
+    try:
+        schema({"number": '12345678901.234'})
+    except MultipleInvalid as e:
+        assert (
+            str(e) == "Scale must be equal to 2 for dictionary value @ data['number']"
+        )
+    else:
+        assert False, "Did not raise Invalid for String"
+
+
+def test_number_when_valid_precision_n_scale_none_yield_decimal_true():
+
+```

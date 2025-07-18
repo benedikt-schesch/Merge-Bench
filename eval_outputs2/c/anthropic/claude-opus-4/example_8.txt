@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+**HEAD (current branch)**: After failing to acquire the lock with the fast approach, it simply calls `mm_do_lock_slow(&lock->locked)` and continues.
+
+**Incoming change**: After failing to acquire the lock, it unlocks the spinlock, yields the scheduler to give other threads a chance to run, and then presumably retries.
+
+The conflict appears to be about different strategies for handling lock acquisition failure:
+- HEAD wants to immediately fall back to a slow locking mechanism
+- The incoming change wants to release the lock, yield, and retry
+
+Without more context about the overall locking strategy and whether this is inside a loop or what the broader design intent is, I cannot definitively resolve this conflict. The two approaches are fundamentally different and choosing between them requires understanding the intended locking behavior.
+
+Here is the snippet with the conflict preserved:
+
+```c
+
+        if (ret) {
+            /* Still no luck, try the slow approach */
+            mm_do_lock_slow(&lock->locked);
+        }
+<<<<<<< HEAD
+=======
+        _spinlock_unlock(lock);
+        sched_yield();
+>>>>>>> 5921a191ef461e97a894063110b45f415affddcb
+    }
+    return 1;
+}
+
+static void mm_do_lock_slow(volatile unsigned int* locked)
+
+```

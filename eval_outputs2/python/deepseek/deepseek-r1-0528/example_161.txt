@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict in the version assignment cannot be automatically resolved due to ambiguous intent:
+
+1. The HEAD branch (current) sets version to `2.9.0.dev` (next minor release)
+2. The incoming branch sets version to `2.8.22.dev` (patch release for previous series)
+
+This likely represents differing release strategies (new feature development vs maintenance updates). Without knowing the project's specific versioning strategy and release plans, it's not possible to determine if the next release should be:
+- A new minor version (2.9.0)
+- A patch for the existing series (2.8.22)
+
+Therefore, human review is needed to determine the correct version path. The original conflict is preserved below with spacing intact:
+
+```python
+
+The version should always be set to the <next release version>.dev
+The jenkins release job will automatically strip the .dev for release,
+and update the version again for continued development.
+"""
+<<<<<<< HEAD
+__version__ = '2.9.0.dev'
+=======
+__version__ = '2.8.22.dev'
+>>>>>>> bb6d3df69475d64c3df18db82a31945686400a3d
+
+```

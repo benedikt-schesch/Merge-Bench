@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD** (current branch): Adds `ev.esc = escseq` to set an escape sequence field on the mouse event
+- **Incoming branch**: Removes this line (or never had it)
+
+The semantic intent appears to be:
+- The HEAD branch wants to preserve escape sequence information with mouse events
+- The incoming branch either doesn't need this information or handles it differently
+
+Since the HEAD branch is explicitly adding functionality (storing escape sequence data with the event), and this appears to be intentional rather than accidental, the most semantically correct resolution would be to keep this line. The incoming branch's removal seems to be either unaware of this need or from a point before this feature was added.
+
+```go
+	// screen, especially with click-drag events.  Clip the coordinates
+	// to the screen in that case.
+	x, y = t.clip(x, y)
+
+	ev := NewEventMouse(x, y, button, mod, motion)
+	ev.esc = escseq
+	t.PostEvent(ev)
+}
+
+// parseSgrMouse attempts to locate an SGR mouse record at the start of the
+// buffer.  It returns true, true if it found one, and the associated bytes
+```

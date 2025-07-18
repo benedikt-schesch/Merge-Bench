@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- HEAD (current branch): Appears to continue normal execution and returns `dev` directly after closing the export.
+- Incoming change: Adds a conditional check for `advance_func.gpio_init_post` being NULL, and if so, frees `dev` and returns NULL.
+
+The semantic intent seems to be:
+- The incoming change wants to add an error handling condition that checks if a post-initialization function exists
+- If the condition is true (gpio_init_post != NULL), it treats this as an error case, cleans up by freeing dev, and returns NULL
+
+However, there's ambiguity here - the condition `advance_func.gpio_init_post != NULL` leading to an error return seems counterintuitive. Typically, having a function pointer NOT be NULL would be a good thing, not an error condition. This might be a logic error or there might be missing context about why having this function would be problematic.
+
+Given the ambiguity in the intent and the potentially incorrect logic, I'm returning the snippet with the conflict markers preserved:
+
+```c
+        }
+        dev->owner = 1;
+        close(export);
+    }
+
+<<<<<<< HEAD
+=======
+    if (advance_func.gpio_init_post != NULL) {
+        free(dev);
+        return NULL;
+    }
+>>>>>>> d7c8f2a79431b8f9461597b86ef9f046357404c6
+    return dev;
+}
+
+static mraa_result_t
+mraa_gpio_write_register(mraa_gpio_context dev,int value)
+```

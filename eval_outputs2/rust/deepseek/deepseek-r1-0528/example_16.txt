@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict involves the construction of an `AggregateFunction` struct where one branch adds a new field `null_treatment` while the other branch does not. The intent of the changes is ambiguous because:
+
+1. The `null_treatment` field appears to be a meaningful addition (likely handling NULL semantics in window functions)
+2. However, the HEAD branch context doesn't define `null_treatment`, suggesting the struct might not support this field
+3. Without knowing if the struct definition was updated in either branch, we can't safely determine if this field should be included
+
+Since the intent is ambiguous and we can't verify struct compatibility, the conflict remains unresolved. Here's the original snippet with conflict markers preserved:
+
+```rust
+                        ),
+                        args: vec![lit(COUNT_STAR_EXPANSION)],
+                        partition_by,
+                        order_by,
+                        window_frame,
+<<<<<<< HEAD
+                    }))
+=======
+                        null_treatment,
+                    })
+>>>>>>> 3b355c798a3258f118016b33f26c5a55fed36220
+                }
+
+                _ => Transformed::no(old_expr),
+            },
+            Expr::AggregateFunction(AggregateFunction {
+```

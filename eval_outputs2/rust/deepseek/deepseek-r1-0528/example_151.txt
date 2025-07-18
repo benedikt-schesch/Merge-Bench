@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by combining the semantic intent of both branches. The conflict is about the documentation for the `shortcut_keys` field in the `PenEvent::Down` variant. 
+
+Analysis:
+1. The field type `Vec<ShortcutKey>` indicates it stores pressed keys, not just a boolean
+2. HEAD mentions "pressed shortcut keys" (correct) but references "proximity event" (incorrect)
+3. Other branch references "down event" (correct) but implies a boolean check (incorrect)
+
+Resolution:
+```rust
+pub enum PenEvent {
+    /// A pen down event. Is repeatedly emitted while the pen is pressed and moved
+    Down {
+        /// The element for the down event
+        element: Element,
+        /// The shortcut keys pressed during the down event
+        shortcut_keys: Vec<ShortcutKey>,
+    },
+    /// A pen up event.
+    Up {
+        /// The element for the down event
+```
+
+Changes made:
+1. Kept "pressed shortcut keys" from HEAD (accurate for `Vec`)
+2. Changed "proximity event" → "down event" from other branch (correct context)
+3. Removed "whether" (incorrect for vector type)
+4. Combined into one clear comment: "The shortcut keys pressed during the down event"

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `Sidekiq::CurrentAttributes.persist` but with different arguments:
+
+- HEAD version: `Sidekiq::CurrentAttributes.persist("Myapp::Current", @config)`
+- Other version: `Sidekiq::CurrentAttributes.persist("Myapp::Current")`
+
+The key difference is that HEAD includes `@config` as a second parameter while the other version doesn't.
+
+Looking at the context below the conflict, I can see that `@config` is being used immediately after in `@config.client_middleware.invoke`, which suggests that `@config` is an important part of the test setup and is needed for the test to work properly.
+
+The HEAD version appears to be the correct resolution since it includes the necessary `@config` parameter that's required for the subsequent test operations.
+
+Here's the resolved code:
+
+```ruby
+    end
+    # the Rails reloader is responsible for reseting Current after every unit of work
+  end
+
+  it "persists" do
+    Sidekiq::CurrentAttributes.persist("Myapp::Current", @config)
+    job_hash = {}
+    with_context(:user_id, 16) do
+      @config.client_middleware.invoke(nil, job_hash, nil, nil) do
+        assert_equal 16, job_hash["cattr"][:user_id]
+      end
+
+```

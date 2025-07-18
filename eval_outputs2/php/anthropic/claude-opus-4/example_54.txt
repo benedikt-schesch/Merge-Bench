@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same file, but with different changes:
+
+1. **HEAD side** (current branch):
+   - Subpackage: `media.tests.cases.libs.media`
+   - Copyright: `2007-2009`
+   - File path: `tests/cases/vendors/media/media.test.php`
+
+2. **Incoming side** (commit 1922e06...):
+   - Subpackage: `media.tests.cases.libs.medium`
+   - Copyright: `2007-2010`
+   - File path: `tests/cases/vendors/medium/medium.test.php`
+
+Based on the file paths and the fact that the incoming side has a more recent copyright year (2010 vs 2009), it appears that this is likely a refactoring where `media` is being renamed to `medium`. The incoming side seems to be the more recent/correct version.
+
+Here's the resolved conflict:
+
+```php
+ *
+ * PHP version 5
+ * CakePHP version 1.2
+ *
+ * @package    media
+ * @subpackage media.tests.cases.libs.medium
+ * @copyright  2007-2010 David Persson <davidpersson@gmx.de>
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link       http://github.com/davidpersson/media
+ */
+App::import('Vendor', 'Media.Media');
+require_once dirname(__FILE__) . DS . '..' . DS . '..' . DS . '..' . DS . 'fixtures' . DS . 'test_data.php';
+
+```

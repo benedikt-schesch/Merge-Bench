@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze what both sides are trying to achieve:
+
+- **HEAD (current branch)**: Imports specific Google Guice classes individually (`AbstractModule`, `BindingAnnotation`, `Provides`) and also imports `net.socialgamer.cah.data.GameOptions`
+- **Incoming branch**: Uses a wildcard import for Google Guice (`com.google.inject.*`) and imports `net.socialgamer.cah.CahModule`
+
+Both sides want to import Google Guice classes, just with different styles (explicit vs wildcard). Each side also adds a different additional import from the `net.socialgamer.cah` package.
+
+The semantic intent appears to be that both branches need Guice imports and both have added different CAH-related imports that are likely both needed. The resolution should include all the imports that both sides need.
+
+```java
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package net.socialgamer.cah.cardcast;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.BindingAnnotation;
+import com.google.inject.Provides;
+import net.socialgamer.cah.CahModule;
+import net.socialgamer.cah.data.GameOptions;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.concurrent.atomic.AtomicInteger;
+
+
+```

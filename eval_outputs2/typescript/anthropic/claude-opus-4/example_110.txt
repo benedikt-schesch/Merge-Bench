@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to handle the case when `_internalState` is `DISPOSING`, but with different approaches:
+
+- HEAD: Calls `_disposeIfEmpty()` for graceful shutdown and returns `Deferred.reject('disconnecting')`
+- The other branch: Returns `Promise.reject(new Error("disposing"))` with a @ts-ignore comment
+
+The semantic intent of both sides is to reject when the room is disposing, but they differ in:
+1. Whether to perform cleanup (`_disposeIfEmpty()`)
+2. The rejection method (`Deferred.reject` vs `Promise.reject`)
+3. The error format (string vs Error object)
+4. The error message ('disconnecting' vs 'disposing')
+
+Without more context about the codebase conventions and whether `Deferred` is being phased out in favor of native Promises, or whether the graceful shutdown is necessary, I cannot determine the correct resolution.
+
+Here is the same snippet with the conflict preserved:
+
+```typescript
+    if (seconds === "manual") {
+      seconds = Infinity;
+    }
+
+    if (this._internalState === RoomInternalState.DISPOSING) {
+<<<<<<< HEAD
+      this._disposeIfEmpty(); // gracefully shutting down
+      return Deferred.reject('disconnecting');
+=======
+      // @ts-ignore
+      return Promise.reject(new Error("disposing"));
+>>>>>>> 1a7da98cbeee551587e6119d06a39a441421827b
+    }
+
+    const sessionId = previousClient.sessionId;
+    const reconnectionToken = previousClient.reconnectionToken;
+
+
+```

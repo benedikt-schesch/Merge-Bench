@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set up a console.error mock in the beforeEach hook. The key difference is:
+
+- HEAD version: Creates a `consoleErrorMock` variable to store the jest spy reference
+- Other version: Calls jest.spyOn directly without storing the reference
+
+Since the HEAD version stores the spy reference in a variable (which is likely needed for cleanup or assertions later in the tests), and both versions have the same implementation otherwise, the semantic intent appears to be to mock console.error while keeping a reference to the mock.
+
+Here's the resolved version:
+
+```javascript
+import '@testing-library/jest-dom/extend-expect'
+
+let consoleErrorMock
+
+beforeEach(() => {
+  const originalConsoleError = console.error
+  consoleErrorMock = jest
+    .spyOn(console, 'error')
+    .mockImplementation((message, ...optionalParams) => {
+      // Ignore ReactDOM.render/ReactDOM.hydrate deprecation warning
+      if (message.indexOf('Use createRoot instead.') !== -1) {
+        return
+
+```

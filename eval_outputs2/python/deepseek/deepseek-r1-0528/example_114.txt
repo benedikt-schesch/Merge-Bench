@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+```python
+    client = get_redis(system)
+    if use_pipeline:
+        client = client.pipeline()
+
+    for obj_class in obj_classes:
+        client.setbit(obj_class.from_date(event_name, now).redis_key, uuid, 1)
+
+    if use_pipeline:
+        client.execute()
+
+
+def get_event_names(system='default', prefix='', batch=10000):
+    """
+    Return the list of all event names, with no particular order. Optional
+```
+
+**Resolution Reasoning:**
+- Preserved the other branch's (`1e6dd6e9`) pipeline execution logic which correctly uses `client.execute()` conditionally only when a pipeline is in use
+- The loop uses the unified `client` variable (instead of `p`)
+- Setbit value matches the other branch's explicit `1`, as the HEAD's `value` variable lacks context and sets bit to 1 unconditionally in the other branch
+- The resolution retains proper structure with pipeline execution *after* the loop at the same indentation level
+- Blank line before conditional execute is preserved per the other branch's formatting
+
+(Note: The other branch's implementation was chosen primarily due to the critical pipeline fix that avoids illegal execute() calls on non-pipeline clients, while the value difference was resolved using explicit 1 due to lack of context for variability.)

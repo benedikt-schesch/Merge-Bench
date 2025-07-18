@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD version (current branch) has the code that appends to `mongoRequests` and then immediately proceeds to write to `destConn`
+2. The incoming change adds a logging statement that tracks timing information after reading the request from the client
+
+Both changes appear to be semantically compatible - one is adding operational logic while the other is adding observability. The logging statement should logically come after the request is read (which has already happened by this point in the code) and before it's written to the server.
+
+Here's the resolved conflict:
+
+```go
+		mongoRequests = append(mongoRequests, models.MongoRequest{
+			Header:    &requestHeader,
+			Message:   mongoRequest,
+			ReadDelay: int64(readRequestDelay),
+		})
+		logStr += fmt.Sprintf("after reading request from client: %v\n", time.Since(started))
+		// write the request message to the mongo server
+		_, err = destConn.Write(requestBuffer)
+		if err != nil {
+			logger.Error("failed to write the request buffer to mongo server", zap.Error(err), zap.String("mongo server address", destConn.RemoteAddr().String()))
+			return
+		}
+
+```

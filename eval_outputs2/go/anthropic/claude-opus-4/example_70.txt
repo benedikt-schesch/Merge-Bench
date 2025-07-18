@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is defining a type alias `Empty = emptypb.Empty`
+2. The incoming branch (84668698...) is adding a compile-time assertion comment and constant to ensure proto package version compatibility
+
+These changes appear to be addressing different concerns and both are likely needed:
+- The type alias provides a convenient way to reference the Empty type
+- The version check ensures compatibility with the proto package
+
+Since these changes don't semantically conflict with each other, both should be included in the final result.
+
+```go
+	reflect "reflect"
+)
+
+// Symbols defined in public import of google/protobuf/empty.proto.
+
+type Empty = emptypb.Empty
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+
+var File_github_com_golang_protobuf_ptypes_empty_empty_proto protoreflect.FileDescriptor
+
+var file_github_com_golang_protobuf_ptypes_empty_empty_proto_rawDesc = []byte{
+	0x0a, 0x33, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x6f, 0x6c,
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `prepend` method, but with different intents:
+
+- **HEAD**: Updates the type hint for the `path` parameter from `typing.List[str]` to maintain consistency
+- **Other branch (1fcf849)**: Updates both the type hint (to `typing.List[typing.Hashable]`) AND changes the assignment from `self.path` to `self._path`
+
+The semantic intent appears to be:
+1. Both sides want to update the type hint (though to different types)
+2. The other branch also wants to change the attribute name from `path` to `_path` (making it private)
+
+Since the other branch has both a type change and an attribute name change, and this appears to be an intentional refactoring to make the attribute private, I'll resolve in favor of the more comprehensive change:
+
+```python
+        output = Exception.__str__(self)
+        if self.error_type:
+            output += ' for ' + self.error_type
+        return output + path
+
+    def prepend(self, path: typing.List[typing.Hashable]) -> None:
+        self._path = path + self.path
+
+
+class MultipleInvalid(Invalid):
+    def __init__(self, errors: typing.Optional[typing.List[Invalid]] = None) -> None:
+        self.errors = errors[:] if errors else []
+
+```

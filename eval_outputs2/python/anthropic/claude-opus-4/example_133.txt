@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same `number_format` list with identical patterns. The key differences are:
+
+1. **HEAD**: Uses regular strings (`'\\1 \\2'`)
+2. **Branch 5c84a7c**: Uses unicode strings (`u'\\1 \\2'`) and adds a new parameter `mobile_number_portable_region=True`
+
+The semantic intent appears to be:
+- Both sides want the same number formatting patterns
+- The branch adds support for mobile number portability
+- The unicode vs regular string difference is likely a Python 2/3 compatibility issue
+
+Since the patterns are identical and the branch adds new functionality (mobile number portability), the resolution should include both the number formats and the new parameter. For the string format, I'll use regular strings (without the `u` prefix) as this is more compatible with Python 3.
+
+```python
+    voip=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    pager=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    uan=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    number_format=[NumberFormat(pattern='(2\\d)(\\d{6})', format='\\1 \\2', leading_digits_pattern=['2']),
+        NumberFormat(pattern='(9\\d{3})(\\d{4})', format='\\1 \\2', leading_digits_pattern=['9']),
+        NumberFormat(pattern='([58]00)(\\d{4,6})', format='\\1 \\2', leading_digits_pattern=['[58]'])],
+    mobile_number_portable_region=True)
+```

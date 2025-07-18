@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic intent - they both have the exact same function signature with identical type annotations. The only difference is in the formatting:
+
+- HEAD has the entire function definition on a single line
+- The other branch has formatted it across multiple lines for better readability
+
+Since both versions are semantically identical and the multi-line format is generally preferred for better readability (especially with type annotations), I'll resolve this by keeping the multi-line formatted version:
+
+```python
+    ...                       Replace('hello', 'goodbye')))
+    >>> validate('you say hello')
+    'I say goodbye'
+    """
+
+    def __init__(
+        self,
+        pattern: typing.Union[re.Pattern, str],
+        substitution: str,
+        msg: typing.Optional[str] = None,
+    ) -> None:
+        if isinstance(pattern, basestring):
+            pattern = re.compile(pattern)
+        self.pattern = pattern
+        self.substitution = substitution
+        self.msg = msg
+
+```

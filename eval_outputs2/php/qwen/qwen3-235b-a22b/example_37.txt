@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Here's the code snippet with its full context enclosed in [PHP] markdown syntax, preserving all whitespace and formatting exactly as provided.
+
+```php
+            foreach($input_attrs as $name => $val) {
+                $input_attr .= sprintf('%s="%s" ', $name, htmlspecialchars($val));
+            }
+
+            $html .= sprintf('<input %s>', $input_attr);
+            $html .= sprintf('<input type="hidden" id="%s_captcha_id" name="captcha_id" value="%s">', $image_id, $captcha_id);
+        }
+
+        return $html;
+    }
+```
+
+### Resolution rationale
+
+1. **Semantic intent**: The HEAD side added an explicit hidden input element to transmit CAPTCHA identity information (`captcha_id`). This serves the clear function of maintaining CAPTCHA state for validation on form submission, which is a typical usage pattern for CAPTCHAs.
+
+2. **Conflict side comparison**: The `>>>>>>> 179182bb...` side of the conflict contains no replacement code, suggesting that either the logic was removed or omitted entirely in that branch.
+
+3. **Functionality implications**: Removing or omitting the `captcha_id` input would break CAPTCHA validation in the backend, as the form submission would lack a reference to match the displayed CAPTCHA.
+
+4. **Decision outcome**: Based on correctness and intent preservation, the `captcha_id` input line from the HEAD is retained. No ambiguity or competing modification was identified that would justify excluding it.

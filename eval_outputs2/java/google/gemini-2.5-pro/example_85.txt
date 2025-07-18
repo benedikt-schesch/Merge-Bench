@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+This merge conflict arises from a refactoring where `CustomDeck` and its related classes were renamed to be specific to a service called "Cardcast".
+
+*   **HEAD** (`CustomDeck.java`) uses the generic type names `CustomBlackCard` and `CustomWhiteCard`.
+*   The incoming change (`CardcastDeck.java`) has renamed the class and its dependencies, now using `CardcastBlackCard` and `CardcastWhiteCard`. The file path `cardcast/CardcastDeck.java` strongly indicates this was an intentional rename of the entire feature.
+
+The semantic intent of the incoming commit is to refactor the generic "custom" implementation into a specific "Cardcast" one. To correctly complete this merge, we should adopt the new names from the refactoring. While this creates a temporary inconsistency with the `CustomDeck` class name shown in the snippet, a developer would typically resolve the class name to `CardcastDeck` as a subsequent step to complete the refactoring. Therefore, the correct resolution for this specific conflict is to use the `Cardcast` types.
+
+```java
+public class CustomDeck extends CardSet {
+  private final int id;
+  private final String name;
+  private final String watermark;
+  private final String description;
+  private final Set<CardcastBlackCard> blackCards = new HashSet<>();
+  private final Set<CardcastWhiteCard> whiteCards = new HashSet<>();
+
+  public CustomDeck(final int id, final String name, final String watermark, final String description) {
+    this.id = id;
+    this.name = name;
+    this.watermark = watermark;
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict centers around whether to include an `open = 1;` statement when handling `FD_CLOSE`. After analyzing both sides:
+
+1. **HEAD version** sets `open = 1` immediately before reading socket data
+2. **Other branch** removes this assignment entirely
+
+Given the context of `FD_CLOSE` handling (socket closure sequence), setting `open = 1` appears semantically incorrect. The socket is being closed, so marking it as "open" contradicts the operation's intent. The other branch's removal aligns with proper close handling semantics.
+
+Resolved version:
+```c
+    if (bufsize_after < bufsize_before)
+      plug_sent(s->plug, bufsize_after);
+  } break;
+  case FD_CLOSE:
+    /* Signal a close on the socket. First read any outstanding data. */
+    do {
+      ret = p_recv(s->s, buf, sizeof(buf), 0);
+      if (ret < 0) {
+        err = p_WSAGetLastError();
+        if (err == WSAEWOULDBLOCK)
+```

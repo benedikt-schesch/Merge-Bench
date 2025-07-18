@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add imports after the same import statement from `@renderer/config/constant`. 
+
+The HEAD branch is adding:
+- Three functions from `@renderer/config/models`
+- `codeThemes` from `@renderer/context/SyntaxHighlighterProvider`
+
+The incoming branch (75f25d8a) is adding:
+- `useCodeStyle` from `@renderer/context/CodeStyleProvider`
+
+These imports appear to be for different purposes and don't conflict semantically. Both sets of imports should be included in the merged result.
+
+```typescript
+  DEFAULT_MAX_TOKENS,
+  DEFAULT_TEMPERATURE,
+  isMac,
+  isWindows
+} from '@renderer/config/constant'
+import {
+  isOpenAIModel,
+  isSupportedFlexServiceTier,
+  isSupportedReasoningEffortOpenAIModel
+} from '@renderer/config/models'
+import { codeThemes } from '@renderer/context/SyntaxHighlighterProvider'
+import { useCodeStyle } from '@renderer/context/CodeStyleProvider'
+import { useAssistant } from '@renderer/hooks/useAssistant'
+import { useProvider } from '@renderer/hooks/useProvider'
+import { useSettings } from '@renderer/hooks/useSettings'
+import { SettingDivider, SettingRow, SettingRowTitle } from '@renderer/pages/settings'
+import AssistantSettingsPopup from '@renderer/pages/settings/AssistantSettings'
+
+```

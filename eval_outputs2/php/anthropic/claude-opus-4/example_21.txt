@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same property `$data` but with different type hints:
+
+- HEAD uses `TimerQueueEntry[]` with PHP 7.4+ property type declaration syntax
+- The other branch uses `Watcher[]` with older PHPDoc syntax
+
+Given that:
+1. The class is implementing a timer queue for a heap
+2. The HEAD version uses `TimerQueueEntry` which semantically makes more sense for a `TimerQueue` class
+3. The HEAD version uses modern PHP syntax (property type declarations)
+4. The `$pointers` property below already uses the modern syntax
+
+The intent appears to be modernizing the code while also using the more semantically appropriate `TimerQueueEntry` type. Therefore, the HEAD version should be kept.
+
+```php
+/**
+ * Uses a binary tree stored in an array to implement a heap.
+ */
+final class TimerQueue
+{
+    /** @var TimerQueueEntry[] */
+    private array $data = [];
+
+    /** @var int[] */
+    private array $pointers = [];
+
+    /**
+
+```

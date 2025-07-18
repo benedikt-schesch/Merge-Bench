@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD (current branch): After calling `ssh_do_close(ssh, TRUE)`, it returns 0, and if that condition isn't met, returns 1. This suggests the function should return a status value.
+- The incoming change: Simply removes the return statements, suggesting the function might have been changed to void or the return value is handled differently.
+
+However, examining the context, this appears to be a callback function (likely part of a Plug interface based on the parameter name). The HEAD version's logic makes semantic sense - returning 0 when the SSH connection is closed (likely indicating no more data should be processed) and 1 otherwise (indicating success/continue processing).
+
+The incoming change that removes the return statements would likely cause a compilation error if this function is expected to return a value. Therefore, I'll preserve the HEAD version as it maintains the proper return semantics:
+
+```c
+{
+  Ssh ssh = (Ssh)plug;
+  ssh_gotdata(ssh, (unsigned char *)data, len);
+  if (ssh->state == SSH_STATE_CLOSED) {
+    ssh_do_close(ssh, TRUE);
+    return 0;
+  }
+  return 1;
+}
+
+static void ssh_sent(Plug plug, int bufsize)
+{
+  Ssh ssh = (Ssh)plug;
+
+```

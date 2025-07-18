@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to declare local variables of type `BignumInt` for the `bigval_final_reduce` function, but they have different sets of variables.
+
+The HEAD version declares variables: v0-v6, v8-v14, v16-v21 (notably skipping v7 and v15)
+The incoming version declares variables: v0-v7, v9-v15, v16-v20, v22-v27 (notably skipping v8 and v21)
+
+Without more context about what the function is trying to accomplish or which variables are actually used in the function body, I cannot determine which set of variables is correct or if they should be merged in a specific way. The intent is ambiguous.
+
+Here is the same snippet with the conflict preserved:
+
+```c
+  r->w[4] = v89;
+}
+
+static void bigval_final_reduce(bigval *n)
+{
+<<<<<<< HEAD
+  BignumInt v0, v1, v2, v3, v4, v5, v6, v8, v9, v10, v11, v12, v13, v14;
+  BignumInt v16, v17, v18, v19, v20, v21;
+=======
+  BignumInt v0, v1, v2, v3, v4, v5, v6, v7, v9, v10, v11, v12, v13, v14;
+  BignumInt v15, v16, v17, v18, v19, v20, v22, v23, v24, v25, v26, v27;
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+  BignumCarry carry;
+
+  v0 = n->w[0];
+  v1 = n->w[1];
+  v2 = n->w[2];
+```

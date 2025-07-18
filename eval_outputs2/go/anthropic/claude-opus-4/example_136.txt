@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add a query parameter for an update mask, but they're using different parameter names and field names:
+
+- HEAD uses `UpdateMaskPaths` field and `update_mask.paths` query parameter
+- The incoming change uses `UpdateMask` field and `updateMask` query parameter
+
+Without additional context about the API specification or which naming convention is correct, I cannot definitively resolve this conflict. The semantic intent appears to be the same (adding an update mask query parameter), but the implementation details differ.
+
+Here's the snippet with the conflict preserved:
+
+```go
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+<<<<<<< HEAD
+	if localVarOptionals != nil && localVarOptionals.UpdateMaskPaths.IsSet() {
+		localVarQueryParams.Add("update_mask.paths", parameterToString(localVarOptionals.UpdateMaskPaths.Value(), "multi"))
+=======
+	if localVarOptionals != nil && localVarOptionals.UpdateMask.IsSet() {
+		localVarQueryParams.Add("updateMask", parameterToString(localVarOptionals.UpdateMask.Value(), "multi"))
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6
+	}
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"application/json", "application/x-foo-mime"}
+
+	// set Content-Type header
+
+```

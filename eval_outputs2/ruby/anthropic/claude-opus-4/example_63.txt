@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle errors in the same code block, but with different approaches:
+
+- **HEAD**: Uses a splat operator with `INTERMITTENT_ERRORS` constant to rescue multiple error types
+- **LEFT (ca3a081...)**: Adds a `was_master = am_master` assignment and explicitly lists specific error types to rescue
+
+The semantic intent appears to be:
+1. Both sides want to handle connection/network-related errors that can occur during Redis operations
+2. The LEFT side also wants to capture the master state in `was_master` variable
+3. Both sides handle errors the same way: log the error message and release the master lock
+
+Since `INTERMITTENT_ERRORS` likely contains the same or similar error types as those explicitly listed in the LEFT branch, and the LEFT branch adds the `was_master` assignment which seems intentional, the best resolution is to combine both intents:
+
+```ruby
+
+              if am_master
+                handle_delayed_items
+                update_schedule if dynamic
+              end
+
+              was_master = am_master
+            rescue *INTERMITTENT_ERRORS => e
+              log! e.message
+              release_master_lock
+            end
+            poll_sleep
+          end
+
+```

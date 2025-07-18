@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add constants to what appears to be a PHP class. Let me analyze the intent:
+
+- HEAD is adding `LOG_TYPE_LOG = 'log'`
+- The incoming branch is adding two constants: `BASE_PATH = 'base_path'` and `LOG = 'log'`
+
+The semantic intent seems to be:
+1. Both sides want a constant for 'log'
+2. HEAD uses the naming convention `LOG_TYPE_LOG` which is consistent with `LOG_TYPE_WARN` below
+3. The incoming branch uses just `LOG` but also adds `BASE_PATH`
+
+The best resolution would be to:
+- Keep the `BASE_PATH` constant from the incoming branch (new functionality)
+- Use the naming convention from HEAD (`LOG_TYPE_LOG`) for consistency with `LOG_TYPE_WARN`
+
+Here's the resolved code:
+
+```php
+    const BACKTRACE_LEVEL = 'backtrace_level';
+
+    /**
+     * @var string
+     */
+    const BASE_PATH = 'base_path';
+
+    /**
+     * @var string
+     */
+    const LOG_TYPE_LOG = 'log';
+
+    /**
+     * @var string
+     */
+    const LOG_TYPE_WARN = 'warn';
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - they want to use the `Debug` trait in the generic constraint. The only difference is:
+
+- HEAD uses the fully qualified path: `fmt::Debug`
+- The other branch uses just `Debug`
+
+Since `Debug` is being used without the `fmt::` prefix in the merged branch, this suggests that `Debug` is likely imported at the top of the file (e.g., `use std::fmt::Debug;`). This would make the shorter form valid and more idiomatic.
+
+Here's the resolved code:
+
+```rust
+pub enum Scope<'a> {
+    Operation(Option<&'a str>),
+    Fragment(&'a str),
+}
+
+pub fn factory<'a, S: Debug>() -> VariableInAllowedPosition<'a, S> {
+    VariableInAllowedPosition {
+        spreads: HashMap::new(),
+        variable_usages: HashMap::new(),
+        variable_defs: HashMap::new(),
+        current_scope: None,
+
+```

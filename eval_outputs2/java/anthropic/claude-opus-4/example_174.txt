@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add a closing brace for the if statement and then add a new `run()` method, while the other branch appears to want to keep the code structure as it was (possibly with the closing brace appearing later).
+
+Based on the context and typical Java code structure, it seems like:
+1. The if statement needs to be properly closed with a brace
+2. The HEAD branch wants to add a new `run()` method
+3. The `setConsoleReader` method should remain after these changes
+
+Here's the resolved conflict that preserves both intents:
+
+```java
+        if (in != null)
+        {
+            parser = new GruntParser(in);
+            parser.setParams(pig);    
+        }
+    }
+
+    public void run() {
+        parser.setInteractive(true);
+        parser.parseContOnError();
+    }
+
+    public void setConsoleReader(ConsoleReader c)
+    {
+        parser.setConsoleReader(c);
+
+```

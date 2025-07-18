@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```ruby
+
+              if am_master
+                handle_delayed_items
+                update_schedule if dynamic
+              end
+
+              was_master = am_master
+            rescue *INTERMITTENT_ERRORS => e
+              log! e.message
+              release_master_lock
+            end
+            poll_sleep
+          end
+
+```

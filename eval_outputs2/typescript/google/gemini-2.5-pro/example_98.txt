@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+An expert in semantic merge conflict resolution would analyze the intent behind the changes on both sides.
+
+*   **`HEAD` side:** This side is importing a new type `IRoomCache` from a file named `api.js`. It also specifies the `.js` extension in its imports (`../Room.js` and `./driver/api.js`).
+*   **`1a7da98...` side:** This side is importing a different new type `IRoomListingData` from a file named `interfaces`. It is also using a different import style that omits file extensions (`../Room` and `./driver/interfaces`). This is a common convention in TypeScript projects.
+
+It's highly likely that both `IRoomCache` and `IRoomListingData` are new, distinct types required for features developed on their respective branches. A semantic resolution should therefore include both imports.
+
+The conflict in style (with or without `.js` extension) should be resolved consistently. Since the `1a7da98...` side seems to be moving towards the more modern and common TypeScript convention of omitting file extensions, we will adopt that style for the merged code.
+
+The correct resolution is to combine the unique imports from both branches while maintaining a consistent, modern import style.
+
+```typescript
+import * as matchMaker from '../MatchMaker.js';
+
+import type { Room } from '../Room';
+import { IRoomCache } from './driver/api';
+import { IRoomListingData } from './driver/interfaces';
+
+const LOBBY_CHANNEL = '$lobby';
+
+/*
+ * TODO: refactor this on v0.16
+
+```

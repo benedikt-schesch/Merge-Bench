@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import the same modules but with different approaches:
+
+- **HEAD**: Uses `.js` extensions in imports and imports `IRoomCache` from a specific local driver
+- **1a7da98...**: Uses no extensions in imports and imports `IRoomListingData` from the general driver module
+
+The key difference is that HEAD imports `IRoomCache` while the other branch imports `IRoomListingData`. Since these are different interfaces being imported for potentially different purposes, and without more context about which one is actually needed in the code that follows, I cannot safely resolve this conflict.
+
+Here's the snippet with the conflict preserved:
+
+```typescript
+
+<<<<<<< HEAD
+import * as matchMaker from '../MatchMaker.js';
+import { IRoomCache } from '../matchmaker/driver/local/LocalDriver.js';
+import { subscribeLobby } from '../matchmaker/Lobby.js';
+import { Room } from '../Room.js';
+import { Client } from '../Transport.js';
+=======
+import * as matchMaker from '../MatchMaker';
+import { IRoomListingData } from '../matchmaker/driver';
+import { subscribeLobby } from '../matchmaker/Lobby';
+import { Room } from '../Room';
+import { Client } from '../Transport';
+>>>>>>> 1a7da98cbeee551587e6119d06a39a441421827b
+
+// TODO: use Schema state & filters on version 1.0.0
+
+// class DummyLobbyState extends Schema { // tslint:disable-line
+//   @type("number") public _: number;
+
+```

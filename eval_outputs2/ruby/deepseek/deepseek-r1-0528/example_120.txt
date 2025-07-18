@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+```ruby
+      upload = Factory.create :upload
+      comment = Factory.create :comment, :upload_ids => [upload.id.to_s],
+        :body => "Can't touch this"
+      Comment.update_all({:updated_at => 15.minutes.ago}, :id => comment.id)
+
+      comment.reload.updated_at.should be_within(1).of(15.minutes.ago)
+      upload.reload.destroy
+      comment.reload.updated_at.should be_within(1).of(Time.now)
+    end
+  end
+  
+  context "hours" do
+    it "assigns human hours" do
+```
+
+The resolution uses the incoming change (`be_within(1)`) because:
+1. It's more precise (1 second tolerance vs 5 seconds)
+2. `be_within` is the modern RSpec matcher
+3. Both changes share identical test steps structure
+4. The semantic intent (testing timestamp updates) is preserved
+
+The conflict was straightforward since both versions were:
+1. Setting up test data
+2. Modifying timestamps
+3. Destroying an upload
+4. Asserting timestamp changes
+The only difference was assertion syntax preference.

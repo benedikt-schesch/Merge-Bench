@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+**HEAD (current branch):**
+- Checks if `baseModel` is 'Flux1' OR
+- Checks if `baseModel` is 'SD3' AND `workflow` is not 'txt2img'
+
+**Incoming change:**
+- Checks if (`baseModel` is 'Flux1' OR 'SD3') AND `workflow` is not 'txt2img'
+
+The key difference is in the logical grouping:
+- HEAD: `Flux1 || (SD3 && workflow !== 'txt2img')`
+- Incoming: `(Flux1 || SD3) && workflow !== 'txt2img'`
+
+These conditions have different semantics:
+- HEAD would trigger if baseModel is Flux1 regardless of workflow, OR if it's SD3 with non-txt2img workflow
+- Incoming would only trigger if baseModel is either Flux1 or SD3, AND the workflow is not txt2img
+
+Looking at the action taken when the condition is true (`form.setValue('workflow', 'txt2img')`), it seems the intent is to force the workflow to 'txt2img' under certain conditions.
+
+The incoming change appears more restrictive and logically consistent - it only forces txt2img when the workflow isn't already txt2img for both Flux1 and SD3 models, which makes more sense than HEAD's version which would always force txt2img for Flux1 regardless of current workflow.
+
+Here's the resolved conflict:
+
+```typescript
+        }
+      }
+
+      if (!name || name === 'baseModel') {
+        if (
+          (watchedValues.baseModel === 'Flux1' || watchedValues.baseModel === 'SD3') &&
+          watchedValues.workflow !== 'txt2img'
+        ) {
+          form.setValue('workflow', 'txt2img');
+        }
+        const fluxBaseModels: BaseModelSetType[] = ['Flux1', 'Flux1Kontext'];
+        if (!!baseModel && !!prevBaseModel) {
+
+```

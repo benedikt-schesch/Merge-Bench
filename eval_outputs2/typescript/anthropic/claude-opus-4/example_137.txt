@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import similar functions from the `./setup` module, but with one key difference:
+
+- HEAD wants: `hasValidApiKey`
+- The incoming change wants: `hasValidOllamaEndpoint`
+
+Based on the semantic intent, it appears that both sides are adding validation functions - one for API keys and another for Ollama endpoints. These are likely complementary features rather than mutually exclusive ones. The most logical resolution would be to include both functions since they serve different validation purposes.
+
+```typescript
+import { join } from 'path';
+import fs from 'node:fs/promises';
+import * as clack from '@clack/prompts';
+import colors from 'yoctocolors';
+import { processPluginName, validateTargetDirectory } from '../utils';
+import { setupProjectEnvironment, setupAIModelConfig, setupEmbeddingModelConfig, hasValidApiKey, hasValidOllamaEndpoint } from './setup';
+import {
+  installDependenciesWithSpinner,
+  buildProjectWithSpinner,
+  createTask,
+  runTasks,
+
+```

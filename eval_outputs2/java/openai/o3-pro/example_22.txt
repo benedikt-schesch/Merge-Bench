@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```java
+		session.send(new EntityTransformMessage(player.getId(), new Transform(p, rot, Vector3.ONE), getRepositionManager()));
+	}
+
+	@Override
+	protected void worldChanged(World world) {
+		session.send(new WorldChangeMessage(world, world.getData()));
+	}
+
+	@Override
+	public void updateBlock(Chunk chunk, int x, int y, int z, BlockMaterial material, short data) {
+		session.send(new BlockUpdateMessage(chunk.getBlock(x, y, z)));
+```

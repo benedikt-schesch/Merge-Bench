@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- **HEAD**: Has a method signature `def get_page(target_url)` with a positional parameter
+- **Other branch**: Has a method signature `def get_page(target_url: nil)` with a keyword parameter with a default value
+
+The semantic intent appears to be:
+- The HEAD branch expects `target_url` as a required positional argument
+- The other branch wants to make `target_url` an optional keyword argument
+
+Looking at the method body, `target_url` is passed directly to `@version.domain.request()`, which suggests it's likely required for the functionality to work properly. However, the other branch's intent to use keyword arguments might be part of a broader refactoring effort to standardize the API.
+
+Since I cannot determine with certainty whether:
+1. The `nil` default is meaningful (perhaps there's other code that handles nil values)
+2. This is part of a larger refactoring to keyword arguments
+3. Whether the positional vs keyword argument change would break existing callers
+
+I should return the conflict as-is:
+
+```ruby
+                ##
+                # Retrieve a single page of IpAddressInstance records from the API.
+                # Request is executed immediately.
+                # @param [String] target_url API-generated URL for the requested results page
+                # @return [Page] Page of IpAddressInstance
+<<<<<<< HEAD
+                def get_page(target_url)
+=======
+                def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+                  response = @version.domain.request(
+                      'GET',
+                      target_url
+                  )
+                  return IpAddressPage.new(@version, response, @solution)
+
+```

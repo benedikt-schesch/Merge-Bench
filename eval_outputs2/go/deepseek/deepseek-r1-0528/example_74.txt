@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+```go
+
+package proto
+
+import (
+	"fmt"
+	"log"
+	"reflect"
+	"strconv"
+	"strings"
+	"sync"
+
+
+```
+
+The conflict arises from one branch adding the `"log"` import while the other branch doesn't. Since both changes are additive and don't conflict semantically, the proper resolution is to preserve both imports. The `"log"` package should be included along with the other imports as it appears to be intentionally added functionality that doesn't interfere with existing imports.
+
+The resolution:
+1. Keeps `"fmt"` from the HEAD branch
+2. Adds `"log"` from the other branch
+3. Preserves all other imports (`reflect`, `strconv`, `strings`, `sync`)
+4. Maintains the original formatting and empty lines
+
+This satisfies both changes: the original import set is preserved while adding the new logging capability from the other branch.

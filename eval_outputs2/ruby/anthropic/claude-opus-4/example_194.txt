@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD (left side)**: Defines `get_page` with `target_url` as a positional parameter
+- **Right side**: Defines `get_page` with `target_url` as a keyword argument with a default value of `nil`
+
+The conflict is about the method signature - whether `target_url` should be a positional or keyword argument.
+
+Given that:
+1. The method documentation shows `@param [String] target_url` which suggests it expects a required string parameter
+2. The method body uses `target_url` directly in the request, indicating it's a required parameter
+3. The keyword argument version includes a default of `nil`, but passing `nil` to the request would likely cause an error
+
+The semantic intent appears to be that `target_url` is a required parameter. The keyword argument style with `nil` default doesn't align with this intent, as it would make the parameter optional when it should be required.
+
+However, since I cannot determine with certainty which style is preferred by the codebase's conventions or the broader refactoring intent, I'll return the snippet with the conflict unresolved:
+
+```ruby
+            ##
+            # Retrieve a single page of OriginationUrlInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of OriginationUrlInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return OriginationUrlPage.new(@version, response, @solution)
+```

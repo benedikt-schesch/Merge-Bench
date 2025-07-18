@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```go
+		return nil, fmt.Errorf("extension is %T; want an HttpRule", ext)
+	}
+	return opts, nil
+}
+
+func defaultAPIOptions(svc *Service, md *descriptorpb.MethodDescriptorProto) (*options.HttpRule, error) {
+	// FQSN prefixes the service's full name with a '.', e.g.: '.example.ExampleService'
+	fqsn := strings.TrimPrefix(svc.FQSN(), ".")
+
+	// This generates an HttpRule that matches the gRPC mapping to HTTP/2 described in
+	// https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md#requests
+
+```

@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```go
+//
+// It works analogously to http.Header.Get, returning the first value if there are many set. If the value is not set,
+// an empty string is returned.
+//
+// The function is binary-key safe.
+func (m MD) Get(key string) string {
+	k, _ := encodeKeyValue(key, "")
+	vv, ok := m[k]
+	if !ok {
+		return ""
+	}
+	return vv[0]
+
+```

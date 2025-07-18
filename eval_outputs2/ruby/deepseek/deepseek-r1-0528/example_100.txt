@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, the conflict arises from two compatible changes:
+1. HEAD branch maintains the existing structure with Rails version check for `attr_accessible`
+2. Other branch adds a new `belongs_to :test_model` association and includes it in `attr_accessible`
+
+The resolution adds the new association while combining the `attr_accessible` attributes from both branches, maintaining the original HEAD's double-quote style for consistency.
+
+```ruby
+end
+
+class Branch < ActiveRecord::Base
+  has_many :test_attrs
+  belongs_to :company
+  belongs_to :test_model
+
+  if Rails.version < "4"
+    attr_accessible :name, :company, :test_model
+  end
+end
+class Company < ActiveRecord::Base
+  has_many :test_attrs
+  has_many :branches
+```

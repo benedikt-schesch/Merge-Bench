@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add support for different languages:
+- HEAD is adding Dutch (nl) language support
+- The incoming change is adding Polish (pl) language support
+
+Both changes are valid and non-conflicting in terms of functionality - they're simply adding different language options to what appears to be a switch statement for loading language-specific message modules.
+
+The semantic intent of both sides is to expand language support, so the resolution should include both languages:
+
+```typescript
+    }
+    case AppLanguage.ko: {
+      mod = await import(`./locales/ko/messages`)
+      break
+    }
+    case AppLanguage.nl: {
+      mod = await import(`./locales/nl/messages`)
+      break
+    }
+    case AppLanguage.pl: {
+      mod = await import(`./locales/pl/messages`)
+      break
+    }
+    case AppLanguage.pt_BR: {
+      mod = await import(`./locales/pt-BR/messages`)
+      break
+
+```

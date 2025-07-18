@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+```php
+                $whereKey[] = $checkFields[0];
+                $whereValue[] = \array_slice((array) $checkFields, 2);
+                $combiner[] = \_AND;
+                $extra[] = null;
+            } else {
+                if (!empty($checkFields[0])) {
+                    $whereKey[] = $checkFields[0];
+                    $whereValue[] = (isset($checkFields[2])) ? $checkFields[2] : '';
+                    $combiner[] = (isset($checkFields[3])) ? $checkFields[3] : \_AND;
+                    $extra[] = (isset($checkFields[4])) ? $checkFields[4] : null;
+                }
+```
+
+**Resolution Explanation:**  
+The conflict is resolved by keeping the `!empty()` check from HEAD, which is semantically safer than `isset()` for this context. Here's why:
+
+1. `!empty($checkFields[0])` ensures the value is:
+   - Set (prevents undefined index notice)
+   - Non-empty (avoids empty string/zero/null values)
+   
+2. This is crucial since `$checkFields[0]` is used as a query key, where empty values could cause unexpected behavior.
+
+3. The branch's `isset()` only checks existence but would allow empty values, which might lead to:
+   - Empty WHERE clauses in SQL queries
+   - Potential data integrity issues
+   - Hidden bugs in query construction
+
+The surrounding context shows `$checkFields[0]` is treated as a significant value (used in `$whereKey[]`), justifying the stricter empty-check. The ternary checks for other indexes (`[2]`, `[3]`, `[4]`) remain unchanged as they handle optional values appropriately.

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to describe the same test case, but there's a typo in one version:
+
+- HEAD version: "rollout scale up and down without rollout batches" (correct spelling)
+- Other version: "rollout scale up adnd down without rollout batches" (typo: "adnd" instead of "and")
+
+The intent is clearly the same - to describe a test for rollout scaling operations. The HEAD version has the correct spelling, so that should be used.
+
+```go
+			}
+			return nil
+		}, 30*time.Second, 300*time.Millisecond).Should(BeNil())
+	})
+
+	It("rollout scale up and down without rollout batches", func() {
+		By("first scale operation")
+		Expect(common.ReadYamlToObject("testdata/rollout/deployment/application.yaml", &app)).Should(BeNil())
+		app.Namespace = namespaceName
+		Expect(k8sClient.Create(ctx, &app)).Should(BeNil())
+
+
+```

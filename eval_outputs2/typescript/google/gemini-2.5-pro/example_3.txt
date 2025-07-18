@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```typescript
+            }),
+          }
+        case 'error':
+          const error = action.error as unknown
+
+          if (isCancelledError(error) && error.revert && this.#revertState) {
+            return { ...this.#revertState, fetchStatus: 'idle' }
+          }
+
+          return {
+            ...state,
+            error: error as TError,
+
+```

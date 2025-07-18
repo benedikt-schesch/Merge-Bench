@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```rust
+        pos: na::Vector2<f64>,
+        bytes: Vec<u8>,
+    ) -> oneshot::Receiver<anyhow::Result<Vec<Stroke>>> {
+        let (oneshot_sender, oneshot_receiver) = oneshot::channel::<anyhow::Result<Vec<Stroke>>>();
+
+        let page_width = (f64::from(self.document.format.width)
+            * (self.pdf_import_width_perc / 100.0))
+            .round() as i32;
+
+        let pdf_import_as_vector = self.pdf_import_as_vector;
+
+        rayon::spawn(move || {
+            let result = || -> anyhow::Result<Vec<Stroke>> {
+
+```

@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+The given code contains a merge conflict between two versions of a line that assigns the result of `pty_real_select_result(pty, -1, status)` to a variable `ret`. While one version (`HEAD`) maintains a cumulative result in `ret` using a logical AND (`ret = ret && ...`), the other version (`4348393f562c8011ebca43d6198e98638aa115b5`) simply calls the function without capturing the result. 
+
+This discrepancy could indicate that the intent of the two branches differs. Specifically:
+
+- The `HEAD` version likely intends to use the result of `pty_real_select_result` as part of a larger logical evaluation that accumulates across loop iterations via the `ret` variable.
+- The other branch may intend to disregard this check entirely, treating `pty_real_select_result` as performing side effects only or assumes correctness is enforced elsewhere.
+
+Since the snippet provided does not show the full context surrounding the usage or declaration of `ret`, nor its effect beyond this loop, the *intent and semantics* of the two changes are ambiguous. One branch maintains stateful logic about execution success; the other may be simplifying or changing behavior.
+
+---
+
+### Semantic Ambiguity and Conflict Resolution Decision
+
+In this scenario, the most responsible and semantically accurate choice is to **preserve the merge conflict markers** and **not resolve the conflict**, because:
+
+- We cannot determine with certainty whether `ret` is still used downstream in the code (in the combined merged branches).
+- The logical behavior of the program can meaningfully change depending on whether `ret` accumulates the return value or not.
+- Finalizing a resolution without understanding the broader implications could introduce logic errors or even subtle bugs.
+
+---
+
+### Final Output (Unresolved Merge Conflict)
+
+```c
+      pid = waitpid(-1, &status, WNOHANG);
+
+      pty = find234(ptys_by_pid, &pid, pty_find_by_pid);
+
+      if (pty)
+<<<<<<< HEAD
+        ret = ret && pty_real_select_result(pty, -1, status);
+=======
+        pty_real_select_result(pty, -1, status);
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+    } while (pid > 0);
+  } else {
+    pty = find234(ptys_by_fd, &fd, pty_find_by_fd);
+
+    if (pty)
+```

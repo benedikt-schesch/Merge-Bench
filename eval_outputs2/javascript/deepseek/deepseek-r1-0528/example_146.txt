@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet preserving context and semantics, with the conflict resolved based on intent analysis:
+
+```javascript
+      pushPendingSelection(doc, doc.history.done);
+      doc.history.atomicSelection = false;
+    }
+
+    var move = operation(cm, function(e) {
+      if ((ie && !ie_lt10) ?  !e.buttons : !e_button(e)) done(e);
+      else extend(e);
+    });
+    var up = operation(cm, done);
+    on(document, "mousemove", move);
+    on(document, "mouseup", up);
+```
+
+**Resolution rationale:**  
+The conflict arises from different IE version handling conditions. Both versions aim to:
+1. Use standard `e.buttons` check for modern browsers
+2. Fall back to `e_button(e)` for legacy browsers
+
+The branch version (`e1cfb7f`) provides more precise handling:
+- Uses `!e.buttons` only for IE10+ (`ie && !ie_lt10`)
+- Uses `e_button` fallback for IE9- and non-IE browsers
+- Maintains proper parenthesis balance
+- Preserves the original spacing and ternary structure
+
+The HEAD version's `!ie_upto8` check became redundant after the branch's more specific version detection. The resolved version maintains cross-browser compatibility while handling IE versions more accurately.

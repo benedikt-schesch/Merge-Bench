@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+            if (response != null || Response.HasStarted)
+            {
+                throw new InvalidOperationException("A response has already been sent.");
+            }
+
+            // Create a new ticket containing an empty identity and
+            // the authentication properties extracted from the challenge.
+            var ticket = new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity()),
+                properties, Scheme.Name);
+
+            // Prepare a new OpenID Connect response.
+            response = new OpenIdConnectResponse
+            {
+                Error = ticket.GetProperty(OpenIdConnectConstants.Properties.Error),
+                ErrorDescription = ticket.GetProperty(OpenIdConnectConstants.Properties.ErrorDescription),
+```

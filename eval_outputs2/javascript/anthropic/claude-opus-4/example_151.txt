@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a function that checks if a character is a "word character". The semantic intent is the same, but there are two key differences:
+
+1. **HEAD** exports the function as `CodeMirror.isWordChar` while the other branch keeps it as a local function
+2. The other branch adds `\u00df` (German ß character) to the regex pattern for non-ASCII single case word characters
+
+Both changes appear intentional and compatible. The HEAD version wants this function to be publicly accessible via the CodeMirror object, while the other branch wants to improve the character detection by including the German ß character.
+
+The best resolution is to combine both intents:
+
+```javascript
+  function bind(f) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return function(){return f.apply(null, args);};
+  }
+
+  var nonASCIISingleCaseWordChar = /[\u00df\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
+  var isWordChar = CodeMirror.isWordChar = function(ch) {
+    return /\w/.test(ch) || ch > "\x80" &&
+      (ch.toUpperCase() != ch.toLowerCase() || nonASCIISingleCaseWordChar.test(ch));
+  };
+
+  function isEmpty(obj) {
+
+```

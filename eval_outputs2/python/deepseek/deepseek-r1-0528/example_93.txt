@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict arises from a difference in formatting style for a list comprehension. Both versions produce identical results, but the HEAD version uses a multi-line format while the other branch uses a single-line format. The single-line version is more concise and maintains consistency with the surrounding context's coding style (as seen in the subsequent `working` method). 
+
+Here's the resolved snippet:
+
+```python
+        if isinstance(host,basestring):
+            resq = ResQ(host)
+        elif isinstance(host, ResQ):
+            resq = host
+
+        return [Worker.find(w,resq) for w in resq.redis.smembers('resque:workers') or []]
+
+    @classmethod
+    def working(cls, host):
+        if isinstance(host, basestring):
+            resq = ResQ(host)
+```
+
+Key resolution points:
+1. Both versions are semantically equivalent
+2. The single-line format aligns better with the compact style of the surrounding methods
+3. No functionality is changed - only formatting is normalized
+4. The resolution maintains Python syntax validity and preserves all original logic

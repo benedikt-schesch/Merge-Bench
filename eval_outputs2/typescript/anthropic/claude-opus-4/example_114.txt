@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same two properties but with different changes:
+
+1. **HEAD**: Uses `NodeJS.Timeout` type and keeps the original tuple type `[any, any]`
+2. **Other branch**: Uses `NodeJS.Timer` type and extends the tuple to include two optional boolean parameters `[any, any, boolean?, boolean?]`
+
+The semantic intent appears to be:
+- Both sides want to update the type definitions for better type safety
+- The other branch additionally wants to extend the `reservedSeats` data structure to support two additional optional boolean flags
+
+Since `NodeJS.Timer` and `NodeJS.Timeout` are essentially the same thing (Node.js unified these types in recent versions), and the extended tuple type is backward compatible with the original, we can merge both changes:
+
+```typescript
+  /** @internal */
+  public _events = new EventEmitter();
+
+  // seat reservation & reconnection
+  protected seatReservationTime: number = DEFAULT_SEAT_RESERVATION_TIME;
+  protected reservedSeats: { [sessionId: string]: [any, any, boolean?, boolean?] } = {};
+  protected reservedSeatTimeouts: { [sessionId: string]: NodeJS.Timeout } = {};
+
+  protected _reconnections: { [reconnectionToken: string]: [string, Deferred] } = {};
+  private _reconnectingSessionId = new Map<string, string>();
+
+  private onMessageHandlers: {
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (HEAD) has nothing additional after the `docroot` line, while the other side adds a `notifies` directive to restart the apache2 service.
+
+The semantic intent appears to be:
+- HEAD: Keep the web app configuration simple without notifications
+- Other branch: Add a notification to restart apache2 when this web app configuration changes
+
+This is a common pattern in Chef recipes where you want services to be restarted when their configuration files change. The `notifies :restart` with `:delayed` means the apache2 service will be restarted at the end of the Chef run if this resource changes.
+
+Since this notification is generally a good practice (ensuring apache2 picks up configuration changes), and it doesn't conflict with any functionality on the HEAD side, the appropriate resolution is to include the notification.
+
+```ruby
+    template "web_app.conf.erb"
+    server_name site["host"]
+    server_aliases site["aliases"]
+    server_include site["include"]
+    docroot site["docroot"]?site["docroot"]:"/vagrant/public/#{site["host"]}"
+    notifies :restart, resources("service[apache2]"), :delayed
+  end
+
+   # Add site info in /etc/hosts
+   bash "hosts" do
+     code "echo 127.0.0.1 #{site["host"]} #{site["aliases"].join(' ')} >> /etc/hosts"
+
+```

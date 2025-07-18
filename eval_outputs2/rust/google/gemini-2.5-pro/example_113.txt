@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires combining the intents of both branches.
+
+-   The `HEAD` branch introduces a new module `dict_codegen` and makes its contents public.
+-   The other branch adds a crate-level attribute to allow `non_snake_case` linting (as a temporary measure) and adds a standard Rust pattern to include the `README.md` file for documentation and doctests.
+
+Both of these changes are semantically independent and can be merged. The standard convention is to place all crate-level attributes (`#![...]`) at the top of the file, followed by module declarations and other items.
+
+The resolved code combines the crate-level attributes from both branches, then includes the module declaration from `HEAD`, and finally adds the documentation testing structure from the other branch.
+
+```rust
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![warn(clippy::print_stderr)]
+#![warn(clippy::print_stdout)]
+#![allow(non_snake_case)] // TODO: Delete me
+
+mod dict_codegen;
+
+pub use crate::dict_codegen::*;
+
+#[doc = include_str!("../README.md")]
+#[cfg(doctest)]
+pub struct ReadmeDoctests;
+
+```

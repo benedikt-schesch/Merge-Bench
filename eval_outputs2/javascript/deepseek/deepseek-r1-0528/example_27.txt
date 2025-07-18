@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing approaches to determining cacheability. The HEAD branch unconditionally enables caching (`true`), while the other branch introduces a configurable flag (`useMicroCache`). Since the comment indicates this app has no user-specific content (making all pages cacheable), but we also want to respect configuration flags, the solution is to:
+
+1. Use `useMicroCache` if defined (for configurable behavior)
+2. Fall back to `true` (original behavior) if the flag isn't defined
+
+This preserves both the original safety (caching when no configuration exists) and the new configurability.
+
+Resolved code:
+```javascript
+
+// since this app has no user-specific content, every page is micro-cacheable.
+// if your app involves user-specific content, you need to implement custom
+// logic to determine whether a request is cacheable based on its url and
+// headers.
+const isCacheable = req => (typeof useMicroCache !== 'undefined' ? useMicroCache : true)
+
+app.get('*', (req, res) => {
+  if (!renderer) {
+    return res.end('waiting for compilation... refresh in a moment.')
+  }
+
+```

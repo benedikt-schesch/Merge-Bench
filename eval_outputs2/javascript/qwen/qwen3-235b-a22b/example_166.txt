@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```javascript
+    inode.atime = inode.mtime;
+    inode.mode = data[JSONFS_IDX_MODE];
+    inode.uid = data[JSONFS_IDX_UID];
+    inode.gid = data[JSONFS_IDX_GID];
+
+    inode.parentid = parentid;
+    this.inodes[inode.parentid].nlinks++;
+    var ifmt = inode.mode & S_IFMT;
+
+    if(ifmt === S_IFDIR)
+    {
+        this.PushInode(inode, parentid, name);
+
+```

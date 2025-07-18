@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+This merge conflict arises from a change in the signature of the `T::component_ids` method. One branch (`HEAD`) calls it with `(components, storages)`, while the other branch calls it with just `(components)`.
+
+The surrounding function receives both `components: &mut Components` and `storages: &mut Storages`. The `HEAD` version utilizes both of these parameters, suggesting that the `component_ids` method was updated to require information from `storages` in addition to `components`. This is a common pattern in ECS (Entity Component System) implementations where initializing bundle metadata might require knowledge of storage types. The other branch seems to be based on an older version of the method signature.
+
+Therefore, the most likely correct resolution is to use the version from `HEAD`, which passes both arguments to `T::component_ids`.
+
+```rust
+        components: &mut Components,
+        storages: &mut Storages,
+    ) -> &'a BundleInfo {
+        let bundle_infos = &mut self.bundle_infos;
+        let id = self.bundle_ids.entry(TypeId::of::<T>()).or_insert_with(|| {
+            let component_ids = T::component_ids(components, storages);
+            let id = BundleId(bundle_infos.len());
+            // SAFE: T::component_id ensures info was created
+            let bundle_info = unsafe {
+                initialize_bundle(std::any::type_name::<T>(), component_ids, id, components)
+            };
+
+```

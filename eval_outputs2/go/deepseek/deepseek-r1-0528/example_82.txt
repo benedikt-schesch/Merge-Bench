@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a block of variable declarations present in the HEAD version but missing in the other branch. Since the variables (`goodPing`, `panicPing`, `nilPanicPing`) appear to be test dependencies used later in the file, and there's no indication they're obsolete or relocated in either branch, I've retained them to preserve test functionality. The resolution keeps the variable block while maintaining the structural changes from both branches.
+
+```go
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+var (
+	goodPing     = &pb_testproto.PingRequest{Value: "something", SleepTimeMs: 9999}
+	panicPing    = &pb_testproto.PingRequest{Value: "panic", SleepTimeMs: 9999}
+	nilPanicPing = &pb_testproto.PingRequest{Value: "nilpanic", SleepTimeMs: 9999}
+)
+
+type recoveryAssertService struct {
+	testpb.TestServiceServer
+}
+
+func (s *recoveryAssertService) Ping(ctx context.Context, ping *testpb.PingRequest) (*testpb.PingResponse, error) {
+```

@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding a new `FileRecord` entity to a list of database models for migration, while the other branch has no changes in this section. The clear intent is to register the new `FileRecord` entity with the database. Therefore, the resolution is to include the line from the incoming branch.
+
+```go
+		&entity.PluginUserConfig{},
+		&entity.Review{},
+		&entity.Badge{},
+		&entity.BadgeGroup{},
+		&entity.BadgeAward{},
+		&entity.FileRecord{},
+		&entity.PluginKVStorage{},
+	}
+
+	roles = []*entity.Role{
+		{ID: 1, Name: "User", Description: "Default with no special access."},
+
+```

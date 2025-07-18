@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+An analysis of the two branches indicates that they are adding distinct but complementary methods.
+
+-   The `HEAD` branch adds a helper method `add_taken_error(key)` to add a conventional `:taken` validation error.
+-   The other branch adds a predicate method `invitation_taken?` to check if an invitation has already been used.
+
+These two methods can coexist as they serve different purposes: one is a query (`invitation_taken?`) and the other is an action (`add_taken_error`), likely used together within a validation. The most logical resolution is to include both methods.
+
+```ruby
+
+        time = self.invitation_created_at || self.invitation_sent_at
+        time + self.class.invite_for
+      end
+
+      def invitation_taken?
+        !invited_to_sign_up?
+      end
+
+      def add_taken_error(key)
+        errors.add(key, :taken)
+      end
+
+      protected
+
+        def block_from_invitation?
+
+```

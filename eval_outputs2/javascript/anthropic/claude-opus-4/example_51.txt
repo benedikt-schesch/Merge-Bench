@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to retrieve settings from a background service (BG), but they're using different method names:
+
+- HEAD uses: `Settings.get`
+- The incoming branch uses: `get_settings`
+
+Without more context about which is the correct API or whether there was a refactoring to change the method name, I cannot determine which one is semantically correct. The conflict appears to be about different naming conventions for the same functionality.
+
+Here's the snippet with the conflict preserved:
+
+```javascript
+            await Time.sleep(500);
+        }
+
+        const {task, task_url, cells, urls} = await on_task_ready();
+
+<<<<<<< HEAD
+        const settings = await BG.exec('Settings.get');
+=======
+        const settings = await BG.exec('get_settings');
+>>>>>>> a9ce98f97aaed5e50c711de3913c3138d4188b24
+        if (!settings.enabled || !settings.hcaptcha_auto_solve) {
+            return;
+        }
+
+        const solve_start = Time.time();
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the `strong_parameters` option based on Rails version:
+
+- HEAD (current branch): Sets `strong_parameters` to `true` when Rails version is 4 or higher and the option is `nil`
+- Incoming change: Sets `strong_parameters` to `false` when Rails version is less than 4 and the option is `nil`
+
+These two conditions are complementary and both should be included to handle all Rails versions properly. The intent is to have strong_parameters enabled by default for Rails 4+ and disabled for earlier versions when not explicitly specified.
+
+Here's the resolved code:
+
+```ruby
+          :model => nil,
+          :nested_in  => nil,
+          :strong_parameters => nil
+        }.merge(options)
+        options.merge!({ :strong_parameters => true }) if Rails.version >= '4' && options[:strong_parameters] == nil
+        options.merge!({ :strong_parameters => false }) if Rails.version < '4' && options[:strong_parameters] == nil
+
+        new_actions = actions_from_option( options[:new] ).merge(
+            actions_from_option(options[:additional_new]) )
+        members = actions_from_option(options[:member]).merge(
+            actions_from_option(options[:additional_member]))
+
+```

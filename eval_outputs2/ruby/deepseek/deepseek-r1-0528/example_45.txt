@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and determined that both sides are semantically equivalent. The only difference is an extra blank line in the conflicting branch. Here's the resolved version:
+
+```ruby
+      #
+      # Evaluation does not update internal statistics, keeping the
+      # classifier state unchanged. Use +update_with_instance+ to
+      # incorporate new samples.
+      def eval(data)
+        neighbors = @data_set.data_items.map do |train_item|
+          [distance(data, train_item), train_item.last]
+        end
+        neighbors.sort_by! { |d, _| d }
+        k_limit = [@k, @data_set.data_items.length].min
+        k_neighbors = neighbors.first(k_limit)
+
+
+```
+
+Resolution reasoning:
+1. Both versions compute the same `neighbors` array mapping
+2. The content inside the block is identical
+3. The extra blank line in the conflicting branch doesn't affect functionality
+4. The HEAD version is cleaner without unnecessary whitespace
+5. All surrounding context is preserved exactly as provided
+6. The solution maintains the original spacing and formatting outside the conflict region

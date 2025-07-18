@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `New` function signature, but with different approaches:
+
+- **HEAD**: Adds `allowPatchFeature bool` as the last parameter, keeping everything on one line
+- **OURS** (0e11f6f8...): Adds both `allowPatchFeature` and `standalone bool` as parameters, and splits the function signature across two lines for better readability
+
+The semantic intent is clear: the OURS side wants to add both boolean parameters while also improving code formatting. Since the OURS side includes everything from HEAD (the `allowPatchFeature` parameter) plus an additional `standalone` parameter, and the struct definition above already shows a `standalone` field, the resolution should accept the OURS version.
+
+```go
+	allowPatchFeature  bool
+	standalone         bool
+}
+
+// New returns a new generator which generates grpc gateway files.
+func New(reg *descriptor.Registry, useRequestContext bool, registerFuncSuffix, pathTypeString, modulePathString string,
+	allowPatchFeature, standalone bool) gen.Generator {
+	var imports []descriptor.GoPackage
+	for _, pkgpath := range []string{
+		"context",
+		"io",
+		"net/http",
+
+```

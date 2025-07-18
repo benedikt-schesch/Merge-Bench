@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes:
+
+1. The HEAD change uses the older v1 grpc-gateway imports with golang/protobuf
+2. The branch change upgrades to grpc-gateway/v2 with the new google.golang.org/protobuf
+3. The branch change is likely part of a migration to v2
+4. Both changes are mutually exclusive due to version upgrade
+5. The internal package from HEAD isn't present in the branch change
+
+Here's the resolved version preserving the branch's upgrade to v2:
+
+```go
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	pb "github.com/grpc-ecosystem/grpc-gateway/v2/runtime/internal/examplepb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
+)
+```
+
+Key resolution points:
+- Used branch's v2 imports for grpc-gateway
+- Removed HEAD's internal package as it's not needed in v2
+- Kept the new protobuf package (google.golang.org/protobuf)
+- Preserved all spacing and context lines
+- Maintained closing parenthesis exactly as in original

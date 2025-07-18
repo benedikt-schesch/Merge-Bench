@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in a comment block that describes the implementation of a Catmull-Rom curve. The core difference lies in the denominator of the tangent formula at `t=0`: 
+
+- One side (HEAD) claims the tangent is computed as $(p2 - p0)/2$.
+- The other (d70beac2) says it's $(p2 - p0)/3$.
+
+The rest of the comment consistently specifies using a denominator of `2` for the tangent at `t=1` — $(p3 - p1)/2$. This suggests adherence to the standard Catmull-Rom definition, which uses the denominator `2` consistently across the curve, giving a uniform parameterization.
+
+---
+
+### Semantic Decision
+
+To resolve this, we must align with the **standard mathematical formulation** of the Catmull-Rom spline. In its typical form, the tangent at `t=0` for the segment from $p1$ to $p2$ is derived as:
+
+$$
+T(0) = \frac{p2 - p0}{2}
+$$
+
+This reflects the original intent of the Catmull-Rom algorithm and ensures consistency with the tangent at `t=1`, which already uses `/2`. If the change to `/3` was intentional for a different parameterization (e.g., uniform, chordal, or centripetal), such a change should have been more thoroughly documented or reviewed. In its current form, the conflicting side lacks sufficient context or correctness to override the conventional version.
+
+---
+
+### Resolution
+
+The **semantic and standard intent** supports preserving the formula from the `HEAD` version, resolving the conflict by retaining `/2`.
+
+Here is the fully resolved snippet with unchanged context and correct formatting preserved:
+
+```c
+#include "bezier_curve.h"
+#include "../common/scene_curves.h"
+
+/*
+
+  Implements Catmul Rom curves with control points p0, p1, p2, p3. At
+  t=0 the curve goes through p1, with tangent (p2-p0)/2, and for t=1
+  the curve goes through p2 with tangent (p3-p2)/2.
+
+ */
+
+namespace embree
+```

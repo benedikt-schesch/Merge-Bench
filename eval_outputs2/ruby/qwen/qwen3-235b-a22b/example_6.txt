@@ -1,0 +1,54 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around two different ways of computing a `deadline` for a connection acquisition timeout:
+
+- One side uses the `current_time` abstraction:
+  ```ruby
+  deadline = current_time + timeout
+  ```
+  
+- The other side uses direct monotonic time retrieval:
+  ```ruby
+  deadline = ::Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+  ```
+
+---
+
+### Evaluation of Intent and Semantics:
+
+#### 1. **Assumption about `current_time`**:
+We do not see the definition of `current_time` in this code snippet. Its presence suggests it might serve as an existing abstraction or helper method elsewhere in the codebase, possibly even for encapsulating monotonic time retrieval. If that is the case, then both approaches may be functionally equivalent—but the abstraction `current_time` should be honored unless there's a specific reason to replace it.
+
+#### 2. **Reliability and Best Practice**:
+`::Process.clock_gettime(Process::CLOCK_MONOTONIC)` is widely acknowledged as the preferable way to measure durations in systems where process lifecycles matter (e.g., waiting for connections), precisely to avoid issues like clock skew or system clock adjustments. This value increases monotonically and is not affected by changes to the system wall clock.
+
+So from a *correctness perspective*, the explicit use of the monotonic clock appears to be more robust and safer for the purpose of timeout handling.
+
+#### 3. **Merge Strategy Decision**:
+Merging both branches directly is not possible—each provides a different implementation for the exact same semantic outcome: computing a deadline.
+
+Given the two sides:
+- The `HEAD` version chooses abstraction (`current_time`)
+- The other branch chooses explicit correctness (`clock_gettime`)
+
+There is merit in both sides, but **only the diff from the remote branch guarantees correct deadline behavior regardless of `current_time`'s internal implementation**.
+
+---
+
+### Conclusion and Resolution:
+
+To align with best practices regarding monotonic timeouts and reduce fragility in time-sensitive logic:
+
+Resolved Snippet:
+```ruby
+
+  def pop(timeout = 0.5, options = {})
+    options, timeout = timeout, 0.5 if Hash === timeout
+    timeout = options.fetch :timeout, timeout
+
+    deadline = ::Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+    @mutex.synchronize do
+      loop do
+        raise ConnectionPool::PoolShuttingDownError if @shutdown_block
+        return fetch_connection(options) if connection_stored?(options)
+```

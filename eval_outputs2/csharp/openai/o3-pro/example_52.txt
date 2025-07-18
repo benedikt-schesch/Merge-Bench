@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+            if (properties.ContentDisposition != null)
+            {
+                request.AddOptionalHeader(Constants.HeaderConstants.FileContentDispositionRequestHeader, properties.ContentDisposition);
+            }
+
+            AddFilePermissionOrFilePermissionKey(request, filePermissionToSet, properties, Constants.HeaderConstants.FilePermissionInherit);
+            AddNtfsFileAttributes(request, properties, Constants.HeaderConstants.FileAttributesNone);
+            AddCreationTime(request, properties, Constants.HeaderConstants.FileTimeNow);
+            AddLastWriteTime(request, properties, Constants.HeaderConstants.FileTimeNow);
+            request.ApplyFileContentChecksumHeaders(properties.ContentChecksum);
+
+            request.Headers.Add(Constants.HeaderConstants.FileType, Constants.HeaderConstants.File);
+            request.Headers.Add(Constants.HeaderConstants.FileContentLengthHeader, fileSize.ToString(NumberFormatInfo.InvariantInfo));
+            properties.Length = fileSize;
+```

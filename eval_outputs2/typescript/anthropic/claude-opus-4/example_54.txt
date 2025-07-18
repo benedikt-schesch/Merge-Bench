@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that HEAD is adding an additional validation rule to check for illegal characters in the zone name (using a regex pattern), while the other branch is simply closing the previous validation chain.
+
+The semantic intent appears to be:
+- Both sides want to validate the zone name
+- HEAD wants to add stricter validation by ensuring only alphanumeric characters, underscores, and hyphens are allowed
+- The other branch doesn't have this additional validation
+
+Since HEAD's additional validation provides more robust input checking without conflicting with the existing "no period" rule, the proper resolution is to keep HEAD's version:
+
+```typescript
+          return !value.includes(".");
+        },
+        {
+          message: "Zone name must not contain a period.",
+        },
+      )
+      .refine((value: string) => /^[a-zA-Z0-9_-]+$/.test(value), {
+        message: "Zone name has an illegal character.",
+      }),
+    inertia: z.coerce
+      .number()
+      .min(1, {
+        message: "Inertia must be above 0.",
+      })
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call the same function `LBItemFromPt`, but they differ in the naming convention:
+
+- HEAD uses: `LBItemFromPt`
+- The incoming change uses: `p_LBItemFromPt`
+
+The `p_` prefix typically indicates a function pointer or a dynamically loaded function (common in Windows programming when functions are loaded via GetProcAddress). Since both sides have the same intent (calling the same function with the same parameters), and the incoming change appears to be a refactoring to use function pointers, I should resolve in favor of the incoming change.
+
+```c
+  updist = downdist = 0;
+  for (i = 1; i < 4096 && (!updist || !downdist); i++) {
+    uppoint = downpoint = cursor;
+    uppoint.y -= i;
+    downpoint.y += i;
+    upitem = p_LBItemFromPt(hwnd, uppoint, FALSE);
+    downitem = p_LBItemFromPt(hwnd, downpoint, FALSE);
+    if (!updist && upitem != ret)
+      updist = i;
+    if (!downdist && downitem != ret)
+      downdist = i;
+  }
+
+```

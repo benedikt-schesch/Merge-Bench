@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD wants to call `self.validate_world_and_update_archetypes(world);`
+- The incoming change wants to call `self.update_archetypes(world);`
+
+The HEAD version seems to be doing validation in addition to updating archetypes, while the incoming change only updates archetypes. Since this is an `unsafe` function (`get_unchecked`), and considering that validation would be an important safety measure, the HEAD version with validation appears to be the more complete and safer implementation.
+
+Here's the resolved code:
+
+```rust
+    pub unsafe fn get_unchecked<'w, 's>(
+        &'s mut self,
+        world: &'w World,
+        entity: Entity,
+    ) -> Result<<Q::Fetch as Fetch<'w, 's>>::Item, QueryEntityError> {
+        self.validate_world_and_update_archetypes(world);
+        self.get_unchecked_manual(
+            world,
+            entity,
+            world.last_change_tick(),
+            world.read_change_tick(),
+```

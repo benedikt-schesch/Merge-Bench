@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```rust
+    pub(crate) fn crosscheck_plans(plan: Arc<dyn ExecutionPlan>) -> Result<()> {
+        let subrules: Vec<Box<PipelineFixerSubrule>> = vec![
+            Box::new(hash_join_convert_symmetric_subrule),
+            Box::new(hash_join_swap_subrule),
+        ];
+        let new_plan = plan
+            .transform_up(&|p| apply_subrules(p, &subrules, &ConfigOptions::new()))
+            .map(|t| t.data)
+            .and_then(check_integrity)?;
+        // TODO: End state payloads will be checked here.
+        let config = ConfigOptions::new().optimizer;
+        let collect_left_threshold = config.hash_join_single_partition_threshold;
+        let collect_threshold_num_rows = config.hash_join_single_partition_threshold_rows;
+        let _ = new_plan.transform_up(&|plan| {
+```

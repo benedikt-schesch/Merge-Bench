@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import Vector3, but from different packages:
+
+- HEAD is importing from `org.spout.math.vector.Vector3`
+- The other branch is importing from `org.spout.api.math.Vector3`
+
+Additionally, the other branch is also importing `org.spout.api.geo.cuboid.Chunk`.
+
+Based on the context (this is in the `org.spout.api.util.cuboid` package), it seems the other branch is using the API-based imports which is more consistent with the package structure. The HEAD version appears to be using a different math library location.
+
+Here's the resolved version that keeps both the Chunk import and uses the API-consistent Vector3 import:
+
+```java
+ * License and see <http://spout.in/licensev1> for the full license, including
+ * the MIT license.
+ */
+package org.spout.api.util.cuboid;
+
+import org.spout.api.geo.cuboid.Chunk;
+import org.spout.api.math.Vector3;
+
+/**
+ * This class implements a Cuboid common methods for a one dimensional array Cuboid Buffer
+ *
+ * Elements are stored in column order and each column is +1 on the Z dimension relative to the previous one.
+
+```

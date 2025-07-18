@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from different approaches to handling percentage scaling in the `unformat` function. The HEAD version always scales by 0.01, while the other branch introduces conditional scaling based on a configuration option. 
+
+The semantic resolution preserves both intents by:
+1. Keeping the conditional logic structure from the other branch
+2. Modifying the condition to default to scaling when `scalePercentBy100` is not explicitly set to `false`
+3. Maintaining the HEAD's behavior as the default case
+
+This ensures:
+- Backward compatibility (HEAD behavior becomes default)
+- Configurability (option to disable scaling)
+- Standard percentage handling (scaling enabled by default)
+
+Resolved code:
+```javascript
+            }
+
+            return output;
+        },
+        unformat: function(string) {
+            var number = numeral._.stringToNumber(string);
+            if (numeral.options.scalePercentBy100 !== false) {
+                return number * 0.01;
+            }
+            return number;
+        }
+    });
+})();

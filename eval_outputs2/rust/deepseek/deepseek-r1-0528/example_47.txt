@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+```rust
+            self.insert_resource(resource);
+        }
+        self
+    }
+
+    /// Initialize a non-send resource in the current [`App`], if it does not exist yet.
+    ///
+    /// Adds a resource that implements `Default` or [`FromWorld`] trait.
+    pub fn init_non_send_resource<R>(&mut self) -> &mut Self
+    where
+        R: FromWorld + 'static,
+    {
+        // See perf comment in init_resource
+```
+
+**Resolution Reasoning:**
+1. The conflict is about documentation comments for `init_non_send_resource`
+2. The HEAD version provides valuable documentation explaining:
+   - What the method does (initializes non-send resources)
+   - When initialization occurs (only if doesn't exist)
+   - Required trait bounds (`Default`/`FromWorld`)
+3. The incoming branch lacks these docs, which would degrade API documentation quality
+4. Since both implementations are identical and the docs provide meaningful context, preserving the documentation is semantically correct
+5. The documentation doesn't conflict with the method implementation shown in the snippet
+
+The resolved version maintains both the functionality and documentation clarity from HEAD while keeping the identical method implementation from both branches.

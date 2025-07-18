@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to declare `transferInsts`, but with different approaches:
+
+- HEAD declares it as a local constant along with `upgradeInsts`
+- The incoming change declares it as a global variable
+
+Since both sides want `transferInsts` to exist, and the HEAD side also adds `upgradeInsts`, the semantic intent appears to be:
+1. Both sides need `transferInsts`
+2. The incoming change specifically wants it to be global
+3. HEAD also introduces `upgradeInsts`
+
+The most sensible resolution would be to keep the global declaration for `transferInsts` (as the incoming change explicitly requires this) and add `upgradeInsts` as well. Here's the resolved code:
+
+```javascript
+const {Transfer} = require('./transfer')
+const {fsExport: fs} = require('./fs')
+const Upgrade = require('./download-upgrade')
+
+const sftpInsts = {}
+global.transferInsts = {}
+const upgradeInsts = {}
+
+/**
+ * add ws.s function
+ * @param {*} ws
+ */
+```

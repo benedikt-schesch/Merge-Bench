@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around the `process_as_code` variable declaration in the loop. Since the surrounding context doesn't show how this variable is used later in the code, I can't determine whether:
+1. The `process_as_code` variable is critical to HEAD's logic (so it should be kept)
+2. The other branch intentionally removed it (so it should be omitted)
+3. The variable is related to other changes not shown in the snippet
+
+Given this ambiguity in the semantic intent of both branches, I'm returning the unresolved conflict:
+
+```python
+>>>>>>> bbeee06f1222fa47439717d2e4b642a41e9d7f4b
+    multistart, multiend = language.get("multistart"), language.get("multiend")
+    comment_matcher = language['comment_matcher']
+
+    for line in lines:
+<<<<<<< HEAD
+        process_as_code = False
+
+=======
+>>>>>>> bbeee06f1222fa47439717d2e4b642a41e9d7f4b
+        # Only go into multiline comments section when one of the delimiters is
+        # found to be at the start of a line
+        if multistart and multiend and \
+            any(line.lstrip().startswith(delim) or line.rstrip().endswith(delim)
+                for delim in (multistart, multiend)):
+
+```

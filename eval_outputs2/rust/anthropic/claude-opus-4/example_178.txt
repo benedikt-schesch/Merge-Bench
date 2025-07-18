@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal: deserializing JSON lines into `RustcOutput` objects and handling invalid lines by printing them and returning `None`.
+
+The key differences are:
+- HEAD uses `RustcOutput::deserialize_json(line)` method
+- The other branch uses `serde_json::from_str::<RustcOutput>(line)`
+
+Both approaches handle errors the same way (print the line and return `None`). The semantic intent is identical - the only difference is the deserialization method used.
+
+Since both achieve the same result, I'll resolve this by keeping the HEAD version as it appears to use a more specific method (`deserialize_json`) that's likely defined on the `RustcOutput` type itself, which suggests it's the preferred API for this operation.
+
+```rust
+}
+
+fn get_last_artifact(out: &str) -> Option<PathBuf> {
+    let last = out
+        .lines()
+        .filter_map(|line| match RustcOutput::deserialize_json(line) {
+            Ok(line) => Some(line),
+            Err(_) => {
+                // Pass through invalid lines
+                println!("{}", line);
+                None
+            }
+        })
+
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to access the same data from `event_tree->head->data`, but they differ in whether to use an explicit cast to `(event_t *)`.
+
+The HEAD version includes an explicit cast to `(event_t *)`, while the incoming change removes this cast. Since both versions are functionally equivalent (assuming `event_tree->head->data` is already of the correct type or implicitly convertible), and modern C practices often prefer to avoid unnecessary casts, I'll resolve this by accepting the cleaner version without the cast.
+
+```c
+
+		if(sigalrm) {
+			logger(LOG_INFO, _("Flushing event queue"));
+
+			while(event_tree->head) {
+				event = event_tree->head->data;
+				event->handler(event->data);
+				event_del(event);
+			}
+			sigalrm = false;
+		}
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to update the version number of the MARKDOWNLIB_VERSION constant:
+
+- HEAD (current branch) has version "1.9.1"
+- The incoming branch has version "2.0"
+
+Since this is a semantic versioning conflict, the intent from both sides is to update the version. The incoming branch appears to be making a major version bump (1.x to 2.0), which typically indicates breaking changes or significant updates. The HEAD branch is making a patch version update (to 1.9.1).
+
+Given that major version changes (2.0) should take precedence over patch updates (1.9.1) as they represent more significant changes, the resolution should accept the incoming change.
+
+```php
+class Markdown implements MarkdownInterface {
+	/**
+	 * Define the package version
+	 * @var string
+	 */
+	const MARKDOWNLIB_VERSION = "2.0";
+
+	/**
+	 * Simple function interface - Initialize the parser and return the result
+	 * of its transform method. This will work fine for derived classes too.
+	 *
+
+```

@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and determined that the changes are semantically incompatible. The HEAD version requires a `storages` parameter and calls `init_component`, while the other branch removes `storages` and calls `get_or_insert_id`. Since these represent fundamentally different approaches to component ID management, I can't safely resolve this without knowing which approach is correct for the current codebase.
+
+Here's the unchanged snippet with conflict markers:
+
+```rust
+macro_rules! tuple_impl {
+    ($($name: ident),*) => {
+        /// SAFE: Component is returned in tuple-order. [Bundle::from_components] and [Bundle::get_components] use tuple-order
+        unsafe impl<$($name: Component),*> Bundle for ($($name,)*) {
+            #[allow(unused_variables)]
+<<<<<<< HEAD
+            fn component_ids(components: &mut Components, storages: &mut Storages) -> Vec<ComponentId> {
+                vec![$(components.init_component::<$name>(storages)),*]
+=======
+            fn component_ids(components: &mut Components) -> Vec<ComponentId> {
+                vec![$(components.get_or_insert_id::<$name>()),*]
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+            }
+
+            #[allow(unused_variables, unused_mut)]
+            #[allow(clippy::unused_unit)]
+            unsafe fn from_components(mut func: impl FnMut() -> *mut u8) -> Self {
+```
+
+Key observations:
+1. The method signatures are incompatible (differing parameters)
+2. The implementation logic differs significantly
+3. The safety implications of these changes aren't clear from context
+4. Both changes appear to be complete solutions rather than complementary changes
+
+A human developer should resolve this by:
+1. Checking which version matches the current `Bundle` trait definition
+2. Verifying component initialization requirements
+3. Ensuring storage handling is consistent with other parts of the system
+4. Testing the final implementation for correctness

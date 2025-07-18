@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set up imports for a test file:
+
+- HEAD wants to import a `mount` helper from a local test support file
+- The other branch wants to import `Vue` directly
+
+Since this appears to be a test file for Vuex helpers (based on the describe block mentioning 'Helpers'), and both imports are likely needed for the tests to function properly, the semantic intent is to have both imports available.
+
+```javascript
+import { mount } from './support/helpers'
+import Vue from 'vue'
+import Vuex, { mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers } from '../../src/index'
+
+describe('Helpers', () => {
+  it('mapState (array)', () => {
+    const store = new Vuex.Store({
+
+```

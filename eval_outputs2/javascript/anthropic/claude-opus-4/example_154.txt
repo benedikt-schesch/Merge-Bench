@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze what each side is trying to achieve:
+
+**HEAD (current branch):**
+- Uses `lineObj` variable (already defined above)
+- Calls `heightAtLine(lineObj)` with just the line object
+
+**Incoming change:**
+- Calls `getLine(this.doc, line)` directly in the first part (duplicating the work already done)
+- Calls `heightAtLine(this, lineObj)` with both `this` context and the line object
+
+The semantic intent appears to be:
+1. Both sides want to use the `lineObj` variable that's already defined
+2. The incoming change suggests that `heightAtLine` function now requires a `this` context as its first parameter (likely a refactoring to make the function signature consistent)
+
+The correct resolution should:
+- Use the already-defined `lineObj` variable (avoiding redundant `getLine` call)
+- Include the `this` parameter in the `heightAtLine` call (accepting the API change)
+
+```javascript
+    heightAtLine: function(line, mode) {
+      var end = false, last = this.doc.first + this.doc.size - 1;
+      if (line < this.doc.first) line = this.doc.first;
+      else if (line > last) { line = last; end = true; }
+      var lineObj = getLine(this.doc, line);
+      return intoCoordSystem(this, lineObj, {top: 0, left: 0}, mode || "page").top +
+        (end ? this.doc.height - heightAtLine(this, lineObj) : 0);
+    },
+
+    defaultTextHeight: function() { return textHeight(this.display); },
+    defaultCharWidth: function() { return charWidth(this.display); },
+
+
+```

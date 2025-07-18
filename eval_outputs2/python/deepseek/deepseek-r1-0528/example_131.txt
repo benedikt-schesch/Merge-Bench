@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, I need to analyze the intent of both branches while preserving the code context:
+
+1. The LEFT side (HEAD) defines a `number_format` field
+2. The RIGHT side adds:
+   - A `u` prefix to the format string
+   - A new `mobile_number_portable_region=True` field
+   - Changes the closing punctuation
+
+The resolution strategy:
+- Keep the LEFT side's string format (without `u` prefix) for consistency with surrounding code
+- Keep RIGHT side's valuable addition of mobile portability data
+- Use RIGHT side's punctuation/formatting for the final fields
+- Maintain identical pattern matching regex from both sides
+
+Resolved code:
+```python
+    voip=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    pager=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    uan=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    number_format=[NumberFormat(pattern='([2689]\\d)(\\d{3})(\\d{3})', format='\\1 \\2 \\3')],
+    mobile_number_portable_region=True)
+```

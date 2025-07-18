@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD version has content after `attr_reader :role_symbols` while the incoming branch (`1bc1a86db3ca5e00b733330d7a1404ae6edd30df`) has a blank line after it.
+
+Since both sides have the same code before and after the conflict, and the only difference is the presence/absence of a blank line, the semantic intent is the same - both sides want the `attr_reader :role_symbols` declaration followed by the Rails version check.
+
+The most reasonable resolution is to keep the version without the extra blank line (HEAD version) as it maintains consistent spacing with the rest of the code:
+
+```ruby
+  belongs_to :branch
+  belongs_to :company
+  has_many :test_attr_throughs
+  has_many :test_model_security_model_with_finds
+  attr_reader :role_symbols
+  if Rails.version < '4'
+    attr_accessible :test_model, :test_another_model, :attr, :branch, :company, :test_attr,
+  	  :test_a_third_model, :n_way_join_item, :n_way_join_item_id, :test_attr_through_id, 
+  	  :test_model_id, :test_another_model_id
+  end
+
+```

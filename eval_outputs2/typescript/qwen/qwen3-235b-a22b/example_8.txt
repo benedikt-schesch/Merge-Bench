@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```typescript
+        'vue-query composables like "useMutation()" should only be used inside a "setup()" function or a running effect scope. They might otherwise lead to memory leaks.',
+      )
+    }
+  }
+
+<<<<<<< HEAD
+  const client = queryClient || useQueryClient()
+=======
+  function MutationOptionsSetup() {
+    const options = computed(() => {
+      return client.defaultMutationOptions(cloneDeepUnref(mutationOptions))
+    })
+    return options
+  }
+>>>>>>> 3d6408484cb0d4287365fdd6ec93753ac0f44388
+
+  const options = computed(() => {
+    return client.defaultMutationOptions(cloneDeepUnref(mutationOptions))
+  })
+  const observer = new MutationObserver(client, options.value)
+  const state = reactive(observer.getCurrentResult())
+```

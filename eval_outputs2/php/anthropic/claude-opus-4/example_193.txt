@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - marking this test method with a 'testonly' group annotation. The conflict arises from two different approaches:
+
+1. **HEAD side**: Uses the older PHPDoc `@group testonly` annotation and has a void return type declaration
+2. **Other side**: Uses the newer PHP 8 attribute syntax `#[\PHPUnit\Framework\Attributes\Group('testonly')]` and has no return type
+
+Since both annotations serve the same purpose, the semantic intent is to keep the test grouped as 'testonly'. The modern best practice would be to use the PHP 8 attribute syntax and include the return type declaration for better type safety.
+
+Here's the resolved conflict:
+
+```php
+
+    /**
+     * Tests that calling a stubbed method will result in the stubbed answer being returned.
+     */
+    #[\PHPUnit\Framework\Attributes\Group('testonly')]
+    public function testStubbedMethodsReturnStubbedAnswer(): void
+    {
+        $newClassName = str_replace('\\', '_', self::class) . '_TestClass7';
+        $mockedClass  = \PhakeTest_MockedClass::class;
+
+        $this->classGen->generate($newClassName, $mockedClass, $this->infoRegistry);
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the copyright year and the subpackage path. The changes appear to be:
+
+1. **HEAD**: Updates the subpackage from `media.tests.cases.libs.media.adapter` and copyright year remains `2007-2009`
+2. **Incoming branch**: Updates the subpackage to `media.tests.cases.libs.medium.adapter` (note: `media` → `medium`) and updates copyright year to `2007-2010`
+
+Based on the semantic intent, it seems the incoming branch has both a structural change (renaming from `media` to `medium` in the path) and a more recent copyright year. These changes appear intentional and should both be preserved.
+
+Here's the resolved conflict:
+
+```php
+ *
+ * PHP version 5
+ * CakePHP version 1.2
+ *
+ * @package    media
+ * @subpackage media.tests.cases.libs.medium.adapter
+ * @copyright  2007-2010 David Persson <davidpersson@gmx.de>
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link       http://github.com/davidpersson/media
+ */
+App::import('Vendor','Media.AudioMedia', array('file' => 'media'.DS.'audio.php'));
+App::import('Vendor','GetId3AudioMediaAdapter', array('file' => 'media'.DS.'adapter'.DS.'get_id3_audio.php'));
+
+```

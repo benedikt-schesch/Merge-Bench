@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```go
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+var (
+	goodPing     = &pb_testproto.PingRequest{Value: "something", SleepTimeMs: 9999}
+	panicPing    = &pb_testproto.PingRequest{Value: "panic", SleepTimeMs: 9999}
+	nilPanicPing = &pb_testproto.PingRequest{Value: "nilpanic", SleepTimeMs: 9999}
+)
+
+type recoveryAssertService struct {
+	testpb.TestServiceServer
+}
+
+func (s *recoveryAssertService) Ping(ctx context.Context, ping *testpb.PingRequest) (*testpb.PingResponse, error) {
+```

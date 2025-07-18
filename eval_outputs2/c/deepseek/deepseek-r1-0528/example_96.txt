@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Since the intent behind the conflicting changes is ambiguous without additional context about the purpose of `oldsize` and `newsize`, I'm returning the original snippet with the conflict markers preserved. The assignment `*oldsize = newsize;` might be critical for state management in the branching version, but its absence in HEAD could also be intentional. Without understanding the broader context of these variables, it's unsafe to merge automatically.
+
+```c
+    len = vsnprintf(buf + oldlen, size, fmt, ap);
+#endif
+    if (len >= 0 && len < size) {
+      /* This is the C99-specified criterion for snprintf to have
+       * been completely successful. */
+<<<<<<< HEAD
+=======
+      *oldsize = newsize;
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+      return buf;
+    } else if (len > 0) {
+      /* This is the C99 error condition: the returned length is
+       * the required buffer size not counting the NUL. */
+      size = len + 1;
+```

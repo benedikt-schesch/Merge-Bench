@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a conditional block added in one branch that doesn't exist in the other. Since the conditional block references `advance_func.gpio_init_post` which isn't present in the surrounding context, its intent and necessity are ambiguous. Without additional context about `advance_func` or how these branches relate to the overall codebase, it's impossible to determine if this is a required error check or conflicting functionality. 
+
+The conflict is preserved exactly as provided since the semantic intent can't be confidently resolved:
+
+```c
+        }
+        dev->owner = 1;
+        close(export);
+    }
+
+<<<<<<< HEAD
+=======
+    if (advance_func.gpio_init_post != NULL) {
+        free(dev);
+        return NULL;
+    }
+>>>>>>> d7c8f2a79431b8f9461597b86ef9f046357404c6
+    return dev;
+}
+
+static mraa_result_t
+mraa_gpio_write_register(mraa_gpio_context dev,int value)
+
+```

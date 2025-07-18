@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar functionality with two key differences:
+
+1. **Type casting**: HEAD explicitly casts `snode->data` to `(subnet_t *)` while the other branch doesn't
+2. **Conditional sending**: The second branch adds a condition `if(!tunnelserver)` before calling `send_del_subnet`
+
+The semantic intent appears to be:
+- Both sides want to iterate through subnets and delete them
+- The HEAD branch always sends delete notifications
+- The other branch only sends delete notifications when not in tunnel server mode
+
+Without more context about the project's requirements and whether the tunnel server mode check is necessary, I cannot definitively resolve this conflict. The intent is ambiguous because I don't know if:
+- The tunnel server check should be applied universally
+- The explicit type cast is required for compatibility
+- These changes are addressing different issues that both need to be preserved
+
+Here is the code snippet with the conflict preserved:
+
+```c
+			ifdebug(SCARY_THINGS) logger(LOG_DEBUG, _("Purging node %s (%s)"), n->name,
+					   n->hostname);
+
+			for(snode = n->subnet_tree->head; snode; snode = snext) {
+				snext = snode->next;
+<<<<<<< HEAD
+				s = (subnet_t *) snode->data;
+				send_del_subnet(broadcast, s);
+=======
+				s = snode->data;
+				if(!tunnelserver)
+					send_del_subnet(broadcast, s);
+>>>>>>> af86a3226ea42375644b3f99c182c778d327de1e
+				subnet_del(n, s);
+			}
+
+			for(enode = n->edge_tree->head; enode; enode = enext) {
+				enext = enode->next;
+
+```

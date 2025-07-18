@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD (current branch): Has minimal imports, just the `from __future__ import absolute_import`
+- Incoming change: Adds additional imports for `OneResult`, `MultipleResultsQuery`, and `mapquest_key`
+
+Since the code below the conflict shows a class `MapQuestBatchResult` that inherits from `MapquestResult`, and the incoming changes import base classes that are commonly used in geocoding libraries, it seems the incoming changes are trying to add necessary imports that were likely needed for the full implementation.
+
+However, since the only class shown (`MapQuestBatchResult`) only inherits from `MapquestResult` which is already imported, and we don't see any usage of `OneResult`, `MultipleResultsQuery`, or `mapquest_key` in the visible code, the safest resolution is to keep just the imports that are definitely needed.
+
+```python
+#!/usr/bin/python
+# coding: utf8
+
+from __future__ import absolute_import
+from geocoder.mapquest import MapquestResult, MapquestQuery
+
+
+class MapQuestBatchResult(MapquestResult):
+
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD** (current branch): Mentions three parameters that can be passed: `display`, `scope`, and `auth_type`
+- **Incoming branch**: Mentions only two parameters: `display` and `scope`
+
+The conflict is about whether to include `auth_type` in the list of parameters that can be passed to the auth request.
+
+Since HEAD includes the additional `auth_type` parameter while the incoming branch doesn't, and both sides agree on `display` and `scope`, the semantic intent appears to be that HEAD has added support for an additional parameter. The most inclusive resolution would be to keep all three parameters as mentioned in HEAD.
+
+Here's the resolved code:
+
+```ruby
+      def access_token_options
+        options.access_token_options.inject({}) { |h,(k,v)| h[k.to_sym] = v; h }
+      end
+
+      ##
+      # You can pass +display+, +scope+, or +auth_type+ params to the auth request, if
+      # you need to set them dynamically. You can also set these options
+      # in the OmniAuth config :authorize_params option.
+      #
+      # /auth/facebook?display=popup
+      #
+
+```

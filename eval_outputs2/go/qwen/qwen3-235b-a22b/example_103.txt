@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+The merge conflict here involves a new parameter being added to `runtime.AnnotateIncomingContext`, specifically a gRPC method path (`"/grpc.gateway.examples.internal.helloworld.Greeter/SayHello"`), which is semantically meaningful in the context of gRPC Gateway usage. This parameter is likely used for proper routing, logging, or other request-specific annotations within the gRPC-to-HTTP translation logic.
+
+From a semantic standpoint, the added argument carries clear intent: to ensure that `rctx` (the runtime context) is correctly associated with the specific gRPC method being invoked. This aligns with common patterns in gRPC Gateway code generation.
+
+However, the presence of the conflict suggests that one version of the function accepted only three arguments (or possibly four), while the other added this fifth, method-specific string. This change could imply a version update in an upstream dependency or a divergence in generated code.
+
+Given that the conflict markers indicate `HEAD` is on one version of the logic and the incoming commit on another, and that the specific function signature (with or without the method string) can’t be verified without compilation or dependency version checks, **the intent remains ambiguously split** between the two versions.
+
+Thus, per the guidelines:
+
+---
+
+### 🛑 Conflict unresolved due to ambiguous intent
+
+The conflict remains unresolved because the intent of either change—whether the old 4-argument function or the new 5-argument version—is not definitively clearer without deeper context or visibility into the function definition from imported packages. Therefore, we preserve the snippet **with conflict markers** exactly as provided:
+
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+<<<<<<< HEAD
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+=======
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_1(rctx, inboundMarshaler, server, req, pathParams)
+```

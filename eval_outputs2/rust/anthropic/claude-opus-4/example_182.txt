@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - they both want to call `listener.retain(|event, _| *event != attr.name)`. The only difference is that HEAD has a semicolon at the end of the statement, while the other branch doesn't.
+
+In Rust, statements inside blocks should end with semicolons, so the HEAD version is correct. The semantic intent is identical in both versions.
+
+Here's the resolved code:
+
+```rust
+                                let DomInner::Element { listeners, .. } = &target_element.inner
+                                else {
+                                    unreachable!("must be an element");
+                                };
+                                if let Some(listener) = listeners.borrow_mut().as_mut() {
+                                    listener.retain(|event, _| *event != attr.name);
+                                }
+                            }
+                            DomAttrValue::Style(_) => {
+                                target_element.remove_dom_attr(attr)?;
+                            }
+
+```

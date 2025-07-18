@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different timestamps for the `modTime` field in the `bindataFileInfo` struct initialization. Both branches also have a minor whitespace difference in the `asset` initialization (`info:  info` vs `info: info`). 
+
+Since the timestamps represent different points in time (1444419364 = 2015-10-09, 1467390283 = 2016-07-01) and there's no semantic context to determine which timestamp is correct, this conflict cannot be automatically resolved. The timestamps likely represent different build/generation times, and choosing one would require domain knowledge about which version of the file is correct.
+
+The conflict is preserved as shown below:
+
+```go
+	bytes, err := confGitignoreVvvvBytes()
+	if err != nil {
+		return nil, err
+	}
+
+<<<<<<< HEAD
+	info := bindataFileInfo{name: "conf/gitignore/VVVV", size: 57, mode: os.FileMode(420), modTime: time.Unix(1444419364, 0)}
+	a := &asset{bytes: bytes, info:  info}
+=======
+	info := bindataFileInfo{name: "conf/gitignore/VVVV", size: 57, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+>>>>>>> 73fedc727538381d4e1048ee03be6b45e977a076
+	return a, nil
+}
+
+var _confGitignoreVagrant = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xd2\x2b\x4b\x4c\x2f\x4a\xcc\x2b\xd1\xe7\x02\x04\x00\x00\xff\xff\xfc\x50\x87\xfb\x0a\x00\x00\x00")
+
+```

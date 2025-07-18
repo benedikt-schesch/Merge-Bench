@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflict arises from a minor whitespace difference in the conditional check. Both branches intend to check the same `r.warnOnUnboundMethods` flag with identical logic. The only difference is an extra space after `if` in the HEAD version. Since the semantics are identical and the formatting difference is trivial, the conflict is resolved by adopting the conventional single-space formatting.
+
+Here's the resolved snippet:
+
+```go
+						return err
+					}
+					optsList = append(optsList, defaultOpts)
+				} else {
+					logFn := glog.V(1).Infof
+					if r.warnOnUnboundMethods {
+						logFn = glog.Warningf
+					}
+					logFn("No HttpRule found for method: %s.%s", svc.GetName(), md.GetName())
+				}
+			}
+
+```

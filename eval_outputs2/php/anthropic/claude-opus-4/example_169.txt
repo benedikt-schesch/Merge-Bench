@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to update the PHPDoc comment for the `validate_recaptcha_field` method. The conflict is in the `@return` tag documentation.
+
+The HEAD version uses `\WP_Error` (with a backslash prefix), while the incoming change uses `WP_Error` (without backslash) and also adds an `@access private` tag.
+
+In terms of intent:
+- HEAD is updating the return type to include the namespace prefix
+- The incoming change is adding access level documentation and updating the return type
+
+The semantic intent is to properly document the method. Both changes are valuable - the `@access private` tag provides additional documentation, and while both `\WP_Error` and `WP_Error` are valid in PHPDoc, using the backslash prefix is more explicit about it being a root namespace class.
+
+Here's the resolved version that combines both intents:
+
+```php
+	/**
+	 * Validate a reCAPTCHA field.
+	 *
+	 * @param bool $success
+	 *
+	 * @access private
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function validate_recaptcha_field( $success ) {
+		$recaptcha_field_label = get_option( 'job_manager_recaptcha_label' );
+
+		// translators: %s is the name of the form validation that failed.
+
+```

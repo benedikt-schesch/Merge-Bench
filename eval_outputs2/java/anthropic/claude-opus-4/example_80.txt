@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same method signature for an interface, with the only difference being the presence of the `public` modifier.
+
+In Java interfaces, all methods are implicitly `public` and `abstract`, so including the `public` modifier is redundant but not incorrect. The conflict appears to be a style preference where:
+- HEAD includes the explicit `public` modifier
+- The incoming change (5adedd24812861bedaf540555ec046744b42b42a) follows the more modern convention of omitting redundant modifiers
+
+Since both versions are functionally identical and this appears to be a code style standardization effort, I'll resolve this by choosing the cleaner, more modern style without the redundant `public` modifier:
+
+```java
+   */
+  public interface DoubleLocalizable {
+    /**
+     * @return The first user-visible string that is associated with this enum value.
+     */
+    String getString();
+
+    /**
+     * @return The second user-visible string that is associated with this enum value.
+     */
+
+```

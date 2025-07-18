@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Based on the provided code snippet, I've analyzed the semantic intent of both sides of the merge conflict. Here's the resolution:
+
+```c
+  if (sshfwd_write(xconn->c, data, len) > 0) {
+    xconn->throttled = 1;
+    xconn->no_data_sent_to_x_client = FALSE;
+    sk_set_frozen(xconn->s, 1);
+  }
+
+  return 1;
+}
+
+static void x11_sent(Plug plug, int bufsize)
+{
+  struct X11Connection *xconn = (struct X11Connection *)plug;
+```
+
+**Resolution Reasoning:**
+1. The `return 1;` statement from the HEAD branch is semantically necessary as:
+   - The function appears to be non-void (based on the return statement)
+   - Without this return, control would reach end of non-void function
+   - The return value likely indicates successful processing
+
+2. The conflicting commit (4348393) only removed this return statement without providing an alternative flow control mechanism, which would create compilation errors.
+
+3. The blank line before `return 1;` is preserved for consistent formatting with the original HEAD version.
+
+The resolved version maintains both the functional behavior from HEAD and proper control flow while preserving the original context and spacing.

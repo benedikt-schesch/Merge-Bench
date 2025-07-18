@@ -1,0 +1,69 @@
+<think>
+No reasoning found</think>
+The code snippet presents a merge conflict between two changes aiming to handle cache invalidation during a resize event. Both versions attempt to clear size caches and trigger resize logic, but they differ in the set of variables to clear and the functions to call afterward.
+
+---
+
+### Conflict Analysis
+
+1. **Conflict Part 1 (Variable Nullification)**:
+   - `HEAD` clears:  
+     ```js
+     d.cachedCharWidth = d.cachedTextHeight = knownScrollbarWidth = null;
+     ```
+   - Commit `e1cfb7f` extends this to:  
+     ```js
+     d.cachedCharWidth = d.cachedTextHeight = d.cachedPaddingH = knownScrollbarWidth = null;
+     ```
+   - This indicates that `d.cachedPaddingH` was added later, likely for a new feature or more granular control during layout recalculations.
+   - **Resolution Intention**: It is semantically logical to include all variables that can be invalidated during a resize, especially if they are related to layout or dimension caching.
+
+2. **Conflict Part 2 (Post-Clear Logic)**:
+   - `HEAD` calls:  
+     ```js
+     cm.setSize();
+     ```
+   - Commit `e1cfb7f` introduces:
+     ```js
+     clearCaches(cm);
+     runInOp(cm, bind(regChange, cm));
+     ```
+   - These suggest further abstraction of resize handling, possibly for performance, concurrency, or separation of layout recalculations from redraws.
+   - **Critical Ambiguity**: It is not clear whether `cm.setSize()` is intended to be replaced by the other functions, or if it should complement them.
+
+---
+
+### Final Resolution Decision
+
+Given that the top-level intent—invalidating the layout/size cache and initiating the editor layout update—is shared between both sides, and **assuming that no prior knowledge of code dependencies indicates incompatibility**, it is reasonable to preserve **all cache invalidations** and finalize it with a combination of both sets of function calls.
+
+Thus, the resolution will:
+- Combine all four cached variable resets.
+- Include all function calls from both versions.
+
+However, if `clearCaches()` and `runInOp()` collectively subsume `cm.setSize()`'s behavior, then calling all three might be **redundant** or **unnecessary**. Without such clarification, failing to include any might cause breakage—particularly in the logic tracked by commit `e1cfb7fd68e7988f508076063ebc17ddbabe2c92`.
+
+Hence, we merge both changes **semantically**, resolving the conflict defensively.
+
+---
+
+### Resolved Snippet
+
+```javascript
+    var resizeTimer;
+    function onResize() {
+      if (resizeTimer == null) resizeTimer = setTimeout(function() {
+        resizeTimer = null;
+        // Might be a text scaling operation, clear size caches.
+        d.cachedCharWidth = d.cachedTextHeight = d.cachedPaddingH = knownScrollbarWidth = null;
+        cm.setSize();
+        clearCaches(cm);
+        runInOp(cm, bind(regChange, cm));
+      }, 100);
+    }
+    on(window, "resize", onResize);
+    // The above handler holds on to the editor and its data
+    // structures. Here we poll to unregister it when the editor is no
+```
+
+> ✅ **Conflict Resolved**: Combined intent includes all layout cache invalidations and retains both API use patterns—`setSize` and custom operations—since their purposes and dependencies are ambiguous a priori.

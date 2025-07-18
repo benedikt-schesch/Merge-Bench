@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides appear to be adding test cases to what seems to be a test suite for a datepicker component. The conflict shows:
+
+- HEAD (current branch): Has an empty section after the previous `describe` block
+- Incoming changes: Adds a new `describe` block testing behavior when DateAdapter and CDK_DATE_FORMATS are missing
+
+Both changes should be kept as they represent different test scenarios. The incoming change adds valuable test coverage for error handling when required dependencies are missing.
+
+Here's the resolved code:
+
+```typescript
+
+    });
+
+  });
+
+  describe('with missing DateAdapter and CDK_DATE_FORMATS', () => {
+    it('should throw when created', () => {
+      expect(() => createComponent(StandardDatepicker))
+          .toThrowError(/CdkDatepicker: No provider found for .*/);
+    });
+  });
+
+  describe('popup positioning', () => {
+    let fixture: ComponentFixture<StandardDatepicker>;
+    let testComponent: StandardDatepicker;
+    let input: HTMLElement;
+
+
+```

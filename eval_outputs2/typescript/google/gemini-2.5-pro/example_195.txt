@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals two different approaches to identifying the current user's integration.
+
+-   The `HEAD` branch introduces a local variable `email` by calling `this.getEmail()` and then uses this variable to find a matching integration: `integrations.find((p) => p === email)`.
+-   The other branch (`e0ec8d420647866ae4cfd29946496b49106838ce`) uses the `me` parameter that is passed into the function: `integrations.find((p) => p === me)`.
+
+The core of the issue lies in determining the correct identifier for the user's integration. The `integrations` array likely contains email addresses.
+
+The `HEAD` branch's approach is more explicit and semantically sound. It retrieves an email via `this.getEmail()` and compares it to the integration identifiers (`p`), which are presumably also emails. This "email-to-email" comparison is type-safe in a semantic sense.
+
+The other branch's use of the `me` parameter is more ambiguous. While `me` is a string, its specific format is unknown. It could be an email, but it could also be a different type of identifier (like a user ID or a UUID). Comparing a potentially non-email `me` string with an email from the `integrations` list could lead to a bug where the user's integration is never found.
+
+Therefore, the most robust and likely correct resolution is to adopt the `HEAD` branch's change, as it ensures a semantically correct comparison. This resolves the conflict by favoring the more specific and safer implementation.
+
+```typescript
+  private getAttendees (event: Event, me: string): string[] {
+    const res = new Set<string>()
+    const email = this.getEmail()
+    for (const participant of event.participants) {
+      const integrations = this.workspace.integrations.byContact.get(participant) ?? []
+      const integration = integrations.find((p) => p === email) ?? integrations[0]
+      if (integration !== undefined && integration !== '') {
+        res.add(integration)
+      } else {
+        const contact = this.workspace.contacts.byId.get(participant)
+        if (contact !== undefined) {
+
+```

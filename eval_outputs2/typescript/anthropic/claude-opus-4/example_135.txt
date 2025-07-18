@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD side: Adds a console.log statement before the dependency installation
+- Other side: Adds an import call and an expectation test before the dependency installation
+
+Both changes appear to be adding different functionality before the `execSync` installation command. The HEAD side is adding logging, while the other side is adding import functionality and a test assertion. These changes don't conflict semantically - they're just adding different features at the same location.
+
+Here's the resolved version that includes both changes:
+
+```typescript
+        await updatePackageJSON(dir, async (packageJSON) => {
+          packageJSON.name = 'Name';
+          packageJSON.productName = 'ProductName';
+        });
+
+        await api.import({ dir });
+
+        expect(fs.existsSync(path.join(dir, 'forge.config.js'))).to.equal(true);
+
+        console.log('installing dependencies');
+        execSync(`${nodeInstaller} install`, {
+          cwd: dir,
+        });
+
+```

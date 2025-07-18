@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the same test case but with different approaches:
+
+- The HEAD (left side) is using a try-except block to catch an `Invalid` exception and assert on its string representation
+- The incoming changes (right side) are using pytest's context manager (`ctx`) to capture the exception and then make assertions about its properties
+
+The incoming changes appear to be the more modern and appropriate approach since:
+1. The code is already using `pytest.raises()` with a context manager
+2. The `ctx` variable is already captured in the `with` statement
+3. The incoming assertions are checking the exception's properties rather than just the string representation
+
+Here's the resolved code:
+
+```python
+
+    with pytest.raises(
+        MultipleInvalid, match=r"\{'c': 1\} not match for \{'b': 1\} @ data\[0\]"
+    ) as ctx:
+        schema([{"c": 1}])
+    assert len(ctx.value.errors) == 1
+    assert isinstance(ctx.value.errors[0], LiteralInvalid)
+
+    schema = Schema(Literal({"a": 1}))
+    with pytest.raises(
+        MultipleInvalid, match=r"\{'b': 1\} not match for \{'a': 1\}"
+    ) as ctx:
+
+```

@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing base classes for `EventNameLocked`. Both sides intend to define this error class, but one uses `StandardError` while the other uses `Error`. 
+
+Observing the surrounding context:
+1. All other classes inherit from `Error` (e.g., `MissingOrInvalidImageFile`, `UserRegistrationFailed`)
+2. `Error` appears to be a consistent base class throughout this snippet
+3. `StandardError` breaks this pattern
+
+The semantic intent is to maintain consistency with the existing error hierarchy. Both branches agree on the class name (`EventNameLocked`) and placement in the code. The version using `Error` aligns with the surrounding context.
+
+Resolved code:
+```ruby
+    class MissingOrInvalidImageFile < Error; end
+    class TooManyUnapprovedPhotosPending < Error; end
+    class ExtendedPermissionRequired < Error; end
+    class ReadMailboxExtendedPermissionRequired < Error; end
+    class InvalidFriendList < Error; end
+    class EventNameLocked < Error; end
+    class UserUnRegistrationFailed < Error
+      attr_accessor :failed_users
+    end
+    class UserRegistrationFailed < Error
+      attr_accessor :failed_users
+
+```
+
+Key resolution points:
+1. Kept `Error` base class for consistency
+2. Removed unnecessary space before semicolon to match surrounding style
+3. Preserved all surrounding context exactly as provided
+4. Maintained incomplete method ending (original snippet ends mid-implementation)
+
+The resolution maintains semantic consistency while honoring the existing error class pattern. No ambiguity exists since all surrounding errors use `Error` inheritance.

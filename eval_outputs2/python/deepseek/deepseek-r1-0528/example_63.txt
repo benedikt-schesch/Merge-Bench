@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from two formatting styles for the same error message. The resolution preserves the error intent while choosing the more readable multi-line format from the incoming branch.
+
+```python
+        try:
+            match = self.pattern.match(v)
+        except TypeError:
+            raise MatchInvalid("expected string or buffer")
+        if not match:
+            raise MatchInvalid(
+                self.msg
+                or 'does not match regular expression {}'.format(self.pattern.pattern)
+            )
+        return v
+
+    def __repr__(self):
+        return 'Match(%r, msg=%r)' % (self.pattern.pattern, self.msg)
+
+
+```

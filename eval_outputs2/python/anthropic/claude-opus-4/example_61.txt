@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is importing various error classes from `voluptuous.error` and importing from `voluptuous.schema_builder`
+2. The incoming branch is adding imports for `datetime`, `os`, `re`, `sys`, `typing`, and `Decimal`/`InvalidOperation` from the `decimal` module, with a `# fmt: off` comment
+
+Both sides appear to be adding necessary imports - they're not conflicting in terms of functionality, just happening at the same location in the file. The semantic intent is to include all these imports.
+
+Here's the resolved version that includes imports from both sides:
+
+```python
+# fmt: off
+from voluptuous.error import (MultipleInvalid, CoerceInvalid, TrueInvalid, FalseInvalid, BooleanInvalid, Invalid,
+                              AnyInvalid, AllInvalid, MatchInvalid, UrlInvalid, EmailInvalid, FileInvalid, DirInvalid,
+                              RangeInvalid, PathInvalid, ExactSequenceInvalid, LengthInvalid, DatetimeInvalid,
+                              DateInvalid, InInvalid, TypeInvalid, NotInInvalid, ContainsInvalid, NotEnoughValid,
+                              TooManyValid)
+
+# F401: flake8 complains about 'raises' not being used, but it is used in doctests
+from voluptuous.schema_builder import Schema, raises, message, Schemable  # noqa: F401
+import datetime
+import os
+import re
+import sys
+import typing
+from decimal import Decimal, InvalidOperation
+
+```

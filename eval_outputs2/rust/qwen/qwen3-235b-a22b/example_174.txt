@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The primary task of the given `match` expression is to convert variants of the `Source` enum into associated constants like `TERNARY`, `INDEXING`, and so on.
+
+In the context of the conflict:
+
+- One branch (HEAD) introduces a new arm: `Source::Random => RANDOM,`
+- Another branch introduces a different arm: `Source::Quantized => QUANTIZED,`
+
+These are not conflicting changes to the same `Source` variant. Instead, they both seem to be extending the `match` block with two distinct `Source` types.
+
+Therefore, **semantically**, both additions are valid and likely intended by the code authors. Since there is no logical conflict in which one superseded the other, the correct resolution is to **include both arms**, preserving their order as in the original merge conflict.
+
+---
+
+Here is the **full code snippet with resolved merge conflict**:
+
+```rust
+            Source::Ternary => TERNARY,
+            Source::Indexing => INDEXING,
+            Source::Cast => CAST,
+            Source::Reduce => REDUCE,
+            Source::Conv => CONV,
+            Source::Random => RANDOM,
+            Source::Quantized => QUANTIZED,
+            Source::Mfa => panic!("Invalid lib"),
+        }
+    }
+
+    /// Load the give library from its [`source`].
+```

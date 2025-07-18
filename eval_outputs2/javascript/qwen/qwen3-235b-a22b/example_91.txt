@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in the `window.WEBPACK_ASSETS` object where the two branches updated the asset hash for `index.js`. All other asset hashes (`lib`, `lib2`, `lib3`, `manifest`) are the same in both versions and are not in conflict. This means those entries remain unchanged and consistent between both branches.
+
+However, the `index.js` hash differs: one branch uses `e45a4de49431db58f52c`, and the other uses `8202947f0c05ff5e96d8`. Given that this is a semantic conflict involving Webpack assets, these hashes are directly tied to the file content of `index.js`. Thus, resolving this requires knowing which branch's version of `index.js` is correct or which one should be prioritized.
+
+Since the intent behind the merge is ambiguous, and there is no additional context provided that clarifies which hash should be preserved (e.g., pull request description, developer intent, latest commit timestamp, or dependent changesets), it's not possible to determine which version of `index.js` should take precedence in a semantically correct resolution.
+
+Accordingly, the entire original snippet including the merge conflict markers is returned as-is to reflect the unresolved semantic ambiguity.
+
+```javascript
+<<<<<<< HEAD
+window.WEBPACK_ASSETS = {"index.js":{"js":"index@e45a4de49431db58f52c.js","css":"index@e45a4de49431db58f52c.css"},"lib":{"js":"lib@aaed0f9bfcc4ff921c5a.js"},"lib2":{"js":"lib2@819909a89ca45b94d9bf.js"},"lib3":{"js":"lib3@93b22d7460620277a5da.js"},"manifest":{"js":"manifest@f2f4bd774d6c221b3d5f.js"}}
+=======
+window.WEBPACK_ASSETS = {"index.js":{"js":"index@8202947f0c05ff5e96d8.js","css":"index@8202947f0c05ff5e96d8.css"},"lib":{"js":"lib@aaed0f9bfcc4ff921c5a.js"},"lib2":{"js":"lib2@819909a89ca45b94d9bf.js"},"lib3":{"js":"lib3@93b22d7460620277a5da.js"},"manifest":{"js":"manifest@f2f4bd774d6c221b3d5f.js"}}
+>>>>>>> 4d24c397483d2703e85c6977236270f52edf2d70
+```

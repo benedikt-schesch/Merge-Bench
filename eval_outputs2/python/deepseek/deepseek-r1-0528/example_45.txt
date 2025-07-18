@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet. The conflict was subtle - only a spacing difference in the docstring opening. I've preserved the standard Python docstring style (no space after opening triple quotes) which both sides intended while maintaining all other context exactly as provided:
+
+```python
+    out_ = schema({"number": '123456789.34'})
+    assert float(out_.get("number")) == 123456789.34
+
+
+def test_number_when_precision_none_n_valid_scale_case2_yield_decimal_true():
+    """Test with Number with no precision and valid scale case 2 with zero in decimal part"""
+    schema = Schema({"number": Number(scale=2, yield_decimal=True)})
+    out_ = schema({"number": '123456789012.00'})
+    assert float(out_.get("number")) == 123456789012.00
+```
+
+Key resolution points:
+1. Kept both test cases exactly as they appear in the context
+2. Chose the more standard docstring formatting (without space after `"""`)
+3. Preserved all indentation, spacing, and line breaks from original context
+4. Maintained identical function implementation and assertions
+5. The exact semantic meaning is preserved as both versions aimed for identical functionality

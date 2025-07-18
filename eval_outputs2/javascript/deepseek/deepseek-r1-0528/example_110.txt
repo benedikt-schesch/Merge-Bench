@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict involves importing different testing libraries and assertion methods. Both sides aim to set up testing utilities, but they use incompatible modules:
+
+1. **HEAD version** uses Node.js built-in modules (`node:assert` and `node:test`)
+2. **Other branch** uses third-party `uvu` testing library
+
+The surrounding context shows the test suite runs for both Node.js and browser environments. The `uvu` version (other branch) is better suited for cross-environment testing, but its CommonJS syntax (`require`) conflicts with the ES module syntax (`import`) used in the context. Since the file uses ES modules elsewhere, the `require` syntax is invalid here.
+
+Given this ambiguity and the instruction to preserve conflicts when unsure, I'm returning the original unresolved snippet:
+
+```javascript
+<<<<<<< HEAD
+import { equal, match, notEqual, ok } from 'node:assert'
+import { after, before, describe, test } from 'node:test'
+=======
+let { test } = require('uvu')
+let { is, ok, equal, match, not } = require('uvu/assert')
+>>>>>>> 3044cd5e73f4cf31795f61f6e6b961c8c0a5c744
+
+import * as browser from '../index.browser.js'
+import * as node from '../index.js'
+
+for (let type of ['node', 'browser']) {
+```

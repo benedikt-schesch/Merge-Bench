@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict involves differing method names and parameter structures for drawing a cropped image. The `HEAD` branch uses a method name `draw_image_cropped` with aggregated parameters (`position`, `crop_position`, `crop_size`), while the other branch uses `image_cropped` with discrete coordinates (`x`, `y`, `crop_x`, `crop_y`, `crop_width`, `crop_height`). The documentation after the conflict also diverges—only covering partial parameters—making it impossible to reconcile without knowing the underlying implementation's requirements.
+
+Since the intent is ambiguous and the parameter structures are incompatible, the conflict remains unresolved. Here's the original snippet:
+
+```ruby
+  # @return [nil]
+  # @example Draw a duck within a game
+  #   display.image(Image['images/duck.png'], 80, 80)
+  # Draw an image at a position.
+
+<<<<<<< HEAD
+  # @!method draw_image_cropped(image, position, crop_position, crop_size)
+=======
+  # @!method image_cropped(image, x, y, crop_x, crop_y, crop_width, crop_height)
+>>>>>>> 878b5f40c7cfe9cb7ea3d8a910f468380bf14e70
+  # @param [Image] image to draw
+  # @param [Numeric] x position
+  # @param [Numeric] y position
+  # @param [Numeric] x position of crop
+  # @param [Numeric] y position of crop
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import from `@umijs/max`, but with slightly different sets of imports and ordering. The conflict appears to be about:
+
+1. **HEAD** wants to include `useEmotionCss` and has a specific order
+2. **The other branch** wants to include `history` and has a different order
+
+Since both sides seem to have valid imports that serve different purposes (styling with emotion vs navigation with history), and the file paths also differ (suggesting a restructuring), I'll merge both sets of imports to preserve the intent of both changes:
+
+```typescript
+  LoginForm,
+  ProFormCaptcha,
+  ProFormCheckbox,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { useEmotionCss } from '@ant-design/use-emotion-css';
+import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
+import { Alert, message, Tabs } from 'antd';
+import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
+import Settings from '../../../../config/defaultSettings';
+
+```

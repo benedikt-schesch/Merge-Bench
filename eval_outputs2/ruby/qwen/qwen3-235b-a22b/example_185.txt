@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+Here is the conflict resolved by preserving the original positional argument since the `target_url` parameter is essential and has no valid default, as implied by the comment and method functionality:
+
+```ruby
+              ##
+              # Retrieve a single page of LocalInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of LocalInstance
+              def get_page(target_url)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return LocalPage.new(@version, response, @solution)
+```

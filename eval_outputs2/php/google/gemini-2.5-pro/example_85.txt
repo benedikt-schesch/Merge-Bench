@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+As a semantic merge conflict resolution expert, I will analyze the intents of both sides of the merge and produce the correctly merged code.
+
+### Analysis of the Conflict
+
+*   **Context:** The code before the conflict contains a conditional block that sets `$this->cfg['port']` if its value is `null`. This logic appears to be inside a larger block, possibly related to DNS SRV record lookups.
+*   **`HEAD` Branch:** This side of the conflict is empty. It introduces no new code in this location. It relies on the pre-existing logic to set the configuration values.
+*   **`ce7bc8c9...` Branch:** This side adds two new lines of code. The intent is to provide a fallback mechanism that ensures `$this->cfg['host']` and `$this->cfg['port']` are set if they haven't been already. This code is placed outside the preceding conditional block, meaning it will always execute.
+
+### Semantic Intent
+
+The developer of the `ce7bc8c9...` branch intended to add a robust fallback for setting the `host` and `port` configuration options. This is a common pattern to ensure essential configuration values have sensible defaults. The code uses `isset()`, which is a safe way to check for the existence of an array key before using it.
+
+This new logic for setting the port (`$this->cfg['port'] = isset($this->cfg['port']) ? $this->cfg['port'] : $port;`) is a more robust superset of the pre-existing logic (`if ($this->cfg['port'] === null) { ... }`). While this makes the older code block redundant, the new code is a clear improvement and likely a bug fix to ensure the host and port are always set.
+
+### Resolution
+
+The correct resolution is to incorporate the new, more robust logic from the `ce7bc8c9...` branch. This logic ensures the `host` and `port` are always set, which aligns with the likely intention of fixing a configuration bug. The pre-existing code, although now redundant, is outside the conflict markers and should be preserved as-is to respect the boundaries of the conflict.
+
+```php
+            }
+            if ($this->cfg['port'] === null) {
+                $this->cfg['port'] = $port;
+            }
+        }
+        $this->cfg['host'] = isset($this->cfg['host']) ? $this->cfg['host'] : $host;
+        $this->cfg['port'] = isset($this->cfg['port']) ? $this->cfg['port'] : $port;
+
+        // choose appropriate transport
+        // if 'bosh_url' cfg is defined include 0206
+        if (isset($this->cfg['bosh_url'])) {
+            JAXLLogger::debug("including bosh xep");
+
+```

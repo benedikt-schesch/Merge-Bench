@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import types from menu-related services, but they're using different paths and type names:
+
+- HEAD is importing `ICustomComponentOption` and `IValueOption` from `'../services/menu/menu'`
+- The incoming branch is importing `IDisplayMenuItem` and `IMenuItem` from `'../services/menu/menu.service'`
+
+Since both sides need their respective imports and they appear to be different types (not just renamed versions of the same thing), the semantic intent is to have all these imports available. Additionally, HEAD has an import for `DisplayTypes` that should be preserved.
+
+Here's the resolved code:
+
+```typescript
+import { ComponentChildren, JSX } from 'preact';
+import { BaseComponent, JSXComponent } from '../BaseComponent';
+import { ICustomComponentOption, IValueOption } from '../services/menu/menu';
+import { DisplayTypes } from '../Components/Select/Select';
+import { IDisplayMenuItem, IMenuItem } from '../services/menu/menu.service';
+
+export interface BaseMenuItem {
+    className?: string;
+    style?: JSX.CSSProperties;
+    label?: ComponentChildren;
+
+```

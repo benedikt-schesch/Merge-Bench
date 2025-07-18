@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict involves differing expected exceptions for the same test method. Since the conflict markers indicate changes from different files (`tests/JAXLXmlTest.php` vs `tests/test_jaxl_xml.php`) and the intent behind choosing a `Warning` vs `Notice` exception is ambiguous without additional context, the conflict cannot be automatically resolved. Both changes appear semantically valid but target different error conditions, making manual resolution necessary.
+
+Here's the unchanged snippet with the conflict preserved:
+
+```php
+
+    public static $NS = 'SOME_NAMESPACE';
+    public static $attrs = array('attr1' => 'value1');
+
+    /**
+<<<<<<< HEAD:tests/JAXLXmlTest.php
+     * @expectedException PHPUnit_Framework_Error_Warning
+=======
+     * @expectedException PHPUnit_Framework_Error_Notice
+>>>>>>> 6c8615c992fb6938640ddfca299de55dc1012ed2:tests/test_jaxl_xml.php
+     */
+    public function testJAXLXml_0()
+    {
+        $xml = new JAXLXml();
+        $this->assertEquals('<></>', $xml->to_string());
+
+```

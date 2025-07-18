@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- The HEAD branch (current branch) wants to return 0 after executing the callback and canceling the query
+- The incoming branch (4348393f5...) wants to end the function without an explicit return statement
+
+From the context, this appears to be the end of a function that processes some kind of agent connection callback. The function executes a callback, cancels the query, and then needs to complete.
+
+Without seeing the full function signature and return type, it's difficult to determine definitively whether this function should return a value or is void. Since I cannot be certain of the intent, I'll preserve the conflict as requested:
+
+```c
+   * clean up. (Of course we don't free retbuf, since ownership
+   * of that passes to the callback.)
+   */
+  conn->callback(conn->callback_ctx, conn->retbuf, conn->retlen);
+  agent_cancel_query(conn);
+<<<<<<< HEAD
+  return 0;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+agent_pending_query *agent_query(void *in,
+                                 int inlen,
+                                 void **out,
+
+```

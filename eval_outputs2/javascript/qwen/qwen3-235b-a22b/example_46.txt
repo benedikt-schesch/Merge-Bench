@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+```javascript
+        if (!data) {
+            last_image_data = null;
+            return;
+        }
+
+        let delay = parseInt(settings.funcaptcha_solve_delay_time);
+        delay = delay ? delay : 1000;
+        const delta = settings.funcaptcha_solve_delay ? (delay - (Time.time() - solve_start)) : 0;
+        if (delta > 0) {
+            await Time.sleep(delta);
+        }
+
+        // Solve
+
+```
+
+**Resolution Analysis:**  
+1. The `delay` variable properly captures the intent of allowing users to configure solve delay time via settings (`funcaptcha_solve_delay_time`)
+2. The explicit `parseInt` with fallback to 1000 maintains defensive programming practices against invalid inputs
+3. The delta calculation from `HEAD` preserves the semantic relationship:  
+   - If solve delay is enabled (`funcaptcha_solve_delay`), use calculated delay based on settings value  
+   - If disabled, maintain 0 delay for uninterrupted execution  
+4. The hardcoded `1000` value from the other branch loses configurability without providing any safety benefits (as invalid values are already handled)  
+
+This resolution maintains all functional intent while keeping the code extensible through configuration.

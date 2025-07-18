@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```java
+                         .Synchronize(locker)
+                         .Select(_ => predicate)
+                         .StartWith(predicate); ;
+
+                     //filter on live trades matching % specified
+                     return _tradeService.Live.Connect()
+                         .Synchronize(locker)
+                         .Filter(reevaluator)
+                         .Do(_ => { }, ex => _logger.Error(ex, ex.Message))
+                         .SubscribeSafe(observer);
+                 });
+```

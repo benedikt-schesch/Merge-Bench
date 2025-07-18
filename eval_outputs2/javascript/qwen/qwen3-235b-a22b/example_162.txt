@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict lies solely in a `dbg_log` message associated with writing to a register that controls the high byte of a Remote Start Address Register (`RSARHI`). Both merge branches agree on the code logic: `this.rsar = this.rsar & 0xFF | data_byte << 8 & 0xFF00;` accurately modifies the high byte of `rsar`.
+
+However, the intent behind the log message diverges. One branch refers to it as "Write start address count high", the other as "Write remote start address low". While the code operates on the *high* byte of the register, the branch version incorrectly labels it "low", while the `HEAD` version appears to obscure or misname the intent behind the register.
+
+Given that the functional part of the code is identical and the only difference is in the log message’s phrasing, and neither message entirely reflects the actual register's semantic role (correctly indicating a "remote start address high") with both presenting incomplete or misleading intent, the resolution is best left ambiguous.
+
+---
+
+```javascript
+    io.register_write(this.port | EN0_RSARHI, this, function(data_byte)
+    {
+        var pg = this.get_page();
+        if(pg === 0)
+        {
+<<<<<<< HEAD
+            dbg_log("Write start address count high: " + h(data_byte, 2), LOG_NET);
+=======
+            dbg_log("Write remote start address low: " + h(data_byte, 2), LOG_NET);
+>>>>>>> 8107f26f1056279286f37db2b6230ebf1bd634a0
+            this.rsar = this.rsar & 0xFF | data_byte << 8 & 0xFF00;
+        }
+        else
+        {
+            dbg_log("Unimplemented: Write pg" + pg + "/09 " + h(data_byte, 2), LOG_NET);
+```

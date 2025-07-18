@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict arises from different PHPUnit exception testing methods. The `HEAD` version uses the modern `expectException` and `expectExceptionMessage` methods, while the other branch uses the legacy `setExpectedException` method. Both methods achieve the same goal, but the modern approach is preferred for compatibility with recent PHPUnit versions.
+
+Here's the resolved snippet:
+
+```php
+            ->expects($this->at(0))
+            ->method('getUser')
+            ->willReturn(null)
+        ;
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('This user does not have access to this section.');
+
+        $this->instance->authorizeAction($this->request);
+    }
+
+    public function testAuthorizeActionWillRenderTemplate()
+```
+
+Key resolution points:
+1. The conflict markers (`<<<<<<< HEAD`, `=======`, `>>>>>>> ...`) are removed
+2. The modern PHPUnit exception method (`expectException` + `expectExceptionMessage`) is preferred
+3. All spacing and surrounding context remains unchanged
+4. The resolved code maintains the same functionality as both approaches
+5. The syntax is corrected (removed orphaned parenthesis from legacy method)

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides of the merge are trying to achieve the same thing - they're both implementing the same function with identical logic. The only difference is the indentation style:
+
+- HEAD uses tabs for indentation
+- The other branch (6ffa9ed1f1c5bd00eeb732e207b2dcbadc7c87fc) uses spaces for indentation
+
+Since the surrounding context uses tabs (as seen in the `BEGIN_PERM;`, `retstat = llistxattr...`, and `END_PERM;` lines), I'll resolve this conflict by keeping the version with tabs for consistency.
+
+```c
+	return retstat;
+}
+
+/** List extended attributes */
+int sfs_listxattr(const char *path, char *list, size_t size) {
+	int retstat = 0;
+	char fpath[PATH_MAX];
+	sfs_fullpath(fpath, path);
+
+	BEGIN_PERM;
+	retstat = llistxattr(fpath, list, size);
+	END_PERM;
+	if (retstat < 0) {
+
+```

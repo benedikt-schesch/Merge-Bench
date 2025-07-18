@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```javascript
+var weinreScriptFile = path.join(config.ASSESTS_PATH, 'js/weinre.js');
+var weinreScript = fs.readFileSync(weinreScriptFile, {encoding: 'utf8'});
+var weinreHtmlScript = '\r\n<script>' + weinreScript + '</script>\r\n';
+
+function getScript(host, name, isHtml, isHttps) {
+  var weinrePath = config.WEBUI_PATH + 'weinre.' + config.weinreport;
+  var result = weinreHtmlScript;
+  if (!isHtml) {
+    result = weinreScript;
+    weinrePath = (isHttps ? 'https://' : 'http://') + host + weinrePath;
+  }
+
+```

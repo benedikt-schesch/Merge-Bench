@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same line with different timestamps. The only differences between the two versions are:
+
+1. The `modTime` value: `1444419364` (HEAD) vs `1467390283` (incoming)
+2. A minor spacing difference: `info:  info` (HEAD) vs `info: info` (incoming)
+
+Since this appears to be auto-generated code (likely from a tool like go-bindata), the semantic intent is to update the file metadata. The incoming change has a more recent timestamp and fixes the spacing issue (removing the extra space after the colon).
+
+The resolution should accept the incoming change with the newer timestamp and corrected spacing:
+
+```go
+	bytes, err := confGitignoreTextpatternBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/Textpattern", size: 177, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreTortoisegit = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x52\x56\x08\x28\xca\xcf\x4a\x4d\x2e\xd1\xcd\x49\x2d\x4b\xcd\x51\x28\x4e\x2d\x29\xc9\xcc\x4b\x2f\xe6\xd2\xd7\x2b\x49\xcf\x2c\x49\xce\xcf\x4b\xcb\x4c\xe7\x02\x04\x00\x00\xff\xff\x87\x0b\xb6\x1b\x26\x00\x00\x00")
+
+
+```

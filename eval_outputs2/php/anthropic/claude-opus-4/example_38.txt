@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Checks if `$this->bgimg != ''` OR `imagecreatetruecolor` function exists to decide whether to use `imagecreatetruecolor`
+- **Incoming change**: Adds an additional condition `$this->use_transparent_text == true` to the same check
+
+The semantic intent is clear: both sides want to determine when to use `imagecreatetruecolor` vs `imagecreate`. The incoming change is adding a new condition (transparent text support) that would also require the true color image functions.
+
+The resolution should include all three conditions since they each represent a valid reason to use `imagecreatetruecolor`:
+1. When transparent text is needed (`$this->use_transparent_text == true`)
+2. When a background image is specified (`$this->bgimg != ''`)
+3. When the function is available (`function_exists('imagecreatetruecolor')`)
+
+Here's the resolved code:
+
+```php
+    /**
+     * The main image drawing routing, responsible for constructing the entire image and serving it
+     */
+    protected function doImage()
+    {
+        if($this->use_transparent_text == true || $this->bgimg != '' || function_exists('imagecreatetruecolor')) {
+            $imagecreate = 'imagecreatetruecolor';
+        } else {
+            $imagecreate = 'imagecreate';
+        }
+
+
+```

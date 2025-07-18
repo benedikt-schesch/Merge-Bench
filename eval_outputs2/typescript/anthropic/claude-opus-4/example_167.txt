@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - generating a token with empty string as the first parameter and some form of workspace identifier as the second parameter.
+
+The HEAD version uses:
+- `'' as PersonUuid` for the first parameter
+- `'latest' as WorkspaceUuid` for the second parameter
+
+The incoming version uses:
+- `''` for the first parameter (without type assertion)
+- `getWorkspaceId('latest')` for the second parameter
+
+The semantic intent appears to be the same - both want to create a token with an empty person identifier and a workspace identifier for 'latest'. The incoming version seems more elegant as it uses a helper function `getWorkspaceId()` rather than a direct type assertion.
+
+Here's the resolution that preserves the intent while using the cleaner approach:
+
+```typescript
+    accountsUrl: '',
+    externalStorage: createDummyStorageAdapter()
+  })
+
+  function connect (): WebSocket {
+    const token: string = generateToken('', getWorkspaceId('latest'))
+    return new WebSocket(`ws://localhost:${port}/${token}`)
+  }
+
+  afterAll(async () => {
+    await cancelOp.shutdown()
+```

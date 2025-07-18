@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The conflict involves two different approaches to triggering a signal in an event loop test. The key differences are:
+
+1. **HEAD version** uses `$loop->defer()` which executes immediately in the next event loop tick
+2. **Other branch** uses `$loop->delay(1)` which introduces a 1-second delay
+
+Since both approaches represent fundamentally different timing behaviors and we lack context about the test's timing requirements, the conflict cannot be automatically resolved. The intent is ambiguous without knowing whether:
+- The test requires immediate execution (defer)
+- The test requires artificial delay (delay)
+- The test needs to simulate time-based behavior
+
+Here's the unchanged output preserving the conflict markers:
+
+```php
+            }
+            $args[] = $expectedData;
+            \call_user_func_array([$loop, $type], $args);
+
+            if ($type == "onSignal") {
+<<<<<<< HEAD
+                $loop->defer(function (): void {
+=======
+                $loop->delay(1, function () {
+>>>>>>> eb2f325586bc6ebb12d27834fc779fa140c38a57
+                    \posix_kill(\getmypid(), \SIGUSR1);
+                });
+            }
+        });
+
+
+```

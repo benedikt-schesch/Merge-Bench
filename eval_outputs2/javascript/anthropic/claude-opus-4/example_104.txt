@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Has the negative number handling logic and then proceeds directly to the thousands separator logic.
+- **Incoming change**: Adds logic to pad the integer part with leading zeros based on a `leadingCount` variable before applying the thousands separator.
+
+Both changes appear to be adding different features that don't conflict semantically:
+1. The negative number handling (HEAD) processes the sign
+2. The leading zero padding (incoming) formats the number with a specific width
+3. Both then want to apply thousands separators
+
+These features are complementary and should both be included in sequence. The logical order would be:
+1. Handle negative sign first
+2. Add leading zeros to achieve desired width
+3. Apply thousands separators
+
+Here's the resolved code:
+
+```javascript
+            if (numeral._.includes(int, '-')) {
+                int = int.slice(1);
+                neg = true;
+            }
+
+            if (int.length < leadingCount) {
+                for (var i = leadingCount - int.length; i > 0; i--) {
+                    int = '0' + int;
+                }
+            }
+
+            if (thousands > -1) {
+                int = int.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + locale.delimiters.thousands);
+            }
+
+            if (format.indexOf('.') === 0) {
+
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from a difference in string quotes and whitespace formatting. Both changes intend to conditionally define `attr_accessible` for Rails versions below 4. The semantics are identical, so the resolution preserves the conditional while standardizing the quote style to match surrounding code conventions.
+
+Resolved code:
+```ruby
+  end
+end
+class Country < ActiveRecord::Base
+  has_many :test_models
+  has_many :companies
+  if Rails.version < "4"
+    attr_accessible :name
+  end
+end
+
+class NamedScopeModelTest < Test::Unit::TestCase
+
+```

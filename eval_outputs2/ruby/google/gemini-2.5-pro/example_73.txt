@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals two different intents for the same test method. The `HEAD` branch has decided to skip a test named `test_worker_uses_one_conn`, noting that it is broken. The other branch, `4561d91...`, has renamed the test to `test_worker_reuses_conn` for clarity and provided a full implementation, which appears to be the fix for the broken test.
+
+The semantic intent of merging is to integrate the fix from the `4561d91...` branch, as it represents progress over temporarily disabling a test. Therefore, the resolution is to adopt the implementation from the `4561d91...` branch, including the improved method name and the test's body. The provided snippet is slightly malformed, but the intent is clear enough to reconstruct the correct and complete test method.
+
+```ruby
+    p_queue.enqueue("TestObject.two_args", "1", 2)
+    p_queue.conn_adapter.disconnect
+    t.join
+  end
+
+  def test_worker_reuses_conn
+    QC.enqueue("TestObject.no_args")
+    count = QC.default_conn_adapter.execute("SELECT count(*) from pg_stat_activity where datname = current_database()")["count"].to_i;
+    worker = TestWorker.new
+    worker.work
+    assert_equal(
+      count,
+      QC.default_conn_adapter.execute("SELECT count(*) from pg_stat_activity where datname = current_database()")["count"].to_i
+    )
+  end
+
+```

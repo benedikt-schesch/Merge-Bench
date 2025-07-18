@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a menu item for the same command, but with different approaches:
+
+- HEAD side: Uses a template string `${DeleteRangeCommand.id}up` for the id and `positions` for the menu placement
+- Other side: Uses `DeleteRangeMoveUpCommand.id` directly and `menu` for the menu placement
+
+Based on the function name `DeleteRangeMoveUpMenuItemFactory` and the context, it appears the intent is to create a menu item for a "move up" variant of the delete range command. The other side's approach using `DeleteRangeMoveUpCommand.id` seems more semantically correct as it directly references what appears to be a dedicated command for this action.
+
+However, both sides use different property names for menu placement (`positions` vs `menu`). Without knowing the exact API requirements, I'll preserve the conflict as the correct property name is ambiguous:
+
+```typescript
+    };
+}
+
+export function DeleteRangeMoveUpMenuItemFactory(accessor: IAccessor): IMenuItem {
+    return {
+<<<<<<< HEAD
+        id: `${DeleteRangeCommand.id}up`,
+        positions: [MenuPosition.CONTEXT_MENU],
+=======
+        id: DeleteRangeMoveUpCommand.id,
+        menu: [MenuPosition.CONTEXT_MENU],
+>>>>>>> a5aac53666a8983bb54bba93a196daee2dc4a61c
+        title: 'rightClick.moveUp',
+        parentId: DeleteRangeCommand.id,
+    };
+}
+
+
+```

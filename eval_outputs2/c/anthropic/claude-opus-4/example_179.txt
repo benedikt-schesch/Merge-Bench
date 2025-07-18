@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD (current branch): Returns 1 at the end of the function
+- The incoming change: Removes the return statement entirely
+
+Given the context, this appears to be a function that handles port forwarding data. The conflict is about whether the function should return a value or not.
+
+Looking at the code structure:
+1. The function appears to handle writing data to a channel
+2. It sets throttling flags when data is written
+3. The dispute is only about the return value
+
+Without seeing the function signature or how it's called, I cannot definitively determine which approach is correct. The semantic intent is ambiguous - one side wants the function to return a status value (1), while the other wants it to return nothing (void function).
+
+Since I cannot determine the correct resolution with certainty, I'll return the snippet with the conflict preserved:
+
+```c
+    if (sshfwd_write(pf->c, data, len) > 0) {
+      pf->throttled = 1;
+      sk_set_frozen(pf->s, 1);
+    }
+  }
+<<<<<<< HEAD
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void pfd_sent(Plug plug, int bufsize)
+{
+  struct PortForwarding *pf = (struct PortForwarding *)plug;
+
+```

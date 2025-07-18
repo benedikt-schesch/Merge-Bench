@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict involves different approaches to token refresh handling. The HEAD version comments out the token refresh logic and simply returns `false`, while the other branch implements active token expiration checking. The presence of both synchronous (`?`) and asynchronous (`.await?`) error handling in the two versions creates ambiguity about execution context. 
+
+Since we can't determine:
+1. Whether token refresh should be active
+2. Whether the operation should be synchronous or asynchronous
+3. Why the HEAD version commented out the logic
+
+The conflict must be preserved for manual resolution. Here's the exact output with conflict markers:
+
+```rust
+            event::Event::GetCurrentPlayback => {
+                self.update_current_playback_state(state)?;
+                false
+            }
+            event::Event::RefreshToken => {
+<<<<<<< HEAD
+=======
+                let expires_at = state.player.read().unwrap().auth_token_expires_at;
+                if SystemTime::now() > expires_at {
+                    state.player.write().unwrap().auth_token_expires_at = self.refresh_token()?;
+                }
+>>>>>>> d291d456a6ab54e316adf9ce40bdd6f2fa529f7a
+                false
+                // let expires_at = state.player.read().unwrap().auth_token_expires_at;
+                // if SystemTime::now() > expires_at {
+                //     state.player.write().unwrap().auth_token_expires_at =
+                //         self.refresh_token().await?;
+```

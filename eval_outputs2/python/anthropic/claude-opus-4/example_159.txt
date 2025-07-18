@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD has version `0.6.0-alpha` (an alpha release for version 0.6.0)
+- The other branch has version `0.5.4` (a stable release)
+
+Since HEAD contains a newer version number (0.6.0-alpha vs 0.5.4) and is explicitly marked as an alpha release, the semantic intent appears to be that development has moved forward to a new major version. The conflict likely arose from a merge where one branch had continued development toward 0.6.0 while another branch had a patch or minor update to 0.5.x.
+
+The resolution should keep the newer version number from HEAD:
+
+```python
+else:
+    import setuptools as dist
+    setup = dist.setup
+
+
+VERSION = '0.6.0-alpha'  # Also change in pystache/__init__.py.
+
+FILE_ENCODING = 'utf-8'
+
+README_PATH = 'README.md'
+HISTORY_PATH = 'HISTORY.md'
+
+```

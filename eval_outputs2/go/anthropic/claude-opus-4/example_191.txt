@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add a comment for the `RetryStrategy` field, but with slightly different wording:
+
+- HEAD (current branch): "RetryStrategy controls how to retry a step"
+- Incoming change: "RetryStrategy contains retry information about the node"
+
+Both comments are describing the same field but from slightly different perspectives. The HEAD version emphasizes the control/configuration aspect ("controls how to retry"), while the incoming version emphasizes the informational aspect ("contains retry information").
+
+Given that this appears to be a node-related structure (based on the context with `PodIP` and `Daemoned` fields), and considering that the incoming change specifically mentions "about the node" which provides more context, I'll resolve this by choosing the incoming change's comment as it's more specific to the context.
+
+```go
+	PodIP string `json:"podIP,omitempty"`
+
+	// Daemoned tracks whether or not this node was daemoned and need to be terminated
+	Daemoned *bool `json:"daemoned,omitempty"`
+
+	// RetryStrategy contains retry information about the node
+	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty"`
+
+	// Outputs captures output parameter values and artifact locations
+	Outputs *Outputs `json:"outputs,omitempty"`
+
+
+```

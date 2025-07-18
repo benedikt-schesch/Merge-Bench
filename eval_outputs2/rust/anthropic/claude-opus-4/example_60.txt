@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD (current branch)**: Uses `.add_startup_system(Self::setup_system)` - calling the method directly without `.system()`
+- **Incoming change**: Uses `.add_startup_system(Self::setup_system.system())` - calling `.system()` on the method
+
+This appears to be a Bevy engine API change. In older versions of Bevy, you needed to call `.system()` to convert functions into systems. In newer versions (0.6+), this was made unnecessary and you can pass functions directly.
+
+The HEAD version represents the newer, cleaner API usage, while the incoming change represents the older API pattern. Since both achieve the same semantic intent (registering a startup system), and the HEAD version is more modern and concise, I'll resolve in favor of HEAD:
+
+```rust
+    frame_count: f64,
+}
+
+impl Plugin for FrameTimeDiagnosticsPlugin {
+    fn build(&self, app: &mut bevy_app::App) {
+        app.add_startup_system(Self::setup_system)
+            .insert_resource(FrameTimeDiagnosticsState { frame_count: 0.0 })
+            .add_system(Self::diagnostic_system);
+    }
+}
+
+
+```

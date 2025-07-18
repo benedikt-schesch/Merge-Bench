@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (HEAD) has removed the `use Indatus\Dispatcher\Scheduling\ScheduledCommand;` import statement, while the other side (8a08444) has kept it.
+
+Since the code still includes `use Indatus\Dispatcher\Scheduling\ScheduledCommandInterface;` and we have a `BackgroundProcessRunner` class, I need to consider whether the `ScheduledCommand` import is actually needed.
+
+Without seeing the rest of the class implementation, I cannot definitively determine if `ScheduledCommand` is used. The safest approach is to keep both imports to avoid potential errors.
+
+Here's the resolved code:
+
+```php
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use Indatus\Dispatcher\Scheduling\ScheduledCommand;
+use Indatus\Dispatcher\Scheduling\ScheduledCommandInterface;
+use Indatus\Dispatcher\Services\CommandService;
+
+class BackgroundProcessRunner
+{
+
+```

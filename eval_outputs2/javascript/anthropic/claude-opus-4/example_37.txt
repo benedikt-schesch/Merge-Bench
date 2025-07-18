@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a `getMaxY()` function, but the incoming change (HEAD) includes an important comment about an issue with a loop and the use of lodash's `_.max` utility. The bottom version appears to be the resolution attempt but is missing the comment.
+
+The semantic intent here is to:
+1. Keep the `getMax` iteratee function for lodash
+2. Include the important comment about why lodash was chosen
+3. Define the `getMaxY()` function
+
+Here's the resolved version that preserves the full context and combines both intents:
+
+```javascript
+
+//iteratee for lodash _.max
+    function getMax(v, i){
+      return parseFloat(v);
+    }
+//for some reason this loop does not properly get the maxY if there are multiple datasets (was doing 4 datasets that differred wildly)
+//just used lodash _.max utility
+    function getMaxY() {
+      if (self.options.maxY) {
+        return self.options.maxY;
+      }
+
+```

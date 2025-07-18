@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet preserving context and spacing while resolving the semantic conflict:
+
+```python
+        if self.order is not None:
+            d['order'] = self.order
+        return d
+
+    def save(self, using=None):
+        es = connections.get_connection(using or self._index._using)
+        return es.indices.put_template(name=self._template_name, body=self.to_dict())
+
+class Index(object):
+    def __init__(self, name, using='default'):
+        """
+        :arg name: name of the index
+```
+
+**Resolution Reasoning:**
+1. **Connection method:** Both versions aim to get an Elasticsearch connection, but use different approaches:
+   - HEAD uses `get_connection()` (likely a module-level function)
+   - Other branch uses `connections.get_connection()` (more explicit object-oriented approach)
+   The `connections` version is preferred as it's more standard in Elasticsearch DSL patterns and avoids potential import ambiguity.
+
+2. **Return value:** 
+   - HEAD version discards the API response
+   - Other branch returns the response from `put_template()`
+   Returning the response is more useful as it allows callers to check operation status.
+
+3. **Semantic compatibility:** The other branch's implementation:
+   - Maintains the core functionality (saving the template)
+   - Provides enhanced usability by returning the API response
+   - Uses more explicit connection handling
+
+The resolved version keeps the best aspects of both changes while maintaining backward compatibility since callers can still ignore the return value if needed.

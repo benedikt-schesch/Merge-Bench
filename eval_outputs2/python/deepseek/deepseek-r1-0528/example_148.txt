@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+The conflict involves two key changes:
+1. Different build script names: HEAD adds "buildgeocodingdata.py" while the other branch adds "buildprefixdata.py"
+2. Different print syntax: HEAD uses a function call (potentially Python 3 syntax) while the other branch uses Python 2 print syntax
+
+The intent appears to be:
+- Handle cases when running either of several build scripts
+- Print a warning about autogeneration
+- Skip loading data during custom build processes
+
+Since there's ambiguity about:
+1. Which build scripts should be included - both "buildgeocodingdata.py" and "buildprefixdata.py" seem necessary but we don't know if both are valid
+2. Which print style is appropriate for the codebase
+3. Whether `prnt` in HEAD is intentional or a typo
+
+Here's the output with conflict preserved:
+
+```python
+    # The generation process imports this module, creating a circular
+    # dependency.  The hack below works around this.
+    import os
+    import sys
+    if (os.path.basename(sys.argv[0]) == "buildmetadatafromxml.py" or
+<<<<<<< HEAD
+        os.path.basename(sys.argv[0]) == "buildgeocodingdata.py"):
+        prnt("Failed to import generated data (but OK as during autogeneration)", file=sys.stderr)
+=======
+        os.path.basename(sys.argv[0]) == "buildprefixdata.py"):
+        print >> sys.stderr, "Failed to import generated data (but OK as during autogeneration)"
+>>>>>>> 298c8f361a29b79085d5f926a70e863e056a33a5
+        _ALT_NUMBER_FORMATS = {}
+    else:
+        raise
+
+```
+
+Resolution requires knowing:
+- If both builds scripts should be supported
+- The correct print syntax for this file
+- Whether `prnt` is intentional or should be `print`
+- Python version compatibility requirements
+
+Without this context, the conflict cannot be safely resolved programmatically. Manual intervention is needed to determine correct behavior.

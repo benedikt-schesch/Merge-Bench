@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict arises from a difference in casting when accessing the `event` data from the event tree. The HEAD branch explicitly casts `event_tree->head->data` to `(event_t *)`, while the other branch assigns it directly without a cast. 
+
+After analyzing the semantics:
+1. Both branches intend to retrieve an event pointer to call its handler and delete it
+2. The subsequent `event->handler(event->data)` usage confirms `event` must be a pointer to a struct with these members
+3. In C, explicit casting from `void*` is good practice but not strictly required
+4. The direct assignment suggests the data member might already be typed as `event_t*` in the other branch
+5. Both approaches are functionally equivalent in standard C
+
+Resolution: Keep the more concise version without the cast, as it's equally valid and reduces redundancy. The context doesn't indicate any type safety issues requiring the explicit cast.
+
+```c
+
+		if(sigalrm) {
+			logger(LOG_INFO, _("Flushing event queue"));
+
+			while(event_tree->head) {
+				event = event_tree->head->data;
+				event->handler(event->data);
+				event_del(event);
+			}
+			sigalrm = false;
+		}
+
+```

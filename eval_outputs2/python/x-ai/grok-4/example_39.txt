@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```python
+    schema = Schema({"number": Number(precision=6, scale=2)})
+    try:
+        schema({"number": 'teststr'})
+    except MultipleInvalid as e:
+        assert (
+            str(e)
+            == "Value must be a number enclosed with string for dictionary value @ data['number']"
+        )
+    else:
+        assert False, "Did not raise Invalid for String"
+
+
+def test_number_validation_with_invalid_precision_invalid_scale():
+```

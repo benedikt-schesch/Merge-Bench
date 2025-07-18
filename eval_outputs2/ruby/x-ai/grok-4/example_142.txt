@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```ruby
+
+    def perform
+      load(object).send(method, *args.map{|a| load(a)})
+    rescue ActiveRecord::RecordNotFound
+      # We cannot do anything about objects which were deleted in the meantime
+      true
+    end
+
+    private
+
+    def load(arg)
+      case arg
+      when AR_STRING_FORMAT then $1.constantize.find($2)
+
+```

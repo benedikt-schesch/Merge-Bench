@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the type annotation for the `path` parameter in the `_run` method:
+
+- HEAD (current branch): `path: typing.List[str]`
+- Incoming change: `path: typing.List[typing.Hashable]`
+
+The semantic intent here is to make the type annotation more general. `typing.Hashable` is a broader type that includes `str` but also allows other hashable types like `int`, `tuple`, etc. This appears to be an intentional widening of the type to make the method more flexible in what path elements it can accept.
+
+Since `str` is a subtype of `Hashable`, and the incoming change represents a more permissive and general type annotation, the resolution should accept the incoming change.
+
+```python
+            schema.required = self.required
+            self._compiled.append(schema._compile(v))
+        schema.required = old_required
+        return self._run
+
+    def _run(self, path: typing.List[typing.Hashable], value):
+        if self.discriminant is not None:
+            self._compiled = [
+                self.schema._compile(v)
+                for v in self.discriminant(value, self.validators)
+            ]
+
+```

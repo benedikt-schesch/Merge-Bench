@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides of the merge are trying to update the same line, with the only difference being the `modTime` parameter in the `bindataFileInfo` struct.
+
+- HEAD has: `modTime: time.Unix(1444419364, 0)`
+- The incoming change has: `modTime: time.Unix(1467390283, 0)`
+
+The semantic intent here appears to be updating the modification time of the file. The incoming change has a more recent timestamp (1467390283 vs 1444419364), which likely represents a more recent update to the file.
+
+Additionally, there's a minor formatting difference where the incoming change has removed an extra space before `info` in `info: info`, which is a good formatting improvement.
+
+Since both changes are trying to update the same metadata and the incoming change has the more recent timestamp, the resolution should accept the incoming change:
+
+```go
+	bytes, err := confGitignoreScrivenerBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/Scrivener", size: 140, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreSdcc = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x52\x56\x08\x76\x71\x76\x56\x28\x2e\x29\x4d\x4b\xe3\xd2\xd2\xcb\xc9\xcb\x06\x91\xc5\x25\x40\x32\x37\xb1\x00\x44\xa6\xe6\x02\xc9\xa2\xd4\x1c\x10\x09\x16\x2f\xae\xcc\xe5\x02\x04\x00\x00\xff\xff\x8f\x5b\x05\xc4\x37\x00\x00\x00")
+
+
+```

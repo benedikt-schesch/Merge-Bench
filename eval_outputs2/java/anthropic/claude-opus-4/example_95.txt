@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+1. **HEAD (current branch)**: Creates a new Game with specific parameters, ending with `formatProvider`
+2. **Incoming branch**: Creates a new Game with the same parameters plus two additional ones: another `falseProvider` and `gameOptionsProvider`
+
+The conflict appears to be about the constructor signature for the `Game` class. The incoming branch seems to have an updated constructor that requires two additional parameters compared to HEAD.
+
+Since the incoming branch has more parameters, it likely represents a newer version of the code where the Game constructor has been updated to accept additional configuration. The semantic intent is to create a new Game instance with ID 1, and the incoming branch provides the complete set of required parameters for the updated constructor.
+
+Therefore, I'll resolve this by accepting the incoming branch's version which includes all necessary parameters:
+
+```java
+
+    // remove game 1 out from under it, to make sure it'll fix itself
+    gameManager.getGames().remove(1);
+    assertEquals(1, gameManager.get().intValue());
+    gameManager.getGames().put(1,
+        new Game(1, cuMock, gameManager, timer, null, null, null, metricsMock, falseProvider,
+            formatProvider, falseProvider, formatProvider, falseProvider, gameOptionsProvider));
+    assertEquals(-1, gameManager.get().intValue());
+
+    gameManager.destroyGame(2);
+    gameManager.destroyGame(0);
+    assertEquals(2, gameManager.get().intValue());
+
+```

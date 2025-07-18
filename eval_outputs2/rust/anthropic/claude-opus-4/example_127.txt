@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Wants a test function that accepts an optional callback function `f` that can modify the `Config`
+- **base (24a95b4)**: Wants a simpler test function without the callback parameter
+
+The HEAD version appears to be adding functionality to allow custom configuration modifications during testing, while the base version keeps it simple. Since the HEAD version is a superset of functionality (it can work without the callback by passing `None`), and adding this flexibility is likely intentional for more comprehensive testing scenarios, I'll resolve in favor of HEAD.
+
+```rust
+};
+use farmfe_core::config::Config;
+
+#[allow(dead_code)]
+#[cfg(test)]
+fn test(file: String, crate_path: String, f: Option<impl Fn(&mut Config)>) {
+  use common::{format_output_name, get_dir_config_files, try_merge_config_file};
+  use farmfe_core::config::partial_bundling::PartialBundlingEnforceResourceConfig;
+
+  let file_path_buf = PathBuf::from(file.clone());
+  let create_path_buf = PathBuf::from(crate_path);
+
+```

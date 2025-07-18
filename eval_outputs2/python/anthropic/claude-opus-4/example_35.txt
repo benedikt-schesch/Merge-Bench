@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD version has additional error handling code with `except` and `else` blocks after the `with raises(Invalid):` statement
+2. The other branch removed this additional error handling code
+
+The `with raises(Invalid):` context manager from pytest already handles the assertion that `Invalid` is raised. The additional `except/else` blocks in HEAD are redundant because:
+- If `Invalid` is raised, the `with raises(Invalid):` will pass
+- If `Invalid` is not raised, the `with raises(Invalid):` will fail the test
+- The `except/else` blocks would never actually execute within the context manager
+
+The intent of both sides is to test that `Invalid` is raised when calling `schema([1, 2, 3])`. The cleaner approach is to use just the `with raises(Invalid):` statement without the redundant error handling.
+
+Here's the resolved code:
+
+```python
+
+def test_exact_sequence():
+    schema = Schema(ExactSequence([int, int]))
+    with raises(Invalid):
+        schema([1, 2, 3])
+    assert schema([1, 2]) == [1, 2]
+
+
+def test_required():
+    """Verify that Required works."""
+
+```

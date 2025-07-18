@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict arises between two versions of a comment describing the creation of a `.jaxl` directory with associated subdirectories — `/tmp`, `/run`, and `/log`. The divergence lies in wording, specifically whether to mention the base directory `JAXL_CWD`:
+
+- HEAD indicates the directory is created *for* those subdirectories.
+- ce7bc8c9 clarifies the directory is specifically created *in* `JAXL_CWD`.
+
+Both comments attempt to explain the semantic purpose: to set up a structure for `.jaxl` subdirectories, which are later assigned to properties like `$this->tmp_dir`. The variable `$this->priv_dir` is explicitly assigned from a config value, giving flexibility to the underlying path. 
+
+Without explicit context confirming that `JAXL_CWD` is indeed the expected default for `$this->priv_dir`, and considering the goal of preserving semantics and resolving only when intent is clear, the ambiguity in relation between `priv_dir` and `JAXL_CWD` implies that merging the comment with certainty would risk semantic inaccuracy.
+
+Accordingly, the original conflicting code is preserved exactly as provided:
+
+```php
+            pcntl_signal(SIGHUP, array($this, 'signal_handler'));
+            pcntl_signal(SIGINT, array($this, 'signal_handler'));
+            pcntl_signal(SIGTERM, array($this, 'signal_handler'));
+        }
+
+<<<<<<< HEAD:src/JAXL/jaxl.php
+        // Create .jaxl directory for our /tmp, /run and /log folders
+=======
+        // Create .jaxl directory in JAXL_CWD for our /tmp, /run and /log folders
+>>>>>>> ce7bc8c9e6848c6877016a3ebf8135404ef39bf7:jaxl.php
+        // overwrite these using jaxl config array
+        $this->priv_dir = $this->cfg['priv_dir'];
+        $this->tmp_dir = $this->priv_dir."/tmp";
+        $this->pid_dir = $this->priv_dir."/run";
+        $this->log_dir = $this->priv_dir."/log";
+```

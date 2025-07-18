@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same `get_page` method, but with different parameter signatures:
+
+- HEAD version: `def get_page(target_url)`
+- The other branch: `def get_page(target_url: nil)`
+
+The semantic difference is that the HEAD version uses a positional parameter while the other branch uses a keyword parameter with a default value of `nil`.
+
+Since the method body uses `target_url` directly in the request, and given that this appears to be an API client method where the target URL would be required for pagination, the positional parameter approach from HEAD seems more appropriate. A pagination method typically requires a URL to function correctly.
+
+Here's the resolved code:
+
+```ruby
+            ##
+            # Retrieve a single page of KeyInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of KeyInstance
+            def get_page(target_url)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return KeyPage.new(@version, response, @solution)
+
+```

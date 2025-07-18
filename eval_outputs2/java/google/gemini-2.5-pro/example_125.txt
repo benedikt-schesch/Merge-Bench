@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+An expert would recognize that the `HEAD` branch is performing a refactoring from a `Repository` pattern to a `UseCase` pattern (a common architectural improvement). However, the developer forgot to rename the provider method to match the new type it's providing. The other branch represents the older state.
+
+The correct semantic resolution is to complete the refactoring initiated in the `HEAD` branch. This involves using the `ChangeRepositoryStarUseCase` and renaming the method for consistency.
+
+```java
+    return new GenericRepository<>(null, api);
+  }
+
+  @Provides
+  @PerActivity
+  ChangeRepositoryStarUseCase provideChangeRepositoryStarUseCase() {
+    return new ChangeRepositoryStarUseCase();
+  }
+
+  @Provides
+  @PerActivity
+<<<<<<< HEAD
+
+```

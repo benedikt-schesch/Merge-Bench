@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the case where a connection fails and the system needs to fall back to a default server. Let me analyze the intent:
+
+**HEAD side**: Wants to connect to the default server using `BungeeCord.instance.config.defaultServerName` and passing `def` as a parameter.
+
+**Other side**: Wants to send a message to the user informing them they're being moved to the default server, then connect directly to `def`.
+
+The semantic intent of both sides is to:
+1. Inform the user (only on the other side)
+2. Connect to the default server
+
+The conflict seems to be about whether to use the config's default server name or the `def` object directly, and whether to inform the user. Looking at the context, `def` is already retrieved as the default server from the listener, so both approaches should achieve the same result.
+
+The most complete resolution would be to:
+1. Keep the user notification (good UX)
+2. Use the more direct approach with `def` since it's already retrieved
+
+Here's the resolved snippet:
+
+```java
+        } catch (Exception ex)
+        {
+            ServerInfo def = ProxyServer.getInstance().getServers().get(user.getPendingConnection().getListener().getDefaultServer());
+            if (retry && !info.equals(def))
+            {
+                user.sendMessage(ChatColor.RED + "Could not connect to target server, you have been moved to the default server");
+                return connect(user, def, handshake, false);
+            } else
+            {
+                throw new RuntimeException("Could not connect to target server " + Util.exception(ex));
+            }
+        }
+
+```

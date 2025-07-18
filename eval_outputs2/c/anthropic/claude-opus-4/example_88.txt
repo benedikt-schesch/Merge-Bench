@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch (current branch) has no content between the comment and the DECL_WINDOWS_FUNCTION macro, while the incoming branch adds a TYPECHECK macro definition.
+
+The TYPECHECK macro appears to be a utility macro that uses the sizeof operator to ensure type checking at compile time. This seems like a reasonable addition that doesn't conflict with the existing code's purpose (which is about Windows function declarations).
+
+Since there's no actual conflict in intent - one side simply adds a macro while the other side has nothing in that location - the resolution should include the TYPECHECK macro from the incoming branch.
+
+Here's the resolved code:
+
+```c
+ *    (However, it can't always be used, as it trips over more complicated
+ *    macro trickery such as the WspiapiGetAddrInfo wrapper for getaddrinfo.)
+ *
+ * (DECL_WINDOWS_FUNCTION works with both these variants.)
+ */
+#define TYPECHECK(to_check, to_return)                                         \
+  (sizeof(to_check) ? to_return : to_return)
+#define DECL_WINDOWS_FUNCTION(linkage, rettype, name, params)                  \
+  typedef rettype(WINAPI *t_##name) params;                                    \
+  linkage t_##name p_##name
+#define STR1(x) #x
+#define STR(x) STR1(x)
+
+```

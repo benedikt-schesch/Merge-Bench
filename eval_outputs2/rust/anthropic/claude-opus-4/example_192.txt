@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import modules, with some overlap:
+
+- HEAD imports: `log::{debug, info, warn}`
+- The other branch imports: `crate::KillPortSignalOptions`, `bollard` modules, and `log::{debug, info}`
+
+The semantic intent appears to be:
+1. Both sides need logging functionality (`debug` and `info` from `log`)
+2. HEAD additionally needs `warn` from `log`
+3. The other branch needs additional imports for Docker-related functionality
+
+Since both sides have valid imports that serve different purposes, the resolution should include all unique imports:
+
+```rust
+use crate::KillPortSignalOptions;
+
+use bollard::container::{KillContainerOptions, ListContainersOptions};
+use bollard::Docker;
+use log::{debug, info, warn};
+use nix::sys::signal::{kill, Signal};
+use nix::unistd::Pid;
+use procfs::process::FDTarget;
+use std::collections::HashMap;
+use std::io;
+```

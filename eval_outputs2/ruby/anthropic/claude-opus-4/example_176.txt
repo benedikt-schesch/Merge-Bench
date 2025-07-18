@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same method `get_page`, but with different parameter styles:
+
+- HEAD version: `def get_page(target_url)` - uses a positional parameter
+- Other version: `def get_page(target_url: nil)` - uses a keyword argument with a default value
+
+The semantic intent appears to be the same - both want to define a method that takes a `target_url` parameter. The difference is in the calling convention. The keyword argument version (with default `nil`) is generally more flexible in Ruby as it allows for optional parameters and clearer method calls.
+
+Since the method body uses `target_url` directly without any nil checks, and the docstring indicates this is an "API-generated URL", it seems like this parameter is required. However, the keyword argument style with a default value might be part of a broader API design pattern in the codebase.
+
+Without more context about the codebase's conventions and whether other similar methods use keyword arguments, I cannot definitively resolve this conflict. The intent is ambiguous regarding whether this should be a required positional parameter or an optional keyword parameter.
+
+Here's the snippet with the conflict preserved:
+
+```ruby
+            ##
+            # Retrieve a single page of InstalledAddOnExtensionInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of InstalledAddOnExtensionInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return InstalledAddOnExtensionPage.new(@version, response, @solution)
+
+```

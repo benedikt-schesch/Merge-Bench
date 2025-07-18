@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+```php
+    public function mock(
+        string|array $mockedClassList,
+        ClassGenerator\MockClass $mockGenerator,
+        CallRecorder\Recorder $callRecorder,
+        Stubber\IAnswer $defaultAnswer,
+        ?array $constructorArgs = null
+    ): IMock {
+        $mockedClassList = (array) $mockedClassList;
+
+        foreach ($mockedClassList as $mockedClass) {
+            if (!class_exists($mockedClass, true) && !interface_exists($mockedClass, true)) {
+                throw new \InvalidArgumentException("The class / interface [{$mockedClass}] does not exist. Check the spelling and make sure it is loadable.");
+```
+
+**Resolution Reasoning:**
+1. **Parameter Nullability:** Both versions agree `$constructorArgs` should accept `null`, but use different syntax:
+   - Branch uses PHP 7.1+ nullable type syntax (`?array`)
+   - HEAD uses array type with `null` default (invalid in strict typing)
+   → `?array` is modern and unambiguous
+
+2. **Return Type:** 
+   - HEAD properly adds `: IMock` return type declaration
+   - Branch omits return type (would break type safety)
+   → Keep return type for contract clarity
+
+3. **Semantic Compatibility:**
+   - Nullable parameter satisfies both "array or null" requirements
+   - Return type preserves interface contract from HEAD
+   - Maintains PHP 7.1+ compatibility
+
+**Why This Works:**  
+Combines the explicit nullable parameter from the branch with the return type declaration from HEAD, creating a type-safe signature that satisfies both changes while maintaining modern PHP best practices.

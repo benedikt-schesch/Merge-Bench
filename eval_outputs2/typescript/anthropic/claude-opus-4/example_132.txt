@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (left side)**: Wants to save `patchFileContents`, `packageVersion`, and `patchPath`
+- **Right side**: Wants to save `patches` and `isRebasing`
+
+Both sides are calling `savePatchApplicationState` with `packageDetails` as the first property, but with different additional properties. This appears to be a case where both sides have evolved the function signature differently.
+
+Since both sets of properties seem semantically important (patch file contents/version/path on one side, and patches state/rebasing status on the other), the resolution should include all properties to preserve both intents:
+
+```typescript
+    }
+
+    if (isRebasing || numPatchesAfterCreate > 1) {
+      savePatchApplicationState({
+        packageDetails,
+        patchFileContents: diffResult.stdout.toString(),
+        packageVersion,
+        patchPath,
+        patches: nextState,
+        isRebasing: didFailWhileFinishingRebase,
+      })
+    } else {
+      clearPatchApplicationState(packageDetails)
+    }
+
+
+```

@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+```rust
+        };
+
+        Ok(Box::new(tunn))
+    }
+
+<<<<<<< HEAD
+    pub fn set_logger(&mut self, logger: Box<Fn(&str) + Send>, verbosity: Verbosity) {
+        self.logger = Some(spin::Mutex::new(logger));
+        self.verbosity = verbosity;
+=======
+    /// Set the external forfunction pointer for the logging function.
+    pub fn set_log(&mut self, log: Option<unsafe extern "C" fn(*const c_char)>, verbosity: u32) {
+        self.log = log;
+        self.verbosity = Verbosity::from(verbosity);
+>>>>>>> 7dc62bb885c6cdb04e61025d2104e31456eaae37
+    }
+
+    /// Receives an IP packet from the tunnel interface and encapsulates it.
+    /// Returns wireguard_result.
+    /// # Panics
+```
+
+The conflict cannot be automatically resolved due to fundamental differences in approach:
+1. **Functionality divergence** - HEAD uses a Rust closure (`Box<Fn(&str) + Send>`) while the incoming branch uses a C function pointer (`unsafe extern "C" fn`)
+2. **Type incompatibility** - The verbosity parameter differs (`Verbosity` vs `u32`)
+3. **Field mismatch** - The struct fields being modified are different (`logger` vs `log`)
+4. **Safety differences** - The incoming branch introduces `unsafe` code
+
+The changes represent two different logging implementations that cannot be merged without knowing:
+- The struct's field definitions
+- Project requirements (FFI vs pure Rust)
+- Verbosity handling strategy
+- Thread safety requirements
+
+Since the intent is ambiguous and the implementations are mutually exclusive, the conflict is preserved. Manual resolution is required to choose between:
+1. Keeping the Rust closure interface
+2. Adopting the C-compatible FFI approach
+3. Implementing a new solution that accommodates both use cases

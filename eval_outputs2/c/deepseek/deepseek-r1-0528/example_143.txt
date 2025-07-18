@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a discrepancy in function termination logic. The HEAD branch includes a `return !finished;` statement after setting `serial->finished = TRUE`, while the other branch completely omits this return statement. Since there's no surrounding context showing the function's return type declaration or the declaration of the `finished` variable, it's impossible to determine semantic intent with certainty.
+
+The conflict remains unresolved due to:
+1. Ambiguity in function's expected return type (void vs non-void)
+2. Unknown scope and meaning of `finished` variable
+3. Lack of context showing function signature
+
+Here's the original code with conflict markers preserved:
+
+```c
+
+    serial->finished = TRUE;
+
+    notify_remote_exit(serial->frontend);
+  }
+<<<<<<< HEAD
+
+  return !finished;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void serial_uxsel_setup(Serial serial)
+{
+  int rwx = 0;
+
+```

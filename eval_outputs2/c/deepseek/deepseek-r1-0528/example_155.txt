@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict involves differing control flow and return types between the two branches. The HEAD branch returns an integer value in both success and error cases, while the other branch returns void and continues execution after handling errors. Since the function's return type and overall control flow intent cannot be determined from the snippet alone, the conflict remains unresolved.
+
+Here's the original code with the conflict preserved:
+
+```c
+      while (err && s->addr && sk_nextaddr(s->addr, &s->step)) {
+        err = try_connect(s);
+      }
+    }
+    if (err != 0)
+<<<<<<< HEAD
+      return plug_closing(s->plug, winsock_error_string(err), err, 0);
+    else
+      return 1;
+=======
+      plug_closing(s->plug, winsock_error_string(err), err, 0);
+    return;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  }
+
+  noise_ultralight(lParam);
+
+  switch (WSAGETSELECTEVENT(lParam)) {
+```

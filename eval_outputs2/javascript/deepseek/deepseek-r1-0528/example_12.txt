@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```javascript
+const { differenceInDays, differenceInHours, differenceInMonths, differenceInMilliseconds, addDays, subHours, subDays, subMonths, subYears } = require("date-fns");
+const nanoid = require("nanoid/generate");
+const JWT = require("jsonwebtoken");
+const path = require("path");
+const hbs = require("hbs");
+const ms = require("ms");
+const knexUtils = require('./knex')
+
+const env = require("../env");
+
+class CustomError extends Error {
+  constructor(message, statusCode, data) {
+```
+
+**Resolution Reasoning:**  
+The conflict occurs between adding `ms` module (HEAD) and formatting changes for `knexUtils` import (other branch). Since:
+1. The `ms` module import is new functionality from HEAD
+2. The other branch's whitespace change (`const   knexUtils`) is non-functional formatting
+3. The HEAD version's formatting (`const knexUtils`) matches surrounding code style  
+
+We keep both imports while preserving HEAD's consistent formatting. The resolution maintains functionality from both branches without introducing formatting inconsistencies.

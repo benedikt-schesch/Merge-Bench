@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the config when `isMobile()` is true, but they're making different changes:
+
+- HEAD sets both `DYE_RESOLUTION = 256` and `SHADING = false`
+- The other branch only sets `DYE_RESOLUTION = 256`
+
+Following this, there's another condition that sets `SHADING = false` when linear filtering is not supported.
+
+The semantic intent appears to be:
+1. Both sides agree that mobile devices should have `DYE_RESOLUTION = 256`
+2. HEAD additionally wants to disable shading on mobile devices
+3. Both sides agree that shading should be disabled when linear filtering is not supported
+
+The most complete resolution would be to keep HEAD's version since it includes both config changes for mobile devices, while the other branch's change is a subset of HEAD's changes.
+
+```javascript
+
+var ref = getWebGLContext(canvas);
+var gl = ref.gl;
+var ext = ref.ext;
+
+if (isMobile()) {
+    config.DYE_RESOLUTION = 256;
+    config.SHADING = false;
+}
+if (!ext.supportLinearFiltering)
+    { config.SHADING = false; }
+
+startGUI();
+
+
+```

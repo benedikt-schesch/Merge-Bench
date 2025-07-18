@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```java
+                    return _client;
+                }
+                catch
+                {
+                    reconnectionDelay = reconnectionDelay * DefaultReconnectionTimeoutMultiplier;
+                    if (_maximumReconnectionTimeoutMs.HasValue)
+                    {
+                        reconnectionDelay = Math.Min(reconnectionDelay, _maximumReconnectionTimeoutMs.Value);
+                    }
+                    else
+                    {
+                        reconnectionDelay = Math.Min(reconnectionDelay, MaxReconnectionTimeout);
+                    }
+
+                    _log.WarnFormat("Failed re-connection to:{0}.  Will retry in:{1}", _endpoint, reconnectionDelay);
+                }
+
+                await Task.Delay(TimeSpan.FromMilliseconds(reconnectionDelay), _disposeToken.Token);
+```

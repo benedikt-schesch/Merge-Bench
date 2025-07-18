@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- The HEAD side appears to end after the warning check
+- The incoming change (3d6408484) adds code that creates a computed `options` variable using `parseQueryArgs`
+
+Both changes seem to be additive and non-conflicting in terms of intent. The HEAD side completes the warning logic, while the incoming side adds new functionality for parsing query arguments. These changes should both be kept.
+
+```typescript
+      console.warn(
+        'vue-query composables like "uesQuery()" should only be used inside a "setup()" function or a running effect scope. They might otherwise lead to memory leaks.',
+      )
+    }
+  }
+
+  const options = computed(() => parseQueryArgs(arg1, arg2, arg3))
+
+  const client = queryClient || useQueryClient()
+
+  const defaultedOptions = computed(() => {
+    const defaulted: DefaultedQueryObserverOptions<
+
+```

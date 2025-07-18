@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a function signature change where the other branch added two new parameters (`actualRequestMsgSections` and `expectedRequestMsgSections`). Since the provided context doesn't show how these parameters are used later in the function, and the HEAD branch's version omits them, the intent is ambiguous. Without seeing the full function implementation or call sites, it's unclear whether these parameters are required for correct functionality or if they represent conflicting changes.
+
+Here's the original snippet with conflict markers preserved:
+
+```go
+	// expectedIdentifier = submatches[1]
+	message = submatches[1]
+	return message, nil
+}
+
+<<<<<<< HEAD
+func encodeOpMsg(responseOpMsg *models.MongoOpMessage, logger *zap.Logger) (*opMsg, error) {
+=======
+func encodeOpMsg(responseOpMsg *models.MongoOpMessage, actualRequestMsgSections []string, expectedRequestMsgSections []string, logger *zap.Logger) (*opMsg, error) {
+>>>>>>> e4e1eb9b70ad7642e1296bc79aeecc4953e607c9
+	message := &opMsg{
+		flags:    wiremessage.MsgFlag(responseOpMsg.FlagBits),
+		checksum: uint32(responseOpMsg.Checksum),
+		sections: []opMsgSection{},
+	}
+```

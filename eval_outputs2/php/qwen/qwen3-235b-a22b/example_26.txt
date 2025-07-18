@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Here is the resolved snippet with the merge conflict addressed:
+
+```php
+
+	$offset = ($page-1)*QUESTIONS_PER_PAGE;
+
+	$sql = ("select count(questions.id) count from questions $conditionspre WHERE $conditionspost 1");
+	$query = mysql_query($sql);
+	$result = mysql_fetch_array($query) or die("Query to get blah failed with error: ".mysql_error());
+
+	$template->set('questionscount',$result['count']);
+
+	$paging = new Pagination();
+	$paging->set('urlscheme','?order='.$orderby.$tag.$type.$search.'&page=%page%');
+	$paging->set('perpage',QUESTIONS_PER_PAGE);
+
+```
+
+### Resolution Rationale
+- The original conflict stemmed from one branch re-executing the SQL query redundantly (`mysql_query($sql)`), while the other branch correctly used the already stored `$query` result.
+- The resolution adopts the efficient practice of referencing `$query` directly and preserves vital error handling logic (`or die(...)`) from the secondary branch.
+- Identical contextual lines and spacing are preserved as requested.

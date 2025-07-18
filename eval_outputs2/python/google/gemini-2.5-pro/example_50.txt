@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```python
+>>>>>>> 1fcf849f16279d43010c89c5d8cf69d5de96a800
+    schema = Schema({"number": Number(precision=14, yield_decimal=True)})
+    try:
+        schema({"number": '12345674.8901234'})
+    except MultipleInvalid as e:
+        assert (
+            str(e)
+            == "Precision must be equal to 14 for dictionary value @ data['number']"
+        )
+    else:
+        assert False, "Did not raise Invalid for String"
+
+
+def test_number_validation_with_valid_precision_scale_yield_decimal_false():
+
+```

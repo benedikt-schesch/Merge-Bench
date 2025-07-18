@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Based on analyzing the merge conflict and understanding the semantics of both changes, here's the resolved version. The conflict arises from both branches adding new imports, so the correct resolution is to include all imports from both branches:
+
+```rust
+use crate::document::Document;
+use crate::engine::{EngineView, EngineViewMut, EngineTaskSender};
+use crate::store::StrokeKey;
+use crate::{DrawOnDocBehaviour, WidgetFlags};
+use piet::RenderContext;
+use rnote_compose::color;
+use rnote_compose::helpers::{AABBHelpers, Vector2Helpers};
+
+```
+
+**Resolution rationale:**
+1. The HEAD branch added `EngineView` and `EngineViewMut` from `crate::engine`
+2. The other branch added:
+   - `Document` from `crate::document`
+   - `EngineTaskSender` from `crate::engine`
+3. Since these are all distinct imports that don't conflict semantically, we:
+   - Kept the `document` import from the other branch
+   - Combined the `engine` imports into a single use statement
+   - Preserved all surrounding context exactly as provided
+   - Maintained alphabetical order within the engine import for consistency
+
+This resolution maintains functionality from both branches while following Rust's idiomatic import grouping.

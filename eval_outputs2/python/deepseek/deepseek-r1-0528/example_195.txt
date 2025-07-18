@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises from different import statements in the two branches. The HEAD branch includes imports for `__future__`, `pyglet`, and `sys`, while the other branch adds standard library imports (`math`, `random`, `time`, `deque`). Since these imports serve different purposes and don't conflict semantically, we merge them by including all imports. The `__future__` import should remain at the top.
+
+Resolved code:
+```python
+from __future__ import division
+
+from pyglet.gl import *
+from pyglet.window import key
+import sys
+import math
+import random
+import time
+
+from collections import deque
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to destroy the old items after moving them, but using different approaches:
+
+- HEAD uses `std::allocator_traits<allocator>::destroy(alloc, &old_items[i])`
+- The other branch uses direct destructor call `old_items[i].~T()`
+
+Both achieve the same semantic goal of destroying the moved-from objects. The `std::allocator_traits::destroy` approach is more generic and follows modern C++ best practices as it allows allocators to customize destruction behavior if needed. Since this code is already using allocator-aware patterns (seen in `alloc.allocate()`), the HEAD version is more consistent with the overall design.
+
+```c
+        /* reallocate and copy items */
+        T* old_items = items;
+        items = alloc.allocate(new_alloced);
+        for (size_t i=0; i<size_active; i++) {
+          ::new (&items[i]) T(std::move(old_items[i]));
+          std::allocator_traits<allocator>::destroy(alloc, &old_items[i]);
+        }
+
+        for (size_t i=size_active; i<new_active; i++) {
+          ::new (&items[i]) T;
+        }
+
+```

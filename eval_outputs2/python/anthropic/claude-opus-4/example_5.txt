@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (current branch):**
+- Adds `bmp.Show(icon[4] if len(icon) > 4 else True)` - allowing control over button visibility
+- Uses `wx.RESERVE_SPACE_EVEN_IF_HIDDEN` flag in the sizer for items that aren't the last one
+- Maintains `wx.BOTTOM, 7` spacing for non-last items
+
+**Incoming branch:**
+- Reformats spacing around operators (`len(self.icons) - 1` vs `len(self.icons)-1`)
+- Adds spaces around `|` operator in wx flags
+- Doesn't include the `Show()` call or `RESERVE_SPACE_EVEN_IF_HIDDEN` flag
+
+The semantic intent appears to be:
+- HEAD wants to add visibility control and reserve space even when buttons are hidden
+- The incoming branch wants to clean up formatting
+
+The resolution should incorporate both: the functionality from HEAD (visibility control and space reservation) with the cleaner formatting from the incoming branch.
+
+```python
+                    bmp = ActionButton(self, bitmap=icon[0], hover=False)
+                    bmp.SetBitmapDisabled(icon[1] or icon[0])
+                    bmp.SetBitmapHover(icon[1] or icon[0])
+                    bmp.SetToolTipString(icon[2])
+                    bmp.Bind(wx.EVT_LEFT_UP, icon[3] if len(icon) > 3 else None)
+                    bmp.Show(icon[4] if len(icon) > 4 else True)
+                    if index < len(self.icons) - 1:
+                        iconSizer.Add(bmp, 0, wx.CENTER | wx.RESERVE_SPACE_EVEN_IF_HIDDEN | wx.BOTTOM, 7)
+                    else:
+                        iconSizer.Add(bmp, 0, wx.CENTER|wx.RESERVE_SPACE_EVEN_IF_HIDDEN)
+                    self.icons[index] = bmp
+            iconSizer.AddSpacer((33, -1))
+            self.hSizer.Add(iconSizer, 0, wx.ALIGN_CENTER_VERTICAL)
+
+```

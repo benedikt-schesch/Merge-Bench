@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to test that calling `s(['four'])` raises a `MultipleInvalid` exception. The semantic intent is the same - to verify that the schema validation fails with the expected exception.
+
+The difference is purely stylistic:
+- HEAD uses the older pytest style: `pytest.raises(MultipleInvalid, s, ['four'])`
+- The other branch uses the newer context manager style: `with pytest.raises(MultipleInvalid): s(['four'])`
+
+Since both achieve the same goal and the newer context manager style is generally preferred in modern pytest code (it's more explicit and readable), I'll resolve this by keeping the context manager version:
+
+```python
+
+
+def test_fix_157():
+    s = Schema(All([Any('one', 'two', 'three')]), Length(min=1))
+    assert ['one'] == s(['one'])
+    with pytest.raises(MultipleInvalid):
+        s(['four'])
+
+
+def test_range_inside():
+    s = Schema(Range(min=0, max=10))
+    assert 5 == s(5)
+
+```

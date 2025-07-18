@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD (current branch): Expects `T` to be a `Resource`
+- Incoming change: Expects `T` to be a `Component`
+
+This appears to be a conflict about what trait bound `T` should have for the `EventWriter` implementation. Without more context about the broader codebase changes, I cannot determine which constraint is semantically correct or if perhaps both traits should be required.
+
+Since the intent is ambiguous and I cannot determine which trait bound is correct for this implementation, I'm returning the snippet with the conflict preserved:
+
+```rust
+    events: ResMut<'w, Events<T>>,
+    #[system_param(ignore)]
+    marker: PhantomData<&'s usize>,
+}
+
+<<<<<<< HEAD
+impl<'w, 's, T: Resource> EventWriter<'w, 's, T> {
+=======
+impl<'w, 's, T: Component> EventWriter<'w, 's, T> {
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    pub fn send(&mut self, event: T) {
+        self.events.send(event);
+    }
+
+    pub fn send_batch(&mut self, events: impl Iterator<Item = T>) {
+```

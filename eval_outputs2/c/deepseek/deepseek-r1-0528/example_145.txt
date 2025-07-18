@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The conflict arises from both branches modifying the same function by adding different Windows API imports. The `HEAD` branch imports `FlashWindowEx` and `PlaySound`, while the other branch imports `FlashWindowEx`, `ToUnicodeEx`, and `PlaySound`. 
+
+The semantic intent is:
+1. Both branches require `FlashWindowEx` and `PlaySound`
+2. The other branch additionally requires `ToUnicodeEx` for keyboard input handling
+3. These are complementary changes rather than mutually exclusive
+
+Here's the resolved version preserving all context:
+
+```c
+static void init_winfuncs(void)
+{
+  HMODULE user32_module = load_system32_dll("user32.dll");
+  HMODULE winmm_module = load_system32_dll("winmm.dll");
+  GET_WINDOWS_FUNCTION(user32_module, FlashWindowEx);
+  GET_WINDOWS_FUNCTION(user32_module, ToUnicodeEx);
+  GET_WINDOWS_FUNCTION_PP(winmm_module, PlaySound);
+}
+
+/*
+ * Translate a WM_(SYS)?KEY(UP|DOWN) message into a string of ASCII
+```
+
+Key resolution points:
+1. Kept `FlashWindowEx` from HEAD
+2. Added `ToUnicodeEx` from the other branch
+3. Kept `PlaySound` from both
+4. Preserved all spacing and context exactly
+5. Removed conflict markers while maintaining both functional requirements
+
+The resolved version satisfies both branches' needs: HEAD's window flashing functionality and the other branch's keyboard input handling capability.

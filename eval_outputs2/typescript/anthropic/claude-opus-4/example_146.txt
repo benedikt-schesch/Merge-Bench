@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD wants to import `withMockProperties` from '../tests/utils' and both `Agent` and `OpenAgent` from './agent'
+- The other branch wants to import `version` from '../package.json' and only `OpenAgent` from './agent'
+
+Since this is in a test file (as evidenced by the `describe` block), and the HEAD branch is importing a test utility (`withMockProperties`), it seems the HEAD version is more appropriate for a test context. The other branch's import of `version` from package.json seems less relevant for a test file.
+
+However, both branches agree on needing `OpenAgent`, so that should definitely be kept. The question is whether `Agent` is also needed (from HEAD) and whether `version` is needed (from the other branch).
+
+Without more context about how these imports are used in the test, I'll preserve the conflict as is:
+
+```typescript
+<<<<<<< HEAD
+import { withMockProperties } from '../tests/utils'
+import { Agent, OpenAgent } from './agent'
+=======
+import { version } from '../package.json'
+import { OpenAgent } from './agent'
+>>>>>>> 9c546ed26b7a224d033269b4e120a97ce38dfaa9
+import { sources } from './sources'
+import { resetScreenFrameWatch } from './sources/screen_frame'
+
+describe('Agent', () => {
+  it('collects all components without unexpected errors and makes visitorId', async () => {
+
+```

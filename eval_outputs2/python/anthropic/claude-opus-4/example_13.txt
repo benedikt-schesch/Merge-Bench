@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD version only runs tests for Python 3.5 through 3.8
+- The incoming change adds Python 2/2.7 tests and also includes Python 3.9
+
+The semantic intent appears to be:
+- HEAD wanted to test Python 3 versions (3.5-3.8)
+- The incoming change wanted to add Python 2 support AND extend to Python 3.9
+
+Since both sides seem to have valid intentions (testing different Python versions), and the incoming change is more comprehensive (includes all versions from HEAD plus additional ones), I'll resolve by keeping the incoming change which includes both Python 2 and the extended Python 3 range:
+
+```python
+        subprocess.run([i, os.path.join(this_dir, "libmagic_test.py")], env=new_env, check=True)
+
+    if not found:
+        sys.exit("No versions found: " + str(versions))
+
+run_test(["python2", "python2.7"])
+run_test(["python3.5", "python3.6", "python3.7", "python3.8", "python3.9"])
+
+```

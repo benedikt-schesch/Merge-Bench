@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires understanding the typical versioning workflow in software development.
+
+*   **`rc2` (from the incoming branch):** This is a specific release tag, "Release Candidate 2". This is usually a commit that is meant to be tagged and released as a pre-release version.
+*   **`rc2-dev` (from the HEAD branch):** This version string indicates a development state. The `-dev` suffix signifies that this is a development version *following* the `rc2` milestone.
+
+When merging, the resulting code is typically intended for continued development, not for a specific release tag itself (which is usually handled on a separate release branch or by a specific commit). Therefore, the branch should remain in a development state. The semantics of `rc2-dev` represent a more advanced state in the timeline than the frozen `rc2` tag. Keeping `rc2-dev` ensures that subsequent builds are correctly identified as development builds and not mistaken for the official "Release Candidate 2".
+
+```php
+     * For example, for 3.8.0 when this is set to 'dev' the version string will be `3.8.0-dev`.
+     *
+     * @var    string
+     * @since  3.8.0
+     */
+    public const EXTRA_VERSION = 'rc2-dev';
+
+    /**
+     * Development status.
+     *
+     * @var    string
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - adding a `parameters_info` call with documentation for the `max_iterations` parameter. The only difference is that one side (HEAD) keeps the string on a single line, while the other side splits it across two lines for better readability.
+
+Since both sides have the same semantic intent and the multi-line version improves code readability without changing functionality, I'll resolve this by keeping the more readable multi-line version:
+
+```ruby
+    class KMeans < Clusterer
+      
+      attr_reader :data_set, :number_of_clusters
+      attr_reader :clusters, :centroids, :iterations
+      attr_reader :history
+      
+      parameters_info(
+        max_iterations: "Maximum number of iterations to " +
+          "build the clusterer. By default it is uncapped.",
+        distance_function: "Custom implementation of distance function. " +
+          "It must be a closure receiving two data items and return the " +
+          "distance between them. By default, this algorithm uses " +
+          "euclidean distance of numeric attributes to the power of 2.",
+        centroid_function: "Custom implementation to calculate the " +
+
+```

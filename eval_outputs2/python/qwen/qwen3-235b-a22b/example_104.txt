@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+The code snippet contains merge conflicts stemming from divergent handling strategies for exceptions in a web scraping or parsing context. Specifically, the two branches differ in what they return—or whether they even return at all—inside an `except` block after encountering an `AttributeError`. The intent behind each side is not entirely congruent in semantics:
+
+- The `HEAD` branch returns early (i.e., exits the function abruptly) **for e.weibo.com URLs**, and otherwise re-raises the error, which implies a belief that AttributeErrors outside of this special case are serious and need escalation.
+
+- The other branch (`d264377`) **returns a structure**: `return [], []` specifically for e.weibo.com URLs, otherwise it calls `return self._error(url, e)`. This implies a preference for graceful error recovery by always returning (or yielding) data of a consistent shape.
+
+This conflict is not merely syntactic; it represents an ambiguous disagreement over how the function should behave when it cannot find expected HTML attributes (e.g., due to malformed HTML or unexpected document structure).
+
+Without further insight into how the returned values are consumed downstream—specifically, whether the function is expected to continue and generate results regardless of this parsing issue, or whether such an error should halt processing—it is unsafe to assume which branch's logic should dominate.
+
+Given this ambiguity about semantic intent, **it is safest not to resolve the conflict**, as doing so might subtly or overtly change behavior in unintended ways.
+
+---
+
+As requested, here is the unmodified conflicting code snippet, preserved **exactly** as given:
+
+```python
+            ul = html.find(attrs={'class': 'cnfList', 'node-type': 'userListBox'})
+            if ul is None:
+                ul = html.find(attrs={'class': 'follow_list', 'node-type': 'userListBox'})
+        except AttributeError, e:
+            if br.geturl().startswith('http://e.weibo.com'):
+<<<<<<< HEAD:app/weibo/parsers.py
+                return
+            raise e
+=======
+                return [], []
+            return self._error(url, e)
+>>>>>>> d26437720088c6a178dce1b795cf5b06a5ed2524:contrib/weibo/parsers.py
+        
+        if ul is None:
+            if is_follow is True:
+                if is_new_mode:
+                    yield 'http://weibo.com/%s/follow?relate=fans' % self.uid
+```

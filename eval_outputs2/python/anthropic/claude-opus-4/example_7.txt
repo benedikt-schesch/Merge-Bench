@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add a button to the `buttonSizer` with the same alignment flags (`wx.ALIGN_CENTER_VERTICAL | wx.RIGHT`), but they differ in the spacing value:
+
+- HEAD version uses a variable `right_spacer` for the spacing
+- The incoming change uses a hardcoded value of `10`
+
+The HEAD version appears more flexible as it uses a variable that could be configured elsewhere, while the incoming change seems to be trying to standardize the spacing. Without more context about whether `right_spacer` is defined and what its value should be, I cannot definitively resolve this conflict.
+
+Here's the code snippet with the conflict preserved:
+
+```python
+            return
+
+        button = ProgressButton(self, -1, label)
+        button.Bind(wx.EVT_LEFT_UP, handler)
+        self.AddEvents(button)
+<<<<<<< HEAD
+        self.buttonSizer.Add(button, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, right_spacer)
+=======
+        self.buttonSizer.Add(button, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
+>>>>>>> d523b6a054acb6d09befd78a9bc3897d48454bcd
+        self.Layout()
+        self.ShowSelected()
+        return button
+
+    def ShowSelected(self):
+
+```

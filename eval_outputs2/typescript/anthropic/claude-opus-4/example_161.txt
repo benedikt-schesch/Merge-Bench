@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add different import statements to the same location in the file. The HEAD branch wants to import `crypto` from "crypto", while the incoming branch wants to import `getLicence` and `getSSOConnectionSummary`.
+
+Since these are non-conflicting imports that serve different purposes, the semantic intent is to include both sets of imports. Here's the resolved version:
+
+```typescript
+import { getAllFeatures } from "../models/FeatureModel";
+import { ExperimentRule, NamespaceValue } from "../../types/feature";
+import { hasActiveSubscription } from "../services/stripe";
+import { usingOpenId } from "../services/auth";
+import { cloneDeep } from "lodash";
+import crypto from "crypto";
+import { getLicence } from "../init/licence";
+import { getSSOConnectionSummary } from "../models/SSOConnectionModel";
+
+export async function getUser(req: AuthRequest, res: Response) {
+  // If using SSO, auto-create users in Mongo who we don't recognize yet
+  if (!req.userId && usingOpenId()) {
+    const user = await createUser(req.name || "", req.email, "", req.verified);
+
+```

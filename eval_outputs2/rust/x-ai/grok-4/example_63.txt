@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```rust
+        &mut self,
+        tables: &'w Tables,
+        archetypes: &'w Archetypes,
+        query_state: &'s QueryState<Q, F>,
+    ) -> Option<<Q::Fetch as Fetch<'w, 's>>::Item> {
+        if self.is_dense {
+            loop {
+                if self.current_index == self.current_len {
+                    let table_id = self.table_id_iter.next()?;
+                    let table = &tables[*table_id];
+                    self.fetch.set_table(&query_state.fetch_state, table);
+
+```

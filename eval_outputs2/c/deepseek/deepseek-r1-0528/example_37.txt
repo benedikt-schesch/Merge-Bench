@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of the conflict, both versions aim to assign the current node's data to variable `c` for further processing. The conflict arises from a type declaration difference that appears to be a refactoring change where explicit casting became unnecessary. 
+
+The resolution maintains the cleaner, more modern approach (removing the redundant cast) while preserving all functionality since:
+1. The context shows `c` is used as a connection pointer (`c->status.remove`)
+2. `connection_del(c)` expects a connection pointer
+3. The removal of the cast suggests the data structure was refactored to contain the correct type
+
+Resolved snippet:
+
+```c
+
+	FD_ZERO(fs);
+
+	for(node = connection_tree->head; node; node = next) {
+		next = node->next;
+		c = node->data;
+
+		if(c->status.remove) {
+			connection_del(c);
+			if(!connection_tree->head)
+				purge();
+```

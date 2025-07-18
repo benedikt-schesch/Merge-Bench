@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD** (current branch): Adds `$this->isActive = true;` after setting the class attribute, indicating it wants to track the active state
+- **Other branch** (ae04fd8...): Removes or doesn't have this line, just has an empty line
+
+The context shows this is part of a method that sets an active class on some attributes. Setting `$this->isActive = true;` makes semantic sense here as it appears to be tracking the active state after applying the active class formatting.
+
+Since the HEAD branch is explicitly tracking the active state (which aligns with the purpose of setting an active class), and the other branch simply has nothing there, the semantic intent appears to be to include the active state tracking.
+
+```php
+
+			return $this;
+		}
+
+		$this->attributes['class'] = Builder::formatGroupClass(array('class' => $this->builder->conf('active_class')), $this->attributes);
+		$this->isActive = true;
+		
+		return $this;
+	}
+
+	/**
+	 * Set or get items's meta data
+
+```

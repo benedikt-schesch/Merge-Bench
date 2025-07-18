@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see it's a simple formatting difference. Both sides have the same functional code - they just differ in the number of blank lines between the `read` method and the `skip` method.
+
+HEAD has one blank line, while the incoming change has two blank lines. Since this is purely a formatting difference with no semantic change, I'll preserve the more common convention of a single blank line between methods.
+
+```java
+    public int read(byte b[], int off, int len) throws IOException {
+        int read = in.read(b, off, len);
+        pos += read;
+        return read;
+    }
+    
+    @Override
+    public long skip(long n) throws IOException {
+        long rc = in.skip(n);
+        pos += rc;
+        return rc;
+```

@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to organize the exports, but with different approaches:
+
+- **HEAD**: Exports `ProgressStyle` from the `progress` module and conditionally exports rayon-related items
+- **Other branch**: Moves `ProgressBarIter` to the `progress` module exports and separates `ProgressStyle` into its own `style` module export
+
+The semantic intent appears to be:
+1. Both sides want to export `ProgressStyle` (just from different modules)
+2. The HEAD side wants to keep `ProgressBarIter` in the `iter` module (as seen in the earlier `use iter::{ProgressBarIter, ProgressIterator}` line)
+3. The other branch wants to move `ProgressBarIter` to the `progress` module
+4. The HEAD side adds conditional rayon exports
+
+Since `ProgressBarIter` is already imported from the `iter` module at the top, it makes more semantic sense to keep it there rather than duplicate it in the `progress` module. The resolution should:
+- Keep `ProgressBarIter` in the `iter` module only
+- Use the `style::ProgressStyle` approach from the other branch (seems like a refactoring to better organize the code)
+- Preserve the conditional rayon exports from HEAD
+
+```rust
+mod utils;
+
+pub use format::{BinaryBytes, DecimalBytes, FormattedDuration, HumanBytes, HumanDuration};
+pub use iter::{ProgressBarIter, ProgressIterator};
+pub use progress::{
+    MultiProgress, ProgressBar, ProgressBarRead, ProgressDrawTarget,
+};
+pub use style::ProgressStyle;
+
+#[cfg(feature = "with_rayon")]
+pub use iter::rayon::{ParProgressBarIter, ParallelProgressIterator};
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+This merge conflict appears to be the result of a refactoring.
+
+- The `HEAD` version operates on a variable named `pipeline`, applies a transformation, and then accesses a `.data` field. The result is assigned to a variable named `state`. This suggests `pipeline` is a wrapper struct.
+- The other version (`e1ca74e...`) operates on a variable named `plan`, applies the same transformation, and assigns the result to `new_plan`. This is a more direct approach, suggesting the wrapper struct was removed.
+
+The intent of the `e1ca74e...` side seems to be a simplification and clarification of the code. Using `plan` and `new_plan` as variable names is more descriptive for an execution plan transformation than `pipeline` and `state`. This kind of refactoring is common to improve code readability and maintainability. Therefore, the resolution adopts the refactored version.
+
+```rust
+        // of the current [`ExecutionPlan`] as we traverse the plan tree.
+        let subrules: Vec<Box<PipelineFixerSubrule>> = vec![
+            Box::new(hash_join_convert_symmetric_subrule),
+            Box::new(hash_join_swap_subrule),
+        ];
+        let new_plan = plan.transform_up(&|p| apply_subrules(p, &subrules, config))?;
+        // Next, we apply another subrule that tries to optimize joins using any
+        // statistics their inputs might have.
+        // - For a hash join with partition mode [`PartitionMode::Auto`], we will
+        //   make a cost-based decision to select which `PartitionMode` mode
+        //   (`Partitioned`/`CollectLeft`) is optimal. If the statistics information
+
+```

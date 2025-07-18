@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to declare the same `rooms` property but with different types:
+- HEAD uses `IRoomCache[]`
+- The incoming change uses `IRoomListingData[]`
+
+Without more context about what these interfaces represent or the broader changes in each branch, I cannot determine which type is semantically correct or if perhaps a new unified type should be used. The conflict appears to be a fundamental disagreement about the data structure being used.
+
+Here is the code snippet with the conflict preserved:
+
+```typescript
+export interface LobbyOptions {
+  filter?: FilterInput;
+}
+
+export class LobbyRoom extends Room { // tslint:disable-line
+<<<<<<< HEAD
+  public rooms: IRoomCache[] = [];
+=======
+  public rooms: IRoomListingData[] = [];
+>>>>>>> 1a7da98cbeee551587e6119d06a39a441421827b
+  public unsubscribeLobby: () => void;
+
+  public clientOptions: { [sessionId: string]: LobbyOptions } = {};
+
+  public async onCreate(options: any) {
+
+```

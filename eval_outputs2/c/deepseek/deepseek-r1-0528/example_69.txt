@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around the function call used to retrieve list box items from points. Both sides share identical logic but use different function names: `LBItemFromPt` in HEAD and `p_LBItemFromPt` in branch fc089d5. This suggests a possible refactoring or change in function naming conventions between branches. Since the intent is ambiguous without broader context (like function definitions or project-wide patterns), the conflict cannot be safely resolved automatically.
+
+Here's the original code with conflict markers preserved:
+
+```c
+  updist = downdist = 0;
+  for (i = 1; i < 4096 && (!updist || !downdist); i++) {
+    uppoint = downpoint = cursor;
+    uppoint.y -= i;
+    downpoint.y += i;
+<<<<<<< HEAD
+    upitem = LBItemFromPt(hwnd, uppoint, FALSE);
+    downitem = LBItemFromPt(hwnd, downpoint, FALSE);
+=======
+    upitem = p_LBItemFromPt(hwnd, uppoint, FALSE);
+    downitem = p_LBItemFromPt(hwnd, downpoint, FALSE);
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+    if (!updist && upitem != ret)
+      updist = i;
+    if (!downdist && downitem != ret)
+      downdist = i;
+  }
+```
+
+Resolution requires manual intervention to determine whether:
+1. `p_LBItemFromPt` is a refactored version (e.g., function pointer)
+2. `LBItemFromPt` remains the canonical function
+3. Both should coexist (unlikely given identical usage)
+
+Without project-specific knowledge, this conflict must be resolved by a developer.

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - implementing the `From` trait for converting `wasm_bindgen::JsValue` to `DomAttrValue`. The only difference is in the return type syntax:
+
+- HEAD uses the explicit type: `-> DomAttrValue`
+- The incoming change uses the more idiomatic Self type alias: `-> Self`
+
+Since both achieve the same semantic goal and `Self` is the more idiomatic Rust pattern when implementing traits (as it automatically refers to the implementing type), I'll resolve in favor of the incoming change:
+
+```rust
+    }))
+}
+
+#[cfg(feature = "with-dom")]
+impl From<wasm_bindgen::JsValue> for DomAttrValue {
+    fn from(val: wasm_bindgen::JsValue) -> Self {
+        if let Some(v) = val.as_bool() {
+            DomAttrValue::Simple(v.into())
+        } else if let Some(v) = val.as_f64() {
+            DomAttrValue::Simple(v.into())
+        } else if let Some(v) = val.as_string() {
+
+```

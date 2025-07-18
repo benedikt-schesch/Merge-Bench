@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The semantic intent of the merge conflict appears to involve two different approaches to requiring internal modules. One side (`HEAD`) includes `"parser"`, `"writer"`, and `"reader"` as separate components, suggesting a focus on individual responsibilities (parsing data files, writing output, reading input). The other side introduces `"parse"`, `"writer"`, and `"smarter_csv/smarter_csv"`—potentially hinting at a structural change, such as a unified entry-point file or different internal organization ("parse" vs. "parser").
+
+It's ambiguous whether `"parse"` and `"parser"` have overlapping concerns or represent a refactor, nor is it clear if `"smarter_csv/smarter_csv"` supersedes or complements the specific component requires. Without clarification on the purpose of these files or the broader architectural goal, it's prudent to leave the merge conflict unresolved to avoid potentially invalid or conflicting load orders or functionality overlaps.
+
+---
+
+Here is the unchanged, conflict-containing snippet as requested:
+
+```ruby
+require 'smarter_csv/header_transformations'
+require 'smarter_csv/header_validations'
+require "smarter_csv/headers"
+require "smarter_csv/hash_transformations"
+
+<<<<<<< HEAD
+require "smarter_csv/parser"
+require "smarter_csv/writer"
+require "smarter_csv/reader"
+=======
+require "smarter_csv/parse"
+require "smarter_csv/writer"
+require "smarter_csv/smarter_csv"
+>>>>>>> 107cb87ba60df917420faa409875591766d8ca8e
+
+# load the C-extension:
+case RUBY_ENGINE
+when 'ruby'
+  begin
+```

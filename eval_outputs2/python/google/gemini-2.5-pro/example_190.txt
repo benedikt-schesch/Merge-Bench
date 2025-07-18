@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```python
+            if (multi_line
+                    and line.strip().endswith(multiend)
+                    and len(line.strip()) > len(multiend)):
+                multi_line = False
+
+            if((not line.strip().startswith(multistart) and not multi_line) or multi_string):
+
+                process_as_code = True
+
+                if(multi_string):
+                    multi_line = False
+            else:
+                # Get rid of the delimiters so that they aren't in the final docs
+                line = line.replace(multistart, '')
+                line = line.replace(multiend, '')
+                docs_text += line.strip() + '\n'
+                indent_level = re.match("\s*", line).group(0)
+
+```

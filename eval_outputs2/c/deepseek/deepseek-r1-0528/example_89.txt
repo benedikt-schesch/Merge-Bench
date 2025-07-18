@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, both changes aim to clean up Cairo resources but with different approaches depending on GTK versions. The conflict arises because the other branch adds version-specific handling for newer GTK APIs. Here's the resolved version:
+
+```c
+    gdk_gc_unref(dctx.u.gdk.gc);
+  }
+#endif
+#ifdef DRAW_TEXT_CAIRO
+  if (dctx.type == DRAWTYPE_CAIRO) {
+#if GTK_CHECK_VERSION(3, 22, 0)
+    gdk_window_end_draw_frame(dctx.u.cairo.gdkwin, dctx.u.cairo.drawctx);
+#else
+    cairo_destroy(dctx.u.cairo.cr);
+#endif
+  }
+#endif
+
+  gdk_window_invalidate_rect(
+      gtk_widget_get_window(fs->preview_area), NULL, FALSE);
+```
+
+**Resolution rationale:**
+1. The version check `#if GTK_CHECK_VERSION(3, 22, 0)` properly handles newer GTK drawing APIs
+2. Preserves backward compatibility with older GTK versions
+3. The `gdk_window_end_draw_frame` call (new API) and `cairo_destroy` (legacy API) serve equivalent cleanup purposes in their respective contexts
+4. Maintains both branches' semantics by conditionally selecting the appropriate cleanup method
+
+The solution honors both changes by retaining the version-specific logic while removing merge conflict markers.

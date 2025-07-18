@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The merge conflict involves a minor numeric value change where both branches adjust the jump speed. Without additional context, it's ambiguous which value is preferred as both are valid gameplay tweaks. Here's the original snippet with the conflict preserved:
+
+```python
+            self.strafe[1] -= 1
+        elif symbol == key.D:
+            self.strafe[1] += 1
+        elif symbol == key.SPACE:
+            if self.dy == 0:
+<<<<<<< HEAD
+                self.dy = 0.015  # jump speed
+=======
+                self.dy = 0.016 # jump speed
+>>>>>>> df11777b8ad85ffeafe3c5c4fbb671367023832d
+        elif symbol == key.ESCAPE:
+            self.set_exclusive_mouse(False)
+        elif symbol == key.TAB:
+            self.flying = not self.flying
+        elif symbol in self.num_keys:
+```
+
+**Reasoning:**  
+- Both changes modify the same variable (`self.dy`) in the same logical context
+- The difference is purely numeric (0.015 vs 0.016) with identical comments
+- No functional context exists to determine which jump speed value is correct
+- Conflict markers must be preserved since the semantic intent is ambiguous  
+**Recommendation:** Manual resolution required - consult both authors to determine the intended jump physics behavior.

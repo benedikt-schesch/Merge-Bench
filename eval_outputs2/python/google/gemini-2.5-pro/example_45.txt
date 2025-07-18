@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```python
+    out_ = schema({"number": '123456789.34'})
+    assert float(out_.get("number")) == 123456789.34
+
+
+def test_number_when_precision_none_n_valid_scale_case2_yield_decimal_true():
+    """Test with Number with no precision and valid scale case 2 with zero in decimal part"""
+    schema = Schema({"number": Number(scale=2, yield_decimal=True)})
+    out_ = schema({"number": '123456789012.00'})
+    assert float(out_.get("number")) == 123456789012.00
+
+
+
+```

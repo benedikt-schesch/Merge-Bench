@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```php
+	public function __construct($builder, $id, $title, $options)
+	{
+		$this->builder     = $builder;
+		$this->id          = $id;
+		$this->title       = $title;
+		$this->nickname    = isset($options['nickname']) ? $options['nickname'] : camel_case(Str::ascii($title));
+		$this->attributes  = $this->builder->extractAttributes($options);
+		$this->parent      = (is_array($options) && isset($options['parent'])) ? $options['parent'] : null;
+
+
+		// Storing path options with each link instance.
+		if(!is_array($options)) {
+
+```

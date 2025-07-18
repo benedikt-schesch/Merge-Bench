@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `crate::colors`, but they differ in what they're importing:
+
+- HEAD (current branch): imports `ResultsListColors` and `BORDER_COLOR`
+- Incoming branch: imports `ResultsListColors`, `BORDER_COLOR`, and `DEFAULT_RESULTS_LIST_MATCH_FOREGROUND_COLOR`
+
+The semantic intent appears to be that the incoming branch is adding an additional import (`DEFAULT_RESULTS_LIST_MATCH_FOREGROUND_COLOR`) to the existing imports. This is a common pattern where one branch adds functionality that requires additional imports.
+
+Here's the resolved code:
+
+```rust
+use crate::colors::{
+    ResultsListColors, BORDER_COLOR,
+    DEFAULT_RESULTS_LIST_MATCH_FOREGROUND_COLOR,
+};
+use crate::layout::InputPosition;
+use color_eyre::eyre::Result;
+use ratatui::layout::{Alignment, Rect};
+use ratatui::prelude::{Color, Line, Span, Style};
+use ratatui::widgets::{
+```

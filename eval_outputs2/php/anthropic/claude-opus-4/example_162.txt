@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - encoding field names and values for URL parameters. The conflict is about which function to use:
+
+- HEAD uses `string_url()`
+- The incoming change uses `urlencode()`
+
+Given the context of the code, where `string_url()` is consistently used in the lines above the conflict (lines 6-7), it appears that `string_url()` is likely a custom wrapper or preferred function in this codebase for URL encoding.
+
+To maintain consistency with the rest of the code, I'll resolve this by keeping the HEAD version:
+
+```php
+			}
+		} else if( $t_count == 1 ) {
+			$t_query_array[] = string_url( $p_field_name ) . '=' . string_url( $p_field_value[0] );
+		}
+	} else {
+		$t_query_array[] = string_url( $p_field_name ) . '=' . string_url( (string)$p_field_value );
+	}
+
+	return implode( '&', $t_query_array );
+}
+
+
+```

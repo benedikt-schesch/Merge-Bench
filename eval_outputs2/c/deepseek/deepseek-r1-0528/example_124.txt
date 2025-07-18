@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from a variable declaration placement. Both branches intend to parse IV data, but one branch declares the variable `j` inside the loop for better scoping. The resolution preserves this improvement while maintaining functionality.
+
+Resolved code:
+```c
+          errmsg = "unsupported cipher";
+          goto error;
+        }
+        p = strchr(p, ',') + 1; /* always non-NULL, by above checks */
+        for (i = 0; i < ivlen; i++) {
+          unsigned j;
+          if (1 != sscanf(p, "%2x", &j)) {
+            errmsg = "expected more iv data in DEK-Info";
+            goto error;
+          }
+          ret->iv[i] = j;
+```

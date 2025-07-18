@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and resolved it by preserving the semantic intent of both changes. The conflict was about whether to include a service restart notification after setting up the web app configuration.
+
+Here's the resolved code snippet:
+
+```ruby
+    template "web_app.conf.erb"
+    server_name site["host"]
+    server_aliases site["aliases"]
+    server_include site["include"]
+    docroot site["docroot"]?site["docroot"]:"/vagrant/public/#{site["host"]}"
+    notifies :restart, resources("service[apache2]"), :delayed
+  end
+
+   # Add site info in /etc/hosts
+   bash "hosts" do
+     code "echo 127.0.0.1 #{site["host"]} #{site["aliases"].join(' ')} >> /etc/hosts"
+```
+
+Reasoning:
+1. The `notifies` directive ensures Apache restarts when configuration changes
+2. This is a safe addition that maintains functionality from both branches
+3. The service restart should be delayed to avoid unnecessary restarts during convergence
+4. The indentation and syntax are preserved exactly as in the original conflict markers
+
+The resolution maintains:
+- Web app configuration from both branches
+- Hosts file management
+- Proper Chef resource notification pattern
+- Original formatting and spacing

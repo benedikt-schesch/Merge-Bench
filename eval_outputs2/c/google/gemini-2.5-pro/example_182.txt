@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The merge conflict is purely a whitespace difference between tabs and spaces. Both sides of the conflict introduce the exact same code, which initializes variables for the `sfs_removexattr` function. The surrounding code uses tabs for indentation. To maintain a consistent coding style, the version using tabs is the correct choice.
+
+```c
+	return retstat;
+}
+
+/** Remove extended attributes */
+int sfs_removexattr(const char *path, const char *name) {
+	int retstat = 0;
+	char fpath[PATH_MAX];
+	sfs_fullpath(fpath, path);
+
+	BEGIN_PERM;
+	retstat = lremovexattr(fpath, name);
+	END_PERM;
+	if (retstat < 0) {
+
+```

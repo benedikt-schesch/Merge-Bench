@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - adding a key to a Redis set called "processes". The differences are:
+
+1. **Redis connection method**: `@cfg.redis` vs `Sidekiq.redis`
+2. **Parameter format**: `key` vs `[key]` 
+
+From the context and file paths in the conflict markers, this appears to be a test file that was moved/renamed (from `test/api.rb` to `test/test_api.rb`). The HEAD version uses `@cfg.redis` (likely a test configuration object), while the other version uses `Sidekiq.redis` (the standard Sidekiq Redis connection method).
+
+Since this is in a test file and both versions are semantically trying to do the same thing, I'll preserve the HEAD version's approach with `@cfg.redis` as it appears to be the testing pattern, but I'll adopt the array syntax `[key]` from the other branch since that's the correct parameter format for `sadd` in newer versions of Redis clients.
+
+```ruby
+      end
+
+      hn = Socket.gethostname
+      key = "#{hn}:#{$$}"
+      pdata = {"pid" => $$, "hostname" => hn, "started_at" => Time.now.to_i}
+      @cfg.redis do |conn|
+        conn.sadd("processes", [key])
+        conn.hmset(key, "info", Sidekiq.dump_json(pdata), "busy", 0, "beat", Time.now.to_f)
+      end
+
+      s = "#{key}:work"
+      data = Sidekiq.dump_json({"payload" => "{}", "queue" => "default", "run_at" => Time.now.to_i})
+
+```

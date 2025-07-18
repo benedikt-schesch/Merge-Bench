@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see there's a disagreement about what value to pass as the second argument to `handle_unthrottle()`.
+
+- HEAD wants to pass `new_backlog`
+- The other branch wants to pass `0`
+
+Without more context about the intent of both changes and what `handle_unthrottle()` expects, I cannot determine which is semantically correct. The conflict appears to be a substantive difference in behavior rather than a simple formatting issue.
+
+Here's the snippet with the conflict preserved:
+
+```c
+  } else {
+    /*
+     * Otherwise, we've successfully thawed!
+     */
+    ps->frozen = UNFROZEN;
+<<<<<<< HEAD
+    handle_unthrottle(ps->recv_h, new_backlog);
+=======
+    handle_unthrottle(ps->recv_h, 0);
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  }
+}
+
+static void sk_handle_set_frozen(Socket s, int is_frozen)
+{
+
+```

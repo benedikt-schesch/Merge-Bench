@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs in an auto-generated file `PHONE_ALT_FORMAT_359`, aiming to define alternative phone number formats for a specific country code (359). The two branches diverge in how this format list should be structured:
+
+- The `HEAD` introduces a single format for numbers with the pattern:  
+  `(3 digits) (3 digits) (3 digits)` (e.g., 123 456 789), applying only to numbers starting with certain prefixes (`48`, `8[7-9]`, or `9[08]`).
+
+- The other branch introduces **three** formats:
+  1. A format for numbers starting with 2, grouped as:  
+     `(1 digit) (3 digits) (2 digits) (2 digits)`, for numbers like `2 123 45 67`.
+  2. The same pattern as the `HEAD`:  
+     `(3 digits) (3 digits) (3 digits)` for numbers matching `48|8[7-9]|9[08]`.
+  3. An additional variant with:
+     `(3 digits) (2 digits) (2 digits) (2 digits)` also matching `48|8[7-9]|9[08]`.
+
+---
+
+### Semantic Resolution:
+Since this is an **auto-generated file**, and both versions define valid number formats (presumably derived from metadata sources), **both changes have semantic intent** and should be preserved.
+
+Inclusion of multiple formats **for the same leading digit pattern** is legitimate, as it may represent optional formatting standards (e.g., different-style formatting depending on usage or preference, such as mobile vs. landline).
+
+Not incorporating the additional format for `leading_digits_pattern=['2']` could limit formatting options for numbers from that prefix.
+
+---
+
+### Final Resolution (with preserved context and format):
+```python
+"""Auto-generated file, do not edit by hand. 359 metadata"""
+from ..phonemetadata import NumberFormat
+
+PHONE_ALT_FORMAT_359 = [NumberFormat(pattern='(\\d)(\\d{3})(\\d{2})(\\d{2})', format=u'\\1 \\2 \\3 \\4', leading_digits_pattern=['2']), NumberFormat(pattern='(\\d{3})(\\d{3})(\\d{3})', format=u'\\1 \\2 \\3', leading_digits_pattern=['48|8[7-9]|9[08]']), NumberFormat(pattern='(\\d{3})(\\d{2})(\\d{2})(\\d{2})', format=u'\\1 \\2 \\3 \\4', leading_digits_pattern=['48|8[7-9]|9[08]'])]
+```

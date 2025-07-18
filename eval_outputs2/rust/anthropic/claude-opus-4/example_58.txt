@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD** (current branch): Does not include `storage_type` in the `Clone` implementation
+- **Incoming change**: Adds `storage_type: self.storage_type,` to the clone method
+
+This appears to be a case where the incoming branch added a new field `storage_type` to the `ChangeTrackersFetch<T>` struct, and the `Clone` implementation needs to be updated to include this field.
+
+Since this is a `Clone` implementation, it should clone all fields of the struct. The semantic intent is clear: if `storage_type` is a field of the struct, it must be included in the `Clone` implementation to maintain correctness.
+
+Here's the resolved code:
+
+```rust
+}
+
+impl<T> Clone for ChangeTrackersFetch<T> {
+    fn clone(&self) -> Self {
+        Self {
+            storage_type: self.storage_type,
+            table_ticks: self.table_ticks,
+            entity_table_rows: self.entity_table_rows,
+            entities: self.entities,
+            sparse_set: self.sparse_set,
+            marker: self.marker,
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - they're asserting the same error message. The only difference is the formatting:
+
+- HEAD version: Single line assertion
+- Incoming version: Multi-line assertion with parentheses for better readability
+
+Since both versions have identical semantic intent (checking the same error message), and the incoming version offers better readability for a long string, I'll resolve this by keeping the incoming version:
+
+```python
+>>>>>>> 1fcf849f16279d43010c89c5d8cf69d5de96a800
+    schema = Schema({"number": Number(precision=6, scale=2)})
+    try:
+        schema({"number": '123456.712'})
+    except MultipleInvalid as e:
+        assert (
+            str(e)
+            == "Precision must be equal to 6, and Scale must be equal to 2 for dictionary value @ data['number']"
+        )
+    else:
+        assert False, "Did not raise Invalid for String"
+
+
+def test_number_validation_with_valid_precision_scale_yield_decimal_true():
+
+```

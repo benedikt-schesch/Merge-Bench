@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to send a `WorldChangeMessage`, but with slight differences:
+
+1. **HEAD version**: Uses `world.getDatatable()` as the second parameter
+2. **Incoming version**: Uses `world.getData()` as the second parameter and adds a `false` boolean as the first argument to `send()`
+
+The semantic intent appears to be sending world change information to the session. The key differences are:
+- The method name change from `getDatatable()` to `getData()` (likely a refactoring)
+- The addition of a boolean parameter to the `send()` method (likely a signature change)
+
+Without more context about which is the correct API, I cannot definitively resolve this conflict. The resolution would depend on:
+- Which method name is correct in the current codebase (`getDatatable()` vs `getData()`)
+- Whether the `send()` method signature has been updated to include a boolean parameter
+
+Here is the snippet with the conflict preserved:
+
+```java
+		session.send(new EntityTransformMessage(player.getId(), new Transform(p, rot, Vector3.ONE), getRepositionManager()));
+	}
+
+	@Override
+	protected void worldChanged(World world) {
+<<<<<<< HEAD:src/main/java/org/spout/engine/protocol/builtin/SpoutServerNetworkSynchronizer.java
+		session.send(new WorldChangeMessage(world, world.getDatatable()));
+=======
+		session.send(false, new WorldChangeMessage(world, world.getData()));
+>>>>>>> 67bcb76a96f358fc131320b0611ffaa3bf3678c2:src/main/java/org/spout/engine/protocol/builtin/SpoutNetworkSynchronizer.java
+	}
+
+	@Override
+	public void updateBlock(Chunk chunk, int x, int y, int z, BlockMaterial material, short data) {
+		session.send(new BlockUpdateMessage(chunk.getBlock(x, y, z)));
+```

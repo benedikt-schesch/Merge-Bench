@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the same method signature and implementation, but with different changes:
+
+- **HEAD**: Changes the parameter type from `MiniCluster` to `MiniGenericCluster` and reformats the method signature
+- **Other branch**: Adds Windows path handling logic to convert backslashes to forward slashes
+
+Both changes appear to be intentional and compatible - one is updating the type system while the other is adding platform-specific path handling. The semantic intent is to both modernize the API (with the new cluster type) and improve cross-platform compatibility.
+
+Here's the resolved conflict that incorporates both changes:
+
+```java
+	 * @param cluster a reference to the minicluster
+	 * @param localFileName the pathname of local file
+	 * @param fileNameOnCluster the name with which the file should be created on the minicluster
+	 * @throws IOException
+	 */
+     static public void copyFromLocalToCluster(MiniGenericCluster cluster,
+        String localFileName, String fileNameOnCluster) throws IOException {
+        if(Util.WINDOWS){
+            localFileName = localFileName.replace('\\','/');
+            fileNameOnCluster = fileNameOnCluster.replace('\\','/');
+        }
+        PigServer ps = new PigServer(ExecType.MAPREDUCE, cluster.getProperties());
+        String script = getMkDirCommandForHadoop2_0(fileNameOnCluster) + "fs -put " + localFileName + " " + fileNameOnCluster;
+
+	    GruntParser parser = new GruntParser(new StringReader(script));
+        parser.setInteractive(false);
+
+```

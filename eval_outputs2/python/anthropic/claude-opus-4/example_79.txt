@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the help text for the `trash-empty` command, but they're adding different options:
+
+- HEAD is adding the `--dry-run` option
+- The incoming change (302accd0) is adding the `--print-completion {bash,zsh,tcsh}` option
+
+Since both changes appear to be adding legitimate new features to the command-line interface, the semantic intent is to include both new options. The proper resolution is to merge both additions.
+
+```python
+
+    def test_help(self):
+        result = run_command.run_command(self.tmp_dir, "trash-empty",
+                                         ['--help'])
+        self.assertEqual(["""\
+usage: trash-empty [-h] [--print-completion {bash,zsh,tcsh}] [--version]
+                   [--trash-dir TRASH_DIR] [--all-users] [-i] [-f]
+                   [--dry-run]
+                   [days]
+
+Purge trashed files.
+
+positional arguments:
+
+```

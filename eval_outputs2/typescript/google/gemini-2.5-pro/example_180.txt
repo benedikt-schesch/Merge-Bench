@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+    id: Ref<ExternalCalendar>,
+    create: boolean = false
+  ): Promise<CalendarClient | undefined> {
+    const calendar = this.calendars.byId.get(id)
+    if (calendar === undefined) {
+      console.warn("couldn't find calendar by id", id)
+      return
+    }
+    const client = this.clients.get(calendar.externalUser)
+    if (client instanceof Promise) {
+      return await client
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the control flow structure, but in slightly different ways:
+
+- HEAD: Uses `else if` to chain the condition with the previous `if` block
+- The other branch: Separates the conditions into two independent `if` blocks
+
+Given the semantic intent, the HEAD version with `else if` appears more appropriate because:
+1. The first condition checks if we should skip processing (`USE_SKIP_DIFF && has_skip_indices && is_subset_of(...)`)
+2. If we're skipping, we don't need to check if attributes differ
+3. Only if we're NOT skipping should we check if `old_attr_values != new_attr_values`
+
+The `else if` structure better represents this mutual exclusivity and avoids unnecessary comparisons when the skip condition is true.
+
+Here's the resolved code:
+
+```rust
+                new_indexed_attr_values.into_iter().unzip();
+            let (old_indices, old_attr_values): (Vec<usize>, Vec<&Vec<AttributeValue<MSG>>>) =
+                old_indexed_attr_values.into_iter().unzip();
+            if USE_SKIP_DIFF && has_skip_indices && is_subset_of(&old_indices, &skip_indices) {
+                //
+            } else if old_attr_values != new_attr_values {
+                for (_i, new_att) in new_attrs {
+                    add_attributes.push(new_att);
+                }
+            }
+        } else {
+```

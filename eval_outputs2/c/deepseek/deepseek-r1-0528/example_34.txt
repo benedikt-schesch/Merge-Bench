@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+```c
+				subnet_del(n, s);
+			}
+
+			for(enode = n->edge_tree->head; enode; enode = enext) {
+				enext = enode->next;
+				e = (edge_t *) enode->data;
+				if(!tunnelserver)
+					send_del_edge(broadcast, e);
+				edge_del(e);
+			}
+		}
+	}
+
+
+```
+
+The conflict is resolved by:
+1. Keeping the type cast from HEAD `(edge_t *)` for type safety
+2. Preserving the conditional `send_del_edge()` from the feature branch
+3. Maintaining the `edge_del(e)` call that both branches agree on
+
+This combines both semantic intentions:
+- Type safety improvement from HEAD
+- Conditional message sending logic from the feature branch
+- The deletion logic remains unchanged
+
+The resolution ensures:
+- The cast is preserved for correct type handling
+- Broadcast only happens when `!tunnelserver`
+- Edge deletion always occurs regardless of tunnel status
+- Original spacing/formatting is maintained

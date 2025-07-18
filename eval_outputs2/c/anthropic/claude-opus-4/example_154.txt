@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD version declares two variables `int ret, open;` while the other branch only declares `int ret;`. The conflict is about whether to include the `open` variable declaration.
+
+Without more context about how these variables are used in the rest of the function, I cannot determine the correct resolution. The `open` variable might be needed for functionality added in HEAD, or it might have been removed in the other branch for a good reason.
+
+Here is the code snippet with the conflict preserved:
+
+```c
+    try_send(s);
+}
+
+void select_result(WPARAM wParam, LPARAM lParam)
+{
+<<<<<<< HEAD
+  int ret, open;
+=======
+  int ret;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  DWORD err;
+  char buf[20480]; /* nice big buffer for plenty of speed */
+  Actual_Socket s;
+  u_long atmark;
+
+
+```

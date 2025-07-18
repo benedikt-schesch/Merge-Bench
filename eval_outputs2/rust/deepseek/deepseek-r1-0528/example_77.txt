@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+```rust
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+
+    #[test]
+    fn table() {
+        let mut components = Components::default();
+<<<<<<< HEAD
+        let mut storages = Storages::default();
+        let component_id = components.init_component::<W<usize>>(&mut storages);
+=======
+        let component_id = components.get_or_insert_id::<usize>();
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+        let columns = &[component_id];
+        let mut table = Table::with_capacity(0, columns.len());
+        table.add_column(components.get_info(component_id).unwrap());
+        let entities = (0..200).map(Entity::new).collect::<Vec<_>>();
+        for entity in entities.iter() {
+
+```
+
+The conflict remains unresolved due to ambiguity between:
+1. HEAD's approach using `Storages` and `init_component<W<usize>>`
+2. Other branch's simplified `get_or_insert_id<usize>` call
+
+Key uncertainties preventing resolution:
+- Type mismatch (`W<usize>` vs `usize`)
+- Storage initialization requirement
+- Purpose of `W` wrapper type
+- Component API evolution between branches
+
+Without additional context about:
+1. The `Components` API contract
+2. Role of `Storages`
+3. Significance of `W` type wrapper
+4. Broader architectural changes
+
+it's unsafe to automatically resolve. The conflict requires manual intervention to reconcile the different component initialization approaches while maintaining type consistency and storage initialization requirements.

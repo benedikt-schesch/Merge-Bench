@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in formatting the `RangeInvalid` exception message. Both sides intend to raise an exception with the same message when a type error occurs, but use different formatting styles for the parentheses.
+
+After analyzing:
+1. The semantic intent is identical - both want to raise an exception with a customizable error message
+2. The formatting difference is purely stylistic
+3. The version with the parenthesis on a new line provides better consistency with the surrounding code's multi-line formatting style
+4. The resolution maintains the exact error message text while improving readability
+
+Resolved version:
+
+```python
+            return v
+
+        # Objects that lack a partial ordering, e.g. None or strings will raise TypeError
+        except TypeError:
+            raise RangeInvalid(
+                self.msg or 'invalid value or type (must have a partial ordering)'
+            )
+
+    def __repr__(self):
+        return 'Range(min=%r, max=%r, min_included=%r, max_included=%r, msg=%r)' % (
+            self.min,
+            self.max,
+```

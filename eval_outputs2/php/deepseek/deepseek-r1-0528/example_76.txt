@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from two changes:
+1. The HEAD branch added a CSRF token parameter for security
+2. The other branch replaced `num_rows() > 0` with `has_rows()` for better abstraction
+
+The merged solution preserves both improvements by keeping the CSRF token while using the modern `has_rows()` method.
+
+```php
+	// Check if there is more work to do
+	if ($end_at > 0)
+	{
+		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+
+		if ($db->has_rows($result))
+			$query_str = '?action=rebuild&csrf_token='.pun_csrf_token().'&i_per_page='.$per_page.'&i_start_at='.$db->result($result);
+	}
+
+	$db->end_transaction();
+	$db->close();
+```

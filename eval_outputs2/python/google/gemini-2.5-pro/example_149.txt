@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```python
+    # The generation process imports this module, creating a circular
+    # dependency.  The hack below works around this.
+    import os
+    import sys
+    if (os.path.basename(sys.argv[0]) == "buildmetadatafromxml.py" or
+        os.path.basename(sys.argv[0]) == "buildgeocodingdata.py" or
+        os.path.basename(sys.argv[0]) == "buildprefixdata.py"):
+        # Use a Python 3 print function call, as this is forward-compatible
+        print("Failed to import generated data (but OK as during autogeneration)", file=sys.stderr)
+        _COUNTRY_CODE_TO_REGION_CODE = {1: ("US",)}
+        _AVAILABLE_SHORT_REGION_CODES = []
+    else:
+        raise
+
+
+```

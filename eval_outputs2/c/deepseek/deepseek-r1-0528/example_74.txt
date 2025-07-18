@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, both sides are attempting to initialize common controls but use different function names. The conflict arises from a naming discrepancy where HEAD uses `InitCommonControls()` while the other branch uses `init_common_controls()`. 
+
+After examining the context:
+1. The surrounding code uses lowercase naming conventions (`sk_init`, `set_explicit_app_user_model_id`)
+2. The comment references PuTTY, which historically uses `init_common_controls`
+3. The standard Windows API is `InitCommonControls()`, but PuTTY typically wraps this in its own function
+
+The resolution uses `init_common_controls()` to maintain:
+- Project naming consistency
+- Historical PuTTY code patterns
+- Semantic intent of the branch commit
+
+Resolved code:
+```c
+  hwnd = NULL;
+  flags = FLAG_VERBOSE | FLAG_INTERACTIVE;
+
+  sk_init();
+
+  init_common_controls();
+
+  /* Set Explicit App User Model Id so that jump lists don't cause
+     PuTTY to hang on to removable media. */
+
+  set_explicit_app_user_model_id();
+
+```

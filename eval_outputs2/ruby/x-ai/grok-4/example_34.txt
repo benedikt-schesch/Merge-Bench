@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```ruby
+    template "web_app.conf.erb"
+    server_name site["host"]
+    server_aliases site["aliases"]
+    server_include site["include"]
+    docroot site["docroot"]?site["docroot"]:"/vagrant/public/#{site["host"]}"
+    notifies :restart, resources("service[apache2]"), :delayed
+  end
+
+   # Add site info in /etc/hosts
+   bash "hosts" do
+     code "echo 127.0.0.1 #{site["host"]} #{site["aliases"].join(' ')} >> /etc/hosts"
+
+```

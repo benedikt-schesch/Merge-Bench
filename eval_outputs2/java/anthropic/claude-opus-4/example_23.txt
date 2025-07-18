@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import `PluginManager`, but they're placing it in different locations within the import list.
+
+The HEAD version doesn't have the `PluginManager` import, while the incoming change adds it after the `Skeleton` import. However, I notice that `PluginManager` is already imported later in the file (after the `Plugin` import).
+
+This appears to be a case where the incoming change tried to add an import that already exists elsewhere in the file. The semantically correct resolution is to keep the existing `PluginManager` import in its current location (after `Plugin`) and not add a duplicate.
+
+Here's the resolved code:
+
+```java
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.math.Vector3;
+import org.spout.api.model.Model;
+import org.spout.api.model.animation.Animation;
+import org.spout.api.model.animation.Skeleton;
+import org.spout.api.plugin.Plugin;
+import org.spout.api.plugin.PluginManager;
+import org.spout.api.protocol.ServerNetworkSynchronizer;
+import org.spout.api.protocol.Session;
+
+
+```

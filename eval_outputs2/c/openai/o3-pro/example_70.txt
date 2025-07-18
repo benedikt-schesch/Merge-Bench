@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```c
+         * FIXME: this causes scrollbar glitches if the count of
+         *        listbox contains >= its height. */
+        hdl->dummyitem =
+            SendDlgItemMessage(hwnd, hdl->listid, LB_ADDSTRING, 0, (LPARAM) "");
+
+        hdl->srcitem = p_LBItemFromPt(dlm->hWnd, dlm->ptCursor, TRUE);
+        hdl->dragging = 0;
+        /* XXX hack Q183115 */
+        SetWindowLongPtr(hwnd, DWLP_MSGRESULT, TRUE);
+        ret |= 1;
+        break;
+```

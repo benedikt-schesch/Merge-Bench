@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import the same testing utilities from `@angular/core/testing`, but with different ordering. This is a common formatting/style conflict where both sides have the same imports but arranged differently.
+
+The semantic intent is the same - both sides want to import `async`, `ComponentFixture`, `inject`, and `TestBed`. The only difference is the order of these imports.
+
+Here's the resolved code:
+
+```typescript
+  JUL,
+} from '@angular/cdk/testing';
+import {DateAdapter} from '@angular/cdk/datetime';
+import {Component, NgZone} from '@angular/core';
+import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
+import {MatNativeDateModule} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {MatCalendar} from './calendar';
+import {MatDatepickerIntl} from './datepicker-intl';
+import {MatDatepickerModule} from './datepicker-module';
+
+```
+
+I chose the ordering from the second branch (`ComponentFixture, TestBed, async, inject`) as it follows a more logical grouping with the main testing fixtures first, followed by utilities.

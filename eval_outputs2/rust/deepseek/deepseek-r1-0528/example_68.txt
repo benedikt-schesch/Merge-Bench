@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Based on analyzing the semantic intent behind both changes:
+
+1. The HEAD version performs direct world validation and updates archetypes
+2. The other branch refactors this into a separate validation method while keeping the same core functionality
+3. Both versions require world validation and archetype updating
+
+The resolution maintains the cleaner abstraction introduced in the other branch while preserving the core functionality from both versions.
+
+Resolved code:
+```rust
+    /// generates new archetypes for the given world.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the `world.id()` does not equal the current [`QueryState`] internal id.
+    pub fn update_archetypes(&mut self, world: &World) {
+        self.validate_world(world);
+        let archetypes = world.archetypes();
+        let new_generation = archetypes.generation();
+        let old_generation = std::mem::replace(&mut self.archetype_generation, new_generation);
+        let archetype_index_range = old_generation.value()..new_generation.value();
+```
+
+Key changes made:
+1. Kept the function name `update_archetypes` from the other branch as it's more concise
+2. Maintained the validation call `self.validate_world(world)` which abstracts the error checking
+3. Preserved all archetype updating logic from both versions
+4. Removed merge conflict markers while maintaining original spacing
+
+This resolution:
+- Keeps the improved code structure from the other branch
+- Maintains all safety checks from HEAD via validate_world()
+- Preserves identical archetype updating functionality
+- Results in cleaner, more maintainable code

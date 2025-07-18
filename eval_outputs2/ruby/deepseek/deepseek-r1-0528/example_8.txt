@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```ruby
+      # dont run cleanup more than once per minute
+      return 0 unless Sidekiq.redis { |conn| conn.set("process_cleanup", "1", nx: true, ex: 60) }
+
+      count = 0
+      Sidekiq.redis do |conn|
+        procs = conn.sscan_each("processes").to_a.sort
+        heartbeats = conn.pipelined { |pipeline|
+          procs.each do |key|
+            pipeline.hget(key, "info")
+          end
+        }
+```
+
+**Resolution Reasoning:**
+1. The conflict is between `sscan` (HEAD) and `sscan_each` (branch) for Redis set scanning
+2. `sscan_each` is the correct method for full set iteration (branch is semantically correct)
+3. The `.sort` operation from HEAD should be preserved to maintain deterministic ordering
+4. The combination achieves both:
+   - Correct Redis iteration (branch fix)
+   - Stable element ordering (HEAD requirement)
+5. No ambiguity - both changes are compatible and address different concerns

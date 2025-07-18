@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+1. **HEAD (current branch)**: Adds a new `optional_parts` method and a `protected` visibility modifier
+2. **Incoming branch**: Removes/doesn't have these additions
+
+From a semantic perspective, the HEAD branch is trying to:
+- Add functionality to expose optional parts of a route
+- Mark the following methods as protected (likely `base_arguments` and `parts_table`)
+
+The incoming branch appears to have the original code without these additions.
+
+Since the `optional_parts` method seems to be a logical companion to `required_parts` (providing complementary functionality), and the `protected` modifier is establishing proper encapsulation for the methods that follow, the semantic intent appears to be to enhance the class with additional functionality and better access control.
+
+Here's the resolved code:
+
+```ruby
+
+    def required_parts
+      route.required_parts
+    end
+
+    def optional_parts
+      route.path.optional_names
+    end
+
+    protected
+
+    def base_arguments
+      @base_arguments ||= [parts_table, serialize(spec, parent_spec)]
+    end
+
+    def parts_table
+
+```

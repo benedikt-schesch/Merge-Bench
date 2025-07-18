@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the error handling logic, but with different approaches:
+
+**HEAD (current branch):**
+- Uses string literal `'ERR_FR_TOO_MANY_REDIRECTS'` for the error code comparison
+- Uses `enhanceError()` function to process the error
+
+**Incoming changes:**
+- Uses `AxiosError.ERR_FR_TOO_MANY_REDIRECTS` (likely a constant)
+- Uses `AxiosError.from()` method to create the error
+- Changes the logic to `return` instead of `reject(err)` when the condition is met
+
+The semantic intent appears to be:
+1. Both sides want to handle the case where the request is aborted
+2. Both sides want to treat the "too many redirects" error differently
+3. The incoming changes appear to be part of a refactoring to use a more structured `AxiosError` class
+
+Since the incoming changes represent a more comprehensive refactoring (using error constants and a dedicated error class), and they also fix the logic by returning early instead of rejecting twice, the incoming changes should be preferred:
+
+```javascript
+      }
+    });
+
+    // Handle errors
+    req.on('error', function handleRequestError(err) {
+      if (req.aborted && err.code !== AxiosError.ERR_FR_TOO_MANY_REDIRECTS) return;
+      reject(AxiosError.from(err, null, config, req));
+    });
+
+    // set tcp keep alive to prevent drop connection by peer
+    req.on('socket', function handleRequestSocket(socket) {
+      // default interval of sending ack packet is 1 minute
+
+```

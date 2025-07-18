@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - getting the connection data from the node. The only difference is whether to include an explicit cast to `(connection_t *)`.
+
+Since C allows implicit void pointer conversions, both approaches are functionally equivalent. The cleaner, more modern approach would be to use the version without the cast, as it's less verbose and follows common C idioms.
+
+Here's the resolved code:
+
+```c
+
+	cp();
+
+	for(node = connection_tree->head; node; node = next) {
+		next = node->next;
+		c = node->data;
+
+		if(c->last_ping_time + pingtimeout < now) {
+			if(c->status.active) {
+				if(c->status.pinged) {
+					ifdebug(CONNECTIONS) logger(LOG_INFO, _("%s (%s) didn't respond to PING"),
+
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import different modules. The HEAD branch is importing `EngineView`, `EngineViewMut`, and `WidgetFlags`, while the other branch is importing `Document`, `EngineTaskSender`, `Camera`, `StrokeStore`, `SurfaceFlags`, and `AudioPlayer`.
+
+Both sides share `DrawOnDocBehaviour` in common, and both appear to be setting up imports needed for the `PenBehaviour` trait below. Without more context about which imports are actually needed by the code that follows, the safest resolution is to include all imports from both sides:
+
+```rust
+use rnote_compose::penhelpers::PenEvent;
+
+use crate::document::Document;
+use crate::engine::{EngineTaskSender, EngineView, EngineViewMut};
+use crate::{Camera, DrawOnDocBehaviour, StrokeStore, SurfaceFlags, WidgetFlags};
+
+use super::AudioPlayer;
+
+/// types that are pens and can handle pen events
+pub trait PenBehaviour: DrawOnDocBehaviour {
+    /// Handles a pen event
+    fn handle_event(
+
+```

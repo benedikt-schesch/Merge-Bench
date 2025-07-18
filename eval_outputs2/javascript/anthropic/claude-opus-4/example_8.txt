@@ -1,0 +1,44 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+**HEAD (left side)**: 
+- Adds handling for destructuring assignments
+- Adds a check for assignment operator "=" 
+- Returns early if the operator is not "=" OR if left is not a SymbolRef
+
+**Right side**: 
+- Simplifies to just check if left is not a SymbolRef and return early
+
+The semantic intent appears to be:
+1. Both sides want to ensure we only process when `node.left` is a `SymbolRef`
+2. HEAD adds special handling for destructuring cases
+3. HEAD also wants to ensure the operator is "=" before proceeding
+
+Looking at the code after the conflict, there's a check for `!fixed && node.operator != "="` which suggests the operator check is important for the logic flow.
+
+The correct resolution should:
+1. Keep the destructuring handling from HEAD (it's a valid case that needs special treatment)
+2. Keep the operator check from HEAD (it's used in the logic below)
+3. Maintain the check for SymbolRef
+
+Here's the resolved code:
+
+```javascript
+            return true;
+        });
+        def(AST_Arrow, mark_func_expr);
+        def(AST_Assign, function(tw) {
+            var node = this;
+            if (node.left instanceof AST_Destructuring) {
+                node.left.walk(suppressor);
+                return;
+            }
+            if (node.operator != "=" || !(node.left instanceof AST_SymbolRef)) return;
+            var d = node.left.definition();
+            var fixed = d.fixed;
+            if (!fixed && node.operator != "=") return;
+            if (!safe_to_assign(tw, d, node.right)) return;
+            d.references.push(node.left);
+
+```

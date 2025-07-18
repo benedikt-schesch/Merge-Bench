@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to fix the same issue - the format specifiers in the `sscanf` call. The conflict is about whether to use `%ld` (signed long) or `%lu` (unsigned long) for parsing the `mtime` and `atime` values.
+
+Since these are time values (modification time and access time), they should be unsigned values as negative timestamps don't make sense in this context. Therefore, the correct resolution is to use `%lu` (unsigned long) format specifiers.
+
+```c
+      case 'E':
+        back->send(backhandle, "", 1);
+        act->action = SCP_SINK_ENDDIR;
+        return 0;
+      case 'T':
+        if (sscanf(act->buf, "%lu %*d %lu %*d", &act->mtime, &act->atime) ==
+            2) {
+          act->settime = 1;
+          back->send(backhandle, "", 1);
+          continue; /* go round again */
+        }
+
+```

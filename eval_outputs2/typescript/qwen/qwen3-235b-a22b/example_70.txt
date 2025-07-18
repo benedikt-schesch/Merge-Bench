@@ -1,0 +1,65 @@
+<think>
+No reasoning found</think>
+The provided code snippet contains a merge conflict that primarily revolves around **two key differences**:
+
+1. A **syntax fix**: the addition of a comma after the `TChannelName extends keyof TIntegration['channels']` line in the incoming commit.
+2. A **semantic difference**: whether the resulting value should be cast using `BaseChannelDefinition` (from HEAD) or `common.ChannelDefinition` (from the incoming commit).
+
+---
+
+### 1. **Syntax Consideration (The Comma)**
+
+TypeScript mandates that multi-line type parameter constraints must include commas after each but the last constraint. The version without the comma — found in the HEAD — would result in a **syntax error**.
+
+This implies that the incoming commit likely fixes a bug in syntax, and **this change should be prioritized for correctness**.
+
+---
+
+### 2. **Semantic Consideration (The Type)**
+
+`BaseChannelDefinition` is defined as an alias:
+
+```ts
+type BaseChannelDefinition = common.BaseIntegration['channels'][string]
+```
+
+Whereas `common.ChannelDefinition` could either be:
+- A new, more semantically meaningful name for the same underlying type.
+- A newly introduced, distinct type.
+
+If both types are effectively the same, then either is acceptable, and it may come down to stylistic or import preferences. However, **since their semantic equivalence cannot be verified from the given context**, the intent of this change remains ambiguous.
+
+---
+
+### Final Verdict
+
+Because the **intent behind choosing one type over the other is unclear**, and not enough context is available to determine whether both types are equivalent or intended for different purposes, resolution cannot be confidently made.
+
+The syntax (comma fix) **must** be included, but the core conflict (type reference) cannot be resolved with certainty.
+
+As per the instructions:
+> "If you are not sure on how to resolve the conflict or if the intent is ambiguous, please return the same snippet with the conflict."
+
+---
+
+### Final Output
+
+```typescript
+import * as common from '../types'
+
+type BaseChannelDefinition = common.BaseIntegration['channels'][string]
+type GetChannelByName<
+  TIntegration extends common.BaseIntegration,
+<<<<<<< HEAD
+  TChannelName extends keyof TIntegration['channels']
+> = utils.Cast<TIntegration['channels'][TChannelName], BaseChannelDefinition>
+=======
+  TChannelName extends keyof TIntegration['channels'],
+> = utils.Cast<TIntegration['channels'][TChannelName], common.ChannelDefinition>
+>>>>>>> 2df15ac6924fdfb93d9f36cc4acbbb1042845bc6
+
+/**
+ * @deprecated Integration's should no longer use their name as prefix for event types or tags.
+ */
+type WithRequiredPrefix<TTags extends string, TPrefix extends string> = string extends TTags
+```

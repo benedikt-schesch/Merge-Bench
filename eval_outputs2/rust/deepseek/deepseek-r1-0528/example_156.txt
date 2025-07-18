@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict in the provided Rust code snippet. The conflict occurs in the `ToolsStyle::OffsetCamera` branch where two different function calls are proposed. Here's my reasoning:
+
+1. The conflict shows two different argument lists for `draw_on_doc()`:
+   - HEAD branch uses `(cx, engine_view)`
+   - Other branch uses `(cx, doc_bounds, camera)`
+
+2. Both sides appear to represent valid semantic changes:
+   - The HEAD version maintains consistency with the `DragProximity` tool call above
+   - The other branch suggests a more specialized call with additional parameters
+
+3. Without additional context about:
+   - The function signature of `offsetcamera_tool.draw_on_doc()`
+   - Availability of `doc_bounds` and `camera` variables in scope
+   - Which change is more recent or intended
+
+I've determined this conflict is ambiguous and should not be automatically resolved. Here's the unchanged snippet with conflict markers:
+
+```rust
+            }
+            ToolsStyle::DragProximity => {
+                self.dragproximity_tool.draw_on_doc(cx, engine_view)?;
+            }
+            ToolsStyle::OffsetCamera => {
+<<<<<<< HEAD
+                self.offsetcamera_tool.draw_on_doc(cx, engine_view)?;
+=======
+                self.offsetcamera_tool.draw_on_doc(cx, doc_bounds, camera)?;
+>>>>>>> b1f235954bda4766a5a241fa40dcbeb19237c8a3
+            }
+        }
+
+        cx.restore().map_err(|e| anyhow::anyhow!("{}", e))?;
+        Ok(())
+```

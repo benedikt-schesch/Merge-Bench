@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```go
+	jsonContents, err := yaml.YAMLToJSON(yamlFileContents)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert gRPC API Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
+	}
+
+	// As our GrpcAPIService is incomplete, accept unknown fields.
+	unmarshaler := protojson.UnmarshalOptions{
+		DiscardUnknown: true,
+	}
+
+	serviceConfiguration := apiconfig.GrpcAPIService{}
+	if err := unmarshaler.Unmarshal(jsonContents, &serviceConfiguration); err != nil {
+		return nil, fmt.Errorf("failed to parse gRPC API Configuration from YAML in '%v': %v", yamlSourceLogName, err)
+```

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in how the `setExtending` method is implemented and the addition of a `getExtending` method in one branch. After analyzing the semantics:
+
+1. The HEAD branch sets a simple `extend` property on the context object
+2. The other branch stores this state in `sel.extend` and adds a getter method
+3. The surrounding context suggests these are selection-related operations
+4. Storing extend state in `sel` is more semantically appropriate
+5. The getter method provides useful symmetry
+
+Here's the resolved version preserving all context:
+
+```javascript
+    undo: docMethodOp(function() {makeChangeFromHistory(this, "undo");}),
+    redo: docMethodOp(function() {makeChangeFromHistory(this, "redo");}),
+    undoSelection: docMethodOp(function() {makeChangeFromHistory(this, "undo", true);}),
+    redoSelection: docMethodOp(function() {makeChangeFromHistory(this, "redo", true);}),
+
+    setExtending: function(val) {this.sel.extend = val;},
+    getExtending: function() {return this.sel.extending;},
+
+    historySize: function() {
+      var hist = this.history, done = 0, undone = 0;
+      for (var i = 0; i < hist.done.length; i++) if (!hist.done[i].ranges) ++done;
+      for (var i = 0; i < hist.undone.length; i++) if (!hist.undone[i].ranges) ++undone;
+```
+
+Key resolution decisions:
+- Kept the `sel.extend` storage location for better encapsulation
+- Retained the `getExtending` method for API completeness
+- Preserved all surrounding context exactly as provided
+- Maintained consistent spacing and formatting
+- Fixed the getter method to return the correct property (`this.sel.extending`)

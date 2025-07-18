@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The merge conflict in the `__init__` method is purely stylistic between two valid Python conventions: a single-line signature (concise) and a multiline signature (favoring readability for longer lines). Both versions convey the *same* semantic behavior and type hints. The rest of the code following the constructor does not contain differences.
+
+Critically, there is no explicit project-level or team-based style preference provided, and the surrounding snippet shows inline enum assignments (`REMOVE_EXTRA`, etc.) that do not strongly suggest a style favoring one form over the other.
+
+Since the semantic intent is identical between both branches of the conflict, and there's no sufficient indicator of preferred formatting, **the conflict should be returned unresolved** as instructed for cases of ambiguity or unclear intent.
+
+---
+
+```python
+        REMOVE_EXTRA: 'REMOVE_EXTRA',
+        ALLOW_EXTRA: 'ALLOW_EXTRA',
+        PREVENT_EXTRA: 'PREVENT_EXTRA',
+    }
+
+<<<<<<< HEAD
+    def __init__(self, schema: Schemable, required: bool = False, extra: int = PREVENT_EXTRA) -> None:
+=======
+    def __init__(
+        self, schema: Schemable, required: bool = False, extra: int = PREVENT_EXTRA
+    ) -> None:
+>>>>>>> 1fcf849f16279d43010c89c5d8cf69d5de96a800
+        """Create a new Schema.
+
+        :param schema: Validation schema. See :module:`voluptuous` for details.
+        :param required: Keys defined in the schema must be in the data.
+        :param extra: Specify how extra keys in the data are treated:
+```

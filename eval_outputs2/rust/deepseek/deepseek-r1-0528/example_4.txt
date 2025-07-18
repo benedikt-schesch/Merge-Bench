@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict in the `Client::new` function. Both sides are making significant changes that appear incompatible without more context about the intended struct fields. Here's why:
+
+1. **Parameter usage**:
+   - HEAD uses `session` and `spotify` parameters directly as fields
+   - Incoming branch ignores `session` parameter and overrides `spotify` with a default value
+
+2. **Field differences**:
+   - HEAD has `session`, `spotify`, and `http`
+   - Incoming branch has `spotify`, `http`, and `oauth` (with different HTTP client type)
+
+3. **HTTP client**:
+   - HEAD uses non-blocking client (`reqwest::Client`)
+   - Incoming branch uses blocking client (`reqwest::blocking::Client`)
+
+The changes seem to represent fundamentally different approaches to initializing the `Client` struct. Since the intent is ambiguous and the changes conflict at both syntactic and semantic levels, I'm returning the unresolved conflict:
+
+```rust
+
+impl Client {
+    /// creates the new `Client` given a spotify authorization
+    pub fn new(session: Session, spotify: Spotify) -> Self {
+        Self {
+<<<<<<< HEAD
+            session,
+            spotify,
+            http: reqwest::Client::new(),
+=======
+            spotify: Spotify::default(),
+            http: reqwest::blocking::Client::new(),
+            oauth,
+>>>>>>> d291d456a6ab54e316adf9ce40bdd6f2fa529f7a
+        }
+    }
+
+    /// handles a client event
+    pub fn handle_event(
+
+```

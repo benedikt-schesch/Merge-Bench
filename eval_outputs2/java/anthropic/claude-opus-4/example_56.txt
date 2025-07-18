@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to execute the same query but with different formatting:
+
+- HEAD version: Multi-line formatting with method calls on separate lines
+- Branch version: Single-line formatting with all method calls chained on one line
+
+Both versions are semantically identical - they create the same query to fetch PyxCardSet objects by IDs. The only difference is the code formatting style.
+
+Since both achieve the same intent and there's no semantic difference, I'll preserve the HEAD version as it follows a more readable multi-line formatting style:
+
+```java
+    synchronized (options.cardSetIds) {
+      try {
+        final List<CardSet> cardSets = new ArrayList<>();
+
+        if (!options.getPyxCardSetIds().isEmpty()) {
+          @SuppressWarnings("unchecked") final List<CardSet> pyxCardSets = session
+              .createQuery("from PyxCardSet where id in (:ids)")
+              .setParameterList("ids", options.getPyxCardSetIds()).list();
+          cardSets.addAll(pyxCardSets);
+        }
+
+        // Not injecting the service itself because we might need to assisted inject it later
+        // with card id stuff.
+
+```

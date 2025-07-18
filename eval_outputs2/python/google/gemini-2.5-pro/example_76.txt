@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```python
+            schema.required = self.required
+            self._compiled.append(schema._compile(v))
+        schema.required = old_required
+        return self._run
+
+    def _run(self, path: typing.List[typing.Hashable], value):
+        if self.discriminant is not None:
+            self._compiled = [
+                self.schema._compile(v)
+                for v in self.discriminant(value, self.validators)
+            ]
+
+```

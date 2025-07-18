@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Based on the semantics of the surrounding C preprocessor directives, here is the resolved merge conflict:
+
+The `HEAD` branch contains a preprocessor check for `ZEND_ENGINE_2_5`, which was used to detect PHP versions older than 5.5, and includes `php_logos.h` accordingly.
+
+The incoming branch (`51c6ba6...`) introduces a more modern and explicit check using `PHP_VERSION_ID < 50500` to achieve the same goal. It also adds includes for `php.h` and `php_ini.h`, which are standard and necessary headers for a PHP extension.
+
+The semantic intent of both branches is to handle compatibility with older PHP versions. The incoming branch does this in a more complete and modern way. Therefore, the resolution is to adopt the changes from the incoming branch and remove the now-redundant `ZEND_ENGINE_2_5` block to avoid duplication of logic.
+
+```c
+
+#include "php.h"
+#include "php_ini.h"
+#if PHP_VERSION_ID < 50500
+   #include "php_logos.h"
+#endif
+#include "main/fopen_wrappers.h"
+#include "ext/standard/info.h"
+#include "ext/standard/php_incomplete_class.h"
+#include "ext/standard/md5.h"
+
+
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```java
+    public static JobContext sJobContext = null;
+
+    public static class Combine
+            extends Reducer<PigNullableWritable, NullableTuple, PigNullableWritable, Writable> {
+
+        private final Log log = LogFactory.getLog(getClass());
+
+        //HADOOP-3226 Combiners can be called multiple times in both map and reduce
+        private static boolean firstTime = true;
+
+        private byte keyType;
+
+        //The reduce plan
+        private PhysicalPlan cp;
+
+```

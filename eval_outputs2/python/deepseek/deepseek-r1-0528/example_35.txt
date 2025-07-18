@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs due to different approaches to validating exception handling in the `test_exact_sequence` function. The HEAD version includes manual exception handling logic while the incoming change removes it, relying solely on the context manager for validation. The resolution aligns with standard pytest patterns by eliminating redundant manual checks since `raises(Invalid)` already validates the exception behavior automatically.
+
+```python
+
+def test_exact_sequence():
+    schema = Schema(ExactSequence([int, int]))
+    with raises(Invalid):
+        schema([1, 2, 3])
+    assert schema([1, 2]) == [1, 2]
+
+
+def test_required():
+    """Verify that Required works."""
+```

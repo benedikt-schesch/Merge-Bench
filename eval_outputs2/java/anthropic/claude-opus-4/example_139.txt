@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the conflict is about whether to include the `@Private` annotation before the `setBackendException` method.
+
+The HEAD version (current branch) does not have the annotation, while the incoming branch (f6a8f7aa42cae344f71cc6759f1c7880b49211fc) adds the `@Private` annotation.
+
+Since the `@Private` annotation is typically used to mark internal APIs that should not be used by external code, and this appears to be a setter method for backend exceptions, it makes semantic sense to include this annotation. The incoming change is adding documentation/visibility constraints without changing the actual functionality.
+
+Here's the resolved code:
+
+```java
+        public int compare(JobStats o1, JobStats o2) {
+            return o1.getJobId().compareTo(o2.getJobId());
+        }
+    }
+
+    @Private
+    public void setBackendException(String jobId, Exception e) {
+        if (e instanceof PigException) {
+            LOG.error("ERROR " + ((PigException)e).getErrorCode() + ": "
+                    + e.getLocalizedMessage());
+        } else if (e != null) {
+
+```

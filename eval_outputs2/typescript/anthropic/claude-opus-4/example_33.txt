@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the class declaration for `MatDatepickerInput<D>`, specifically the interfaces it implements.
+
+- HEAD version implements: `ControlValueAccessor, OnDestroy, Validator`
+- Incoming version implements: `AfterContentInit, ControlValueAccessor, OnDestroy, Validator`
+
+The semantic intent is clear: the incoming change wants to add `AfterContentInit` to the list of implemented interfaces while keeping all the existing ones. This is a common pattern when adding lifecycle hooks to Angular components.
+
+Here's the resolved code:
+
+```typescript
+    '(blur)': '_onBlur()',
+    '(keydown)': '_onKeydown($event)',
+  },
+  exportAs: 'matDatepickerInput',
+})
+export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements AfterContentInit,
+    ControlValueAccessor, OnDestroy, Validator {
+  /** Prefix for form control validator properties. */
+  protected _formControlValidatorPrefix = 'mat';
+
+  /** The datepicker that this input is associated with. */
+  @Input()
+
+```

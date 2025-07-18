@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```python
+            "nmap_tophop",
+            list(ivre.db.db.nmap.topvalues("hop"))[0]['_id'])
+        self.check_value(
+            "nmap_tophop_10+",
+            list(ivre.db.db.nmap.topvalues("hop>10"))[0]['_id'])
+
+        cov.stop()
+        cov.save()
+        self.assertEqual(RUN(["./bin/scancli.py", "--init"],
+                              stdin=open(os.devnull))[0], 0)
+
+    def test_passive(self):
+
+        # Init DB
+        self.assertEqual(RUN(["./bin/ipinfo.py", "--count"])[1], "0\n")
+
+```

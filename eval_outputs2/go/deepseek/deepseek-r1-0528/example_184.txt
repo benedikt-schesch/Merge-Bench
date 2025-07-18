@@ -1,0 +1,51 @@
+<think>
+No reasoning found</think>
+The merge conflict involves differences in both variable usage and return types, indicating a semantic disagreement. The HEAD branch uses `returnVal.LoadedHooks` and returns a tuple `(returnVal, err)`, while the other branch uses `loadedHooks` and returns `false`. This suggests deeper structural differences in the codebase that require manual resolution.
+
+Here's the snippet with the conflict preserved:
+
+```go
+	select {
+	case <-stopper:
+		return returnVal, errors.New("Keploy was interupted by stopper")
+	default:
+		// load the ebpf hooks into the kernel
+<<<<<<< HEAD
+		if err := returnVal.LoadedHooks.LoadHooks(cfg.AppCmd, cfg.AppContainer, 0, context.Background()); err != nil {
+			return returnVal, err
+=======
+		if err := loadedHooks.LoadHooks(appCmd, options.AppContainer, 0, context.Background()); err != nil {
+			return false
+>>>>>>> e4e1eb9b70ad7642e1296bc79aeecc4953e607c9
+		}
+	}
+
+	select {
+	case <-stopper:
+```
+
+Key observations:
+1. **Variable differences**:
+   - `returnVal.LoadedHooks` (HEAD) vs `loadedHooks` (other branch)
+   - `cfg.AppCmd`/`cfg.AppContainer` (HEAD) vs `appCmd`/`options.AppContainer` (other branch)
+
+2. **Return type mismatch**:
+   - HEAD returns tuple `(returnVal, err)`
+   - Other branch returns single value `false`
+
+3. **Semantic implications**:
+   - The changes likely represent different architectural approaches
+   - Return type differences affect all callers of this function
+   - Variable names suggest changes in data flow and ownership
+
+Resolution requires understanding:
+- What `returnVal` represents vs `loadedHooks`
+- Why the return type changed in the other branch
+- Whether `cfg` and `options` are compatible configurations
+- How the stopper functionality integrates with both versions
+
+Without additional context about these architectural decisions, automated resolution isn't possible. A developer should:
+1. Compare the full function signatures
+2. Check how callers handle returns
+3. Verify initialization of `returnVal`/`loadedHooks`
+4. Reconcile configuration structures (`cfg` vs `options`)

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```c
+        assert(new_active <= new_alloced); 
+
+        /* destroy elements */
+        if (new_active < size_active) 
+        {
+          for (size_t i=new_active; i<size_active; i++)
+            std::allocator_traits<allocator>::destroy(alloc, &items[i]);
+          size_active = new_active;
+        }
+
+        /* only reallocate if necessary */
+        if (new_alloced == size_alloced) {
+```

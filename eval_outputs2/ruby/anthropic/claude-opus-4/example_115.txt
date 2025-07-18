@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the test assertions, likely to accommodate a newer version of RSpec. The conflict shows:
+
+- HEAD version uses `should be true`
+- The incoming change uses `should be_truthy`
+
+The pattern `should be_truthy` is the more modern RSpec syntax that replaced the older `should be true` syntax. Since the incoming change appears to be updating the test suite to use newer RSpec conventions, and this is a semantic improvement (using the more appropriate matcher), I'll resolve by accepting the incoming change.
+
+```ruby
+>>>>>>> 88e81a1828af3c87c3b3ef7563bc67326d6774d9
+    end
+
+    it "marks unicode as available" do
+      Encoding.stub(:default_external).and_return(Encoding::UTF_8)
+      Term.unicode?.should be_truthy
+    end
+
+    it 'marks color as unavailable' do
+      STDOUT.stub(:tty?).and_return(false)
+<<<<<<< HEAD
+
+```

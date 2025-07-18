@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to destructure properties from `useSettingStore()`. The HEAD version extracts `sync`, `apiKey`, and `markDescGen`, while the incoming change adds two additional properties: `githubUsername` and `repositoryName`.
+
+The intent appears to be extending the destructured properties to include the GitHub-related settings. This is a typical additive change where new functionality (likely GitHub integration) is being added to the settings.
+
+Here's the resolved version:
+
+```typescript
+
+export function ControlImage() {
+  const [open, setOpen] = useState(false);
+
+  const { currentTagId, fetchTags, getCurrentTag } = useTagStore()
+  const { sync, apiKey, markDescGen, githubUsername, repositoryName } = useSettingStore()
+  const { fetchMarks, addQueue, setQueue, removeQueue } = useMarkStore()
+
+  async function selectImage(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+```

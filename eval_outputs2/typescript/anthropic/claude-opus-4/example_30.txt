@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import month constants from `@angular/cdk/testing`. 
+
+The HEAD side has:
+- `FEB`, `JAN`, `JUL`, `MockNgZone`, `NOV`
+
+The other side (7d443f98cf9f7fc4c9ddcb7abe45fa9bd4e9141c) has:
+- `DEC`, `FEB`, `JAN`, `NOV`, `JUL`
+
+The semantic intent appears to be:
+1. Both sides want the same months (FEB, JAN, JUL, NOV)
+2. The other side additionally wants to import `DEC`
+3. HEAD has `MockNgZone` which the other side doesn't explicitly list (but it might already be there)
+
+The resolution should include all unique imports from both sides. Here's the resolved version:
+
+```typescript
+  dispatchMouseEvent,
+  DEC,
+  FEB,
+  JAN,
+  JUL,
+  MockNgZone,
+  NOV,
+} from '@angular/cdk/testing';
+import {DateAdapter} from '@angular/cdk/datetime';
+import {Component, NgZone} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+
+```

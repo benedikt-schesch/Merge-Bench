@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar goals with some differences:
+
+1. **HEAD**: Adds a comment explaining that the code will "Pass incoming triggers to the WASM module and return entity changes; Stop when cancelled."
+
+2. **Incoming change**: 
+   - Wraps `valid_module` in an `Arc` (for shared ownership across threads)
+   - Adds a similar but slightly different comment: "Pass incoming events to the WASM module and send entity changes back; stop when cancelled from the outside."
+
+The semantic intent is the same - both are documenting what the subsequent code does. The incoming change also adds the Arc wrapper which seems important for thread safety.
+
+Here's the resolved conflict that combines both intents:
+
+```rust
+                link_resolver: link_resolver.clone(),
+                store: store.clone(),
+            };
+            let valid_module = ValidModule::new(&module_logger, wasmi_config, task_sender)
+                .expect("Failed to validate module");
+            let valid_module = Arc::new(valid_module);
+
+            // Pass incoming triggers to the WASM module and return entity changes;
+            // stop when cancelled from the outside.
+            let canceler = cancel_receiver.into_stream();
+            mapping_request_receiver
+                .select(canceler.map(|_| panic!("WASM module thread cancelled")).map_err(|_| ()))
+                .map_err(|()| err_msg("Cancelled"))
+                .for_each(move |request: MappingRequest| -> Result<(), Error> {
+
+```

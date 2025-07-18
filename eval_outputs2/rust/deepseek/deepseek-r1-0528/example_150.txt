@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by combining the imports from both branches while preserving their semantics. Here's the resolved snippet:
+
+```rust
+use rnote_compose::penhelpers::PenEvent;
+
+use super::AudioPlayer;
+use crate::document::Document;
+use crate::engine::{EngineTaskSender, EngineView, EngineViewMut};
+use crate::{Camera, DrawOnDocBehaviour, StrokeStore, SurfaceFlags, WidgetFlags};
+
+/// types that are pens and can handle pen events
+pub trait PenBehaviour: DrawOnDocBehaviour {
+    /// Handles a pen event
+    fn handle_event(
+```
+
+### Resolution Explanation:
+1. **Combined Engine Imports**: Both branches needed items from `crate::engine`. The HEAD branch had `{EngineView, EngineViewMut}` while the other branch had `EngineTaskSender`. I combined these into a single import statement.
+
+2. **Preserved Unique Imports**: 
+   - Added `super::AudioPlayer` from the other branch
+   - Added `crate::document::Document` from the other branch
+   - Added `Camera`, `StrokeStore`, and `SurfaceFlags` from the other branch
+   - Retained `WidgetFlags` from the HEAD branch
+
+3. **Deduplicated Common Import**: `DrawOnDocBehaviour` appears in both branches so it's only included once.
+
+This resolution maintains all functionality from both branches while organizing the imports logically. The order is structured as:
+1. External crate imports
+2. Super-relative imports
+3. Current crate imports (with submodules first, then root items)

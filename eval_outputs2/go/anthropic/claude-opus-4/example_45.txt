@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same `bindataFileInfo` structure, but with different `modTime` values:
+
+- HEAD has: `modTime: time.Unix(1444419364, 0)`
+- The incoming change has: `modTime: time.Unix(1467390283, 0)`
+
+The only other difference is the spacing after `info:` - HEAD has two spaces while the incoming change has one space.
+
+Since both sides are trying to update the modification time (likely from regenerating the bindata), and the incoming change has a more recent timestamp (1467390283 vs 1444419364), the semantic intent appears to be to use the most recent version.
+
+Here's the resolved code:
+
+```go
+	bytes, err := confGitignoreJbossBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/Jboss", size: 509, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreJekyll = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x8a\x2f\xce\x2c\x49\xd5\xe7\xd2\x2b\x4e\x2c\x2e\xd6\x4d\x4e\x4c\xce\x00\x71\xb2\x52\xb3\x2b\x73\x72\x74\x73\x53\x4b\x12\x53\x12\x4b\x12\xb9\x00\x01\x00\x00\xff\xff\xa0\x2d\x85\xce\x25\x00\x00\x00")
+
+
+```

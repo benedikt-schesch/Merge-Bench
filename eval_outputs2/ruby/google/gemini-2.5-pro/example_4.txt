@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict is in a test method named `test_skips_with_true_condition_without_fb_sig`. This test verifies that the `Rack::Facebook` middleware skips its signature verification logic when the Facebook signature parameter (`fb_sig`) is not provided.
+
+- The `HEAD` version (`response = @page.call(:fb_sig => nil)`) tests this condition by explicitly passing the `fb_sig` parameter with a `nil` value.
+- The `79bd4f8...` version (`response = @page.call(:fb_sig_user => 'ignored')`) tests this by omitting the `fb_sig` parameter entirely, while including a different Facebook-related parameter (`fb_sig_user`).
+
+The second approach is semantically richer. It simulates a more realistic scenario where a request from Facebook might contain some Facebook-specific parameters (like the user ID) but not the full set of canvas page signature parameters. The intent is to ensure that the middleware correctly identifies the absence of the specific `fb_sig` signature parameter and skips verification, even when other `fb_sig_*` parameters are present. This is a more robust test for the "without fb_sig" condition.
+
+Therefore, the version from the `79bd4f8...` branch is chosen.
+
+```ruby
+    assert_equal 200, response.status
+  end
+  
+  def test_skips_with_true_condition_without_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+    response = @page.call(:fb_sig_user => 'ignored')
+    assert_equal 200, response.status
+  end
+  
+  def test_verifies_with_true_condition_with_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+
+```

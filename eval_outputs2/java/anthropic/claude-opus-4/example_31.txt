@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic goal - creating a perspective projection matrix. The differences are:
+
+1. **TODO comment**: HEAD has "TODO Get FOV" while the other branch has "TODO: Get FOV" (with a colon)
+2. **Variable assignment**: HEAD uses `projection = ` while the other branch uses `this.projection = `
+3. **Method name**: HEAD uses `Matrix4.createPerspective` while the other branch uses `MatrixMath.createPerspective`
+
+The most significant semantic difference is the method name change from `Matrix4` to `MatrixMath`, which appears to be a refactoring. The other differences are stylistic.
+
+Resolving in favor of the more explicit style and the refactored class name:
+
+```java
+		updateView();
+	}
+
+	@Override
+	public void onAttached() {
+		// TODO: Get FOV
+		this.projection = MatrixMath.createPerspective(fieldOfView, 4.0f / 3.0f, .001f, 1000f);
+		updateView();
+	}
+
+	@Override
+	public Matrix4 getProjection() {
+
+```

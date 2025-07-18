@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+
+    // only effectively close connection when "onLeave" is fulfilled
+    this._onLeave(client, closeCode).then(() => client.leave(closeCode));
+  }
+
+  protected async _onLeave(client: Client, code?: number): Promise<any> {
+    debugMatchMaking('onLeave, sessionId: \'%s\'', client.sessionId);
+    client.state = ClientState.LEAVING;
+
+    const success = this.clients.delete(client);
+    if (!this.clients.delete(client)) {
+
+```

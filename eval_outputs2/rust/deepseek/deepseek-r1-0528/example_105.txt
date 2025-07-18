@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes, the resolution incorporates the following:
+
+1. The `ignore_unused` field from HEAD is preserved as it represents new functionality
+2. The `&*DEFAULT_DIR` argument from the other branch is preserved as it provides necessary context
+3. The struct pattern now matches the updated `LocalIdl` definition with 4 fields
+
+Here's the resolved snippet:
+
+```rust
+            for idl in entry.idls {
+                let LocalIdl {
+                    path,
+                    includes,
+                    touch,
+                    ignore_unused,
+                } = get_or_download_idl(idl, &*DEFAULT_DIR)?;
+
+                builder = builder
+                    .add_service(path.clone())
+                    .includes(includes)
+                    .touch([(path, touch)])
+```
+
+Explanation:
+- The `ignore_unused` field is maintained from HEAD since it represents additional functionality being tracked
+- The `DEFAULT_DIR` argument is kept from the other branch as it provides necessary context for the function call
+- The spacing and surrounding context are preserved exactly as in the original
+- This resolution assumes the `get_or_download_idl` function in the merged codebase both:
+  1. Accepts the `DEFAULT_DIR` argument
+  2. Returns a struct containing the `ignore_unused` field

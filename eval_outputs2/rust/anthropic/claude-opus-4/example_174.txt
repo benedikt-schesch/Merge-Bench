@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are adding new enum variants to what appears to be a match expression that maps `Source` enum variants to some constants.
+
+The HEAD branch is adding:
+- `Source::Random => RANDOM,`
+
+The incoming branch (403680f17) is adding:
+- `Source::Quantized => QUANTIZED,`
+
+Since these are different enum variants mapping to different constants, and both additions follow the same pattern as the existing code, the semantic intent is to include both new mappings. They don't conflict with each other functionally.
+
+Here's the resolved code:
+
+```rust
+            Source::Ternary => TERNARY,
+            Source::Indexing => INDEXING,
+            Source::Cast => CAST,
+            Source::Reduce => REDUCE,
+            Source::Conv => CONV,
+            Source::Random => RANDOM,
+            Source::Quantized => QUANTIZED,
+            Source::Mfa => panic!("Invalid lib"),
+        }
+    }
+
+    /// Load the give library from its [`source`].
+
+```

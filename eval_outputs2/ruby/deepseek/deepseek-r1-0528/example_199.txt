@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing method signatures for `get_page`. The HEAD version uses a required positional argument, while the other branch uses an optional keyword argument. However, the method body requires `target_url` to make the API request. Since the parameter is documented as required and the method would fail if `target_url` is nil, the positional argument is more appropriate. 
+
+Here's the resolved snippet:
+
+```ruby
+            ##
+            # Retrieve a single page of PublicKeyInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of PublicKeyInstance
+            def get_page(target_url)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return PublicKeyPage.new(@version, response, @solution)
+```

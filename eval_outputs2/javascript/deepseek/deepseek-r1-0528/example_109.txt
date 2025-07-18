@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing function definitions: one uses an exported function declaration while the other uses a variable assignment with an arrow function. The resolution preserves the export requirement from HEAD while adopting the arrow function syntax from the other branch. This maintains both the module interface and modern function syntax.
+
+```javascript
+    poolOffset = 0
+  }
+  poolOffset += bytes
+}
+
+export const random = bytes => {
+  // `|=` convert `bytes` to number to prevent `valueOf` abusing and pool pollution
+  fillPool((bytes |= 0))
+  return pool.subarray(poolOffset - bytes, poolOffset)
+}
+
+```

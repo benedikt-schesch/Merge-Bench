@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```ruby
+  scope :latest, :order => 'id DESC'
+
+  # TODO: investigate how we can enable this and not break nested attributes
+  # validates_presence_of :target_id, :user_id, :project_id
+  
+<<<<<<< HEAD
+  validate_on_create :check_duplicate, :if => lambda { |c| c.target_id? and not c.hours? }
+  validates_presence_of :body, :unless => lambda { |c| c.task_comment? or c.uploads.to_a.any? or c.google_docs.any? }
+=======
+  validate :check_duplicate, :if => lambda { |c| c.target_id? and not c.hours? }, :on => :create
+  validates_presence_of :body, :unless => lambda { |c| c.task_comment? or c.uploads.to_a.any? }
+>>>>>>> c91f301d8e8bc0b83797bd94a82dd1c8b1838234
+
+  # was before_create, but must happen before format_attributes
+  before_save   :copy_ownership_from_target, :if => lambda { |c| c.new_record? and c.target_id? }
+  after_create  :trigger_target_callbacks
+  after_destroy :cleanup_activities, :cleanup_conversation
+
+```

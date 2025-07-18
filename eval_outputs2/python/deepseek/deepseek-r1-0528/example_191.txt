@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+I'll return the code snippet with the conflict preserved since the intent appears ambiguous. The variable `process_as_code` introduced in the HEAD branch isn't used in the other branch, and it's unclear whether the conditional logic should be retained or removed without more context about the overall functionality.
+
+```python
+                save(docs_text, code_text)
+                has_code = docs_text = code_text = ''
+            docs_text += re.sub(comment_matcher, "", line) + "\n"
+
+        else:
+<<<<<<< HEAD
+            process_as_code = True
+
+        if(process_as_code):
+=======
+>>>>>>> bbeee06f1222fa47439717d2e4b642a41e9d7f4b
+            if code_text and any(line.lstrip().startswith(x)
+                                 for x in ['class ', 'def ', '@']):
+                if not code_text.lstrip().startswith("@"):
+                    save(docs_text, code_text)
+                    code_text = has_code = docs_text = ''
+
+```

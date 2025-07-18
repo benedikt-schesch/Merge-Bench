@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+    private readonly mongo: Db,
+    client: Client,
+    private readonly workspace: WorkspaceClient,
+    stayAlive: boolean = false
+  ) {
+    this.stayAlive = stayAlive
+    this.client = new TxOperations(client, this.user.userId)
+    this.systemTxOp = new TxOperations(client, core.account.System)
+    this.googleClient = new GoogleClient(user, mongo, this)
+    this.calendar = this.googleClient.calendar
+    this.histories = mongo.collection<EventHistory>('histories')
+
+```

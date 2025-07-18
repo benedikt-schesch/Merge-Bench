@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import classes from Apache Pig, but they're organizing the imports differently:
+
+- HEAD is importing `PigServer.ExecType` (suggesting it references ExecType through the PigServer class)
+- The other branch imports `ExecType` directly from `org.apache.pig`
+
+Both sides also import `org.apache.pig.Main`, and the other branch additionally imports `FuncSpec`.
+
+Since both sides seem to need ExecType and Main, and the direct import of ExecType is cleaner than the nested reference through PigServer, I'll merge these imports by taking all the necessary imports:
+
+```java
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.pig.FuncSpec;
+import org.apache.pig.Main;
+import org.apache.pig.ExecType;
+import org.apache.pig.backend.datastorage.DataStorage;
+import org.apache.pig.backend.datastorage.DataStorageException;
+import org.apache.pig.backend.datastorage.ElementDescriptor;
+import org.apache.pig.backend.executionengine.ExecException;
+import org.apache.pig.backend.executionengine.ExecutionEngine;
+
+```

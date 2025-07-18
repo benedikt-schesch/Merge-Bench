@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD side: The parameter `$common` has an array type hint and a default value of an empty array
+- The other side: The parameter `$common` has no type hint and no default value
+
+Both sides are trying to define the constructor parameter for what appears to be the same `$common` property. The HEAD side is more defensive with type safety (array type hint) and provides a default value, while the other side is more permissive.
+
+Given that the property is assigned to `$this->common` and considering modern PHP best practices, the HEAD version with the array type hint seems more appropriate. The default empty array also makes the class easier to instantiate without requiring parameters.
+
+Here's the resolved version:
+
+```php
+    protected $reg = array();
+
+    /**
+     * @param array $common
+     */
+    public function __construct(array $common = array())
+    {
+        $this->common = $common;
+    }
+
+    public function __destruct()
+```

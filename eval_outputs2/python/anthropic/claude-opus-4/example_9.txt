@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are making very similar changes with only minor differences:
+
+1. **HEAD** has spacing without spaces around the `|` operators and includes `self.hSizer_labels.Layout()`
+2. **d523b6a054acb6d09befd78a9bc3897d48454bcd** has spacing with spaces around the `|` operators but doesn't include `self.hSizer_labels.Layout()`
+
+The semantic intent appears to be the same - both sides want to add a label and separator line to the horizontal sizer. The differences are:
+- Formatting style (spaces around `|` operators)
+- Whether to call `Layout()` after adding the widgets
+
+Since the formatting with spaces around operators is more readable and follows common Python style guidelines, and the `Layout()` call ensures the UI updates properly after adding new elements, the best resolution would be to combine both improvements.
+
+```python
+
+    def AddPage(self, page, text, select=False):
+        label = LinkStaticText(self.hSizer_panel, text, None, font_colour=wx.BLACK)
+        label.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        sline = wx.StaticLine(self.hSizer_panel, -1, style=wx.LI_VERTICAL)
+        self.hSizer_labels.Add(label, 0, wx.RIGHT | wx.LEFT | wx.CENTER, self.lspace)
+        self.hSizer_labels.Add(sline, 0, wx.EXPAND | wx.ALL | wx.CENTER | wx.TOP | wx.BOTTOM, 5)
+        self.hSizer_labels.Layout()
+        page.Show(False)
+        index = len(self.hSizer_panels.GetChildren()) - 1 if self.ad else len(self.hSizer_panels.GetChildren())
+        self.hSizer_panels.Insert(index, page, 100, wx.EXPAND)
+        self.labels.append(label)
+        self.panels.append(page)
+
+```

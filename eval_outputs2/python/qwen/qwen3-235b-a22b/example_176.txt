@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```python
+            if not wbuf and 1 in keeps:
+                wbuf.append(None)
+            for vv in vbuf:
+                for ww in wbuf:
+                    yield (k, (vv, ww))
+        return self.cogroup(other, numSplits, taskMemory).flatMap(dispatch)
+    
+    def collectAsMap(self):
+        d = {}
+        for v in self.ctx.runJob(self, lambda x:list(x)):
+            d.update(dict(v))
+        return d
+```

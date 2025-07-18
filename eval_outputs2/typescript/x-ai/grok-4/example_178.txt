@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```typescript
+    return res
+  }
+
+  async newCalendarClient (user: User, code: string): Promise<CalendarClient> {
+    const newClient = await CalendarClient.create(user, this.mongo, this.client, this)
+    const email = await newClient.authorize(code)
+    if (this.clients.has(email)) {
+      newClient.close()
+      throw new Error('Client already exist')
+    }
+    this.clients.set(email, newClient)
+    return newClient
+
+```

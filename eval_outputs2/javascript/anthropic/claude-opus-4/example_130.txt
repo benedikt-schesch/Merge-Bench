@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (left side)**: Simply checks if `!meta` exists before initializing the metadata
+- **RIGHT side**: Checks if `!meta || !meta.codec` exists, and additionally sets audio flags before initializing
+
+The semantic intent appears to be:
+- Both sides want to initialize audio metadata when it doesn't exist
+- The RIGHT side adds an additional check for `!meta.codec` (suggesting metadata might exist but be incomplete)
+- The RIGHT side also ensures audio flags are set to true when initializing metadata
+
+The RIGHT side's approach seems more complete as it:
+1. Handles cases where metadata exists but lacks codec information
+2. Properly sets the audio flags before initialization
+
+Here's the resolved conflict:
+
+```javascript
+
+
+        let meta = this._audioMetadata;
+        let track = this._audioTrack;
+
+        if (!meta || !meta.codec) {
+            if (this._hasAudio === false) {
+                this._hasAudio = true;
+                this._mediaInfo.hasAudio = true;
+            }
+
+            // initial metadata
+            meta = this._audioMetadata = {};
+            meta.type = 'audio';
+            meta.id = track.id;
+            meta.timescale = this._timescale;
+
+```

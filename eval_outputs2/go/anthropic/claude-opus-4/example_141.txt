@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic goal - they're both updating terminology from "swagger" to "openapi". The conflict appears to be due to simultaneous changes where:
+
+- HEAD is keeping the old "swagger" terminology
+- The incoming change (0e11f6f8...) is updating to "openapi" terminology and also shows a file rename from `protoc-gen-swagger/genswagger/template.go` to `protoc-gen-openapiv2/internal/genopenapi/template.go`
+
+The intent is clear: migrate from Swagger to OpenAPI terminology. The incoming change should be accepted as it represents the desired state.
+
+```go
+		}
+	}
+	return ""
+}
+
+// messageToQueryParameters converts a message to a list of OpenAPI query parameters.
+func messageToQueryParameters(message *descriptor.Message, reg *descriptor.Registry, pathParams []descriptor.Parameter, body *descriptor.Body) (params []openapiParameterObject, err error) {
+	for _, field := range message.Fields {
+		p, err := queryParams(message, field, "", reg, pathParams, body)
+		if err != nil {
+			return nil, err
+		}
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic intent - checking if the `props` object has its own `css` property. The conflict arose because:
+
+- HEAD version uses `hasOwnProperty.call(props, 'css')`
+- The incoming change uses `hasOwn.call(props, 'css')` and adds TypeScript type annotations
+
+Since `hasOwn` is already imported from `'./utils'` at the top of the file, and both methods achieve the same goal (checking for own property), the semantic intent is clear. The incoming change also adds type annotations which is a common improvement for TypeScript compatibility.
+
+Here's the resolved code:
+
+```javascript
+import Emotion, { createEmotionProps } from './emotion-element'
+import { hasOwn } from './utils'
+
+export const Fragment = ReactJSXRuntime.Fragment
+
+export function jsx(type: any, props: any, key: any) {
+  if (!hasOwn.call(props, 'css')) {
+    return ReactJSXRuntime.jsx(type, props, key)
+  }
+
+  return ReactJSXRuntime.jsx(Emotion, createEmotionProps(type, props), key)
+}
+
+```

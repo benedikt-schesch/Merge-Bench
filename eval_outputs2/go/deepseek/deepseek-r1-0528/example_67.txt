@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I'll resolve this merge conflict by analyzing the intent and semantics. The conflict arises from two different file registration paths for the same generated protobuf file, but both versions are functionally equivalent.
+
+Here's the resolved code:
+
+```go
+	proto.RegisterExtension(E_DefaultString)
+	proto.RegisterExtension(E_DefaultBytes)
+	proto.RegisterExtension(E_DefaultEnum)
+}
+
+func init() { proto.RegisterFile("proto2_proto/test.proto", fileDescriptor_e5b3e7ca68f98362) }
+
+var fileDescriptor_e5b3e7ca68f98362 = []byte{
+	// 4330 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x5b, 0x4b, 0x73, 0xdb, 0x58,
+	0x76, 0x36, 0xc0, 0xf7, 0x21, 0x25, 0x42, 0xb7, 0xd5, 0x36, 0x2d, 0xb5, 0x6d, 0x98, 0x3d, 0x3d,
+```
+
+Key resolution points:
+1. The file descriptor variable `fileDescriptor_e5b3e7ca68f98362` exists in the context, so we must use it
+2. Both file paths (`proto2_proto/test.proto` vs `test_proto/test.proto`) are semantically equivalent for registration
+3. The HEAD version's compact syntax is preferred as it's functionally identical
+4. The file descriptor bytes clearly belong to the HEAD version's registration
+
+The resolution maintains compatibility with the existing file descriptor while using the more concise initialization syntax.

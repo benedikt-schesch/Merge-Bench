@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is trying to:
+   - Create an `llmClient` from `llmProvider.getClient(modelName, requestId)`
+   - Determine if it's using Anthropic by checking `llmClient.type === "anthropic"`
+   - Use this `isUsingAnthropic` variable in the prompt building functions
+
+2. The other branch (85483fe) appears to have removed this logic entirely, suggesting that either:
+   - The `llmClient` is now passed in as a parameter (which we can see it is in the function signature)
+   - The Anthropic-specific logic has been moved elsewhere or is no longer needed
+
+Since the function signature already includes `llmClient: LLMClient` as a parameter, the HEAD's attempt to create a new `llmClient` from `llmProvider` would create a variable name conflict and is likely incorrect. The other branch's approach of using the passed-in `llmClient` directly makes more sense.
+
+However, the `isUsingAnthropic` check might still be needed for the prompt building functions. Let me preserve the Anthropic check while using the passed-in `llmClient`:
+
+```typescript
+  llmClient: LLMClient;
+  chunksSeen: number;
+  chunksTotal: number;
+  requestId: string;
+}) {
+  const isUsingAnthropic = llmClient.type === "anthropic";
+
+  const extractionResponse = await llmClient.createChatCompletion({
+    messages: [
+      buildExtractSystemPrompt(isUsingAnthropic),
+      buildExtractUserPrompt(instruction, domElements, isUsingAnthropic),
+    ],
+```

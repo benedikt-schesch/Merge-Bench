@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding a post-write hook while the other branch doesn't. The hook (`gpio_mmaped_write_post`) should be called after modifying the register but before returning success, as it extends functionality without breaking existing behavior when the hook is unset. Here's the resolved version:
+
+```c
+        *((unsigned *)dev->reg) |= (1<<dev->reg_bit_pos);
+        return MRAA_SUCCESS;
+    }
+    *((unsigned *)dev->reg) &= ~(1<<dev->reg_bit_pos);
+
+    if (advance_func.gpio_mmaped_write_post != NULL)
+        return advance_func.gpio_mmaped_write_post(dev,value);
+    return MRAA_SUCCESS;
+}
+
+static mraa_result_t
+mraa_gpio_wait_interrupt(int fd)
+```
+
+Key resolution points:
+1. The `gpio_mmaped_write_post` hook is preserved from the feature branch
+2. It's safely guarded by a NULL check
+3. When the hook exists, its return value propagates
+4. When no hook exists, `MRAA_SUCCESS` returns normally
+5. Original spacing/indentation is preserved
+
+The solution maintains both:
+- The original success return behavior (when no hook exists)
+- The new extended functionality (when hook is configured)

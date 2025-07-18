@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+```c
+      case DL_DRAGGING:
+        hdl->dragging = 1;
+        dest = pl_itemfrompt(dlm->hWnd, dlm->ptCursor, TRUE);
+        if (dest > hdl->dummyitem)
+          dest = hdl->dummyitem;
+<<<<<<< HEAD
+        DrawInsert(hwnd, dlm->hWnd, dest);
+=======
+        p_DrawInsert(hwnd, dlm->hWnd, dest);
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+        if (dest >= 0)
+          SetWindowLongPtr(hwnd, DWLP_MSGRESULT, DL_MOVECURSOR);
+        else
+          SetWindowLongPtr(hwnd, DWLP_MSGRESULT, DL_STOPCURSOR);
+        ret |= 1;
+```
+
+**Explanation of Preservation:**  
+The conflict remains unresolved because the semantic intent is ambiguous. Both branches appear to be performing the same core operation (drawing an insertion marker during drag operations), but use different function identifiers (`DrawInsert` vs `p_DrawInsert`). Without broader context to determine if:
+1. This is a simple refactor (e.g., function renaming)
+2. The prefix `p_` indicates a meaningful semantic change (e.g., internal/protected function)
+3. Both functions exist in the codebase with different behaviors  
+
+the conflict is preserved per the instruction to return the original snippet when intent is unclear. The surrounding logic is identical in both branches.

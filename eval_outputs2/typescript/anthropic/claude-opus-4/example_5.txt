@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add import statements. The conflict appears to be about importing different types:
+
+- HEAD wants to import `QueryClient` from `'./queryClient'`
+- The incoming change wants to import `DeepUnwrapRef`, `MaybeRef`, and `WithQueryClientKey` from `'./types'`
+
+Based on the semantic intent, both imports seem necessary for the module - they're importing different types from different modules. The resolution should include both import statements.
+
+Here's the resolved code:
+
+```typescript
+  DefaultedQueryObserverOptions,
+  QueryKey,
+  QueryObserver,
+  QueryObserverResult,
+} from '@tanstack/query-core'
+import type { QueryClient } from './queryClient'
+import type { DeepUnwrapRef, MaybeRef, WithQueryClientKey } from './types'
+import type { UseQueryOptions } from './useQuery'
+import type { UseInfiniteQueryOptions } from './useInfiniteQuery'
+
+export type UseBaseQueryReturnType<
+  TData,
+
+```

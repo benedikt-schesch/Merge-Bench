@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict in the method definition for `get_page` is ambiguous because it's unclear why the branch introduced a keyword argument with a default value. The method body requires a non-nil `target_url` parameter, and the keyword argument version introduces a potentially unsafe `nil` default that would break the request call. Without additional context about calling patterns or refactoring intentions, the conflict cannot be safely resolved.
+
+Here's the original snippet with the conflict preserved:
+
+```ruby
+            ##
+            # Retrieve a single page of InstalledAddOnExtensionInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of InstalledAddOnExtensionInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return InstalledAddOnExtensionPage.new(@version, response, @solution)
+```

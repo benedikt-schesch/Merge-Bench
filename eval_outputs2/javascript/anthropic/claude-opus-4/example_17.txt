@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (current branch)**: Initializing various test result arrays (`testResults`, `preRequestTestResults`, `postResponseTestResults`, `assertionResults`)
+- **Incoming branch**: Clearing error messages for various scripts (`preRequestScriptErrorMessage`, `postResponseScriptErrorMessage`, `testScriptErrorMessage`)
+
+Both sides appear to be resetting/initializing different aspects of the same request item - one focuses on test results, the other on error messages. These changes are complementary rather than conflicting in terms of intent. Both are preparing the item for a new request execution by clearing previous state.
+
+The semantic intent is to reset all test-related and error-related state before running a new request. Therefore, the resolution should include both sets of initializations:
+
+```javascript
+      if (!item) return;
+
+      item.requestState = null;
+      item.requestUid = requestUid;
+      item.requestStartTime = Date.now();
+      item.testResults = [];
+      item.preRequestTestResults = [];
+      item.postResponseTestResults = [];
+      item.assertionResults = [];
+      item.preRequestScriptErrorMessage = null;
+      item.postResponseScriptErrorMessage = null;
+      item.testScriptErrorMessage = null;
+    },
+    runRequestEvent: (state, action) => {
+      const { itemUid, collectionUid, type, requestUid } = action.payload;
+      const collection = findCollectionByUid(state.collections, collectionUid);
+
+
+```

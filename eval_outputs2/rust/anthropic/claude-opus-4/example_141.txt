@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call a `typescript` function but with different approaches:
+
+- **HEAD**: Uses `program.mutate()` and passes `default_config(&context.config.script)` with `unresolved_mark`
+- **Other branch**: Uses `program.visit_mut_with()` and passes `default_config(&context.config.script, param.module_id)` with `top_level_mark`
+
+The semantic differences are:
+1. Method name change: `mutate` vs `visit_mut_with`
+2. Additional parameter in `default_config`: the other branch adds `param.module_id`
+3. Different mark parameter: `unresolved_mark` vs `top_level_mark`
+
+Without more context about the codebase and the intent of these changes, it's ambiguous which approach is correct or if both changes need to be combined. The conflict appears to involve architectural changes that require domain knowledge to resolve properly.
+
+```rust
+          TsxConfig::default(),
+          comments,
+          unresolved_mark,
+          top_level_mark,
+        ));
+<<<<<<< HEAD
+        program.mutate(&mut typescript(
+          default_config(&context.config.script),
+          unresolved_mark,
+=======
+        program.visit_mut_with(&mut typescript(
+          default_config(&context.config.script, param.module_id),
+>>>>>>> 24a95b48172836d31c55697037d5dada7d9c1ef7
+          top_level_mark,
+        ));
+      }
+      _ => {}
+    }
+
+```

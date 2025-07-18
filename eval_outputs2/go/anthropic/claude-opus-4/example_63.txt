@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to add a deprecation comment to the `UnmarshalMessageSet` function. The only difference is in capitalization:
+
+- HEAD version: `// Deprecated: Do not use.`
+- Other branch: `// Deprecated: do not use.`
+
+Since both sides have the same semantic intent (marking the function as deprecated), I'll resolve this by choosing the more common Go convention, which is to capitalize the first word after "Deprecated:" in godoc comments.
+
+```go
+>>>>>>> 84668698ea25b64748563aa20726db66a6b8d299
+func MarshalMessageSet(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
+}
+
+// Deprecated: Do not use.
+func UnmarshalMessageSet([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+```

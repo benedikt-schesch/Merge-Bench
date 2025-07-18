@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```rust
+            &input_locations,
+        )?;
+
+        // Optimize plan based on new resolved statistics
+        let optimize_join = JoinSelection::new();
+        let optimize_aggregate = AggregateStatistics::new();
+
+        let cfg: SessionConfig = SessionConfig::new();
+
+        let plan: Arc<dyn ExecutionPlan> = optimize_join.optimize(plan, cfg.options())?;
+        let plan: Arc<dyn ExecutionPlan> = optimize_aggregate.optimize(plan, cfg.options())?;
+
+        Ok(ResolvedStage::new(
+            self.stage_id,
+            self.stage_attempt_num,
+            plan,
+```

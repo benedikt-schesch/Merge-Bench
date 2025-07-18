@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze the intent of both sides:
+
+- **HEAD**: The method signature is `def get_page(target_url)` - using positional parameter
+- **Branch d26f64b**: The method signature is `def get_page(target_url: nil)` - using keyword argument with a default value
+
+The branch version is trying to convert the parameter to a keyword argument with a default value of `nil`. This is likely part of a broader refactoring to use keyword arguments for better API clarity and allowing optional parameters.
+
+Since the rest of the method body remains the same and both versions use `target_url` in the same way, the semantic intent is preserved. The keyword argument version with default value provides more flexibility while maintaining backward compatibility if called with a keyword.
+
+Here's the resolved version:
+
+```ruby
+            ##
+            # Retrieve a single page of PublicKeyInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of PublicKeyInstance
+            def get_page(target_url: nil)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return PublicKeyPage.new(@version, response, @solution)
+
+```

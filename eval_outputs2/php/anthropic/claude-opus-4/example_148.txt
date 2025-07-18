@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - returning a JSON response about permission updates. The key differences are:
+
+1. **HEAD** uses a specific JSON format with `cenInfo` and `cenError` keys
+2. **932edc4** uses `json_encode()` to encode plain strings
+
+Since both sides want JSON responses and the HEAD version uses a more structured format with specific keys (`cenInfo` for success, `cenError` for errors), I'll resolve this by keeping the HEAD version's approach as it provides more semantic meaning to the response type.
+
+```php
+						}
+					}
+
+					saveFile("$directory/$groupName/$userName/propertyPerm.txt", json_encode($outputPermProperties));
+				}
+				echo '{"cenInfo":"permissions updated"}';
+			} else {
+				echo '{"cenError":"permissions cannot be edited on default user"}';
+			}
+
+		} else if ($action === "getOfflinePerm") {
+			$openedPerm = openFile("$directory/$groupName/$userName/offlinePerm.txt", 50000);
+			echo json_encode($openedPerm);
+
+```

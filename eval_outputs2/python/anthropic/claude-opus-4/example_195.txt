@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+1. **HEAD (current branch)**: Has import statements including:
+   - `from __future__ import division` (Python 2/3 compatibility)
+   - PyGlet imports (`from pyglet.gl import *` and `from pyglet.window import key`)
+   - `import sys`
+
+2. **Other branch (50c6dd2...)**: Appears to have removed all these imports, leaving only the common imports below the conflict.
+
+The semantic intent seems to be:
+- HEAD wants to include PyGlet-related imports and Python 2/3 compatibility
+- The other branch removed these imports, possibly because:
+  - The code no longer uses PyGlet
+  - They're moving away from Python 2 support
+  - Or these imports were moved elsewhere
+
+Given that both branches agree on the imports after the conflict (math, random, time, deque), and the other branch explicitly removed the PyGlet imports, the most likely intent is that the PyGlet dependencies were intentionally removed.
+
+Here's the resolved version, favoring the removal of PyGlet imports:
+
+```python
+import math
+import random
+import time
+
+from collections import deque
+```

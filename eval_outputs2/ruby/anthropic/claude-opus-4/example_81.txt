@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD wants to set `PRE = 'rc3'` (indicating a release candidate version)
+- The other branch wants to set `PRE = nil` (indicating a stable release)
+
+This is a typical version conflict where one branch is preparing a release candidate (rc3) while another branch is setting up for a stable release (no pre-release identifier).
+
+Without additional context about which version should be used, I cannot definitively resolve this conflict. The decision depends on whether the project should be at version 3.0.0-rc3 or 3.0.0 (stable).
+
+Here's the snippet with the conflict preserved:
+
+```ruby
+module RailsAdmin
+  class Version
+    MAJOR = 3
+    MINOR = 0
+    PATCH = 0
+<<<<<<< HEAD
+    PRE = 'rc3'
+=======
+    PRE = nil
+>>>>>>> f5cc4272f1ab209470783123383db89ffc076858
+
+    class << self
+      # @return [String]
+      def to_s
+        [MAJOR, MINOR, PATCH, PRE].compact.join('.')
+```

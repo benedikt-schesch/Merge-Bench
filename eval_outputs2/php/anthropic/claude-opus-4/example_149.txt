@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: Adds a password verification check before removing a user. It reads the user's password from a file and compares it with `$clientData` before proceeding with the removal.
+- **Other branch (932edc45...)**: Proceeds directly to remove the user without any verification.
+
+The semantic intent appears to be:
+- HEAD wants to add security by requiring password verification before user removal
+- The other branch just wants the basic removal functionality
+
+Since the HEAD branch adds a security feature (password verification) that doesn't conflict with the core functionality, and this seems like a desirable security enhancement, I'll resolve this by keeping the password verification logic from HEAD while maintaining the removal code that follows.
+
+```php
+
+		} else if ($action === "getOfflinePerm") {
+			$openedPerm = openFile("$directory/$groupName/$userName/offlinePerm.txt", 50000);
+			echo json_encode($openedPerm);
+		} else if ($action === "removeUser") {
+			
+			$userToRemovePass = openFile("$directory/$groupName/$userName/pass.txt", 50000);
+			if ($userToRemovePass === $clientData) {
+			//remove user directory
+			delete_files("$directory/$groupName/$userName/");
+
+			//remove from user list
+			$users = openFile("$directory/$groupName/userlist.txt", 500000);
+
+```

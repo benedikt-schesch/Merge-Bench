@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch has an additional import/variable declaration `var _ = descriptor.ForMessage` that is not present in the other branch (0e11f6f8faadec71484fea2af292dcb6c56230d6).
+
+This appears to be a typical import conflict where one branch added a new dependency. Since these are blank identifier assignments (used to ensure imports are included even if not directly used), and the HEAD branch seems to have additional functionality that requires the descriptor package, the semantic intent would be to keep the additional import.
+
+Here's the resolved conflict:
+
+```go
+var _ codes.Code
+var _ io.Reader
+var _ status.Status
+var _ = runtime.String
+var _ = utilities.NewDoubleArray
+var _ = descriptor.ForMessage
+var _ = metadata.Join
+
+var (
+	filter_NonStandardService_Update_0 = &utilities.DoubleArray{Encoding: map[string]int{"body": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+)
+
+```

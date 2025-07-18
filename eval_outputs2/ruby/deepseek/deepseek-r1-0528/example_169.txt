@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+```ruby
+            ##
+            # Retrieve a single page of AddressInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of AddressInstance
+            def get_page(target_url)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return AddressPage.new(@version, response, @solution)
+```
+
+**Reasoning:**  
+The conflict arises between a required positional argument (`target_url`) and an optional keyword argument (`target_url: nil`). Considering:
+
+1. The parameter is described as required in the documentation ("API-generated URL for the requested results page")
+2. The method body passes `target_url` directly to the request without nil-checking
+3. Keyword arguments weren't used elsewhere in the provided context
+
+The positional argument approach is semantically safer since it:
+- Enforces the required nature of the parameter
+- Avoids potential nil errors in the request call
+- Matches typical patterns for mandatory API parameters
+
+The conflict is resolved by keeping the HEAD version while preserving all surrounding context and spacing.

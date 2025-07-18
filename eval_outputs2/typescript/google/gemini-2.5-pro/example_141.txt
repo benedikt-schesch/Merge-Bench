@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+  }
+
+  // Always set up Ollama as universal fallback (if not already configured)
+  // This should happen regardless of interactive mode since Ollama is always included
+  const envContent = existsSync(envFilePath) ? await fs.readFile(envFilePath, 'utf8') : '';
+  if (!hasValidOllamaEndpoint(envContent)) {
+    await setupEmbeddingModelConfig('ollama', envFilePath, true);
+  }
+
+  // Install AI model plugin
+  if (aiModel === 'local') {
+
+```

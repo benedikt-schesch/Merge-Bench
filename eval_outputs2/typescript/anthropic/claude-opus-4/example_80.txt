@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- **HEAD (current branch)**: Adds three properties to the request body:
+  - `max_completion_tokens: 1` - OpenAI's parameter
+  - `max_tokens: 1` - Deprecated OpenAI parameter but still used by most OpenAI-compatible providers
+  - `enable_thinking: false` - Qwen3 specific parameter
+
+- **Incoming branch**: Wants to keep the body minimal with just the basic required fields
+
+The intent of HEAD appears to be adding token limit parameters for compatibility with different AI providers (OpenAI and its compatible providers, plus Qwen3). The incoming branch seems to prefer a cleaner, minimal approach.
+
+Since the HEAD branch is explicitly adding provider-specific parameters with comments explaining their purpose (compatibility with different providers), and these are likely important for proper functionality across different AI services, I'll preserve the HEAD changes:
+
+```typescript
+    }
+
+    const body = {
+      model: model.id,
+      messages: [{ role: 'user', content: 'hi' }],
+      max_completion_tokens: 1, // openAI
+      max_tokens: 1, // openAI deprecated 但大部分OpenAI兼容的提供商继续用这个头
+      enable_thinking: false, // qwen3
+      stream
+    }
+
+    try {
+      await this.checkIsCopilot()
+
+```

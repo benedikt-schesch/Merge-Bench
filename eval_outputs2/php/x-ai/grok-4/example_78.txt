@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```php
+                    }
+                    $code .= "validReturn);\n";
+                    $code .= "if (*validReturn != SUCCESS) { return; }\n";
+                    break;
+                case 'functioncall':
+                    if (strtolower($func[$i][1]) == 'strlen') {
+                        $code .= $scope[$func[$i][count($func[$i]) - 1]] . ' = ' . $scope[$func[$i][2]] . '.length;';
+                        break;
+                    }
+                    $code .= $scope[$func[$i][count($func[$i]) - 1]] . ' = recki_if_' . strtolower($func[$i][1]) . '(';
+                    for ($j = 2; $j < count($func[$i]) - 1; $j++) {
+                        $code .= $scope[$func[$i][$j]] . ', ';
+                    }
+                    $code .= "validReturn);\n";
+                    $code .= "if (*validReturn != SUCCESS) { return; }\n";
+
+```

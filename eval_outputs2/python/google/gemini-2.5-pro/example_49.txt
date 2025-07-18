@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```python
+    out_ = schema({"number": '1234567.8901234'})
+    assert float(out_.get("number")) == 1234567.8901234
+
+
+def test_number_when_invalid_precision_n_scale_none_yield_decimal_true():
+    """Test with Number with no precision and invalid scale"""
+    schema = Schema({"number": Number(precision=14, yield_decimal=True)})
+    try:
+        schema({"number": '12345674.8901234'})
+    except MultipleInvalid as e:
+        pass
+```

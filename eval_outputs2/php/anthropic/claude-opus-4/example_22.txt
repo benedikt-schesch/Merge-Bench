@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Uses `defer()` to schedule a callback to run on the next iteration of the event loop
+- **Right side (eb2f325)**: Uses `delay(1, ...)` to schedule a callback after a 1 millisecond delay
+
+Both sides are trying to send a SIGUSR1 signal to the current process, but with slightly different timing:
+- `defer()` executes as soon as possible in the next tick
+- `delay(1, ...)` waits 1ms before executing
+
+In the context of signal testing, the intent appears to be to ensure the signal is sent after the signal handler is properly set up. The `defer()` approach is likely sufficient and more efficient for this purpose, as it ensures the handler is registered before the signal is sent without introducing an arbitrary delay.
+
+Here's the resolved code:
+
+```php
+            }
+            $args[] = $expectedData;
+            \call_user_func_array([$loop, $type], $args);
+
+            if ($type == "onSignal") {
+                $loop->defer(function (): void {
+                    \posix_kill(\getmypid(), \SIGUSR1);
+                });
+            }
+        });
+
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+```go
+	}
+
+	// Check for cyclical message reference:
+	isCycle := touchedIn[*msg.Name]
+	if isCycle {
+		return nil, fmt.Errorf("recursive types are not allowed for query parameters, cycle found on %q", fieldType)
+	}
+
+	// Construct a new map with the message name so a cycle further down the recursive path can be detected.
+	// Do not keep anything in the original touched reference and do not pass that reference along.  This will
+	// prevent clobbering adjacent records while recursing.
+
+```
+
+Reasoning:
+1. The semantic intent is identical - both versions report a recursive type error with the same message structure
+2. The only difference is capitalization of "recursive" (HEAD uses uppercase, merging branch uses lowercase)
+3. Go convention prefers lowercase for error strings (as seen in standard library)
+4. The lowercase version maintains consistency with typical Go error formatting
+5. The file path differences in conflict markers are irrelevant for semantic resolution
+6. No ambiguity exists since both versions convey identical meaning
+
+The resolution preserves the functional behavior while adhering to Go style conventions.

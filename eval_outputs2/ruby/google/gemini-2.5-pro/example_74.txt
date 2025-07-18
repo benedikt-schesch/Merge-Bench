@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```ruby
+      @zk.set(path, value)
+    end
+
+    # Schedules a manual failover to a redis node.
+    def schedule_manual_failover
+      return unless @leader
+      new_master = @zk.get(@manual_znode, :watch => true).first
+      return unless new_master && new_master.size > 0
+      logger.info("Received manual failover request for: #{new_master}")
+      logger.info("Current nodes: #{current_nodes.inspect}")
+
+      node = if new_master == ManualFailover::ANY_SLAVE
+        @slaves.shuffle.first
+
+```

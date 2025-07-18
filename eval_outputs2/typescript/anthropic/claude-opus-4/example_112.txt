@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same intent - they want to delay the callback execution after sending an error message. The key differences are:
+
+1. **HEAD**: Uses `setTimeout(cb, 0)` with a comment about responding with callback after the message has been sent
+2. **Branch**: Uses `setTimeout(cb, 1)` with a more detailed comment explaining that uWS doesn't acknowledge when the message was sent (matching the API of "ws" transport)
+
+The branch version provides more context about **why** the setTimeout is needed (uWS doesn't acknowledge message sending) and mentions API compatibility with the "ws" transport. The only functional difference is the timeout value (0 vs 1 millisecond).
+
+Since both achieve the same semantic intent of delaying callback execution, and the branch version provides better documentation, I'll resolve this by keeping the branch version:
+
+```typescript
+    this._ref.ws.send(data, true, false);
+  }
+
+  public error(code: number, message: string = '', cb?: (err?: Error) => void) {
+    this.raw(getMessageBytes[Protocol.ERROR](code, message));
+
+    // delay callback execution - uWS doesn't acknowledge when the message was sent
+    // (same API as "ws" transport)
+    setTimeout(cb, 1);
+  }
+
+  public leave(code?: number, data?: string) {
+    if (this.readyState !== ReadyState.OPEN) {
+      // connection already closed. ignore.
+
+```

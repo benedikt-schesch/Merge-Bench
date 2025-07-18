@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+```typescript
+  ].map(Number)
+
+  const ignore = options.skipIgnore ? [] : (options.ignore || ['/node_modules/']).map(str => new RegExp(str))
+
+  // Require the TypeScript compiler and configuration.
+<<<<<<< HEAD
+  const cwd = options.cwd || process.cwd()
+  const transpileOnly = options.transpileOnly === true
+=======
+  const cwd = options.dir ? resolve(options.dir) : process.cwd()
+  const isScoped = options.scope ? (fileName: string) => relative(cwd, fileName).charAt(0) !== '.' : () => true
+  const typeCheck = options.typeCheck === true || options.transpileOnly !== true
+>>>>>>> 3d92f25dfb00a44a45a02bcd6afa6c655ca63a81
+  const compiler = require.resolve(options.compiler || 'typescript', { paths: [cwd, __dirname] })
+  const ts: typeof _ts = require(compiler)
+  const transformers = options.transformers || undefined
+  const readFile = options.readFile || ts.sys.readFile
+  const fileExists = options.fileExists || ts.sys.fileExists
+
+```

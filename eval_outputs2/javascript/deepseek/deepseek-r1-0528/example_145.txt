@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+The merge conflict remains unresolved due to ambiguity in the intent of both branches. The differences involve:
+
+1. **Conditional logic**: HEAD uses `cmp(cur, lastPos) != 0` while the other branch uses `!posEq(cur, last)`
+2. **Focus handling**: HEAD explicitly checks focus state while the other branch uses `ensureFocus()`
+3. **Core logic**: HEAD calls `extendTo(cur)` while the other branch updates `last` and calls `doSelect(cur)`
+
+Without more context about the relationships between:
+- `cmp()` vs `posEq()`
+- `lastPos` vs `last`
+- `extendTo()` vs `doSelect()`
+- `onFocus()` vs `ensureFocus()`
+
+It's impossible to determine the correct resolution while preserving semantics. The original conflict is preserved below:
+
+```javascript
+
+    function extend(e) {
+      var curCount = ++counter;
+      var cur = posFromMouse(cm, e, true, type == "rect");
+      if (!cur) return;
+<<<<<<< HEAD
+      if (cmp(cur, lastPos) != 0) {
+        if (!cm.state.focused) onFocus(cm);
+        extendTo(cur);
+=======
+      if (!posEq(cur, last)) {
+        ensureFocus(cm);
+        last = cur;
+        doSelect(cur);
+>>>>>>> e1cfb7fd68e7988f508076063ebc17ddbabe2c92
+        var visible = visibleLines(display, doc);
+        if (cur.line >= visible.to || cur.line < visible.from)
+          setTimeout(operation(cm, function(){if (counter == curCount) extend(e);}), 150);
+      } else {
+        var outside = e.clientY < editorSize.top ? -20 : e.clientY > editorSize.bottom ? 20 : 0;
+```

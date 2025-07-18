@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to address the same issue - checking the class of `item['item_id']`. The conflict arises because:
+
+- **HEAD (left side)**: Simply checks that `item['item_id']` is a `Fixnum`
+- **Right side**: Adds compatibility for Ruby 2.4+ where `Fixnum` and `Bignum` were unified into `Integer`
+
+The intent of the right side is clearly to make the test compatible with both older Ruby versions (that use `Fixnum`) and newer Ruby versions (that use `Integer`). This is the more comprehensive solution that maintains backward compatibility while supporting newer Ruby versions.
+
+Here's the resolved code:
+
+```ruby
+    data.flatten.size.should eq 8
+    data.each do |item|
+      # all keys should be strings
+      item.keys.each{|x| x.class.should eq String}
+      item['timestamp'].should eq 1381388409
+      # Ruby 2.4+ unifies Fixnum & Bignum into Integer.
+      if 0.class == Integer
+        item['item_id'].class.should eq Integer
+      else
+        item['item_id'].class.should eq Fixnum
+      end
+      item['name'].size.should be > 0
+    end
+    data[3]['parent_id'].should be_nil
+    data[4]['parent_id'].should be_nil
+  end
+```

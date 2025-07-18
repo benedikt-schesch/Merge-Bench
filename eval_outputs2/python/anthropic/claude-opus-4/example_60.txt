@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to modify the docstring for the `test_literal()` function. The only difference is:
+- HEAD has a space after the opening quotes: `""" Test with Literal """`
+- The incoming change has no space after the opening quotes: `"""Test with Literal"""`
+
+The intent from both sides is the same - to have a docstring describing the test function. The conflict is purely about formatting style. According to PEP 257 (Python docstring conventions), docstrings should start with a capital letter and end with a period, but it doesn't mandate spaces after the opening quotes. However, the more common Python style is to not have a space after the opening quotes.
+
+Since the incoming change follows the more common Python docstring style (no space after opening quotes), I'll resolve in favor of that version:
+
+```python
+    schema = Schema({'a': {Extra: object}}, required=True)
+    schema({'a': {}})
+
+
+def test_literal():
+    """Test with Literal"""
+
+    schema = Schema([Literal({"a": 1}), Literal({"b": 1})])
+    schema([{"a": 1}])
+    schema([{"b": 1}])
+    schema([{"a": 1}, {"b": 1}])
+
+```

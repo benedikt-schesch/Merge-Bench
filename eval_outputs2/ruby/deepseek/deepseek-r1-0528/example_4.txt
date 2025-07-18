@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to simulating the absence of `fb_sig` in a test. The test name `test_skips_with_true_condition_without_fb_sig` indicates the key requirement is the **absence of the `fb_sig` parameter**, not just a nil value. 
+
+The other branch's approach (using `fb_sig_user: 'ignored'`) better satisfies this requirement because:
+1. It completely omits `fb_sig` (aligning with "without_fb_sig")
+2. The `fb_sig_user` parameter is irrelevant to this test case since the middleware condition is hardcoded to `true`
+3. The test only cares about the response status when `fb_sig` is missing
+
+Here's the resolved snippet:
+
+```ruby
+    assert_equal 200, response.status
+  end
+  
+  def test_skips_with_true_condition_without_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+    response = @page.call(:fb_sig_user => 'ignored')
+    assert_equal 200, response.status
+  end
+  
+  def test_verifies_with_true_condition_with_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+```

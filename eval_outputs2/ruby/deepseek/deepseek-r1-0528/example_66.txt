@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```ruby
+    # TEMPLATE CSS LOADING
+
+    def inline_stylesheet(name, media='all')
+      path = File.expand_path("../template/#{name}.css", __FILE__)
+      data = File.read(path)
+      data.gsub!(/([;{]) *\n/m, '\1')
+      data.gsub!(/([;{]) +/m, '\1')
+      data.gsub!(/[; ]+\}/, '}')
+      data.gsub!(/^/, '  ')
+      "<style type='text/css' media='#{media}'>\n#{data}  </style>"
+    end
+```
+
+**Resolution Reasoning:**  
+- The HEAD version provides the correct regex syntax for whitespace minification
+- The conflicting branch's pattern `(<=[;{])` contains invalid regex syntax (lookbehind should be `(?<=)`)
+- Both versions intend to minify CSS by removing unnecessary whitespace after `;`/`{`, but HEAD's approach is syntactically valid
+- The subsequent cleanup operations (`};` removal and indentation) remain identical in both branches
+- Preserved all context lines without modification as requested

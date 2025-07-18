@@ -1,0 +1,46 @@
+<think>
+No reasoning found</think>
+The code snippet contains a merge conflict that primarily involves two syntactic differences related to:
+
+1. **PHPUnit DataProvider Annotation Style**:  
+   - `@dataProvider matchesDataProvider` (DocBlock annotation style)  
+   - `#[\PHPUnit\Framework\Attributes\DataProvider('matchesDataProvider')]` (Attribute-based style introduced in PHP 8+)
+
+2. **Void Return Type**:  
+   - `public function testMatches($arg): void`  
+   - `public function testMatches($arg)`
+
+---
+
+### Semantic Intent Analysis
+
+- Both changes aim to attach the same functionality (`matchesDataProvider`) to the `testMatches()` method. The only difference is the syntax used.  
+- The presence/absence of `: void` is a modernization choice, not functionally necessary in PHPUnit versions < 9. However, if `: void` is present in the `HEAD` but absent in the other branch, both changes can be harmonized if the codebase uses PHP 7.1+ and encourages return type declarations.
+
+---
+
+### Resolution Decision
+
+- **Choose Attribute Syntax**: Modern PHP projects using PHP 8+ should prefer Attributes (`#[...]`) as it aligns with current language trends and avoids issues with docblock parsing.
+- **Include `: void` Return Type**: This enforces type safety and is a good practice. There is no semantic conflict in including it unless there are compatibility constraints with older test runners.
+
+---
+
+### Final Resolved Snippet
+
+Backticks and formatting preserved exactly as requested.
+
+```php
+    }
+
+    /**
+     * @dataProvider matchesDataProvider
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('matchesDataProvider')]
+    public function testMatches($arg): void
+    {
+        $this->assertNull($this->matcher->doArgumentsMatch($arg));
+    }
+
+    public function testToString(): void
+```

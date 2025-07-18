@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- **HEAD (current branch)**: Uses `deleteNearSelection` with a function that returns a range from the start of the first line to the start of the line after the last line. This approach handles selections and follows the pattern of other functions in the context.
+
+- **Incoming branch**: Directly manipulates the cursor position and replaces content from the start of the current line to the start of the next line, with a "+delete" origin marker.
+
+The HEAD version appears more consistent with the surrounding code pattern (notice `delLineLeft` below uses `deleteNearSelection`). It also handles selections properly, whereas the incoming version only works with the cursor position.
+
+The semantic intent of both is to delete the current line(s), but HEAD's implementation is more robust and consistent with the codebase pattern.
+
+```javascript
+          return {from: range.from(), to: range.to()};
+        }
+      });
+    },
+    deleteLine: function(cm) {
+      deleteNearSelection(cm, function(range) {
+        return {from: Pos(range.from().line, 0),
+                to: clipPos(cm.doc, Pos(range.to().line + 1, 0))};
+      });
+    },
+    delLineLeft: function(cm) {
+      deleteNearSelection(cm, function(range) {
+        return {from: Pos(range.from().line, 0), to: range.from()};
+      });
+```

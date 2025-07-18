@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Based on analyzing the semantic intent of both sides of the conflict, I've resolved the merge conflict. Both versions are functionally identical - they both append the current line plus a newline to `code_text`. The only difference is trailing whitespace in the HEAD version which doesn't affect functionality.
+
+Here's the resolved snippet with full context preserved:
+
+```python
+                if not code_text.lstrip().startswith("@"):
+                    save(docs_text, code_text)
+                    code_text = has_code = docs_text = ''
+
+            has_code = True
+            code_text += line + '\n'
+
+    save(docs_text, code_text)
+
+    return sections
+
+```
+
+Resolution rationale:
+1. Both sides of the conflict (`HEAD` and `bbeee06f`) implement identical functionality - appending `line + '\n'` to `code_text`
+2. The trailing whitespace in the HEAD version (`'\n'        `) is purely cosmetic and doesn't affect program behavior
+3. The version without trailing whitespace is cleaner and matches typical Python style conventions
+4. The surrounding context remains unchanged as requested
+5. Since both implementations achieve the same semantic intent, either version would work, but I chose the cleaner formatting
+
+The conflict was resolvable because both changes were semantically equivalent and the whitespace difference was insignificant.

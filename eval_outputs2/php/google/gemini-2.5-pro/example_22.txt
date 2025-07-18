@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```php
+            }
+            $args[] = $expectedData;
+            \call_user_func_array([$loop, $type], $args);
+
+            if ($type == "onSignal") {
+                $loop->defer(function (): void {
+                    \posix_kill(\getmypid(), \SIGUSR1);
+                });
+            }
+        });
+
+
+```

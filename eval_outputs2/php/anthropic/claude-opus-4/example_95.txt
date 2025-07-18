@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see it's about Tamil language translations for time expressions. Both sides are trying to express time durations in Tamil, but with slightly different grammatical forms.
+
+The conflict is between:
+- HEAD: "1 நிமிடம் இல்" and "5 நிமிடங்கள் இல்"
+- Other branch: "1 நிமிடத்தில் இல்" and "5 நிமிடங்களில் இல்"
+
+The difference is in the grammatical case used:
+- HEAD uses the nominative case (நிமிடம், நிமிடங்கள்)
+- The other branch uses the locative case (நிமிடத்தில், நிமிடங்களில்)
+
+Since this appears to be a test for the `ago()` method which typically returns phrases like "1 minute ago" or "in 1 minute", and both forms could be grammatically valid depending on the exact context in Tamil, I cannot determine which is the correct translation without more context about the intended Tamil grammar rules for this library.
+
+Therefore, I'm returning the snippet with the conflict unchanged:
+
+```php
+        ///
+
+        $oneAgo = Date::parse('1 minute');
+        $fiveAgo = Date::parse('5 minutes');
+
+<<<<<<< HEAD
+        $this->assertEquals('1 நிமிடம் இல்', $oneAgo->ago());
+        $this->assertEquals('5 நிமிடங்கள் இல்', $fiveAgo->ago());
+=======
+        $this->assertEquals('1 நிமிடத்தில் இல்', $oneAgo->ago());
+        $this->assertEquals('5 நிமிடங்களில் இல்', $fiveAgo->ago());
+>>>>>>> c5bda64d5e8e8da1c06651266e0da7c887816a48
+
+        ///
+
+        $oneAgo = Date::parse('1 hour');
+        $fiveAgo = Date::parse('5 hours');
+
+```

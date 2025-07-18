@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to assert that after login, the user is redirected to their profile page. The conflict is between two different ways of expressing the same redirect assertion:
+
+- HEAD uses the newer Rails routing helper: `profile_url(users(:user).profile)`
+- The other branch uses the older hash-style routing: `:controller=>'profiles', :action=>'show', :id=>users(:user).profile.to_param`
+
+Both achieve the same semantic intent - verifying the redirect to the user's profile page. The `profile_url` helper is the more modern, cleaner approach in Rails and would be preferred in most codebases.
+
+Here's the resolved conflict using the cleaner syntax from HEAD:
+
+```ruby
+    get "/login"
+    assert_response :success
+    post "/login", :user=>{:login => users(:user).login, :password => 'test'}
+    assert_response :redirect
+    assert session[:user]
+    assert_redirected_to profile_url(users(:user).profile)
+    follow_redirect!
+  
+    #   puts @response.body
+    spider(@response.body, "/", false)
+  end
+```

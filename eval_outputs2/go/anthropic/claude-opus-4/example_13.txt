@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same line that creates a `bindataFileInfo` struct. The differences are:
+
+1. **HEAD**: `modTime: time.Unix(1444419364, 0)` with spacing `info:  info` (two spaces)
+2. **Incoming**: `modTime: time.Unix(1467390283, 0)` with spacing `info: info` (one space)
+
+The semantic intent appears to be updating the modification timestamp. The incoming change has a newer timestamp (1467390283 vs 1444419364), which makes sense as it's likely updating the embedded file's metadata to reflect a more recent modification.
+
+The spacing difference (`info:  info` vs `info: info`) appears to be a formatting inconsistency. Following Go conventions, single space formatting is more standard.
+
+Here's the resolved code:
+
+```go
+	bytes, err := confGitignoreRailsBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/Rails", size: 707, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreRedcar = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xd2\x2b\x4a\x4d\x49\x4e\x2c\xe2\x02\x04\x00\x00\xff\xff\xfb\x2a\xf8\x5b\x08\x00\x00\x00")
+
+
+```

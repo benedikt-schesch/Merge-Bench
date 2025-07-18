@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `update_current_playback_state` method, but with different approaches:
+
+- **HEAD** (left side): Makes the function `async` and uses `await` for the asynchronous call to `get_current_playback()`, and uses `std::time::Instant::now()`
+- **Right side**: Keeps the function synchronous (no `async`), calls `get_current_playback()` without `await`, and uses `std::time::SystemTime::now()`
+
+The semantic intent appears to be that HEAD is converting the codebase to use async/await patterns, while the right side made a change to use `SystemTime` instead of `Instant`. 
+
+Since the HEAD version is making the function async (which is likely a broader architectural change), and `Instant` is typically preferred for measuring elapsed time (which seems to be the purpose given the field name `playback_last_updated`), the HEAD version should be kept:
+
+```rust
+            None => Err(anyhow!("failed to get the current playback context")),
+        }
+    }
+
+    /// updates the current playback state by fetching data from the spotify client
+    async fn update_current_playback_state(&self, state: &state::SharedState) -> Result<()> {
+        state.player.write().unwrap().playback = self.get_current_playback().await?;
+        state.player.write().unwrap().playback_last_updated = Some(std::time::Instant::now());
+        Ok(())
+    }
+
+    /// cleans up a list of albums (sort by date, remove duplicated entries, etc)
+    fn clean_up_artist_albums(
+
+```

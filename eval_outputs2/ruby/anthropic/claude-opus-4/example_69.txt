@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD side**: Calls `stats(path)` unless `options.quiet?` is true
+- **Merge side**: Prints a message showing the number of advisories in the database unless `options.quiet?` is true
+
+Both sides have the same condition (`unless options.quiet?`) but different implementations. The HEAD side uses a `stats` method while the merge side directly prints the advisory count. Since the merge side's implementation is more specific and explicit about what it's displaying, and both sides want to show database statistics when not in quiet mode, I'll keep the merge side's version as it provides clear output about what's being displayed.
+
+```ruby
+          exit 1
+        when nil
+          say "Skipping update", :yellow
+        end
+
+        unless options.quiet?
+          puts "ruby-advisory-db: #{Database.new.size} advisories"
+        end
+      end
+
+      desc 'version', 'Prints the bundler-audit version'
+      def version
+        database = Database.new
+
+```

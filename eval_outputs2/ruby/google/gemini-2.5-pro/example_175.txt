@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+Resolving the conflict requires choosing between a positional argument and a keyword argument. The change to a keyword argument (`target_url: nil`) in the `d26f64b7...` branch represents a more modern Ruby style that enhances clarity for the caller. While making the argument optional with a `nil` default seems counterintuitive as the method requires a URL to function, this is a common pattern for adopting keyword arguments. The method will fail at runtime if no URL is provided, thus enforcing the requirement. This change is more intentional and aligns with modern API design principles, making it the preferred resolution.
+
+```ruby
+          ##
+          # Retrieve a single page of InstalledAddOnInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of InstalledAddOnInstance
+          def get_page(target_url: nil)
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return InstalledAddOnPage.new(@version, response, @solution)
+```

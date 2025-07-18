@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```java
+        /// <param name="rehydratePriority">The priority with which to rehydrate an archived blob.</param>
+        /// <param name="sourceAccessCondition">An object that represents the access conditions for the source blob. If null, no condition is used.</param>
+        /// <param name="destAccessCondition">An object that represents the access conditions for the destination blob. If null, no condition is used.</param>
+        /// <param name="options">An object that specifies additional options for the request.</param>
+        /// <returns>A <see cref="RESTCommand"/> that starts to copy the blob.</returns>
+        internal RESTCommand<string> StartCopyImpl(BlobAttributes attributes, Uri source, Checksum sourceContentChecksum, bool incrementalCopy, bool syncCopy, PremiumPageBlobTier? premiumPageBlobTier, StandardBlobTier? standardBlockBlobTier, RehydratePriority? rehydratePriority, AccessCondition sourceAccessCondition, AccessCondition destAccessCondition, BlobRequestOptions options)
+        {
+            if (sourceAccessCondition != null && !string.IsNullOrEmpty(sourceAccessCondition.LeaseId))
+            {
+                throw new ArgumentException(SR.LeaseConditionOnSource, "sourceAccessCondition");
+            }
+```

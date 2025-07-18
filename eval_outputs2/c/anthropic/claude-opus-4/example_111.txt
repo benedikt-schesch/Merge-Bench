@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that HEAD wants to add a `return 0;` statement after the `connection_fatal` call, while the other branch (4348393f562c8011ebca43d6198e98638aa115b5) does not have this return statement.
+
+Based on the context, this appears to be the end of a function (likely an error handling function) followed by the start of another function `ssh_receive`. The semantic intent seems to be:
+- HEAD: The function should explicitly return 0 after handling the fatal connection error
+- Other branch: The function ends without an explicit return statement
+
+Without knowing the function signature and return type, I cannot definitively resolve this conflict. The presence or absence of the return statement could be significant depending on whether this is a void function or one that returns an int/error code.
+
+Here is the snippet with the conflict preserved:
+
+```c
+
+  if (error_msg)
+    logevent(error_msg);
+  if (!ssh->close_expected || !ssh->clean_exit)
+    connection_fatal(ssh->frontend, "%s", error_msg);
+<<<<<<< HEAD
+  return 0;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void ssh_receive(Plug plug, int urgent, char *data, int len)
+{
+  Ssh ssh = (Ssh)plug;
+
+```

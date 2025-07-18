@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the `get_page` method, but with different parameter styles:
+
+- HEAD version: `def get_page(target_url)` - uses positional parameter
+- Other branch: `def get_page(target_url: nil)` - uses keyword parameter with nil default
+
+The semantic intent appears to be the same - both versions want to accept a `target_url` parameter. The conflict is about the parameter style. Since the method body uses `target_url` directly without any nil checking, and the comment indicates this is an "API-generated URL", it seems like this parameter is required.
+
+However, without more context about the broader codebase conventions or the reason for the change to keyword arguments, I cannot definitively resolve this conflict. The intent is ambiguous - was this part of a broader refactoring to use keyword arguments? Or was the nil default added for a specific reason?
+
+Here's the snippet with the conflict preserved:
+
+```ruby
+            ##
+            # Retrieve a single page of AddressInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of AddressInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return AddressPage.new(@version, response, @solution)
+```

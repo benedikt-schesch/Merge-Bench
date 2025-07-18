@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the type annotation for the `path` parameter in the `prepend` method. 
+
+- The HEAD version uses `typing.List[str]`
+- The incoming change uses `typing.List[typing.Hashable]`
+
+From a semantic perspective, `typing.Hashable` is more general than `str` - all strings are hashable, but not all hashable objects are strings. This suggests the incoming change is trying to make the type annotation more flexible to accept a broader range of path elements.
+
+Since this appears to be a deliberate broadening of the accepted types (likely to support non-string keys in paths), the semantic intent seems to be to allow more flexibility. Therefore, the resolution should use the more general type annotation.
+
+Here's the resolved code:
+
+```python
+        self.errors.append(error)
+
+    def __str__(self) -> str:
+        return str(self.errors[0])
+
+    def prepend(self, path: typing.List[typing.Hashable]) -> None:
+        for error in self.errors:
+            error.prepend(path)
+
+
+class RequiredFieldInvalid(Invalid):
+
+```

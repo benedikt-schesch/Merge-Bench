@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+```javascript
+        locales = {},
+        defaults = {
+            currentLocale: 'en',
+            zeroFormat: null,
+            nullFormat: null,
+            defaultFormat: '0,0',
+            scalePercentBy100: true
+        },
+        options = {
+            currentLocale: defaults.currentLocale,
+            zeroFormat: defaults.zeroFormat,
+            nullFormat: defaults.nullFormat,
+
+```
+
+**Resolution Explanation:**  
+The conflict arises from two parallel additions to the `defaults` configuration object:
+1. HEAD branch adds `defaultFormat: '0,0'`
+2. Other branch adds `scalePercentBy100: true`
+
+Since these are independent configuration options serving different purposes:
+- `defaultFormat` sets the default number formatting pattern
+- `scalePercentBy100` controls percentage value scaling behavior
+
+The semantic solution combines both properties in the `defaults` object. The resolved configuration maintains both features while preserving the trailing comma syntax consistency. The `options` initialization remains unchanged as it only references pre-existing properties.

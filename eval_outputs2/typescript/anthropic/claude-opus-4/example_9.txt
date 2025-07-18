@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Directly passes `options.value` to `observer.setOptions()`
+- **Incoming change**: Wraps `options.value` with `queryClient.defaultMutationOptions()` before passing it
+
+The incoming change appears to be adding a layer of default options processing, which is likely an intentional enhancement to ensure that mutation options are properly merged with client defaults. This is a common pattern in query/mutation libraries to ensure consistent behavior.
+
+Since the incoming change adds functionality (default options merging) rather than just being a different approach, the semantic intent seems to be to enhance the options handling. Therefore, I'll resolve in favor of the incoming change:
+
+```typescript
+  }
+
+  watch(
+    options,
+    () => {
+      observer.setOptions(queryClient.defaultMutationOptions(options.value))
+    },
+    { flush: 'sync' },
+  )
+
+  onScopeDispose(() => {
+
+```

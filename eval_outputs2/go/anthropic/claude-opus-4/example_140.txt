@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the schema for `.google.protobuf.BoolValue`, but with slightly different syntax:
+
+- HEAD uses `schemaCore{` with the Type inside
+- The incoming change uses `{` directly with the Type inside
+
+Based on the context where other entries like `.google.protobuf.DoubleValue` use the direct `{` syntax without `schemaCore`, and considering that both sides want to achieve the same result (defining a boolean type), the semantic intent is clear. The incoming change appears to be normalizing the syntax to match the other entries.
+
+Here's the resolved version:
+
+```go
+	},
+	".google.protobuf.DoubleValue": {
+		Type:   "number",
+		Format: "double",
+	},
+	".google.protobuf.BoolValue": {
+		Type: "boolean",
+	},
+	".google.protobuf.Empty": {},
+	".google.protobuf.Struct": {
+		Type: "object",
+
+```

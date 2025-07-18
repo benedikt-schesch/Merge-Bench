@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to access the same property but with slightly different syntax:
+
+- HEAD uses bracket notation: `relayConnetion.fields['edges']`
+- The other branch uses dot notation: `relayConnetion.fields.edges`
+
+Both achieve the same semantic intent - checking if the 'edges' field exists. Since the surrounding code consistently uses bracket notation (as seen in lines like `relayConnetion.fields['edges'].type` and `relayEdge.fields['node'].type`), I'll resolve this by maintaining consistency with bracket notation:
+
+```typescript
+        return;
+
+      //FIXME: additional checks
+      const relayConnetion = field.type;
+
+      if (!relayConnetion.fields['edges']) return;
+
+      relayConnetion.isRelayType = true;
+      const relayEdge = relayConnetion.fields['edges'].type;
+      relayEdge.isRelayType = true;
+      const realType = relayEdge.fields['node'].type;
+
+```

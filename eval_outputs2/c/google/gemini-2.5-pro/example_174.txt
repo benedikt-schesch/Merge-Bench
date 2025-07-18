@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+This merge conflict arises from a refactoring of coroutine macros. The goal of this refactoring was to create two distinct sets of macros: one for coroutines that return a value, and another for `void` coroutines.
+
+*   The `HEAD` branch uses `crFinish(1);`. This is the macro for a coroutine that returns a value (`int` in this case), and it is returning `1`.
+*   The `434839...` branch uses `crFinishV;`. This is the macro for a coroutine that returns `void`.
+
+According to the commit message associated with the refactoring, this specific coroutine (`pageant_main_coroutine`) is intended to return an `int`. Therefore, using the value-returning macro `crFinish(1)` is the correct semantic choice. Using `crFinishV` would be a bug where a non-void function fails to return a value.
+
+```c
+      sk_write(pc->connsock, reply, replylen);
+      smemclr(reply, replylen);
+    }
+  }
+
+  crFinish(1);
+}
+
+struct pageant_listen_state {
+  const struct plug_function_table *fn;
+  /* the above variable absolutely *must* be the first in this structure */
+
+```

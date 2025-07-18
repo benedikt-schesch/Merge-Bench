@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+The merge conflict primarily involves a discrepancy in how the function `_nested_getitem` is typed. To resolve this, we need to consider the *intent* behind each version.
+
+---
+
+### Understanding the Disagreement
+
+- In **HEAD**, a type variable `IndexT` is introduced and tightly binds both the dictionary's key type and the path's item type. This constrains usage to dictionaries where the keys and path elements are of the same type.
+- The **other branch** loosens this, setting `data` to `Any`, which accommodates a range of indexable types such as `dict`, `list`, or even custom objects that implement `__getitem__`. It also changes the `path` type to `List[Hashable]`, which captures the need for components of the path to be valid dictionary keys.
+
+---
+
+### Semantic Resolution
+
+The goal of this function is to safely access nested values via a sequence of keys or indices. The more flexible signature (from the second branch) better supports this real-world, dynamic use case:
+
+- Making `data: typing.Any` supports more than just dictionaries—important if the nested structure includes lists or objects.
+- Declaring `path: typing.List[typing.Hashable]` correctly reflects that the path may contain any hashable value (integers for lists, strings for dicts, etc.).
+
+---
+
+### Final Solution
+
+The resolution adopts the broader `data: Any` and the more semantically accurate `path: List[Hashable]`, removing the locally defined `TypeVar` which is now unnecessary. The implementation and comments are untouched.
+
+```python
+# fmt: on
+
+MAX_VALIDATION_ERROR_ITEM_LENGTH = 500
+
+
+def _nested_getitem(
+    data: typing.Any, path: typing.List[typing.Hashable]
+) -> typing.Optional[typing.Any]:
+    for item_index in path:
+        try:
+            data = data[item_index]
+        except (KeyError, IndexError, TypeError):
+            # The index is not present in the dictionary, list or other
+```
+
+Lastly, there is no need to retain the conflict markers as the semantic difference has been fully addressed.

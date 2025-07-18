@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `bindataFileInfo` struct initialization, but they differ only in the `modTime` field:
+
+- HEAD version: `modTime: time.Unix(1444419364, 0)`
+- Incoming version: `modTime: time.Unix(1467390283, 0)`
+
+The only other difference is minor spacing after `info:` in the `asset` struct initialization, where the incoming version has one space and HEAD has two spaces.
+
+Since this appears to be auto-generated code (based on the function names and the binary data below), and the only semantic difference is the modification timestamp, I should accept the more recent timestamp (1467390283 is later than 1444419364) while preserving the consistent spacing style.
+
+```go
+	bytes, err := confGitignoreCodekitBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/CodeKit", size: 54, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreCommonlisp = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xd2\xd2\x73\x73\x0c\xf6\xe1\xd2\xd2\x4b\x4b\x2c\xce\x01\x52\x39\x99\xc5\x05\xba\x25\xa9\xb9\x05\x5c\x80\x00\x00\x00\xff\xff\x3a\xc8\xab\x61\x1a\x00\x00\x00")
+
+
+```

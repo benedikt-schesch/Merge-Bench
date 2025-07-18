@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+Based on the provided code snippet with a merge conflict, I've analyzed both sides of the conflict and determined that the intent is ambiguous. The key difference is whether the generic type `T` should be constrained by `Resource` or `Component`, and there's insufficient context to determine which constraint is semantically correct.
+
+Here is the original snippet with conflict markers preserved:
+
+```rust
+    }
+
+    fn default_config() {}
+}
+
+<<<<<<< HEAD
+impl<'w, 's, T: Resource> SystemParamFetch<'w, 's> for ResMutState<T> {
+=======
+impl<'w, 's, T: Component> SystemParamFetch<'w, 's> for ResMutState<T> {
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    type Item = ResMut<'w, T>;
+
+    #[inline]
+    unsafe fn get_param(
+        state: &'s mut Self,
+```
+
+Reason for not resolving:
+- Both `Resource` and `Component` are common traits in Rust ECS frameworks (like Bevy), but serve different purposes
+- The surrounding context doesn't clarify whether `ResMutState` should work with resources or components
+- Changing between these constraints could have significant downstream effects
+- The commit hashes indicate these changes come from different branches with potentially conflicting intentions
+- Without knowing the larger architectural context, it's unsafe to assume which constraint is correct
+
+I recommend:
+1. Consulting the authors of both branches
+2. Checking trait implementations for `ResMutState`
+3. Verifying usage examples in the codebase
+4. Considering if both constraints could be supported through a supertrait

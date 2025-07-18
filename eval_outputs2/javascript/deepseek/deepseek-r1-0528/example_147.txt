@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to handling focus and key events. The other branch introduces `ensureFocus` for focus management and adds an `onKeyEvent` callback check, while both branches handle IE escape key quirks but with different variables (`old_ie` vs `ie_upto10`). 
+
+The resolution:
+1. Uses `ensureFocus` from the other branch for focus handling
+2. Combines the DOM event checks including the `onKeyEvent` callback
+3. Preserves both IE escape key fixes (`old_ie` and `ie_upto10`)
+4. Keeps the duplicate `var code` assignment since it's harmless in JavaScript
+
+Here's the resolved snippet:
+
+```javascript
+  }
+
+  var lastStoppedKey = null;
+  function onKeyDown(e) {
+    var cm = this;
+    ensureFocus(cm);
+    if (signalDOMEvent(cm, e) || cm.options.onKeyEvent && cm.options.onKeyEvent(cm, addStop(e))) return;
+    if (old_ie && e.keyCode == 27) e.returnValue = false;
+    var code = e.keyCode;
+    // IE does strange things with escape.
+    if (ie_upto10 && e.keyCode == 27) e.returnValue = false;
+    var code = e.keyCode;
+    cm.display.shift = code == 16 || e.shiftKey;
+    var handled = handleKeyBinding(cm, e);
+```

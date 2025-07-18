@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD version: `ret = c.newInstance(args.toArray());`
+- Incoming version: `ret = c.newInstance((Object[])args);`
+
+The key difference is how the `args` variable is being passed to `newInstance()`. The HEAD version calls `toArray()` on `args`, suggesting `args` is likely a Collection (like List or Set). The incoming version casts `args` directly to `Object[]`, suggesting `args` might already be an array.
+
+Without seeing the declaration of `args`, both approaches seem to be trying to pass the arguments as an array to the constructor. The `newInstance()` method expects an `Object[]` parameter.
+
+Since both versions are semantically trying to achieve the same thing (pass arguments as an array), and `toArray()` is the more flexible approach that works whether `args` is already an array or a Collection, I'll resolve this by keeping the HEAD version:
+
+```java
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+                for (int i = 0; i < paramTypes.length; i++) {
+                    paramTypes[i] = String.class;
+                }
+                Constructor c = objClass.getConstructor(paramTypes);
+                ret =  c.newInstance(args.toArray());
+            } else {
+                ret = objClass.newInstance();
+            }
+        }
+        catch(NoSuchMethodException nme) {
+
+```

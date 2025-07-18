@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to work with an "extend" property, but they're accessing it differently:
+
+- HEAD version: `this.extend = val;` (storing directly on the object)
+- The other branch: `this.sel.extend = val;` (storing on a `sel` property) and also adds a `getExtending` method
+
+The semantic intent appears to be that the codebase has refactored to move the `extend` property into a `sel` (likely "selection") object. The second branch also adds a getter method for consistency.
+
+Since the second branch appears to be a more complete refactoring that includes both setter and getter methods, and moves the property to what seems to be a more appropriate location (`this.sel`), I'll resolve in favor of the more complete implementation:
+
+```javascript
+    undo: docMethodOp(function() {makeChangeFromHistory(this, "undo");}),
+    redo: docMethodOp(function() {makeChangeFromHistory(this, "redo");}),
+    undoSelection: docMethodOp(function() {makeChangeFromHistory(this, "undo", true);}),
+    redoSelection: docMethodOp(function() {makeChangeFromHistory(this, "redo", true);}),
+
+    setExtending: function(val) {this.sel.extend = val;},
+    getExtending: function() {return this.sel.extend;},
+
+    historySize: function() {
+      var hist = this.history, done = 0, undone = 0;
+      for (var i = 0; i < hist.done.length; i++) if (!hist.done[i].ranges) ++done;
+      for (var i = 0; i < hist.undone.length; i++) if (!hist.undone[i].ranges) ++undone;
+```

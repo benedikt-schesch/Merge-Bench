@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict involves a test method for the `auth_type` parameter that was added in the HEAD branch but removed in the other branch (`d2f099d`). Since the intent behind the removal is unclear and the test appears to be independent of the surrounding tests, I'm leaving the conflict unresolved for developer decision. The test might have been intentionally removed due to changed functionality, or its removal could be accidental.
+
+Here's the unchanged code with conflict markers:
+
+```ruby
+    @request.stubs(:params).returns({ 'display' => 'touch' })
+    assert strategy.authorize_params.is_a?(Hash)
+    assert_equal 'touch', strategy.authorize_params[:display]
+  end
+
+<<<<<<< HEAD
+  test 'includes auth_type parameter from request when present' do
+    @request.stubs(:params).returns({ 'auth_type' => 'reauthenticate' })
+    assert strategy.authorize_params.is_a?(Hash)
+    assert_equal 'reauthenticate', strategy.authorize_params[:auth_type]
+  end
+
+=======
+>>>>>>> d2f099deab685207bd548533eba9a075a63af912
+  test 'overrides default scope with parameter passed from request' do
+    @request.stubs(:params).returns({ 'scope' => 'email' })
+    assert strategy.authorize_params.is_a?(Hash)
+    assert_equal 'email', strategy.authorize_params[:scope]
+  end
+
+```

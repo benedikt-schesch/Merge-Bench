@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch has an additional extern declaration for `select_result(WPARAM, LPARAM)` that the other branch doesn't have.
+
+Since this appears to be a function declaration that will likely be used later in the code (given the comment about "We must not call select_result()"), and since extern declarations don't create conflicts if unused, the safest semantic resolution is to keep the declaration from HEAD.
+
+Here's the resolved code:
+
+```c
+    handle_got_event(handles[n - WAIT_OBJECT_0]);
+  } else if (netindex >= 0 && n == WAIT_OBJECT_0 + netindex) {
+    WSANETWORKEVENTS things;
+    SOCKET socket;
+    extern SOCKET first_socket(int *), next_socket(int *);
+    extern int select_result(WPARAM, LPARAM);
+    int i, socketstate;
+
+    /*
+     * We must not call select_result() for any socket
+     * until we have finished enumerating within the
+```

@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD wants `GFAny` to extend `EvalFunc<DataAtom>`
+- The incoming change (1488b22...) wants `GFAny` to extend `EvalFunc<Integer>`
+
+Given that:
+1. The class name `GFAny` suggests it's a grouping function that can work with "any" type
+2. The comment says it "permits system to choose any grouping"
+3. The class has `numGroups` as an `int` and uses a `Random` object
+4. The default number of groups is 1000
+
+Without more context about what this class actually does in its implementation, and given that both changes are trying to modify the same generic type parameter, I cannot determine which type is semantically correct. The conflict represents a fundamental disagreement about what type this evaluation function should return.
+
+Therefore, I'm returning the snippet with the conflict preserved:
+
+```java
+
+
+/**
+ * built-in grouping function; permits system to choose any grouping.
+ */
+<<<<<<< HEAD
+public class GFAny extends EvalFunc<DataAtom> {
+=======
+public class GFAny extends EvalFunc<Integer> {
+>>>>>>> 1488b22ce313803d012c8ace36c3b12f930ee309
+    public static final int defaultNumGroups = 1000;
+    
+    int numGroups = defaultNumGroups;
+    Random r = new Random();
+    
+
+```

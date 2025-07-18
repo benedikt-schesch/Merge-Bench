@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```python
+    digest_size = new().digest_size
+
+except ImportError:
+    import md5
+    hashFactory = md5
+    digest_size = 16
+
+```
+
+**Resolution Reasoning:**
+1. Preserved the `hashFactory` assignment from HEAD since it's needed for functionality
+2. Kept the `digest_size = 16` assignment but moved it inside the except block where it logically belongs
+3. Removed the problematic conditional from the other branch since:
+   - `digestsize` isn't defined in local scope (should be `md5.digestsize`)
+   - MD5 digest size is always 16 regardless of attribute checks
+   - `del md5` would break `hashFactory` reference
+4. Maintained consistent indentation and spacing
+5. The combined solution ensures:
+   - Fallback to MD5 works correctly
+   - digest_size is properly set (16 for MD5)
+   - hashFactory is available for cryptographic operations
+   - No namespace pollution from temporary variables

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet. I analyzed both sides of the conflict and determined that the `select_result` function declaration from HEAD should be preserved since it's referenced in the subsequent comment and likely used in the implementation. Removing this declaration (as the other branch suggests) would likely cause compilation errors.
+
+```c
+      handle_got_event(handles[n - WAIT_OBJECT_0]);
+    } else if (n == WAIT_OBJECT_0 + nhandles) {
+      WSANETWORKEVENTS things;
+      SOCKET socket;
+      extern SOCKET first_socket(int *), next_socket(int *);
+      extern int select_result(WPARAM, LPARAM);
+      int i, socketstate;
+
+      /*
+       * We must not call select_result() for any socket
+       * until we have finished enumerating within the tree.
+```
+
+Key resolution rationale:
+1. The comment explicitly references `select_result()`, confirming its importance in subsequent logic
+2. The function declaration matches Windows message parameters (`WPARAM`/`LPARAM`) which fits the Windows socket event context
+3. Removing the declaration would likely break compilation since the function is used later
+4. Both branches agree on the surrounding context structure
+
+The spacing and context are preserved exactly as in the original snippet.

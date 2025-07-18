@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - creating nullable datetime columns for 'created_at' and 'updated_at' with optional precision. The key difference is:
+
+- HEAD version: Creates the columns but doesn't return anything
+- Incoming version: Creates the columns and returns them in a Collection
+
+Based on the method signature which indicates a return type of `\Illuminate\Support\Collection<int, \Illuminate\Database\Schema\ColumnDefinition>`, the incoming change is correct as it properly returns the collection of column definitions as specified in the docblock.
+
+Here's the resolved conflict:
+
+```php
+     * @param  int|null  $precision
+     * @return \Illuminate\Support\Collection<int, \Illuminate\Database\Schema\ColumnDefinition>
+     */
+    public function datetimes($precision = null)
+    {
+        return new Collection([
+            $this->datetime('created_at', $precision)->nullable(),
+            $this->datetime('updated_at', $precision)->nullable(),
+        ]);
+    }
+
+    /**
+     * Add a "deleted at" timestamp for the table.
+     *
+```

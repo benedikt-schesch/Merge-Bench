@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD (current branch) is adding `require "net/https"` - this is for HTTPS support
+- The incoming branch is adding `require "yajl/json_gem"` - this is for JSON parsing functionality
+
+Both additions appear to be independent requirements that don't conflict with each other semantically. The module likely needs both HTTPS support and JSON parsing capabilities. Therefore, the resolution should include both requires.
+
+```ruby
+require "digest/sha1"
+require "net/http"
+require "net/https"
+require "yajl/json_gem"
+
+require "private_pub/faye_extension"
+require "private_pub/engine" if defined? Rails
+
+module PrivatePub
+
+```

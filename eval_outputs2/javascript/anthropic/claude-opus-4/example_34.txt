@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to set up a watcher for the Vuex store state, but they're using different approaches that reflect different versions of the Vuex implementation.
+
+The HEAD version uses a more modern approach with a `watch` function and accesses `store._state.data`, while the incoming change uses the older Vue 2 style with `store._vm.$watch` and accesses `this._data.$$state`.
+
+Based on the context and the fact that both sides want to achieve the same goal (watching the store state for mutations outside of mutation handlers), I'll resolve this by keeping the HEAD version as it appears to be the more modern implementation:
+
+```javascript
+    )
+  }
+}
+
+function enableStrictMode (store) {
+  watch(() => store._state.data, () => {
+    if (__DEV__) {
+      assert(store._committing, `do not mutate vuex store state outside mutation handlers.`)
+    }
+  }, { deep: true, flush: 'sync' })
+}
+
+```

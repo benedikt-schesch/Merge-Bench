@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - they want to check if the file type/suffix is either "afm" or "pfb". The main difference is:
+
+- HEAD uses `font_type` variable and checks for "afm" or empty string ""
+- The other branch uses `suffix` variable and checks for "afm" or "pfb"
+
+The second approach (using `suffix` and checking for "pfb") appears more semantically correct because:
+1. The code inside the block handles both AFM and PFB files
+2. The inner condition specifically handles the "afm" case
+3. The empty string check in HEAD seems less intentional than explicitly checking for "pfb"
+
+Here's the resolved code:
+
+```python
+                                addMapping(fontName, bold, italic, fullFontName)
+
+                    # Register "normal" name and the place holder for style
+                    self.registerFont(fontName, [*fontAlias, fullFontName])
+
+            elif suffix in {"afm", "pfb"}:
+                if suffix == "afm":
+                    afm = file.getNamedFile()
+                    tfile = pisaFileObject(baseName + ".pfb", basepath=file.basepath)
+                    pfb = tfile.getNamedFile()
+                else:
+                    pfb = file.getNamedFile()
+
+```

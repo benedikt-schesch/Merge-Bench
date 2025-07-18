@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the type of the `activeDate` property in an abstract class for a calendar/datepicker component.
+
+- HEAD wants: `activeDate: D`
+- The incoming change wants: `activeDate: D | null`
+
+Given the context of a datepicker component and looking at the pattern established by other properties in the class (`minDate` and `maxDate` are both typed as `D | null`), it makes semantic sense that `activeDate` should also be nullable. This would allow the component to handle cases where no date is initially selected or when the date needs to be cleared.
+
+The intent appears to be making the component more flexible by allowing `activeDate` to be null, which aligns with the nullable pattern used for other date properties in the class.
+
+```typescript
+ * contains all necessary parts needed for a generic datepicker component.
+ */
+export abstract class CalendarView<D> implements OnDestroy {
+
+  /** The date representing when to start the calendar. */
+  abstract activeDate: D | null;
+
+  /** The minimum selectable date. */
+  abstract minDate: D | null;
+
+  /** The maximum selectable date. */
+
+```

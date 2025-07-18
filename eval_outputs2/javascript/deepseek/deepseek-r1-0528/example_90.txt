@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of the merge conflict, I've determined that the manifest file contains auto-generated build artifacts with cryptographic hashes. Since both sides modify the same asset entry (`index.js`) with different hashes, this conflict cannot be safely resolved through merging. The correct solution requires rebuilding the assets after merging the source code changes to generate a new manifest.
+
+Here's the original snippet with the conflict preserved:
+
+```javascript
+<<<<<<< HEAD
+window.WEBPACK_ASSETS = {"index.js":{"js":"index@8202947f0c05ff5e96d8.js","css":"index@8202947f0c05ff5e96d8.css"},"lib":{"js":"lib@aaed0f9bfcc4ff921c5a.js"},"lib2":{"js":"lib2@819909a89ca45b94d9bf.js"},"lib3":{"js":"lib3@93b22d7460620277a5da.js"},"manifest":{"js":"manifest@f2f4bd774d6c221b3d5f.js"}}
+=======
+window.WEBPACK_ASSETS = {"index.js":{"js":"index@e45a4de49431db58f52c.js","css":"index@e45a4de49431db58f52c.css"},"lib":{"js":"lib@aaed0f9bfcc4ff921c5a.js"},"lib2":{"js":"lib2@819909a89ca45b94d9bf.js"},"lib3":{"js":"lib3@93b22d7460620277a5da.js"},"manifest":{"js":"manifest@f2f4bd774d6c221b3d5f.js"}}
+>>>>>>> 219fab4afc431d627e0eb907567def08043bda2f
+
+```
+
+Recommended next steps:
+1. Keep the conflict markers in version control
+2. Merge the actual source code changes from both branches
+3. Run the build process to regenerate the manifest
+4. Commit the newly generated manifest file

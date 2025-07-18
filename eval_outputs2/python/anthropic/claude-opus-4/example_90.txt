@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the only difference between the two sides is the presence or absence of a blank line after the `else` block and before the `validate_queues` method.
+
+The HEAD version has no blank line, while the incoming change adds a blank line. This is a simple formatting difference with no semantic impact.
+
+Following Python style conventions (PEP 8), which recommend two blank lines between top-level function and class definitions, it would be appropriate to include the blank line to separate these two methods.
+
+Here's the resolved version:
+
+```python
+        elif isinstance(server, ResQ):
+            self.resq = server
+        else:
+            raise Exception("Bad server argument")
+
+
+    def validate_queues(self):
+        """Checks if a worker is given at least one queue to work on."""
+        if not self.queues:
+            raise NoQueueError("Please give each worker at least one queue.")
+
+
+```

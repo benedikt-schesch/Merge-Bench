@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict in the `sfs_removexattr` function. Both versions are functionally identical but use different indentation styles. The surrounding context uses consistent indentation (tabs for code blocks), so I've preserved the branch version's indentation to maintain semantic consistency with the rest of the function body.
+
+Here's the resolved snippet:
+
+```c
+	return retstat;
+}
+
+/** Remove extended attributes */
+int sfs_removexattr(const char *path, const char *name) {
+    int retstat = 0;
+    char fpath[PATH_MAX];
+    sfs_fullpath(fpath, path);
+
+	BEGIN_PERM;
+	retstat = lremovexattr(fpath, name);
+	END_PERM;
+	if (retstat < 0) {
+```

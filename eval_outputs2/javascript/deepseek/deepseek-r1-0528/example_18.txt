@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different configuration options being added to the AJV validator constructor. The HEAD branch adds `extendRefs: 'fail'` while the other branch adds `strict: false` with a comment linking to a GitHub issue. Since these are independent configuration options that serve different purposes, both should be included in the final resolution.
+
+Here's the resolved code:
+
+```javascript
+const res = './test/resources/';
+
+const validator = new ajv.default({
+    allErrors: true,
+    verbose: true,
+    extendRefs: 'fail',
+    strict: false // FIXME: https://github.com/vega/vega/issues/3022
+  });
+
+addFormats(validator);
+
+const validate = validator.compile(schema);
+```
+
+Key changes:
+1. Added comma after `extendRefs: 'fail'` to maintain valid JavaScript syntax
+2. Kept both configuration options since they control different behaviors:
+   - `extendRefs` handles reference extension behavior
+   - `strict` controls schema strictness (disabled here with a FIXME comment)
+3. Preserved the GitHub issue link comment for future reference
+4. Maintained all original spacing and context

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to access the same data from `node->data`, but with slightly different syntax:
+
+- HEAD version: Uses an explicit cast `(connection_t *) node->data`
+- Other version: Uses direct assignment without a cast `node->data`
+
+Both versions have the same semantic intent - to assign the node's data to variable `c`. The difference is purely stylistic (explicit cast vs. implicit). Since modern C compilers handle void pointer assignments well and the code appears to work without the cast, I'll resolve this by choosing the cleaner, more concise version without the cast.
+
+```c
+
+	FD_ZERO(fs);
+
+	for(node = connection_tree->head; node; node = next) {
+		next = node->next;
+		c = node->data;
+
+		if(c->status.remove) {
+			connection_del(c);
+			if(!connection_tree->head)
+				purge();
+
+```

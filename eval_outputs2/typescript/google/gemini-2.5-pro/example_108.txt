@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+This merge conflict involves two distinct changes to the `onAuth` method call.
+
+*   **The `HEAD` branch** calls `onAuth` with the arguments `(client, joinOptions, authContext)`.
+*   **The `1a7da98cbeee551587e6119d06a39a441421827b` branch** changes the third argument to `req` (likely the inbound request object) and wraps the call in a `try` block, suggesting a larger refactoring of the authentication mechanism and its error handling.
+
+The change from `authContext` to `req` is a significant semantic change in the public API of the `onAuth` method. Furthermore, the `try` block introduced in the `1a7da98cbeee551587e6119d06a39a441421827b` branch is incomplete within the provided snippet (it's missing its corresponding `catch` or `finally` block).
+
+Due to this ambiguity and the incomplete code structure, it is not possible to determine the correct resolution with certainty. A developer with full context of the project's changes would be needed to correctly merge these intents. Therefore, the conflict is returned unresolved.
+
+```typescript
+      try {
+        if (authData) {
+          client.auth = authData;
+
+        } else if (this.onAuth !== Room.prototype.onAuth) {
+<<<<<<< HEAD
+          client.auth = await this.onAuth(client, joinOptions, authContext);
+=======
+          try {
+            client.auth = await this.onAuth(client, joinOptions, req);
+>>>>>>> 1a7da98cbeee551587e6119d06a39a441421827b
+
+            if (!client.auth) {
+              throw new ServerError(ErrorCode.AUTH_FAILED, 'onAuth failed');
+            }
+
+
+```

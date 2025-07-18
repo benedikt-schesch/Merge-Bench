@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises from redundant field initialization in the struct. Both sides set `output_file`, but the other branch duplicates it. The HEAD version correctly uses `..Default::default()` to handle remaining fields. The resolution keeps the HEAD version since it's semantically correct and avoids duplication.
+
+Resolved snippet:
+```rust
+      &compiler,
+      AssertCompilerResultConfig {
+        entry_name: Some(entry_name.clone()),
+        output_file: Some(format_output_name(name)),
+        ignore_emitted_field: false,
+        ..Default::default()
+      },
+    );
+  }
+}
+```

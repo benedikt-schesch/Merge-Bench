@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet preserving context and intent:
+
+```ruby
+      module Trace
+        class SpanTest < Minitest::Test
+          Segment = Struct.new(:guid, :transaction)
+          Transaction = Struct.new(:trace_id)
+
+          def setup
+            @tracer = NewRelic::Agent::OpenTelemetry::Trace::Tracer.new
+          end
+
+          def teardown
+            NewRelic::Agent.instance.transaction_event_aggregator.reset!
+            NewRelic::Agent.instance.span_event_aggregator.reset!
+          end
+
+
+```
+
+**Resolution rationale:**
+1. Both branches agree on the `Segment`/`Transaction` structs and `teardown` method
+2. The incoming branch (12a1760) adds a valid `setup` method that initializes `@tracer`
+3. HEAD branch had no conflicting content (just whitespace), so the `setup` method can be safely added
+4. The `setup` method is semantically compatible with the existing `teardown`
+5. Ordering is preserved with setup before teardown per standard test conventions
+
+The conflict is resolved by keeping the new `setup` method while maintaining all existing context.

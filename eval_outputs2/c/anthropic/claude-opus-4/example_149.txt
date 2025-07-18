@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD version: Assigns the return value of `plug_receive()` to `new_backlog`
+- Other version: Simply calls `plug_receive()` without capturing its return value
+
+The key question is whether the return value of `plug_receive()` is needed. Looking at the context, I don't see `new_backlog` being used after this point in the visible code. However, without seeing more context, I cannot definitively determine if `new_backlog` is used later or if the return value should be ignored.
+
+Since the intent is ambiguous without more context, I'm returning the snippet with the conflict preserved:
+
+```c
+  /*
+   * Hand it off to the plug. Be careful of re-entrance - that might
+   * have the effect of trying to close this socket.
+   */
+  ps->defer_close = TRUE;
+<<<<<<< HEAD
+  new_backlog = plug_receive(ps->plug, 0, data, len);
+=======
+  plug_receive(ps->plug, 0, data, len);
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  bufchain_consume(&ps->inputdata, len);
+  ps->defer_close = FALSE;
+  if (ps->deferred_close) {
+    sk_handle_close(ps);
+    return;
+```

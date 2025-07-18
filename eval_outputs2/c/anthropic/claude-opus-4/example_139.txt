@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add a variable declaration `int ret = TRUE;` at the beginning of the `pty_select_result` function, while the other branch (4348393f562c8011ebca43d6198e98638aa115b5) doesn't have this variable.
+
+Without more context about how `ret` is used later in the function, or what the intent of adding this variable is, I cannot determine the correct resolution. The conflict appears to be about whether this return value variable should be initialized at the start of the function or not.
+
+Here is the snippet with the conflict preserved:
+
+```c
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+void pty_select_result(int fd, int event)
+{
+<<<<<<< HEAD
+  int ret = TRUE;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+  Pty pty;
+
+  if (fd == pty_signal_pipe[0]) {
+    pid_t pid;
+    int status;
+
+```

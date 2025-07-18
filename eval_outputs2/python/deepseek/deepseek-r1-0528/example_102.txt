@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arose between two branches regarding additional cleanup and initialization steps at the end of an nmap test method. The HEAD branch added coverage-saving steps and a scancli initialization test. The other branch removed these lines since:
+1. Coverage should be handled at the suite level, not mid-test
+2. The initialization call didn't fit semantically between test methods
+3. The following test already handles its own initialization
+
+The resolved version removes the conflicting lines to maintain:
+1. Proper test separation
+2. Clean test structure
+3. Supported coverage collection strategy
+
+```python
+            "nmap_tophop",
+            list(ivre.db.db.nmap.topvalues("hop"))[0]['_id'])
+        self.check_value(
+            "nmap_tophop_10+",
+            list(ivre.db.db.nmap.topvalues("hop>10"))[0]['_id'])
+    def test_passive(self):
+
+        # Init DB
+        self.assertEqual(RUN(["./bin/ipinfo.py", "--count"])[1], "0\n")
+```

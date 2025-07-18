@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Resolving this merge conflict requires understanding the intent behind both changes.
+
+*   The `HEAD` branch introduces an instance variable `@rolled_back` in the `rollback` method. The intent is to flag that the transaction has been explicitly rolled back.
+*   The `75c6c1343248bdc6d75ce59607b270ca6cfcda76` branch introduces an instance variable `@failure` in the `rollback` method. It also adds a new `close` method that marks the transaction as successful.
+
+The semantic goal of both branches inside the `rollback` method is the same: to mark the transaction as not successfully completed. The second branch introduces a broader success/failure tracking mechanism (`@failure` in `rollback`, and a `success` call in `close`). This seems like a more comprehensive approach to transaction state management.
+
+Resolving the conflict by adopting the implementation from the `75c6c134...` branch preserves the intent of both changes: it flags the transaction's state on rollback (as a failure) and includes the new, related functionality for closing a transaction successfully.
+
+```ruby
+module ActiveGraph
+  module Transaction
+    def rollback
+      super
+      @failure = true
+    end
+
+    def close
+      success
+      super
+    end
+
+    def after_commit(&block)
+      after_commit_registry << block
+    end
+
+```

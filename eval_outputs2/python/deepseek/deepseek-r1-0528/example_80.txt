@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises because both branches added new DNS providers at the same location in the constants list. These additions aren't mutually exclusive and should both be included. The resolution alphabetizes them based on their string values to maintain consistency and prevent future conflicts.
+
+```python
+    POINTDNS = 'pointdns'
+    VULTR = 'vultr'
+    LIQUIDWEB = 'liquidweb'
+    ZONOMI = 'zonomi'
+    DURABLEDNS = 'durabledns'
+    CLOUDFLARE = 'cloudflare'
+    GODADDY = 'godaddy'
+
+    # Deprecated
+    RACKSPACE_US = 'rackspace_us'
+    RACKSPACE_UK = 'rackspace_uk'
+
+```
+
+Key reasoning:
+1. Both additions are valid DNS provider constants
+2. Alphabetical order (`cloudflare` comes before `godaddy`) provides a deterministic resolution
+3. The order of deprecated constants remains unchanged as they weren't conflicted
+4. All spacing/formatting is preserved per the original context
+
+This merges both contributions while maintaining semantic consistency and avoiding arbitrary ordering.

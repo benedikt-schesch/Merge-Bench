@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different approaches to defining a data provider in PHPUnit. The HEAD branch uses a docblock annotation with a return type hint, while the other branch uses a PHP 8 attribute without a return type. Both serve the same purpose of specifying a data provider. 
+
+The resolution adopts the modern attribute syntax from the branch while preserving the return type hint from HEAD. This approach:
+1. Uses PHP 8 attributes for better forward compatibility
+2. Maintains type safety with the `void` return type
+3. Avoids redundant declarations by removing the docblock
+
+Here's the resolved code:
+
+```php
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('typeReturnMap')]
+    public function testSimpleReturn($method, $expectedValue): void
+    {
+        $context = new \PhakeTest_ScalarTypes();
+        $cb = $this->answer->getAnswerCallback($context, $method);
+
+        $this->assertSame($expectedValue, $cb());
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the `HEAD` branch has the original struct fields, while the incoming branch (`bcba6ba3a99353be48a08f3a022962daaa3f7d1a`) is trying to add a new field `RequesterPays bool` between `StorageClass` and `AccessKey`.
+
+This appears to be a straightforward addition of a new configuration field for S3 functionality. The intent is clear - to add support for requester pays buckets in S3. There's no semantic conflict here, just a new feature being added.
+
+Here's the resolved code:
+
+```go
+	// S3
+	Endpoint       string
+	Region         string
+	RegionSet      bool
+	StorageClass   string
+	RequesterPays  bool
+	AccessKey      string
+	SecretKey      string
+	Profile        string
+	UseContentType bool
+	UseSSE         bool
+```

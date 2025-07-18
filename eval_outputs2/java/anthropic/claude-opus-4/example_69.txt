@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - creating an ArrayList with an initial capacity of `cards.size()`. The only difference is:
+
+- HEAD version: `new ArrayList<Map<WhiteCardData, Object>>(cards.size())`
+- Other version: `new ArrayList<>(cards.size())` (using diamond operator)
+
+Both are semantically identical. The second version uses the diamond operator (`<>`) which was introduced in Java 7 to reduce verbosity by allowing type inference. Since the variable declaration already specifies the generic type `List<Map<WhiteCardData, Object>>`, the compiler can infer the type parameters for the ArrayList constructor.
+
+The more modern and cleaner approach is to use the diamond operator, so I'll resolve in favor of the second version:
+
+```java
+   *
+   * @param cards Cards to convert to client data.
+   * @return Client representation of {@code cards}.
+   */
+  private List<Map<WhiteCardData, Object>> getWhiteCardData(final List<WhiteCard> cards) {
+    final List<Map<WhiteCardData, Object>> data = new ArrayList<>(cards.size());
+    for (final WhiteCard card : cards) {
+      data.add(card.getClientData());
+    }
+    return data;
+  }
+
+```

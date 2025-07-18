@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in initializing hooks and handling panic recovery. The HEAD branch assigns directly to `returnVal.LoadedHooks`, while the other branch uses a local variable and adds a defer recovery. Both intents can be combined since:
+
+1. The hook initialization should use `returnVal.Ys` (as `ys` isn't in context)
+2. The panic recovery is a valuable addition
+3. The `returnVal.LoadedHooks` assignment is needed for later use
+
+Here's the resolved version:
+
+```go
+	// fetch the recorded testcases with their mocks
+	returnVal.Ys = yaml.NewYamlStore(path+"/tests", path, "", "", t.logger, tele)
+
+	routineId := pkg.GenerateRandomID()
+	// Initiate the hooks
+	loadedHooks := hooks.NewHook(returnVal.Ys, routineId, t.logger)
+	returnVal.LoadedHooks = loadedHooks
+
+	// Recover from panic and gracfully shutdown
+	defer loadedHooks.Recover(routineId)
+
+	select {
+	case <-stopper:
+		returnVal.Ok = false
+		return returnVal
+```
+
+Key changes:
+1. Uses `returnVal.Ys` for hook initialization
+2. Creates local `loadedHooks` for defer recovery
+3. Maintains `returnVal.LoadedHooks` assignment
+4. Preserves panic recovery from other branch
+5. Keeps all comments and spacing unchanged

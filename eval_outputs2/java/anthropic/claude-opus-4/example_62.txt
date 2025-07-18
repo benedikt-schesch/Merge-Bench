@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same semantic intent - they both want to log the same message with the same parameters. The only difference is the formatting:
+
+- HEAD version has the string split across multiple lines
+- The other version has it on a single line
+
+Since both versions are functionally identical and this appears to be just a formatting preference difference, I'll preserve the more compact single-line version as it's more concise and doesn't affect readability for this particular log message.
+
+```java
+
+    synchronized (playedCards) {
+      if (state == GameState.PLAYING || playersToRemove.size() == 0) {
+        // not sure how much of this check is actually required
+        if (players.size() < 3 || playedCards.size() < 2) {
+          logger.info(String.format("Resetting game %d due to insufficient players after removing %d idle players.", id, playersToRemove.size()));
+          resetState(true);
+        } else {
+          judgingState();
+        }
+      }
+
+```

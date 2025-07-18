@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `datafusion_common::tree_node`, but with different types:
+
+- HEAD wants: `TreeNode, TreeNodeRecursion`
+- The incoming change wants: `TreeNode, VisitRecursion`
+
+Additionally, the incoming change adds an import for `datafusion_common::instant::Instant`.
+
+Based on the semantic intent, it appears that `TreeNodeRecursion` and `VisitRecursion` might be related types (possibly one was renamed to the other). Since both sides want `TreeNode` and only differ on the recursion type, and the incoming change also adds the `Instant` import, the most likely resolution is to keep both the `Instant` import and figure out which recursion type is correct.
+
+Without more context about which is the correct recursion type to use, I'll preserve the conflict as requested:
+
+```rust
+
+use crate::analyzer::subquery::check_subquery_expr;
+use crate::analyzer::type_coercion::TypeCoercion;
+use crate::utils::log_plan;
+use datafusion_common::config::ConfigOptions;
+<<<<<<< HEAD
+use datafusion_common::tree_node::{TreeNode, TreeNodeRecursion};
+=======
+use datafusion_common::instant::Instant;
+use datafusion_common::tree_node::{TreeNode, VisitRecursion};
+>>>>>>> 9aa01f35cf512e03196799c44cfecf7fe8af90e2
+use datafusion_common::{DataFusionError, Result};
+use datafusion_expr::expr::Exists;
+use datafusion_expr::expr::InSubquery;
+use datafusion_expr::utils::inspect_expr_pre;
+use datafusion_expr::{Expr, LogicalPlan};
+
+```

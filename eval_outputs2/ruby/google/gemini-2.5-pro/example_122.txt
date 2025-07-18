@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The intent of the `HEAD` branch is to assert that sending the project membership notification email does not raise any exceptions. The `rescue assert(false)` pattern is a way to fail the test if the preceding code raises an error.
+
+The intent of the other branch (`c91f301d8e8bc0b83797bd94a82dd1c8b1838234`) is to comment out this assertion. This was likely a temporary change for debugging or to bypass a failing test, and it's unlikely that the final intent is to allow this operation to fail silently.
+
+The most sensible resolution is to keep the assertion from the `HEAD` branch, as it enforces the successful completion of the email sending operation, which is a critical part of the behavior being tested.
+
+```ruby
+      invitation = @project.new_invitation(@inviter, :user_or_email => user.login)
+      invitation.save
+      invitation.deleted?.should == true
+      user.invitations.length.should == 0
+      
+      Emailer.send_email(:project_membership_notification, invitation.id) rescue assert(false)
+    end
+
+    it "should not send an Invitation email to users in the inviter's organization" do
+      user = Factory.create(:user)
+      @project.organization.add_member(user, :participant)
+
+```

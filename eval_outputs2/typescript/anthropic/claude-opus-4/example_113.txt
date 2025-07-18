@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `Transport` class properties:
+
+- **HEAD** (current branch): Adds a `server` property with types `net.Server | http.Server | https.Server`
+- **Incoming branch**: Adds both a `protocol` property and a `server` property with an extended type union that includes `DummyServer`
+
+The semantic intent appears to be:
+1. Both sides want to add a `server` property
+2. The incoming branch also wants to add a `protocol` property
+3. The incoming branch has a more comprehensive type definition for `server` that includes `DummyServer` (likely for testing purposes)
+
+The resolution should include both the `protocol` property and use the more comprehensive `server` type definition from the incoming branch.
+
+```typescript
+import { Schema, StateView } from '@colyseus/schema';
+import { EventEmitter } from 'events';
+import { spliceOne } from './utils/Utils';
+
+export abstract class Transport {
+    public protocol?: string;
+    public server?: net.Server | http.Server | https.Server | DummyServer;
+
+    public abstract listen(port?: number, hostname?: string, backlog?: number, listeningListener?: Function): this;
+    public abstract shutdown(): void;
+
+    public abstract simulateLatency(milliseconds: number): void;
+
+```

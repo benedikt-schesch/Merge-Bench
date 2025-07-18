@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides.
+
+The HEAD branch has two fields (`parent: None,` and `specifier: None,`) that the other branch doesn't have. This appears to be a case where:
+- The HEAD branch has added new fields to a struct
+- The other branch (02345a5) represents an earlier version without these fields
+
+Since this is likely a struct initialization and the HEAD branch has extended the struct with new fields, the semantic intent would be to keep the additional fields to maintain compatibility with the updated struct definition.
+
+Here's the resolved code:
+
+```rust
+                                extra: None,
+                                dev: None,
+                                marker,
+                            }),
+                            version: Range::singleton(version.clone()),
+                            parent: None,
+                            specifier: None,
+                            url: None,
+                        })
+                        .collect(),
+                ));
+            }
+
+```

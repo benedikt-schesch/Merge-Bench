@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires combining the intents of both branches.
+- The `HEAD` branch introduces a helper method `log_exception(job, e)`, which is likely a refactoring to centralize and standardize exception logging.
+- The other branch (`757f5852...`) adds two key improvements:
+    1. It passes the `e.backtrace` to `job.reschedule` for more detailed context on rescheduling.
+    2. It explicitly returns the `job` after handling the failure, which is consistent with the successful return path.
+
+The best resolution is to combine these improvements. We will use the more detailed `reschedule` call and the explicit `return` from the secondary branch, while keeping the cleaner `log_exception` helper from `HEAD`. The explicit logging calls in the secondary branch are likely superseded by the new helper method.
+
+```ruby
+
+          return job
+        rescue LockError
+          # We did not get the lock, some other worker process must have
+          logger.warn "* [JOB] failed to aquire exclusive lock for #{job.name}"
+        rescue StandardError => e
+          job.reschedule e.message, e.backtrace
+          log_exception(job, e)
+          return job
+        end
+      end
+
+      nil
+
+```

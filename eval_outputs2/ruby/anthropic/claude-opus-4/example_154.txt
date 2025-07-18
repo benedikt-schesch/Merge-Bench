@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both changes:
+
+- **HEAD**: Uses positional parameter `target_url`
+- **Incoming change**: Uses keyword parameter `target_url: nil`
+
+The incoming change appears to be modernizing the method signature to use Ruby's keyword arguments pattern, which is a common refactoring for better API clarity and flexibility. The `nil` default value also makes the parameter technically optional.
+
+Since the method body uses `target_url` directly without any nil checking, and the method's purpose is to retrieve a page from a specific URL, the parameter should remain required. The best resolution is to use a keyword argument without a default value, which maintains the requirement while adopting the modern syntax pattern.
+
+```ruby
+            ##
+            # Retrieve a single page of ChannelInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of ChannelInstance
+            def get_page(target_url:)
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return ChannelPage.new(@version, response, @solution)
+
+```

@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+1. The HEAD version says "Write start address count high"
+2. The incoming change says "Write remote start address low"
+
+Given the context:
+- The register being written to is `EN0_RSARHI` (note the "HI" suffix)
+- The operation being performed is: `this.rsar = this.rsar & 0xFF | data_byte << 8 & 0xFF00`
+- This operation is setting the high byte (shifting left by 8 bits)
+
+The semantic intent is clear: this is writing to the HIGH byte of the remote start address register. The HEAD version incorrectly says "count high" instead of "address high", while the incoming change incorrectly says "low" instead of "high".
+
+The correct resolution should say "Write remote start address high":
+
+```javascript
+    io.register_write(this.port | EN0_RSARHI, this, function(data_byte)
+    {
+        var pg = this.get_page();
+        if(pg === 0)
+        {
+            dbg_log("Write remote start address high: " + h(data_byte, 2), LOG_NET);
+            this.rsar = this.rsar & 0xFF | data_byte << 8 & 0xFF00;
+        }
+        else
+        {
+            dbg_log("Unimplemented: Write pg" + pg + "/09 " + h(data_byte, 2), LOG_NET);
+
+```

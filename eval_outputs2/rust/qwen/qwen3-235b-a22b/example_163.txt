@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```rust
+                link_resolver: link_resolver.clone(),
+                store: store.clone(),
+            };
+            let valid_module = ValidModule::new(&module_logger, wasmi_config, task_sender)
+                .expect("Failed to validate module");
+            let valid_module = Arc::new(valid_module);
+
+            // Pass incoming events to the WASM module and send entity changes back;
+            // stop when cancelled from the outside.
+            let canceler = cancel_receiver.into_stream();
+            mapping_request_receiver
+                .select(canceler.map(|_| panic!("WASM module thread cancelled")).map_err(|_| ()))
+                .map_err(|()| err_msg("Cancelled"))
+                .for_each(move |request: MappingRequest| -> Result<(), Error> {
+
+```

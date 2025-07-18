@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differing changes to the `PubGrubPackage` enum handling. The resolution integrates both changes by preserving the new `Extra` variant handler from the other branch while updating the `Package` variant to match its simplified signature (removing the unused fourth parameter). The body logic remains unchanged since it only depends on the `name` field.
+
+```rust
+        request_sink: &tokio::sync::mpsc::Sender<Request>,
+    ) -> Result<(), ResolveError> {
+        match package {
+            PubGrubPackage::Root(_) => {}
+            PubGrubPackage::Python(_) => {}
+            PubGrubPackage::Extra(_, _, _) => {}
+            PubGrubPackage::Package(name, _extra, None) => {
+                // Verify that the package is allowed under the hash-checking policy.
+                if !self.hasher.allows_package(name) {
+                    return Err(ResolveError::UnhashedPackage(name.clone()));
+                }
+```

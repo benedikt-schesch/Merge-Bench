@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from different versions of the `runtime.AnnotateIncomingContext` call. The HEAD branch uses a 3-argument version while the other branch uses a 4-argument version with an explicit method path. Since the method path (`/grpc.gateway.examples.internal.helloworld.Greeter/SayHello`) matches the handler method `local_request_Greeter_SayHello_3`, it's semantically correct to include this identifier. 
+
+The resolved version maintains compatibility with newer gRPC Gateway versions while preserving the intended functionality. Here's the resolved snippet:
+
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.helloworld.Greeter/SayHello")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Greeter_SayHello_3(rctx, inboundMarshaler, server, req, pathParams)
+```

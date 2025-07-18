@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different approaches to binding the `ScheduleService` class. The HEAD version uses `$this->app->bind` which is the standard Laravel service provider method, while the other branch uses the `App` facade. The extra closing brace in the HEAD version is necessary for correct class structure, as the subsequent comment block is clearly positioned outside the current registration method.
+
+Resolution: Use the idiomatic service provider binding syntax and preserve the closing brace to maintain proper class structure.
+
+```php
+            return $resolver->resolveSchedulerClass();
+        });
+
+        //load the schedule service of the appropriate driver
+        $this->app->bind('Indatus\Dispatcher\Services\ScheduleService', function () use ($resolver) {
+            return $resolver->resolveServiceClass();
+        });
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @codeCoverageIgnore
+```

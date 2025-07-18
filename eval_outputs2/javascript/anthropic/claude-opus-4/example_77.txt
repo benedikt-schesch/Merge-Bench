@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze the semantic intent of both sides:
+
+**HEAD version**: Uses `1.0 / dyeWidth, 1.0 / dyeHeight` for the dyeTexelSize uniform
+**Incoming version**: Uses `1.0 / dyeWidth, 1.0 / dyeWidth` for the dyeTexelSize uniform
+
+The context shows:
+1. We're setting up a viewport with `dyeWidth` and `dyeHeight`
+2. We're setting a uniform called `dyeTexelSize` which appears to represent texel dimensions
+3. This is only done when linear filtering is not supported
+
+Semantically, a "texel size" in graphics programming typically represents the size of one texel (texture element) in texture coordinate space, which would be `1.0 / textureWidth` for the X dimension and `1.0 / textureHeight` for the Y dimension.
+
+The HEAD version (`1.0 / dyeWidth, 1.0 / dyeHeight`) appears to be the correct implementation as it properly accounts for both dimensions of the texture, while the incoming version uses `dyeWidth` for both dimensions which would only be correct for square textures.
+
+Here's the resolved code:
+
+```javascript
+    gl.uniform1f(advectionProgram.uniforms.dissipation, config.VELOCITY_DISSIPATION);
+    blit(velocity.write.fbo);
+    velocity.swap();
+
+    gl.viewport(0, 0, dyeWidth, dyeHeight);
+
+    if (!ext.supportLinearFiltering)
+        { gl.uniform2f(advectionProgram.uniforms.dyeTexelSize, 1.0 / dyeWidth, 1.0 / dyeHeight); }
+    gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.texId);
+    gl.uniform1i(advectionProgram.uniforms.uSource, density.read.texId);
+    gl.uniform1f(advectionProgram.uniforms.dissipation, config.DENSITY_DISSIPATION);
+    blit(density.write.fbo);
+    density.swap();
+
+```

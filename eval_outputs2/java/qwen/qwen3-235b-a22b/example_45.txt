@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+The merge conflict originates from two methods in separate branches, each intended to serve potentially distinct functionalities for deck type identifiers in a game. Examining the context and naming semantics:
+
+1. `getCustomDeckIds()` in the `HEAD`, returning a `Set<Integer>`, is likely for numeric identifiers of user-defined or internally-managed custom decks.
+
+2. `getCardcastDeckIds()` in the merged commit, returning a `Set<String>`, appears to be for string-identified decks related to a Cardcast-type feature (possibly an external service or API).
+
+**Key Resolution Insight:**  
+- The differing method names and return types indicate that these methods are not semantically in conflict.
+- `customDecksIds` and `cardcastDeckIds` reference two different variables, as seen from their names and types, so merging should allow both to coexist.
+
+### Therefore, the correct resolution is to retain both methods in the post-merge code without changes.
+
+Here is the resolved snippet:
+
+```java
+  public void updateGameSettings(final GameOptions newOptions) {
+    this.options.update(newOptions);
+    notifyGameOptionsChanged();
+  }
+
+  public Set<Integer> getCustomDeckIds() {
+    return customDecksIds;
+  }
+
+  public Set<String> getCardcastDeckIds() {
+    return cardcastDeckIds;
+  }
+
+  /**
+   * Get information about this game, without the game's password.
+   * <br/>
+```

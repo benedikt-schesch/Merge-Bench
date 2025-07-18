@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+```php
+        } else {
+            $transport = new JAXLSocketClient($this->cfg['stream_context']);
+        }
+
+        // lifecycle events callback
+<<<<<<< HEAD:src/JAXL/jaxl.php
+        $this->ev = new JAXLEvent($this->cfg['multi_client'] ? array(&$this) : array());
+=======
+        $this->ev = new JAXLEvent(defined('JAXL_MULTI_CLIENT') ? array(&$this) : array());
+>>>>>>> ce7bc8c9e6848c6877016a3ebf8135404ef39bf7:jaxl.php
+
+        // initialize xmpp stream with configured transport
+        parent::__construct(
+            $transport,
+            $jid,
+```
+
+**Resolution Explanation:**  
+The conflict remains unresolved because the intent is ambiguous. Both sides aim to initialize `JAXLEvent` with either `[$this]` or `[]`, but they use different conditionals:
+1. **HEAD version** uses `$this->cfg['multi_client']` (runtime configuration)  
+2. **Branch version** uses `defined('JAXL_MULTI_CLIENT')` (compile-time constant)  
+
+Without broader context about whether the project uses configuration arrays or constants for feature flags, this conflict requires human decision. Possible resolutions:
+1. Keep HEAD version if configuration-driven features are preferred
+2. Keep branch version if constant-based feature flags are standard
+3. Combine both checks if needed (e.g., `($this->cfg['multi_client'] || defined('JAXL_MULTI_CLIENT'))`)
+
+Since intent isn't clear from the snippet alone, the conflict is preserved.

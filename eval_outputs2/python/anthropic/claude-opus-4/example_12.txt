@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import from the same modules, but with slightly different formatting and content:
+
+- **HEAD**: Imports `PaylaneTransaction,PaylaneAuthorization` (no space after comma) and adds a wildcard import from `pin_models`
+- **Other branch**: Imports `PaylaneTransaction, PaylaneAuthorization` (with proper spacing after comma)
+
+The semantic intent appears to be:
+1. Both sides want to import the same two classes from `paylane_models`
+2. HEAD additionally wants to import everything from `pin_models`
+3. The other branch has better formatting (PEP 8 style with space after comma)
+
+The resolution should include both the properly formatted `paylane_models` import and the `pin_models` import from HEAD:
+
+```python
+from authorize_models import AuthorizeAIMResponse
+from gc_models import GCNewOrderNotification
+from world_pay_models import WorldPayResponse
+from eway_models import EwayResponse
+from amazon_fps_models import AmazonFPSResponse
+from paylane_models import PaylaneTransaction, PaylaneAuthorization
+from pin_models import *
+```

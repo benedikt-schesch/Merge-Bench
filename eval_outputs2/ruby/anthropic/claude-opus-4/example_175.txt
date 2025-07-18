@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the method signature for `get_page`. 
+
+The HEAD version has:
+```ruby
+def get_page(target_url)
+```
+
+The incoming change has:
+```ruby
+def get_page(target_url: nil)
+```
+
+The semantic intent here is clear: the incoming change is converting the positional parameter `target_url` to a keyword argument with a default value of `nil`. This is a common Ruby pattern that makes the API more explicit and allows for optional parameters.
+
+Since the method body uses `target_url` directly without any modifications, and keyword arguments are generally preferred in modern Ruby for clarity, the resolution should accept the incoming change.
+
+Here's the resolved code:
+
+```ruby
+          ##
+          # Retrieve a single page of InstalledAddOnInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of InstalledAddOnInstance
+          def get_page(target_url: nil)
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return InstalledAddOnPage.new(@version, response, @solution)
+```

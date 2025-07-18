@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add different migrations after v16. The conflict arises because:
+
+- HEAD wants to add migration v17 -> v18 (updating repository description field)
+- The other branch wants to add migration v18 -> v19 (cleaning unlinked webhooks)
+
+The issue is that the other branch skipped v17 and went directly to v18, creating a version numbering conflict.
+
+To resolve this semantically, we need to:
+1. Keep the migration from HEAD as v17 -> v18
+2. Renumber the migration from the other branch to v18 -> v19
+
+Here's the resolved code:
+
+```go
+	NewMigration("generate and migrate Git hooks", generateAndMigrateGitHooks),
+	// v15 -> v16:v0.10.16
+	NewMigration("update repository sizes", updateRepositorySizes),
+	// v16 -> v17:v0.10.31
+	NewMigration("remove invalid protect branch whitelist", removeInvalidProtectBranchWhitelist),
+	// v17 -> v18:v0.11.48
+	NewMigration("store long text in repository description field", updateRepositoryDescriptionField),
+	// v18 -> v19:v0.11.55
+	NewMigration("clean unlinked webhook and hook_tasks", cleanUnlinkedWebhookAndHookTasks),
+}
+
+// Migrate database to current version
+func Migrate(x *xorm.Engine) error {
+	if err := x.Sync(new(Version)); err != nil {
+```

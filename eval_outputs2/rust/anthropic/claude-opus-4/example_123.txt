@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set virtual terminal settings, but with different approaches:
+
+- HEAD (current branch): Uses conditional compilation to only run this on Windows with `#[cfg(windows)]`
+- The incoming branch: Runs the code unconditionally on all platforms
+
+Based on the semantics and the fact that this appears to be setting up virtual terminal support (which is typically a Windows-specific concern for enabling ANSI escape codes), the HEAD version with the `#[cfg(windows)]` conditional compilation is likely the correct approach. This prevents unnecessary operations on non-Windows platforms where virtual terminal support is typically already available.
+
+Here's the resolved code:
+
+```rust
+    });
+}
+
+impl Repl {
+    fn new(ide_mode: bool) -> Result<Repl, Error> {
+        #[cfg(windows)]
+        let _ret = control::set_virtual_terminal(true);
+
+        let (command_context, outputs) = CommandContext::new()?;
+        send_output(outputs.stdout, io::stdout(), None);
+        send_output(outputs.stderr, io::stderr(), Some(Color::BrightRed));
+        let mut repl = Repl {
+            command_context,
+
+```

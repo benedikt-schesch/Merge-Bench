@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```rust
+    vsync: bool,
+    resizable: bool,
+    decorations: bool,
+    cursor_visible: bool,
+    cursor_locked: bool,
+    physical_cursor_position: Option<DVec2>,
+    cursor_position: Option<Vec2>,
+    raw_window_handle: RawWindowHandleWrapper,
+    focused: bool,
+    mode: WindowMode,
+    #[cfg(target_arch = "wasm32")]
+    pub canvas: Option<String>,
+    command_queue: Vec<WindowCommand>,
+```
+
+**Resolution rationale:**  
+1. `physical_cursor_position` (HEAD) and `cursor_position` (other branch) serve complementary roles:
+   - `DVec2` (double-precision) for physical coordinates (high-precision device input)
+   - `Vec2` (single-precision) for logical coordinates (typically used in UI logic)
+2. `raw_window_handle` is orthogonal to cursor positioning and was added in the other branch without any semantic conflict
+3. All three fields appear to be non-overlapping in functionality and can coexist without ambiguity

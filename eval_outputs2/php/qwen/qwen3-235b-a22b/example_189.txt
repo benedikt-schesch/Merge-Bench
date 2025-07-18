@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```php
+            function ($m) use ($scheduledCommand, $scheduler) {
+                $item = m::mock('Indatus\Dispatcher\QueueItem');
+                $item->shouldReceive('getCommand')->once()->andReturn($scheduledCommand);
+                $m->shouldReceive('flush')->once()->andReturn([$item]);
+            });
+        $scheduleService = m::mock('Indatus\Dispatcher\Drivers\Cron\ScheduleService');
+        $scheduleService->shouldReceive('getQueue')->once()->andReturn($queue);
+        $this->app->instance('Indatus\Dispatcher\Services\ScheduleService', $scheduleService);
+
+        $commandService = m::mock('Indatus\Dispatcher\Services\CommandService[runnableInEnvironment,run]',
+            [$scheduleService]);
+```

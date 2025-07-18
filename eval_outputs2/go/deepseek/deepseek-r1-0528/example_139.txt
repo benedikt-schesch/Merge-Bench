@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in package names (`swagger_options` vs `openapi_options`) and comments between the two branches. Both branches implement the same logical behavior for the `STRING` case but use different package names. The surrounding context shows that `openapi_options` is already used in the cases above the conflict, so we should maintain consistency by using `openapi_options` for the `STRING` case as well. The comment is updated to reference "OpenAPI specification" which is consistent with the other branch's terminology.
+
+Here's the resolved snippet:
+
+```go
+	case openapi_options.JSONSchema_INTEGER:
+		return "integer", "int32"
+	case openapi_options.JSONSchema_NUMBER:
+		return "number", "double"
+	case openapi_options.JSONSchema_STRING:
+		// NOTE: in OpenAPI specification, format should be empty on string type
+		return "string", ""
+	default:
+		// Maybe panic?
+		return "", ""
+	}
+
+```

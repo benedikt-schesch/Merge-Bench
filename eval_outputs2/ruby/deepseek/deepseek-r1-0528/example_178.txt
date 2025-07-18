@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing method signatures for `get_page`. The HEAD branch uses a required positional parameter, while the other branch uses an optional keyword parameter with a default value. Since the method body immediately uses `target_url` in an API request without nil-checking, making it optional could introduce errors if called without the parameter. However, the intent behind converting to a keyword parameter (e.g., API consistency or future flexibility) is unclear from the context. 
+
+Given the ambiguity and risk of introducing unexpected behavior, the conflict remains unresolved. Here's the original snippet with the conflict markers:
+
+```ruby
+              ##
+              # Retrieve a single page of InviteInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of InviteInstance
+<<<<<<< HEAD
+              def get_page(target_url)
+=======
+              def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return InvitePage.new(@version, response, @solution)
+```

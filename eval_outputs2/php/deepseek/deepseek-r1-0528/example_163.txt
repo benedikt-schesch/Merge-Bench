@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises from a trailing comma in the second argument of the `loadAll` method call. The branch version (1a3bfac) adds a trailing comma after the second argument, while the HEAD version omits it. Since trailing commas in function calls are allowed in PHP and improve maintainability by making future additions easier, the branch version is preferred. The resolved code maintains the trailing comma from the branch version.
+
+```php
+    public function execute(Arguments $args, ConsoleIo $io): int
+    {
+        $configFinder = new ConfigFinder();
+        $config = $configFinder->loadAll(
+            (string)$args->getOption('config'),
+            (bool)$args->getOption('skip-plugins'),
+        );
+        $factory = new Factory($config);
+
+        $themes = (array)$config->general('themes');
+        foreach ($themes as $theme) {
+```

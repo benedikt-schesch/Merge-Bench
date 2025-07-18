@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD (current branch) has added a new option `{ "unbuffered", no_argument, NULL, 'u' },`
+- The other branch (05f934d5...) doesn't have this option
+
+This appears to be a case where one branch added a new command-line option while the other branch didn't. Since this is an additive change that doesn't conflict with the existing options, and the "unbuffered" option seems like a legitimate feature addition, the resolution should include this option.
+
+```c
+        { "id", required_argument, NULL, 'i' },
+        { "bundle", required_argument, NULL, 'b' },
+        { "args", required_argument, NULL, 'a' },
+        { "verbose", no_argument, NULL, 'v' },
+        { "timeout", required_argument, NULL, 't' },
+        { "unbuffered", no_argument, NULL, 'u' },
+        { "xcode", required_argument, NULL, 'x' },
+        { NULL, 0, NULL, 0 },
+    };
+    char ch;
+
+
+```

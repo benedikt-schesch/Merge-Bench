@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+After analyzing the merge conflict, I've determined that the semantic intent of both versions is identical - they aim to implement the same constructor with type hints. The only difference is formatting style. Here's the resolved version:
+
+```python
+    >>> validate = Schema(Match(re.compile(r'0x[A-F0-9]+', re.I)))
+    >>> validate('0x123ef4')
+    '0x123ef4'
+    """
+
+    def __init__(
+        self, pattern: typing.Union[re.Pattern, str], msg: typing.Optional[str] = None
+    ) -> None:
+        if isinstance(pattern, basestring):
+            pattern = re.compile(pattern)
+        self.pattern = pattern
+        self.msg = msg
+
+
+```
+
+Resolution rationale:
+1. I chose the multi-line formatting (from the branch commit) because:
+   - It improves readability for type-annotated parameters
+   - Matches common Python styling guides (PEP 8)
+   - Maintains consistency with surrounding code formatting
+2. Both versions implement identical functionality:
+   - Parameter types and names match exactly
+   - Default value for `msg` is the same
+   - Return type annotation is identical
+3. The surrounding context remains completely unchanged:
+   - Docstring above is preserved verbatim
+   - Method body after conflict remains unchanged
+   - Spacing/exact indentation is maintained per requirements
+
+The selected formatting enhances readability without altering functionality or semantics.

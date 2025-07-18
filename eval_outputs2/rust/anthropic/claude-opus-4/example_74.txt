@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD wants `LocalState<T>` to have a `Resource` trait bound
+- The incoming change wants `LocalState<T>` to have a `Component` trait bound
+
+However, looking at the context below the conflict, I can see that `impl<'a, T: Resource + FromWorld> SystemParam for Local<'a, T>` uses `Resource` as the trait bound for `T`. This suggests that `LocalState<T>` should also use `Resource` to maintain consistency with how `Local<T>` is implemented.
+
+Since the `SystemParam` implementation for `Local<'a, T>` requires `T: Resource`, and `LocalState<T>` is the associated `Fetch` type, they should have matching trait bounds.
+
+Here's the resolved code:
+
+```rust
+        self.0
+    }
+}
+
+/// The [`SystemParamState`] of [`Local<T>`].
+pub struct LocalState<T: Resource>(T);
+
+impl<'a, T: Resource + FromWorld> SystemParam for Local<'a, T> {
+    type Fetch = LocalState<T>;
+}
+
+
+```

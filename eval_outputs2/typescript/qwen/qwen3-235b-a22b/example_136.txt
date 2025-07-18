@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two different commands being executed in the same line inside the `before` hook:
+
+- The `HEAD` change suggests initializing an empty npm project using `nodeInstaller` based on its configuration.
+- The other branch (`84eb77568a8933099dafb531a9ed7e003870165`) suggests setting up the test environment by cloning the `electron-quick-start` repository into the test directory.
+
+Both changes modify the same line in opposing ways: one replaces it with a local `init`, and the other replaces it with a `git clone` of an existing project. This creates a semantic divergence in how the test setup proceeds — one starts from an empty directory and initializes it, while the other starts from an existing template.
+
+Given this ambiguity, it's unclear which approach should take precedence or whether both should be used in sequence to properly support the downstream test case `it('creates forge.config.js and is packageable')`. 
+
+Since the intent behind the changes is not definitively clear and depends on the expected test behavior, we cannot resolve the merge conflict safely without additional context.
+
+Here is the original code with the merge conflict preserved:
+
+```typescript
+
+    describe('import', () => {
+      before(async () => {
+        dir = await ensureTestDirIsNonexistent();
+        await fs.mkdir(dir);
+<<<<<<< HEAD
+        execSync(nodeInstaller === 'pnpm' ? `${nodeInstaller} init` : `${nodeInstaller} init -y`, {
+=======
+        execSync(`git clone https://github.com/electron/electron-quick-start.git . --quiet`, {
+>>>>>>> 84eb77568a8933099dafb531a9ed7e003870165
+          cwd: dir,
+        });
+      });
+
+      it('creates forge.config.js and is packageable', async () => {
+
+```

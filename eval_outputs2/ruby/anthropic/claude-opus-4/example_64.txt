@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side)**: Simply yields the chunksize
+**Incoming (right side)**: Yields the chunksize, captures the return value as `time_in_db`, and ensures it's converted to a float (with error handling)
+
+The semantic intent appears to be:
+- Both sides want to yield the chunksize
+- The incoming change adds functionality to capture and process the return value from the yield
+- The variable `time_in_db` is already initialized to 0 before the begin block, suggesting the incoming change is the intended behavior
+
+Since the incoming change is a superset of the HEAD change (it still yields chunksize but adds return value handling), and the return value handling appears intentional given the variable initialization, the resolution should accept the incoming changes:
+
+```ruby
+
+		retries = 0
+		time_in_db = 0
+		begin
+			t1 = Time.now
+			time_in_db = yield chunksize
+			time_in_db = time_in_db.to_f rescue 0
+		rescue Errno::EPIPE, RestClient::RequestFailed
+			retries += 1
+			raise if retries > 2
+
+			# we got disconnected, the chunksize could be too large
+
+```

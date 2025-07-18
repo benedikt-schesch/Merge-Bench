@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, both branches are trying to achieve the same goal of importing required modules and defining a path resolver function. The conflict arises from different variable declaration styles (`const` vs `var`). 
+
+The resolution adopts modern ES6 `const` declarations since:
+1. These variables are never reassigned
+2. `const` provides better scoping and intentionality
+3. The `'use strict'` directive should be preserved as it enables stricter parsing
+
+Here's the resolved snippet with original spacing preserved:
+
+```javascript
+'use strict'
+const path = require('path')
+const utils = require('./utils')
+const config = require('../config')
+const vueLoaderConfig = require('./vue-loader.conf')
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+
+```

@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```c
+    FD_ZERO(&xset);
+    maxfd = 0;
+
+    FD_SET_MAX(signalpipe[0], maxfd, rset);
+
+    if (connopen && !sending && back->connected(backhandle) &&
+        back->sendok(backhandle) &&
+        back->sendbuffer(backhandle) < MAX_STDIN_BACKLOG) {
+      /* If we're OK to send, then try to read from stdin. */
+      FD_SET_MAX(STDIN_FILENO, maxfd, rset);
+    }
+```

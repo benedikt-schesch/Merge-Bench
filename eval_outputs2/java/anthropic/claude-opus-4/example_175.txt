@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - they both want to:
+1. Set the parser to non-interactive mode
+2. Call `parseStopOnError()`
+
+The only difference is the indentation. The HEAD version has no indentation, while the incoming change (1488b22ce313803d012c8ace36c3b12f930ee309) has proper indentation that aligns with the try-catch block structure.
+
+Since both sides have the same semantic intent and the indented version follows proper Java code formatting conventions within the try block, I'll resolve this by keeping the properly indented version:
+
+```java
+        parser.parseContOnError();
+    }
+
+    public void exec() throws Throwable {
+        try {
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+        } catch (Exception e) {
+            Exception pe = Utils.getPermissionException(e);
+            if (pe != null)
+                log.error("You don't have permission to perform the operation. Error from the server: " + pe.getMessage());
+```

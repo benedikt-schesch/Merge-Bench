@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to declare the same HashMap, but with a slight syntax difference:
+
+- HEAD uses the older Java syntax: `new HashMap<GamePlayerInfo, Object>()`
+- The incoming change uses the diamond operator syntax introduced in Java 7: `new HashMap<>()`
+
+Both achieve the same result - creating a HashMap with GamePlayerInfo keys and Object values. The diamond operator version is more modern and concise, as it infers the type parameters from the left-hand side declaration.
+
+Since both sides have the same intent (creating the same HashMap) and the diamond operator syntax is the more modern approach, I'll resolve this by using the incoming change:
+
+```java
+   *
+   * @param player The player for whom to get status.
+   * @return Information for {@code player}: Name, score, status.
+   */
+  public Map<GamePlayerInfo, Object> getPlayerInfo(final Player player) {
+    final Map<GamePlayerInfo, Object> playerInfo = new HashMap<>();
+    // TODO make sure this can't happen in the first place
+    if (player == null) {
+      return playerInfo;
+    }
+    playerInfo.put(GamePlayerInfo.NAME, player.getUser().getNickname());
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict involves defining a type alias for gRPC metadata. Both sides aim to create a convenience wrapper, but they differ in naming and package references. The HEAD branch uses `NiceMD` with `metadata.MD`, while the other branch uses `MD` with `grpcMetadata.MD`. The surrounding context shows the imported package is explicitly aliased as `grpcMetadata`, and the subsequent function comment references `grpcMetadata.MD` and `MD`.
+
+Here's the resolved snippet preserving context and spacing:
+
+```go
+	"strings"
+
+	grpcMetadata "google.golang.org/grpc/metadata"
+)
+
+// MD is a convenience wrapper defining extra functions on the metadata.
+type MD grpcMetadata.MD
+
+// ExtractIncoming extracts an inbound metadata from the server-side context.
+//
+// This function always returns a MD wrapper of the grpcMetadata.MD, in case the context doesn't have metadata it returns
+// a new empty MD.
+```
+
+Key resolution points:
+1. Used `MD` for type name (matches the function comment's "MD wrapper")
+2. Used `grpcMetadata.MD` to match the actual imported package alias
+3. Kept identical comment structure from both branches
+4. Preserved all surrounding context and spacing exactly as provided
+
+The resolution maintains consistency with existing package aliases and documentation references while providing a concise type name.

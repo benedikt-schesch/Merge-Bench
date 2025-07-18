@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to register the same systems (`setup_system` and `diagnostic_system`) but with different syntax:
+
+- HEAD (left side): Uses direct method references without `.system()` calls
+- The right side: Uses `.system()` calls on the method references
+
+This appears to be a change in the Bevy game engine API where the `.system()` call was either added or removed between versions. Based on typical Bevy evolution patterns, the more recent versions (around 0.6 and later) removed the need for explicit `.system()` calls, making the code cleaner.
+
+The HEAD version (without `.system()`) represents the newer, cleaner API style and should be preferred.
+
+```rust
+    }
+}
+
+impl<T: Asset> Plugin for AssetCountDiagnosticsPlugin<T> {
+    fn build(&self, app: &mut App) {
+        app.add_startup_system(Self::setup_system)
+            .add_system(Self::diagnostic_system);
+    }
+}
+
+impl<T: Asset> AssetCountDiagnosticsPlugin<T> {
+    pub fn diagnostic_id() -> DiagnosticId {
+
+```

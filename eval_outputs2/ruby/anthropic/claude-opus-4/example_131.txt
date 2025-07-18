@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side)**: Adds `name = name.to_sym` to ensure the attribute name is converted to a symbol.
+
+**Incoming change (right side)**: Adds validation to check if the attribute name ends with `=` and raises an error with a helpful message about the correct syntax.
+
+Both changes appear to be valuable and compatible:
+- Converting to symbol is a good practice for attribute names
+- The validation helps users avoid a common syntax error
+
+The semantic intent is to:
+1. Validate the attribute name doesn't have an incorrect `=` suffix
+2. Convert the valid name to a symbol
+3. Continue with the rest of the method
+
+Here's the resolved code with both changes integrated:
+
+```ruby
+  #     The name of this attribute. This will be assigned using :"#{name}=" for
+  #     generated instances.
+  #   value: (Object)
+  #     If no block is given, this value will be used for this attribute.
+  def add_attribute (name, value = nil, &block)
+    if name.to_s =~ /=$/
+      raise AttributeDefinitionError, "factory_girl uses 'f.#{name.to_s.chop} #{value}' syntax rather than 'f.#{name} #{value}'" 
+    end
+    
+    name = name.to_sym
+    if block_given?
+      unless value.nil?
+        raise ArgumentError, "Both value and block given"
+      end
+      @lazy_attribute_blocks[name] = block
+
+```

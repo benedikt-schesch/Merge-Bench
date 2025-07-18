@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different approaches for the `show_in_menu` and `show_in_nav_menus` keys. The HEAD branch uses `disp_boolean()` on `$taxonomy` array values, while the other branch uses direct variables (`$show_in_menu` and `$show_in_nav_menus`). Since it's unclear whether the variables are pre-processed (e.g., already passed through `disp_boolean()`) or if this represents a deeper semantic conflict, the resolution requires additional context. The surrounding code shows inconsistencies in boolean handling (some keys use `disp_boolean()`, others use direct values/variables), making it unsafe to automatically resolve.
+
+Here's the original code with the conflict preserved:
+
+```php
+		"labels" => $labels,
+		"public" => <?php echo $public; ?>,
+		"hierarchical" => <?php echo $taxonomy['hierarchical']; ?>,
+		"label" => "<?php echo $taxonomy['label']; ?>",
+		"show_ui" => <?php echo disp_boolean( $taxonomy['show_ui'] ); ?>,
+<<<<<<< HEAD
+		"show_in_menu" => <?php echo disp_boolean( $taxonomy['show_in_menu'] ); ?>,
+		"show_in_nav_menus" => <?php echo disp_boolean( $taxonomy['show_in_nav_menus'] ); ?>,
+=======
+		"show_in_menu" => <?php echo $show_in_menu; ?>,
+		"show_in_nav_menus" => <?php echo $show_in_nav_menus; ?>,
+>>>>>>> bc343c6bec205e7120ccae126fca480929046f1d
+		"query_var" => <?php echo disp_boolean( $taxonomy['query_var'] );?>,
+		"rewrite" => <?php echo $rewrite; ?>,
+		"show_admin_column" => <?php echo $taxonomy['show_admin_column']; ?>,
+		"show_in_rest" => <?php echo disp_boolean( $taxonomy['show_in_rest'] ); ?>,
+		"rest_base" => "<?php echo $taxonomy['rest_base']; ?>",
+```
+
+**Recommendation**: Manually review to determine:
+1. If `$show_in_menu`/`$show_in_nav_menus` are equivalent to `disp_boolean($taxonomy[...])` calls
+2. Why boolean handling is inconsistent across keys (e.g., `show_admin_column` vs `show_in_rest`)
+3. The source of the variables in the conflicting branch

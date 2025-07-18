@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that HEAD is trying to add a configuration line `USE_OLLAMA_TEXT_MODELS=true` while the other branch doesn't have this addition. 
+
+Based on the context, this appears to be in a section that's setting up Ollama configuration with environment variables. The HEAD branch seems to be adding an additional configuration option that explicitly enables the use of Ollama text models, which aligns with the overall intent of configuring Ollama.
+
+Since this is an additive change that enhances the configuration without conflicting with the existing setup, the semantic intent appears to be to include this additional configuration option.
+
+Here's the resolved snippet:
+
+```typescript
+
+          content += '\n# AI Model Configuration\n';
+          content += '# Ollama Configuration\n';
+          content += 'OLLAMA_API_ENDPOINT=http://localhost:11434\n';
+          content += 'OLLAMA_MODEL=gemma3\n';
+          content += 'USE_OLLAMA_TEXT_MODELS=true\n';
+          content += '# Make sure Ollama is installed and running: https://ollama.ai/\n';
+
+          await fs.writeFile(envFilePath, content, 'utf8');
+        } else {
+          // Interactive mode - prompt for Ollama configuration
+
+```

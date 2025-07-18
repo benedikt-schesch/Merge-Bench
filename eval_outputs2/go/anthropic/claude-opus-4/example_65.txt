@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add deprecation comments to the same functions. The only difference is in the capitalization and punctuation of the deprecation notice:
+
+- HEAD version: `// Deprecated: Do not use.`
+- Other version: `// Deprecated: do not use.`
+
+Since both sides have the same semantic intent (marking these functions as deprecated), I'll resolve this by choosing the more formal style with proper capitalization, which is more consistent with Go's documentation conventions.
+
+Here's the resolved code:
+
+```go
+>>>>>>> 84668698ea25b64748563aa20726db66a6b8d299
+func MarshalMessageSetJSON(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
+}
+
+// Deprecated: Do not use.
+func UnmarshalMessageSetJSON([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+
+```

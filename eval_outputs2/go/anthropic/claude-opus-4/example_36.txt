@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same line with different timestamps in the `modTime` field:
+
+- HEAD has: `modTime: time.Unix(1444419364, 0)`
+- The other branch has: `modTime: time.Unix(1467390283, 0)`
+
+The only other difference is a minor formatting change in the spacing after `info:` in the second branch.
+
+Since this appears to be auto-generated code (likely from a tool like go-bindata) that embeds file metadata, the semantic intent from both sides is to update the timestamp to reflect when the file was last modified. The more recent timestamp (1467390283 is from July 2016, while 1444419364 is from October 2015) should be used.
+
+Here's the resolved code:
+
+```go
+	bytes, err := confGitignoreElispBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "conf/gitignore/Elisp", size: 36, mode: os.FileMode(420), modTime: time.Unix(1467390283, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _confGitignoreElixir = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\xd2\x8f\x4f\x2a\xcd\xcc\x49\xe1\xd2\x4f\x49\x2d\x28\xe6\x4a\x2d\xca\x89\x4f\x2e\x4a\x2c\xce\xd0\x4b\x29\xcd\x2d\xe0\xd2\xd2\x4b\xad\xe2\x02\x04\x00\x00\xff\xff\x32\x40\x48\x82\x22\x00\x00\x00")
+```

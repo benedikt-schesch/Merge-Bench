@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```python
+            if isinstance(self, LibraryDetails) and not self.torrent.swift_hash:
+                vSizer.Add(self.listCtrl, 1, wx.EXPAND | wx.LEFT)
+                vSizer.Add(wx.StaticLine(parent, -1, style=wx.LI_HORIZONTAL), 0, wx.EXPAND | wx.ALL, 3)
+                ulfont = self.GetFont()
+                ulfont.SetUnderlined(True)
+                self.filesFooter = LinkText(parent, 'Click here to modify which files should be downloaded.', fonts=[self.GetFont(), ulfont], colours=[self.GetForegroundColour(), wx.RED])
+                self.filesFooter.SetBackgroundColour(parent.GetBackgroundColour())
+                self.filesFooter.Bind(wx.EVT_LEFT_UP, self.OnChangeSelection)
+                vSizer.Add(self.filesFooter, 0, wx.EXPAND | wx.ALL, 3)
+            else:
+                vSizer.Add(self.listCtrl, 1, wx.EXPAND | wx.LEFT)
+            parent.SetSizer(vSizer)
+```
+
+**Resolution Reasoning:**
+1. Preserved the keyword argument formatting from the other branch (`fonts=[...]` without spaces around `=`) as it's more Pythonic
+2. Kept the background color setting from HEAD since it ensures visual consistency with the parent component
+3. Maintained both functional aspects:
+   - LinkText creation with proper styling
+   - Background color inheritance
+   - Event binding
+4. The combination maintains the intended functionality from both branches: proper link styling + visual background consistency

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes, here's the resolved version preserving the context while maintaining the intended functionality:
+
+```go
+	jsonContents, err := yaml.YAMLToJSON(yamlFileContents)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert gRPC API Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
+	}
+
+	// As our GrpcAPIService is incomplete, accept unknown fields.
+	unmarshaler := protojson.UnmarshalOptions{
+		DiscardUnknown: true,
+	}
+
+	serviceConfiguration := apiconfig.GrpcAPIService{}
+	if err := unmarshaler.Unmarshal(jsonContents, &serviceConfiguration); err != nil {
+		return nil, fmt.Errorf("failed to parse gRPC API Configuration from YAML in '%v': %v", yamlSourceLogName, err)
+```
+
+**Resolution reasoning:**
+1. The `protojson` package (from the other branch) is the modern Protobuf JSON implementation and should be preferred over the deprecated `jsonpb`
+2. `DiscardUnknown: true` achieves the same semantic intent as `AllowUnknownFields: true` (ignoring unrecognized fields)
+3. The improved comment clarity from the other branch ("incomplete,") was preserved
+4. Both solutions functionally handle unknown fields during unmarshaling
+5. The `protojson` version is more future-proof and aligns with current Protobuf best practices
+
+The resolution maintains the core functionality both branches were attempting to achieve (ignoring unknown fields during JSON unmarshaling) while using the modern API and clearer comment.

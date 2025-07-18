@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `xavier` method definition. The conflict is about:
+
+1. **HEAD**: Keeps the method as an instance method (`def xavier(structure)`)
+2. **Incoming branch**: Makes it a class method (`def self.xavier(structure)`) and adds documentation comments
+
+Based on the semantic intent, it appears the incoming branch is trying to:
+- Convert the method to a class method (which makes sense for an initialization strategy)
+- Add proper documentation with `@param` and `@return` tags
+
+Since the method appears to be returning a lambda that's used for initialization (similar to the `random` method above it), making it a class method is likely the correct approach. The documentation also adds value.
+
+Here's the resolved conflict:
+
+```ruby
+        ->(_n, _i, _j) { rand * 2 - 1 }
+      end
+
+      # Xavier/Glorot initialization based on layer dimensions
+      # @param structure [Object]
+      # @return [Object]
+      def self.xavier(structure)
+        lambda do |layer, _i, _j|
+          limit = Math.sqrt(6.0 / (structure[layer] + structure[layer + 1]))
+          rand * 2 * limit - limit
+        end
+      end
+
+```

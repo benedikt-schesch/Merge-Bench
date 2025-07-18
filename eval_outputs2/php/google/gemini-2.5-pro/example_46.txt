@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two independent changes: a refactoring that renames a directory from `media` to `medium` and an update to the copyright year.
+
+*   **HEAD** references the subpackage as `media.tests.cases.libs.media.adapter` and has a copyright year up to `2009`.
+*   The **incoming change** references the subpackage as `media.tests.cases.libs.medium.adapter` (reflecting the directory rename from `media` to `medium` as shown in the filename `.../vendors/medium/...`) and updates the copyright year to `2010`.
+
+The semantic resolution is to combine both intents:
+1.  Accept the subpackage rename to `medium`, as this is a significant refactoring and the docblock should correctly reflect the file's location.
+2.  Accept the updated copyright year, as it is a routine and correct chronological update.
+
+Both desired changes are present in the incoming branch. Therefore, the resolution is to accept the incoming block in its entirety.
+
+```php
+ *
+ * PHP version 5
+ * CakePHP version 1.2
+ *
+ * @package    media
+ * @subpackage media.tests.cases.libs.medium.adapter
+ * @copyright  2007-2010 David Persson <davidpersson@gmx.de>
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link       http://github.com/davidpersson/media
+ */
+App::import('Vendor','Media.AudioMedia', array('file' => 'media'.DS.'audio.php'));
+App::import('Vendor','GetId3AudioMediaAdapter', array('file' => 'media'.DS.'adapter'.DS.'get_id3_audio.php'));
+
+```

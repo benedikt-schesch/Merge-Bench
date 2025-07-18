@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing approaches to setting the `nickname` property. The HEAD version checks for a 'nickname' option before falling back to generating one, while the other branch always generates the nickname. The resolution preserves the more robust logic from HEAD that allows nickname customization via options, while keeping the cleaner attributes assignment from the other branch.
+
+Here's the resolved code:
+
+```php
+	public function __construct($builder, $id, $title, $options)
+	{
+		$this->builder     = $builder;
+		$this->id          = $id;
+		$this->title       = $title;
+		$this->nickname    = isset($options['nickname']) ? $options['nickname'] : camel_case(Str::ascii($title));
+		$this->attributes  = $this->builder->extractAttributes($options);
+		$this->parent      = (is_array($options) && isset($options['parent'])) ? $options['parent'] : null;
+
+
+		// Storing path options with each link instance.
+		if(!is_array($options)) {
+
+```

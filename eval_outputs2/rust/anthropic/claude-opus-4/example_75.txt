@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD version: Uses `T: Resource + FromWorld` as the trait bound
+- The other version: Uses `T: Component + FromWorld` as the trait bound
+
+This appears to be a semantic difference where one branch expects `LocalState<T>` to work with `Resource` types while the other expects it to work with `Component` types. Without more context about the system's design intent and what `LocalState` is supposed to handle, I cannot definitively resolve this conflict.
+
+Since the intent is ambiguous and could fundamentally change the behavior of the code depending on which trait bound is chosen, I'm returning the snippet with the conflict preserved:
+
+```rust
+    fn default_config() -> Option<T> {
+        None
+    }
+}
+
+<<<<<<< HEAD
+impl<'w, 's, T: Resource + FromWorld> SystemParamFetch<'w, 's> for LocalState<T> {
+=======
+impl<'w, 's, T: Component + FromWorld> SystemParamFetch<'w, 's> for LocalState<T> {
+>>>>>>> 65e834ce8d5142f1a01d06c2a9e4e7ef4a1238a9
+    type Item = Local<'s, T>;
+
+    #[inline]
+    unsafe fn get_param(
+        state: &'s mut Self,
+```

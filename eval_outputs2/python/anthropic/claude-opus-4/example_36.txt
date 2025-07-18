@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic goal - they want to assert that the repr of `range_` matches a specific string. The only difference is formatting:
+
+- HEAD has it on a single line
+- The incoming change splits it across multiple lines for better readability (following Python style guidelines for long lines)
+
+Since both sides have identical assertion logic and the incoming change improves code readability by breaking up a long line, I'll resolve in favor of the incoming change:
+
+```python
+    all_ = All('10', Coerce(int), msg='all msg')
+    maybe_int = Maybe(int)
+
+    assert repr(match) == "Match('a pattern', msg='message')"
+    assert repr(replace) == "Replace('you', 'I', msg='you and I')"
+    assert (
+        repr(range_)
+        == "Range(min=0, max=42, min_included=False, max_included=False, msg='number not in range')"
+    )
+    assert repr(coerce_) == "Coerce(int, msg='moo')"
+    assert repr(all_) == "All('10', Coerce(int, msg=None), msg='all msg')"
+    assert repr(maybe_int) == "Any(None, %s, msg=None)" % str(int)
+
+
+
+```

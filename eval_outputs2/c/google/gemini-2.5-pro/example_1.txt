@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+This is a classic conflict where one branch introduces a performance optimization and another branch introduces a safety/correctness fix.
+
+-   **HEAD branch intent**: The change from `memcpy` to `memmove` along with the comment `/* in case count & Counting1 are overlapping */` clearly indicates an intent to make the code safer by correctly handling potentially overlapping memory buffers.
+-   **ce01506e08348f945b1e392207b613580a2d2746 branch intent**: This branch optimizes the copy operation. Instead of copying a potentially larger, pre-defined block of memory (indicated by `countSize` in the other branch), it calculates the precise size needed based on the `maxSymbolValue` discovered in the input. This avoids copying unused trailing zeros in the frequency count array.
+
+The best resolution combines both intents: it uses the safer `memmove` function from the HEAD branch and the more performant, precise size calculation from the other branch. This results in code that is both safe and optimized.
+
+```c
+
+    {   unsigned maxSymbolValue = 255;
+        while (!Counting1[maxSymbolValue]) maxSymbolValue--;
+        if (check && maxSymbolValue > *maxSymbolValuePtr) return ERROR(maxSymbolValue_tooSmall);
+        *maxSymbolValuePtr = maxSymbolValue;
+        memmove(count, Counting1, (maxSymbolValue+1) * 4);   /* in case count & Counting1 are overlapping */
+    }
+    return (size_t)max;
+}
+
+
+
+```

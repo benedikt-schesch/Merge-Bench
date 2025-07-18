@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet preserving surrounding context and resolving the conflict based on semantic intent:
+
+```python
+    out_ = schema({"number": '123456789012.00'})
+    assert float(out_.get("number")) == 123456789012.00
+
+
+def test_number_when_precision_none_n_invalid_scale_yield_decimal_true():
+    """Test with Number with no precision and invalid scale"""
+    schema = Schema({"number": Number(scale=2, yield_decimal=True)})
+    try:
+        schema({"number": '12345678901.234'})
+    except MultipleInvalid as e:
+```
+
+**Resolution reasoning:**
+1. Both versions of the conflict are semantically identical - they convey the same documentation purpose
+2. The only difference is a minor whitespace style in the docstring opening
+3. I preserved the cleaner version without leading space after `"""` as it's more common in Python docstrings
+4. The rest of the test implementation remains unchanged as it was identical in both versions
+
+The resolution maintains:
+- Original test behavior
+- Both authors' documentation intent
+- Consistent Python docstring styling
+- Unchanged implementation logic before/after the conflict

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to require TinyMCE-related files, but with different approaches:
+
+- HEAD (current branch): Requires a single file `"tinymce/rails"`
+- Incoming branch: Requires multiple specific files including version, railtie, configuration, and helper
+
+Since the incoming branch has more specific and granular requires, it likely represents a refactoring or reorganization of the code structure. The single require in HEAD might be loading all these components through a single entry point, while the incoming changes explicitly require each component.
+
+Without more context about the project structure and whether `"tinymce/rails"` is still a valid entry point that loads all the necessary components, I cannot determine which approach is correct or if both sets of requires are needed.
+
+Here is the code snippet with the conflict preserved:
+
+```ruby
+<<<<<<< HEAD
+require "tinymce/rails"
+=======
+require "tinymce/version"
+require "tinymce/railtie"
+require "tinymce/configuration"
+require "tinymce/tinymce_helper"
+>>>>>>> 73335b54fae6c17953039b0961b4f1eb1151ad64
+
+```

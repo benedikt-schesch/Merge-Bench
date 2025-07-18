@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD**: Uses positional parameter `target_url`
+- **Other branch**: Uses keyword argument `target_url: nil`
+
+The semantic intent appears to be the same - both versions want to accept a `target_url` parameter for the `get_page` method. The difference is in the Ruby calling convention:
+- Positional parameters require the argument to be passed in order
+- Keyword arguments are more explicit and self-documenting
+
+Given modern Ruby best practices favor keyword arguments for clarity and the fact that the other branch explicitly made this change (likely as part of a refactoring effort), the resolution should use the keyword argument version.
+
+```ruby
+              ##
+              # Retrieve a single page of MemberInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of MemberInstance
+              def get_page(target_url: nil)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return MemberPage.new(@version, response, @solution)
+
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - converting symbolic size values (like `:small`, `:medium`, etc.) to their numeric equivalents using the `sizes` hash. The key difference is:
+
+- HEAD version handles both `:size` and `:s` keys as possible size options
+- The other branch only handles `:size`
+
+Since the HEAD version is more comprehensive (supporting both `:size` and `:s` as aliases) while still achieving the same intent as the other branch, I'll resolve this by keeping the HEAD version's logic but using the cleaner variable naming from the other branch:
+
+```ruby
+  def self.sizes
+    { :small => 50, :medium => 100, :large => 150, :big => 150 }
+  end
+  
+  def parse_options(profile, options)
+    #pass :gravatar_size through, but translate :size or :s to a number if possible
+    result = parse_options_without_size(profile, options)
+    [:size, :s].each do |k|
+      result[k] = self.class.sizes[options[k]] if self.class.sizes.has_key?(options[k])
+    end
+    result
+  end
+  
+end
+```

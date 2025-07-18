@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal: handle the case where `moment` might be an object with a `default` property (common in ES6 module interop scenarios) rather than a function directly.
+
+The semantic intent is identical - both want to reassign `moment` to `moment.default` when `moment` is not a function and has a default export.
+
+The differences are:
+- HEAD uses `hasOwnProperty('default')` and bracket notation `moment['default']`
+- The other branch uses `moment.default` for both checking and accessing
+
+Since both achieve the same result, I'll choose the cleaner, more concise version from the second branch:
+
+```javascript
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Make globaly available as well
+        define(['moment', 'jquery'], function (moment, jquery) {
+            if (!jquery.fn) jquery.fn = {}; // webpack server rendering
+            if (typeof moment !== 'function' && moment.default) moment = moment.default;
+            return factory(moment, jquery);
+        });
+    } else if (typeof module === 'object' && module.exports) {
+        // Node / Browserify
+        //isomorphic issue
+
+```

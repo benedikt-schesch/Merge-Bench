@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add the `association` to a collection, but they're using different instance variable names:
+- HEAD uses `@join_parts`
+- The incoming change uses `@joins`
+
+Without more context about the broader codebase changes, I cannot definitively determine which instance variable name is correct. The semantic intent is the same (adding the association to a collection), but the naming convention has changed between the two branches.
+
+Here's the snippet with the conflict preserved:
+
+```ruby
+            association = PolymorphicJoinAssociation.new(reflection, self, klass, parent)
+          else
+            association = build_join_association(reflection, parent)
+          end
+          association.join_type = join_type
+<<<<<<< HEAD
+          @join_parts << association
+=======
+          @joins << association
+>>>>>>> 5df8ae16e28501c35b5681da6563eba6bff0ffb6
+          cache_joined_association(association)
+        end
+        association
+      else
+        build_without_metawhere(associations, parent, join_type)
+```

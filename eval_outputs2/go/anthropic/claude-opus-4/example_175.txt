@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the function signature of `recordMessage`. Let me analyze the differences:
+
+**HEAD version adds:**
+- No additional parameters beyond the original
+
+**Incoming change (7d20443...) adds:**
+- `logStr string` parameter (after `responseBuffer`)
+- `reqTimestampMock time.Time` parameter (after `ctx`)
+- `logger *zap.Logger` parameter (at the end)
+
+The semantic intent appears to be that the incoming change wants to enhance the function with additional logging capabilities (logStr and logger) and timestamp mocking functionality, while maintaining all the original parameters.
+
+Here's the resolved conflict that incorporates both intents:
+
+```go
+
+	}
+
+}
+
+func recordMessage(h *hooks.Hook, requestBuffer, responseBuffer []byte, logStr string, mongoRequests []models.MongoRequest, mongoResponses []models.MongoResponse, opReq Operation, ctx context.Context, reqTimestampMock time.Time, logger *zap.Logger) {
+	// // capture if the wiremessage is a mongo operation call
+
+	shouldRecordCalls := true
+	name := "mocks"
+	meta1 := map[string]string{
+
+```

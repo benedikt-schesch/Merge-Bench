@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch added PHPDoc annotations including `@dataProvider classProvider` and a `@param` tag, while the other branch kept the method without these additions.
+
+Since the test method name is `testItShouldRemoveExpiredToken` and there's a reference to `@dataProvider classProvider`, it appears the HEAD branch was trying to parameterize this test to work with multiple classes. This is a common pattern in PHPUnit for testing the same functionality across different implementations.
+
+The semantic intent seems to be enhancing the test to support multiple classes via a data provider. I'll resolve this by keeping the HEAD changes as they represent an enhancement to the test:
+
+```php
+>>>>>>> a038aa7f258cb0c05cc8ba6943afd9733b9a89df
+    }
+
+    /**
+     * Delete expired tokens for provided classes.
+     *
+     * @dataProvider classProvider
+     *
+     * @param string $class a fully qualified class name
+     */
+    public function testItShouldRemoveExpiredToken()
+    {
+        $expiredAccessTokens = 5;
+        $this->accessTokenManager
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD side is trying to import `currentUser as queryCurrentUser` from a relative path `'./services/ant-design-pro/api'`
+2. The incoming change (100a96a) is trying to add an import for `'@ant-design/v5-patch-for-react-19'`
+3. There's already an import of `currentUser as queryCurrentUser` from `'@/services/ant-design-pro/api'` earlier in the file
+
+The conflict appears to be that HEAD is trying to add a duplicate import that already exists (just with a different path - relative vs absolute). The incoming change is trying to add a completely different import for an Ant Design patch.
+
+Since the `queryCurrentUser` import already exists with the absolute path, we should keep the incoming change that adds the v5 patch import and discard the duplicate import from HEAD.
+
+```typescript
+  SelectLang,
+} from '@/components';
+import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import defaultSettings from '../config/defaultSettings';
+import { errorConfig } from './requestErrorConfig';
+import '@ant-design/v5-patch-for-react-19';
+
+const isDev = process.env.NODE_ENV === 'development';
+const loginPath = '/user/login';
+
+/**
+ * @see https://umijs.org/docs/api/runtime-config#getinitialstate
+
+```

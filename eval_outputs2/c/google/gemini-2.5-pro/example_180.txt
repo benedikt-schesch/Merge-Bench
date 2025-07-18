@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The `HEAD` branch attempts to return a value from both the `if` block and the code path outside the `if` block. However, one of these paths involves `return plug_receive(...)`, but the standard `plug_receive` function in this type of interface is a `void` function, meaning it doesn't return a value. This makes the code in `HEAD` logically and syntactically incorrect.
+
+The other branch (`4348393f...`) refactors the logic into a clear `if-else` block. It calls `ps->negotiate(...)` and `plug_receive(...)` for their side effects, discarding any return value. This is consistent with a `void` parent function, which aligns with the fact that `plug_receive` is `void`.
+
+The intent of both branches is to either handle the data via the proxy negotiation logic or pass it down to the underlying plug. The `4348393f...` branch implements this intent correctly and robustly. Therefore, we will adopt the changes from that branch.
+
+```c
+     */
+    bufchain_add(&ps->pending_input_data, data, len);
+    ps->receive_urgent = urgent;
+    ps->receive_data = data;
+    ps->receive_len = len;
+    ps->negotiate(ps, PROXY_CHANGE_RECEIVE);
+  } else {
+    plug_receive(ps->plug, urgent, data, len);
+  }
+}
+
+static void plug_proxy_sent(Plug p, int bufsize)
+{
+  Proxy_Plug pp = (Proxy_Plug)p;
+
+```

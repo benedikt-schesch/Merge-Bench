@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. **HEAD** (the current branch) has:
+   - A UMD (Universal Module Definition) wrapper that handles CommonJS, AMD, and browser environments
+   - Defines the mode as 'rst-base'
+   - Takes only `config` as a parameter
+
+2. **The incoming branch** has:
+   - Defines the mode directly as 'rst'
+   - Takes both `config` and `options` as parameters
+
+The semantic intent appears to be:
+- HEAD wants to make the module compatible with different module systems (CommonJS, AMD, plain browser)
+- The incoming branch wants to rename the mode from 'rst-base' to 'rst' and add an `options` parameter
+
+Since both changes serve different purposes and are compatible, I'll merge them by:
+- Keeping the UMD wrapper from HEAD for module compatibility
+- Using the mode name 'rst' and the additional `options` parameter from the incoming branch
+
+```javascript
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"), require("../python/python"), require("../stex/stex"), require("../../addon/mode/overlay"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror", "../python/python", "../stex/stex", "../../addon/mode/overlay"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.defineMode('rst', function (config, options) {
+
+  var rx_strong = /^\*\*[^\*\s](?:[^\*]*[^\*\s])?\*\*/;
+  var rx_emphasis = /^\*[^\*\s](?:[^\*]*[^\*\s])?\*/;
+  var rx_literal = /^``[^`\s](?:[^`]*[^`\s])``/;
+
+
+```

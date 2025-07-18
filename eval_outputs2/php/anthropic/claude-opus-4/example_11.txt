@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what's happening with the `cptui_admin_notices_helper` function call.
+
+The conflict shows:
+- HEAD version: Has two parameters - the message and `false`
+- Other branch: Has only one parameter - just the message
+
+Both sides have the same message text, so the conflict is only about whether to include the second parameter (`false`).
+
+Without more context about what `cptui_admin_notices_helper` expects or what changes were made to its signature, I cannot determine which version is correct. The intent is ambiguous - one branch may have updated the function to require a second parameter, or the other branch may have simplified it to use a default value.
+
+Here's the snippet with the conflict preserved:
+
+```php
+ *
+ * @since 1.5.0
+ */
+function cptui_import_fail_admin_notice() {
+	echo cptui_admin_notices_helper(
+<<<<<<< HEAD
+		esc_html__( 'Invalid data provided', 'custom-post-type-ui' ),
+		false
+=======
+		esc_html__( 'Invalid data provided', 'custom-post-type-ui' )
+>>>>>>> 87a406bda6b64d7103e4334a33c192b715bca89f
+	);
+}
+
+/**
+ * Returns error message for if trying to register existing post type.
+```

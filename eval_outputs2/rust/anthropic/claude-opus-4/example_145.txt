@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD** (left side): Uses `ref mut shapestroke` - explicitly taking a mutable reference to the shapestroke
+- **Right side** (commit ed50227...): Uses just `shapestroke` - relying on pattern matching to automatically handle the reference
+
+The key observation is that in the code block, `shapestroke.update_geometry()` is called, which requires a mutable reference to work. 
+
+In modern Rust, when pattern matching on a mutable reference (like `&mut Stroke`), the pattern `Stroke::ShapeStroke(shapestroke)` automatically gives you a mutable reference to the inner value when needed. The explicit `ref mut` is unnecessary and more verbose.
+
+Since both versions achieve the same semantic intent (getting a mutable reference to call `update_geometry()`), and the right side uses the more idiomatic modern Rust syntax, I'll resolve in favor of the cleaner approach:
+
+```rust
+                    brushstroke.update_geometry();
+                    self.key_tree.update_with_key(key, stroke.bounds());
+
+                    self.set_rendering_dirty(key);
+                }
+                Stroke::ShapeStroke(shapestroke) => {
+                    shapestroke.update_geometry();
+                    self.key_tree.update_with_key(key, stroke.bounds());
+
+                    self.set_rendering_dirty(key);
+                }
+
+```

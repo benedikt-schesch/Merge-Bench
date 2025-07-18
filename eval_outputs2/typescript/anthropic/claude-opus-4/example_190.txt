@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to get calendars for a user, but they differ in how they obtain the user identifier:
+
+- **HEAD**: Uses `this.user.userId` directly
+- **Branch**: First calls `await this.googleClient.getMe()` to get the user, then passes that to `getMyCalendars`
+
+The semantic intent appears to be the same - getting the user's calendars - but the branch version adds an async call to fetch the user information from Google first. Without more context about the codebase changes, I cannot determine which approach is correct or if both changes need to be combined.
+
+Here is the snippet with the conflict preserved:
+
+```typescript
+  }
+
+  private async syncEvent (calendarId: string, event: calendar_v3.Schema$Event, accessRole: string): Promise<void> {
+    this.updateTimer()
+    if (event.id != null) {
+<<<<<<< HEAD
+      const calendars = this.workspace.getMyCalendars(this.user.userId)
+=======
+      const me = await this.googleClient.getMe()
+      const calendars = this.workspace.getMyCalendars(me)
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+      const _calendar =
+        calendars.find((p) => p.externalId === event.organizer?.email) ??
+        calendars.find((p) => p.externalId === calendarId) ??
+        calendars[0]
+      if (_calendar !== undefined) {
+
+```

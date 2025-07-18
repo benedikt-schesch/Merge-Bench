@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The conflict involves the method signature for `get_page`. Both branches require a `target_url` parameter, but differ in their approach:
+- HEAD branch uses a required positional argument
+- Other branch uses an optional keyword argument with nil default
+
+The method body uses `target_url` without nil-checking, indicating it requires a value. The keyword argument approach (with nil default) would allow calling without arguments, leading to runtime errors. The positional argument enforces required usage but loses keyword flexibility.
+
+Since the method fundamentally requires a URL to function, and both approaches are semantically incompatible (positional vs keyword), the conflict cannot be automatically resolved. Manual intervention is needed to decide which parameter style to use.
+
+```ruby
+            ##
+            # Retrieve a single page of IpAccessControlListInstance records from the API.
+            # Request is executed immediately.
+            # @param [String] target_url API-generated URL for the requested results page
+            # @return [Page] Page of IpAccessControlListInstance
+<<<<<<< HEAD
+            def get_page(target_url)
+=======
+            def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+              response = @version.domain.request(
+                  'GET',
+                  target_url
+              )
+              return IpAccessControlListPage.new(@version, response, @solution)
+```

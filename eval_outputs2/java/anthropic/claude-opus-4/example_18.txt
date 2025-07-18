@@ -1,0 +1,41 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (left side):**
+- Declares `snapshotManager` as `protected final`
+- Only includes the snapshotManager declaration
+
+**Incoming changes (right side):**
+- Declares `snapshotManager` as `private final`
+- Adds three additional field declarations:
+  - `players` (protected final SnapshotableLinkedHashMap)
+  - `defaultGenerator` (private final WorldGenerator)
+  - `sessions` (protected final SpoutSessionRegistry)
+
+The semantic intent appears to be:
+1. Both sides want to declare the `snapshotManager` field
+2. The incoming changes want to add additional fields that seem to be core components of the system
+3. The visibility modifier conflict (`protected` vs `private`) needs resolution
+
+Since the incoming changes include the `players` field which uses `snapshotManager` in its initialization, and this field is `protected`, it makes semantic sense to keep `snapshotManager` as `protected` to maintain consistency in visibility for related fields.
+
+Here's the resolved code:
+
+```java
+	private final PluginManager pluginManager = new PluginManager(this, securityManager, 0.0);
+	private final ConsoleManager consoleManager;
+	private final EventManager eventManager = new SimpleEventManager();
+	private final RecipeManager recipeManager = new SimpleRecipeManager();
+	private final ServiceManager serviceManager = new ServiceManager();
+	protected final SnapshotManager snapshotManager = new SnapshotManager();
+	protected final SnapshotableLinkedHashMap<String, SpoutPlayer> players = new SnapshotableLinkedHashMap<String, SpoutPlayer>(snapshotManager);
+	private final WorldGenerator defaultGenerator = new EmptyWorldGenerator();
+	protected final SpoutSessionRegistry sessions = new SpoutSessionRegistry();
+	protected final SpoutScheduler scheduler = new SpoutScheduler(this);
+	protected final SpoutParallelTaskManager parallelTaskManager = new SpoutParallelTaskManager(this);
+	private final AtomicBoolean setupComplete = new AtomicBoolean(false);
+	private final SpoutConfiguration config = new SpoutConfiguration();
+	private final SpoutInputConfiguration inputConfig = new SpoutInputConfiguration();
+
+```

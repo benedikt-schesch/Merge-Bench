@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to log an error message about queryKey needing to be an Array. The conflict is between:
+- HEAD: using `console.error()`
+- The other branch: using `this.logger.error()`
+
+Since the other branch is using `this.logger.error()`, it suggests that there's a logger instance available on `this` that should be used for logging instead of direct console access. This is a common pattern for better logging control and consistency.
+
+The semantic intent of both sides is the same - to log an error message. The other branch appears to be refactoring to use a proper logger instance, which is typically the preferred approach.
+
+Here's the resolved snippet:
+
+```typescript
+      }
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!Array.isArray(this.options.queryKey)) {
+        this.logger.error(
+          `As of v4, queryKey needs to be an Array. If you are using a string like 'repoData', please change it to an Array, e.g. ['repoData']`,
+        )
+      }
+    }
+
+
+```

@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+```java
+
+		public IEnumerable<T> Items
+        {
+            get
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _data.ToArray();
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+        }
+```

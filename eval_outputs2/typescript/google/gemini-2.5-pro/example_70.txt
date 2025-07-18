@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Resolving the merge conflict requires understanding the intent of each change.
+
+*   **HEAD Branch:** This change introduces a local type alias `BaseChannelDefinition` and uses it to cast the channel type. This makes the type definition self-contained within this section.
+*   **`2df15ac6924fdfb93d9f36cc4acbbb1042845bc6` Branch:** This change uses `common.ChannelDefinition`, presumably a canonical, shared type definition from the `../types` module. It also adds a trailing comma to the generic type parameters, which is a common and preferred code style for multi-line lists.
+
+**Semantic Resolution:**
+
+The intent of both branches is to create a generic type `GetChannelByName` that correctly types a specific channel from an integration.
+
+Using a shared, explicitly named type like `common.ChannelDefinition` is generally better for maintainability and consistency than creating a local alias. The trailing comma is also a stylistic improvement. Therefore, the changes from the `2df15ac6924fdfb93d9f36cc4acbbb1042845bc6` branch are preferable.
+
+Adopting this version makes the `BaseChannelDefinition` type alias, introduced in `HEAD`, redundant. The cleanest resolution is to remove it and use the version from the second branch.
+
+```typescript
+import * as common from '../types'
+
+type GetChannelByName<
+  TIntegration extends common.BaseIntegration,
+  TChannelName extends keyof TIntegration['channels'],
+> = utils.Cast<TIntegration['channels'][TChannelName], common.ChannelDefinition>
+
+/**
+ * @deprecated Integration's should no longer use their name as prefix for event types or tags.
+ */
+type WithRequiredPrefix<TTags extends string, TPrefix extends string> = string extends TTags
+
+```

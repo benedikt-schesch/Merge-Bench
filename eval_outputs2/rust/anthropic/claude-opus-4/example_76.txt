@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is adding imports and a component struct definition that the other branch doesn't have. The conflict appears to be about what imports and definitions should be included in the test module.
+
+Based on the semantic intent:
+- HEAD wants to add more imports (including `bevy_ecs`, `Component`, and `Storages`) and define a generic component struct `W<T>`
+- The other branch has a minimal set of imports
+
+Since this is a test module and HEAD appears to be adding test infrastructure (the `W<T>` component), I'll resolve by keeping HEAD's additions as they seem necessary for the tests:
+
+```rust
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate as bevy_ecs;
+    use crate::component::Component;
+    use crate::storage::Storages;
+    use crate::{component::Components, entity::Entity, storage::Table};
+    #[derive(Component)]
+    struct W<T>(T);
+
+    #[test]
+    fn table() {
+        let mut components = Components::default();
+
+```

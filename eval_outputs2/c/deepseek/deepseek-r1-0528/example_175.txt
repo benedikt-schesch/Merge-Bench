@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict involves a missing return statement after error handling. Both branches close the socket and clear the pointer, but the HEAD branch explicitly returns 1 (indicating an error condition) while the other branch omits this. Since the function appears to expect an integer return value (as evidenced by the subsequent function declaration with `static int`), preserving the explicit error return maintains functional integrity and avoids undefined behavior.
+
+Resolved code:
+```c
+  struct pageant_listen_state *pl = (struct pageant_listen_state *)plug;
+  if (error_msg)
+    plog(pl->logctx, pl->logfn, "listening socket: error: %s", error_msg);
+  sk_close(pl->listensock);
+  pl->listensock = NULL;
+  return 1;
+}
+
+static int pageant_listen_accepting(Plug plug,
+                                    accept_fn_t constructor,
+                                    accept_ctx_t ctx)
+
+```

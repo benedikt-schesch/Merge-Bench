@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- The HEAD version creates a `GruntParser` with just a `StringReader` parameter
+- The incoming change (2125666c1941d4a88c08ab87ebf92ee46be4f0ea) creates a `GruntParser` with both a `StringReader` and a `myPig` parameter
+
+The semantic intent appears to be that the incoming change is adding an additional parameter (`myPig`) to the GruntParser constructor, likely to provide some pig-related configuration or context to the parser. This seems like an enhancement to provide more context to the parser.
+
+Given that the rest of the code remains the same and the parser is used in the same way after construction, the resolution should accept the incoming change that includes the additional `myPig` parameter.
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "explain b;"
+                          + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+```

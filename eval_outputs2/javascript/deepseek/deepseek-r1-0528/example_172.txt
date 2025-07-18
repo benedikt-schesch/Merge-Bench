@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+```javascript
+// @flow
+import type {StyleSheetFactoryOptions, Jss, SheetsRegistry, SheetsManager, BaseRule} from 'jss'
+import type {Node} from 'react'
+import type {Theming} from 'theming'
+
+export type StaticStyles = {[key: string]: {}}
+
+export type Managers = {[key: number]: SheetsManager}
+
+type StyleSheetOptions = {
+  ...StyleSheetFactoryOptions,
+  classNamePrefix: string
+```
+
+**Resolution Explanation:**  
+The conflict occurred because one branch added a new `StaticStyles` type definition while the other branch didn't modify this section. Since:
+1. The new type doesn't conflict with existing definitions
+2. It logically belongs in this type declaration section
+3. Both branches' changes are compatible (one adds new content, the other leaves context unchanged)
+
+The resolution adds `StaticStyles` while preserving all other context. The type definition:
+```javascript
+export type StaticStyles = {[key: string]: {}}
+```
+is inserted between the import statements and the existing `Managers` type, maintaining consistent formatting and type declaration patterns.

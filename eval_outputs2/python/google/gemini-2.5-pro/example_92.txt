@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```python
+            'run_at': str(int(time.mktime(datetime.datetime.now().timetuple()))),
+            'payload': job._payload
+        }
+        data = json.dumps(data)
+        self.resq.redis["resque:worker:%s" % str(self)] = data
+        logger.debug("worker:%s" % str(self))
+        logger.debug(self.resq.redis["resque:worker:%s" % str(self)])
+
+    def done_working(self):
+        logger.info('done working')
+        self.processed()
+        self.resq.redis.delete("resque:worker:%s" % str(self))
+
+```

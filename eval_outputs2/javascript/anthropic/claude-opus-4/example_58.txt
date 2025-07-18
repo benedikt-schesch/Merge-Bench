@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same intent - sending a 'start_locate' action through a background process. The key differences are:
+
+1. **HEAD**: Uses `BG.exec('Relay.send', {data: {action: 'start_locate', locate: key}})` with the data wrapped in a `data` object, and has a commented out alternative approach
+2. **Branch a9ce98f**: Uses `BG.exec('relay', {action: 'start_locate', locate: key})` with a simpler structure
+
+The branch version appears to be a refactored/simplified API call. Since the HEAD version has the simpler version commented out (which is similar to the branch version but with 'Relay.send' instead of 'relay'), it seems the intended direction is to use the simpler API structure.
+
+The most semantically correct resolution would be to use the branch's simpler approach:
+
+```javascript
+     */
+
+    for (const $e of document.querySelectorAll('.locate')) {
+        $e.addEventListener('click', async () => {
+            const key = $e.dataset.key;
+            await BG.exec('relay', {action: 'start_locate', locate: key});
+            window.close();
+        });
+    }
+
+
+```

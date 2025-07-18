@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar goals but with different approaches:
+
+- **HEAD** (left side): Adds a return type hint `: void` to the test method
+- **Right side**: Replaces the `@dataProvider` annotation with the modern PHP 8 attribute syntax `#[\PHPUnit\Framework\Attributes\DataProvider('magicGetInvalidData')]`
+
+Both changes are complementary and represent modernization efforts - one for type safety and one for using PHP 8 attributes. The semantic intent is to improve the test method declaration, and both changes can be combined.
+
+Here's the resolved code:
+
+```php
+
+
+    /**
+     * @dataProvider magicGetInvalidData
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('magicGetInvalidData')]
+    public function testMagicGetWithInvalidData($invalidData, $exceptionContains): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->proxy->__get($invalidData);
+    }
+
+
+```

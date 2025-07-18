@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the `AnthropicClient` class, but with different approaches:
+
+- HEAD: Implements the `LLMClient` interface and explicitly defines a `type` property
+- The other branch: Extends the `LLMClient` class
+
+Without knowing the full context of whether `LLMClient` is an interface or a class, and whether the `type` property is needed, I cannot definitively resolve this conflict. The intent is ambiguous - one side treats `LLMClient` as an interface while the other treats it as a base class.
+
+Here is the same snippet with the conflict preserved:
+
+```typescript
+import { LogLine } from "../../types/log";
+import { AvailableModel } from "../../types/model";
+import { LLMCache } from "../cache/LLMCache";
+import { ChatCompletionOptions, LLMClient } from "./LLMClient";
+
+<<<<<<< HEAD
+export class AnthropicClient implements LLMClient {
+  public type: "anthropic" = "anthropic";
+=======
+export class AnthropicClient extends LLMClient {
+>>>>>>> 85483fe091544fc079015c62b6923b03f8b9caa7
+  private client: Anthropic;
+  private cache: LLMCache | undefined;
+  public logger: (message: LogLine) => void;
+  private enableCaching: boolean;
+
+
+```

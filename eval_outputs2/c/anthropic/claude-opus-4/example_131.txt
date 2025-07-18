@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD version adds a `return 1;` statement after the closing brace of what appears to be a switch statement or similar control structure, while the other branch (4348393f562c8011ebca43d6198e98638aa115b5) doesn't have this return statement.
+
+Without more context about the function's return type and expected behavior, I cannot definitively determine which version is correct. The semantic intent is ambiguous - it could be that:
+1. The function should return 1 to indicate success
+2. The function should fall through to other code below
+3. The function might have a different return statement elsewhere
+
+Since the intent is ambiguous, I'm returning the snippet with the conflict preserved:
+
+```c
+      if (bufsize_after < bufsize_before)
+        plug_sent(s->plug, bufsize_after);
+    }
+    break;
+  }
+<<<<<<< HEAD
+
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+/*
+ * Special error values are returned from sk_namelookup and sk_new
+ * if there's a problem. These functions extract an error message,
+```

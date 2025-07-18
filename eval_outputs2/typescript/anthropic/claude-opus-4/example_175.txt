@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD is trying to import `PersonId`, `SocialIdType`, `buildSocialIdString`, and `TxMixin` from the core module
+- The other branch (e0ec8d4) appears to have removed these imports
+
+Looking at the context, the surrounding code still has imports from `@hcengineering/contact` and continues with more imports from core (`RateLimiter`, `TxOperations`, etc.). 
+
+Since I cannot determine the semantic intent of why these imports were removed in one branch while being added/kept in another, and without more context about how these imports are used in the code, I cannot safely resolve this conflict.
+
+Here is the snippet with the conflict preserved:
+
+```typescript
+  getPersonRefBySocialId,
+  getPersonRefsBySocialIds,
+  type Employee
+} from '@hcengineering/contact'
+import core, {
+<<<<<<< HEAD
+  PersonId,
+  SocialIdType,
+  buildSocialIdString,
+  TxMixin,
+=======
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+  RateLimiter,
+  TxOperations,
+  TxProcessor,
+  WorkspaceUuid,
+  toIdMap,
+```

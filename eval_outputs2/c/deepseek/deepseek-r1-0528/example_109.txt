@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs around a return statement at the end of a function. Since the function's return type isn't visible in the snippet, the intent is ambiguous. The HEAD branch returns `1` at this position, while the other branch has no return statement. Without knowing whether the function should return a value, it's unsafe to resolve automatically.
+
+Here's the unchanged snippet with conflict markers:
+
+```c
+      rlogin->firstbyte = 0;
+    }
+    if (len > 0)
+      c_write(rlogin, data, len);
+  }
+<<<<<<< HEAD
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void rlogin_sent(Plug plug, int bufsize)
+{
+  Rlogin rlogin = (Rlogin)plug;
+```

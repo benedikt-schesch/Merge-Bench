@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import error-related modules, but they're using different approaches:
+
+- HEAD side: Uses older error handling with `createError` and `Cancel`
+- Incoming side: Uses newer error handling with `AxiosError` and `CanceledError`
+
+Additionally, HEAD includes some imports (`url` and `transitionalDefaults`) that aren't in the incoming changes, while the incoming side includes `defaults`.
+
+Based on the pattern of the changes (moving from `createError`/`Cancel` to `AxiosError`/`CanceledError`), this appears to be a modernization of the error handling system. The semantic intent is to update the error handling mechanism.
+
+Here's the resolved conflict, keeping the modernized error handling while preserving the additional imports that might be needed:
+
+```javascript
+var cookies = require('./../helpers/cookies');
+var buildURL = require('./../helpers/buildURL');
+var buildFullPath = require('../core/buildFullPath');
+var parseHeaders = require('./../helpers/parseHeaders');
+var isURLSameOrigin = require('./../helpers/isURLSameOrigin');
+var url = require('url');
+var transitionalDefaults = require('../defaults/transitional');
+var defaults = require('../defaults');
+var AxiosError = require('../core/AxiosError');
+var CanceledError = require('../cancel/CanceledError');
+
+module.exports = function xhrAdapter(config) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
+    var requestData = config.data;
+    var requestHeaders = config.headers;
+
+```

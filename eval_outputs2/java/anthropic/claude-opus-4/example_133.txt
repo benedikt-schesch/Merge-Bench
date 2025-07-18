@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to declare the same `ThreadLocal<Configuration>` field named `sJobConfInternal`, but with slightly different modifiers:
+
+- HEAD version: `public static ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();`
+- Other version: `public static final ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();`
+
+The only difference is that the other version adds the `final` modifier. Since this is a `ThreadLocal` field being initialized at declaration, making it `final` is actually a good practice as it prevents the reference from being reassigned while still allowing the thread-local values to be modified. This aligns with the principle of least mutability.
+
+Given that both sides have the same intent (declaring a ThreadLocal field) and the `final` version is more restrictive and follows better practices, I'll resolve this by choosing the version with `final`:
+
+```java
+     * <pre>UdfContext.getUdfContext().getJobConf()</pre>
+     */
+    @Deprecated
+    public static Configuration sJobConf = null;
+
+    public static final ThreadLocal<Configuration> sJobConfInternal = new ThreadLocal<Configuration>();
+
+    public static class Map extends PigMapBase {
+
+        @Override
+        public void collect(Context oc, Tuple tuple)
+
+```

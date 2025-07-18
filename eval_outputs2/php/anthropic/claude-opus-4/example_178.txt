@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (the branch being merged in) is trying to add a `use` statement for `Indatus\Dispatcher\ConfigResolver`, while HEAD has no additional use statements beyond `use App;`.
+
+Since this is an abstract class file and the conflict only involves adding an import statement, the intent seems clear: the incoming branch needs the ConfigResolver class for some functionality. Without seeing the rest of the class implementation, I cannot determine if this import is actually used, but adding an unused import is generally harmless.
+
+Here's the resolved code:
+
+```php
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use App;
+use Indatus\Dispatcher\ConfigResolver;
+
+abstract class Schedulable
+{
+    /** @var array $arguments */
+    protected $arguments = [];
+
+```

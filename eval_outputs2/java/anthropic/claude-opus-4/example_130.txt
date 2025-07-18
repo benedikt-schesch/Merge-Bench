@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to configure job update settings, but with different approaches:
+
+- **HEAD (left side)**: Uses `setUpdateStrategy()` with a `JobUpdateStrategy.queueStrategy()` that takes a `QueueJobUpdateStrategy` object with `setGroupSize(1)`
+- **Right side**: Uses `setUpdateGroupSize(updateGroupSize)` directly on the `JobUpdateSettings`
+
+The semantic intent appears to be the same - both sides want to control the update group size. The HEAD side is using a more structured approach with a strategy pattern, while the right side is setting it directly. The HEAD side hardcodes the group size to 1, while the right side uses a variable `updateGroupSize`.
+
+Since the HEAD side represents a more recent refactoring to use a strategy pattern (based on the method names), and assuming `updateGroupSize` variable should be respected, the resolution should use the HEAD's approach but with the variable from the right side:
+
+```java
+        .setInstructions(new JobUpdateInstructions()
+            .setDesiredState(new InstanceTaskConfig()
+                .setTask(newConfig.newBuilder())
+                .setInstances(ImmutableSet.of(new Range(0, 2))))
+            .setSettings(new JobUpdateSettings()
+                .setUpdateStrategy(
+                    JobUpdateStrategy.queueStrategy(new QueueJobUpdateStrategy().setGroupSize(updateGroupSize)))
+                .setRollbackOnFailure(true)
+                .setMinWaitInInstanceRunningMs(WATCH_TIMEOUT.as(Time.MILLISECONDS).intValue())
+                .setUpdateOnlyTheseInstances(ImmutableSet.of())));
+
+    for (IInstanceTaskConfig config : configs) {
+
+```

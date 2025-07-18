@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD** (current branch): Uses `.add_system(hello_world_system)` - a more direct, simpler syntax
+- **Incoming change**: Uses `.add_system(hello_world_system.system())` - explicitly calling `.system()` method
+
+This appears to be a common pattern in Bevy (a Rust game engine) where the API evolved over time. The `.system()` method was required in older versions of Bevy but became unnecessary in newer versions as the API was simplified to automatically convert functions into systems.
+
+Given that both sides are trying to achieve the same goal (adding a system to the App), and the HEAD version represents the more modern, cleaner API, I'll resolve in favor of HEAD:
+
+```rust
+/// # use bevy_app::prelude::*;
+/// # use bevy_ecs::prelude::*;
+///
+/// fn main() {
+///    App::new()
+///        .add_system(hello_world_system)
+///        .run();
+/// }
+///
+/// fn hello_world_system() {
+///    println!("hello world");
+```

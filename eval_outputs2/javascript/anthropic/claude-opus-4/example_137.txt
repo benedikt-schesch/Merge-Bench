@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are adding test cases for the `natural()` function. The HEAD branch has the test for checking if min > max, while the incoming branch adds a test for checking if numerals is less than 1. Both tests are validating different error conditions and should both be included.
+
+Here's the resolved code:
+
+```javascript
+test('natural() throws an error if min > max', t => {
+    const fn = () => chance.natural({ min: 1000, max: 500 })
+    t.throws(fn, 'Chance: Min cannot be greater than Max.')
+})
+
+test('natural() throws an error if numerals is less than 1', t => {
+    const fn = () => chance.natural({ numerals: 0 })
+    t.throws(fn, 'Chance: Numerals cannot be less than one.')
+})
+
+test('set() works as expected', t => {
+    let cData = { lastNames: ['customName', 'testLast'] }
+    chance.set(cData)
+    let data = chance.get('lastNames')
+    t.true(_.isArray(data))
+
+```

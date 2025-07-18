@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to update the constructor parameter type for the `_configuration` field:
+
+- HEAD uses `types.ConfigurationDefinition`
+- The incoming change uses `types.ApiConfigurationDefinition`
+
+Based on the naming convention and the fact that this appears to be an API-related module (given the context of configuration), the incoming change with `ApiConfigurationDefinition` seems to be the more specific and likely correct type. The change from `ConfigurationDefinition` to `ApiConfigurationDefinition` appears to be a deliberate type refinement.
+
+Here's the resolved code:
+
+```typescript
+import { Module, ReExportVariableModule } from '../../module'
+import * as strings from '../../strings'
+import * as types from './typings'
+
+export class ConfigurationModule extends Module {
+  public constructor(
+    name: string,
+    private _configuration: types.ApiConfigurationDefinition
+  ) {
+    const configurationName = name
+    const exportName = strings.varName(`${configurationName}Config`)
+    super({
+      path: `${name}.ts`,
+      exportName,
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The conflict occurs because the two branches have different approaches for setting `index[slug].body` in the `else` block. The HEAD branch processes the token text through `markdownToTxt()` before assignment, while the incoming branch uses the raw token text directly. 
+
+Since both branches first process `token.text` through `getTableData()` and `getListData()`, and we don't know whether these functions return markdown or plain text, the intent is ambiguous. The resolution requires knowing:
+1. Whether `getTableData()`/`getListData()` output needs markdown conversion
+2. Why the `if` branch uses `markdownToTxt()` while the `else` branch differs
+3. Whether consistency between branches is required
+
+Without this context, I'm returning the unresolved conflict:
+
+```javascript
+        index[slug].body += '\n' + markdownToTxt(token.text || '');
+      } else {
+        token.text = getTableData(token);
+        token.text = getListData(token);
+
+<<<<<<< HEAD
+        index[slug].body = markdownToTxt(token.text || '');
+=======
+        index[slug].body = token.text || '';
+>>>>>>> 141ac96add9892fcb345551906770c4e9b2265b0
+      }
+
+      index[slug].path = path;
+      index[slug].indexKey = indexKey;
+    }
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+This merge conflict involves two distinct, non-contradictory changes that can be combined.
+
+- **`HEAD`'s Intent:** To add a deprecation notice to the `MarshalMessageSetJSON` function.
+- **`84668698ea...`'s Intent:** To add a new function, `UnmarshalMessageSet`, and also to add a deprecation notice to `MarshalMessageSetJSON`.
+
+The only direct conflict is a stylistic difference in the deprecation comment's capitalization (`Do not use.` vs. `do not use.`). Standard Go style for comments that are sentences is to start them with a capital letter.
+
+The correct semantic resolution is to include the new function from `84668698ea...` and use the stylistically preferred deprecation comment from `HEAD`.
+
+```go
+func UnmarshalMessageSet([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+// Deprecated: Do not use.
+func MarshalMessageSetJSON(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
+}
+
+```

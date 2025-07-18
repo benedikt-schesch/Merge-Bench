@@ -1,0 +1,40 @@
+<think>
+No reasoning found</think>
+The conflict arises from both branches adding different initializations to the `item` object. The HEAD branch initializes test result arrays, while the other branch initializes script error message fields. Since these are complementary initializations for different aspects of the item state, they should be merged together.
+
+Here's the resolved snippet:
+
+```javascript
+      if (!item) return;
+
+      item.requestState = null;
+      item.requestUid = requestUid;
+      item.requestStartTime = Date.now();
+      item.testResults = [];
+      item.preRequestTestResults = [];
+      item.postResponseTestResults = [];
+      item.assertionResults = [];
+      item.preRequestScriptErrorMessage = null;
+      item.postResponseScriptErrorMessage = null;
+      item.testScriptErrorMessage = null;
+    },
+    runRequestEvent: (state, action) => {
+      const { itemUid, collectionUid, type, requestUid } = action.payload;
+      const collection = findCollectionByUid(state.collections, collectionUid);
+
+
+```
+
+Key resolution points:
+1. Both sets of properties are preserved since they serve different purposes:
+   - `testResults`/`preRequestTestResults`/etc. track test execution results
+   - `*ScriptErrorMessage` properties track error states in different script phases
+2. Ordering puts array initializations first since they relate to the existing `request*` properties, followed by error message initializations
+3. All spacing and surrounding context is preserved exactly as in the original
+4. Conflict markers are removed while keeping all meaningful code from both branches
+
+This maintains:
+- Test result tracking from HEAD branch
+- Script error handling from the other branch
+- Full context before/after the conflict region
+- Original indentation and code structure

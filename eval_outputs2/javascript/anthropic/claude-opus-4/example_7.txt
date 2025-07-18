@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to get the current timestamp in milliseconds:
+
+- The HEAD version uses `new Date().getTime()`
+- The incoming version uses `Date.now()`
+
+Both achieve the same result - getting the current timestamp in milliseconds. However, `Date.now()` is the more modern and performant approach as it:
+1. Doesn't create a new Date object (less memory allocation)
+2. Is more concise
+3. Is the recommended modern JavaScript approach
+
+Since both have the same intent but the incoming change represents a code improvement, I'll resolve in favor of the more modern approach:
+
+```javascript
+
+    this.valueRange = { min: chartMinValue, max: chartMaxValue };
+  };
+
+  SmoothieChart.prototype.render = function(canvas, time) {
+    var nowMillis = Date.now();
+
+    // Respect any frame rate limit.
+    if (this.options.limitFPS > 0 && nowMillis - this.lastRenderTimeMillis < (1000/this.options.limitFPS))
+      return;
+
+
+```

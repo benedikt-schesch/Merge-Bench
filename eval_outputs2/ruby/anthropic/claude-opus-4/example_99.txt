@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - adding a Rails version check before the `attr_accessible` declaration. The only difference is:
+
+- HEAD uses a double-quoted string: `"4"`
+- The incoming change uses a single-quoted string: `'4'` and adds an empty line before the condition
+
+Since both versions are functionally identical (in Ruby, both `"4"` and `'4'` represent the same string), and the empty line doesn't affect functionality, I'll choose the incoming change version as it uses single quotes (which is often preferred in Ruby for strings without interpolation) and includes the spacing that was intentionally added.
+
+```ruby
+  end
+  has_many :test_attrs
+  belongs_to :test_attr
+  using_access_control :include_read => true, 
+    :context => :test_model_security_models
+  
+  if Rails.version < '4'
+    attr_accessible :test_attr, :attr
+  end
+end
+
+class Branch < ActiveRecord::Base
+
+```

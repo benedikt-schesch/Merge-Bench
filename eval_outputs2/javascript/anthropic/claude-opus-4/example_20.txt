@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to configure the `ajv` validator but with different options:
+
+- **HEAD** wants to add `extendRefs: 'fail'`
+- **The incoming change** wants to add `strict: false` (with a FIXME comment) and also chain a call to `.addMetaSchema()`
+
+Both changes appear to be intentional additions to the validator configuration. The semantic intent seems to be:
+1. Set `extendRefs` to `'fail'` to handle reference extensions
+2. Set `strict` to `false` to work around an issue (as noted in the FIXME comment)
+3. Add support for JSON Schema Draft-06
+
+Here's the resolved version that combines both intents:
+
+```javascript
+const res = './test/resources/';
+
+const validator = new ajv.default({
+    allErrors: true,
+    verbose: true,
+    extendRefs: 'fail',
+    strict: false // FIXME: https://github.com/vega/vega/issues/3022
+  })
+  .addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
+
+addFormats(validator);
+
+const validate = validator.compile(schema);
+
+
+```

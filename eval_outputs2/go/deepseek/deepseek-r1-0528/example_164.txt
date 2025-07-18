@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Based on the provided context, the merge conflict arises in the `MODE_TEST` case block. Here's the resolution:
+
+1. Both branches are trying to call `decodePostgresOutgoing` in `MODE_TEST`
+2. The HEAD version correctly uses the receiver's `hooks` and `logger` fields (`p.hooks`, `p.logger`)
+3. The other branch uses undefined variables (`h` and `logger`) which aren't in scope
+4. The receiver's fields are used consistently in both `MODE_RECORD` and the default case
+
+Resolved version preserving all context:
+
+```go
+func(p *PostgresParser) ProcessOutgoing(requestBuffer []byte, clientConn, destConn net.Conn, ctx context.Context) {
+	switch models.GetMode() {
+	case models.MODE_RECORD:
+		encodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	case models.MODE_TEST:
+		decodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	default:
+		p.logger.Info("Invalid mode detected while intercepting outgoing http call", zap.Any("mode", models.GetMode()))
+	}
+
+}
+```

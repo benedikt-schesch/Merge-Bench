@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (current branch):**
+- Sets `cwd` from `options.cwd` or `process.cwd()`
+- Sets `transpileOnly` from `options.transpileOnly`
+
+**Incoming changes:**
+- Sets `cwd` from `options.dir` (resolved) or `process.cwd()`
+- Adds `isScoped` functionality based on `options.scope`
+- Sets `typeCheck` based on `options.typeCheck` or the inverse of `options.transpileOnly`
+
+The semantic intent appears to be:
+1. Both sides need `cwd` - the incoming change uses `options.dir` instead of `options.cwd` and resolves the path
+2. Both sides care about transpile-only mode, but the incoming change inverts the logic to create a `typeCheck` variable
+3. The incoming change adds new `isScoped` functionality
+
+Here's the resolved conflict that preserves all functionality:
+
+```typescript
+  ].map(Number)
+
+  const ignore = options.skipIgnore ? [] : (options.ignore || ['/node_modules/']).map(str => new RegExp(str))
+
+  // Require the TypeScript compiler and configuration.
+  const cwd = options.dir ? resolve(options.dir) : process.cwd()
+  const isScoped = options.scope ? (fileName: string) => relative(cwd, fileName).charAt(0) !== '.' : () => true
+  const transpileOnly = options.transpileOnly === true
+  const typeCheck = options.typeCheck === true || !transpileOnly
+  const compiler = require.resolve(options.compiler || 'typescript', { paths: [cwd, __dirname] })
+  const ts: typeof _ts = require(compiler)
+  const transformers = options.transformers || undefined
+  const readFile = options.readFile || ts.sys.readFile
+  const fileExists = options.fileExists || ts.sys.fileExists
+
+```

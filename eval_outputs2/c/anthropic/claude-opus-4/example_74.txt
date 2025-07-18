@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to initialize common controls, but with different function names:
+- HEAD uses `InitCommonControls()` (Windows API style with PascalCase)
+- The other branch uses `init_common_controls()` (lowercase with underscores)
+
+Given the surrounding context with other function calls using lowercase_with_underscores style (`sk_init()` and `set_explicit_app_user_model_id()`), it appears the codebase is following a consistent naming convention. The intent is the same - to initialize common controls - so I'll resolve this by using the lowercase version to maintain consistency.
+
+```c
+  hwnd = NULL;
+  flags = FLAG_VERBOSE | FLAG_INTERACTIVE;
+
+  sk_init();
+
+  init_common_controls();
+
+  /* Set Explicit App User Model Id so that jump lists don't cause
+     PuTTY to hang on to removable media. */
+
+  set_explicit_app_user_model_id();
+
+```

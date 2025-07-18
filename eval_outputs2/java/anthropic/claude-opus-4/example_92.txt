@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `handle` method but with different changes:
+
+- **HEAD**: Changes the HashMap initialization to use diamond operator (`<>`) for type inference
+- **Current branch (ed08e371...)**: Adds a new line `ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);` and keeps the explicit type parameters in HashMap
+
+Both changes are semantically compatible - one is modernizing the code style while the other is adding new functionality. The resolution should include both improvements.
+
+Here's the resolved code:
+
+```java
+    this.userPermalinkFormatString = userPermalinkFormatString;
+  }
+
+  @Override
+  public Map<ReturnableData, Object> handle(final RequestWrapper request,
+                                            final HttpSession session) {
+    final HashMap<ReturnableData, Object> ret = new HashMap<>();
+    ret.put(AjaxResponse.GAME_CHAT_ENABLED, gameChatEnabled);
+    ret.put(AjaxResponse.GLOBAL_CHAT_ENABLED, globalChatEnabled);
+
+    if (banList.contains(request.getRemoteAddr())) {
+      LOG.info(String.format("Rejecting user from %s because they are banned.",
+              request.getRemoteAddr()));
+
+```

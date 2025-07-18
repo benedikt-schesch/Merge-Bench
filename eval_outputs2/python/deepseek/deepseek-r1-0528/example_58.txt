@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+```python
+
+
+def test_capitalize_util_handles_various_inputs():
+    assert Capitalize(3) == "3"
+    assert Capitalize(u"3") == u"3"
+    assert Capitalize(b'\xe2\x98\x83'.decode("UTF-8")) == b'\xe2\x98\x83'.decode(
+        "UTF-8"
+    )
+    assert Capitalize(u"aaa aaa") == u"Aaa aaa"
+
+
+def test_title_util_handles_various_inputs():
+    assert Title(3) == "3"
+
+```
+
+Resolution rationale:
+Both versions of the conflicted line test the same functionality with identical values, differing only in formatting. The branched version (from commit 1fcf849) breaks the long line for better readability while maintaining the same bytes value (☃ snowman character) and UTF-8 decoding. This preserves both:
+1. Semantic equivalence with HEAD version
+2. Improved code readability through line wrapping
+
+The surrounding context remains unchanged to ensure no unintended modifications to the tests. All assertions continue to validate the handling of numerical, unicode, and special character inputs.

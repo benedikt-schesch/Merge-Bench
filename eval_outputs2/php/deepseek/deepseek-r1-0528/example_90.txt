@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Based on the analysis, the conflict involves incompatible type declarations in a docblock comment. The changes appear to be mutually exclusive rather than complementary, as:
+
+1. The HEAD branch introduces a base class type `JAXLClientBase`
+2. The other branch introduces a union type `JAXLSocketClient|XEP_0206`
+3. Without knowing the class hierarchy or implementation details, it's impossible to determine if:
+   - These types are related through inheritance
+   - The union type should replace the base type
+   - The base type should replace the union type
+   - A new combined type should be created
+
+Since the semantic relationship between these types is ambiguous and there's no clear way to preserve both intents, the conflict cannot be automatically resolved. The original conflict markers must be preserved.
+
+```php
+    //
+    // public api
+    //
+
+    /**
+<<<<<<< HEAD:src/JAXL/xmpp/xmpp_stream.php
+     * @param JAXLClientBase $transport
+=======
+     * @param JAXLSocketClient|XEP_0206 $transport
+>>>>>>> ce7bc8c9e6848c6877016a3ebf8135404ef39bf7:xmpp/xmpp_stream.php
+     * @param XMPPJid|null $jid
+     * @param string $pass
+     * @param string $resource
+     * @param bool $force_tls
+     */
+
+```

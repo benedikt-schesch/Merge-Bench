@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```rust
+    ///
+    /// Hook functions will be called just before volo's own gracefull existing code starts,
+    /// in reverse order of registration.
+    pub fn register_shutdown_hook(
+        mut self,
+        hook: impl FnOnce() -> BoxFuture<'static, ()> + 'static + Send,
+    ) -> Self {
+        self.shutdown_hooks.push(Box::new(hook));
+        self
+    }
+
+
+```

@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict arises from two changes:
+1. HEAD adds a line `let _ = $py;` to suppress unused variable warnings and uses `$($body)*` for the function body
+2. The other branch changes the return type to use a crate-relative path `$crate::_detail::Result` and uses `$body` for the function body
+
+The resolution:
+- Keeps the crate-relative return type from the other branch for consistency
+- Keeps the unused variable suppression from HEAD
+- Uses `$body` for the function body (as in the other branch) since it's more flexible
+- Wraps everything in a block body to maintain syntax consistency
+
+Here's the resolved snippet:
+
+```rust
+            $crate::py_coerce_item!{
+                impl $class {
+                    fn __traverse__(&$slf,
+                    $py: $crate::Python,
+                    $visit: $crate::py_class::gc::VisitProc)
+                    -> $crate::_detail::Result<(), $crate::py_class::gc::TraverseError> {
+                        let _ = $py;
+                        $body
+                    }
+                }
+            }
+        }
+        $members $props
+    }};
+```

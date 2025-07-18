@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Resolving semantic conflicts requires understanding the intent of the changes from both sides.
+
+### Conflict 1: `@angular/cdk/testing` imports
+*   **HEAD's intent:** To add the constant `NOV` to the list of imports.
+*   **Incoming branch's (`7d443f98cf9f7fc4c9ddcb7abe45fa9bd4e9141c`) intent:** To add the constant `DEC` to the list of imports. The other symbols (`FEB`, `JAN`, `NOV`, `JUL`) are duplicates, likely from a previous messy merge or rebase.
+*   **Resolution:** The correct resolution is to combine the unique additions from both branches. We will include both `NOV` and `DEC`, remove the duplicates from the incoming branch, and sort the entire list of imports alphabetically for better readability and consistency.
+
+### Conflict 2: `@angular/core/testing` import
+*   **HEAD's intent:** To ensure `async`, `ComponentFixture`, `inject`, and `TestBed` are imported from `@angular/core/testing`.
+*   **Incoming branch's (`7d443f98cf9f7fc4c9ddcb7abe45fa9bd4e9141c`) intent:** The conflict marker is malformed, but it suggests this line was deleted in the incoming branch.
+*   **Resolution:** Deleting an import statement is a potentially breaking change if those symbols are still used elsewhere in the file. Without the full file context, the safest action is to preserve the import statement from `HEAD`. This ensures no functionality is broken by the merge.
+
+Based on this analysis, here is the resolved code:
+
+```typescript
+  dispatchMouseEvent,
+  DEC,
+  FEB,
+  JAN,
+  JUL,
+  MockNgZone,
+  NOV,
+} from '@angular/cdk/testing';
+import {DateAdapter} from '@angular/cdk/datetime';
+import {Component, NgZone} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+
+```

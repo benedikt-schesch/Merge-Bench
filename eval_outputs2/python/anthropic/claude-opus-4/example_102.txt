@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD (current branch)**: After the `topvalues` checks, it adds code coverage stopping/saving and runs a test for `scancli.py --init`
+- **Incoming change**: Simply removes those lines, moving directly to the `test_passive` method
+
+The conflict appears to be about whether to include the coverage stopping and `scancli.py --init` test before the `test_passive` method. Since the HEAD version includes additional test setup/teardown logic that seems intentional (stopping coverage and initializing something with scancli.py), while the incoming change removes it entirely, I should preserve the HEAD version as it contains more complete test logic.
+
+Here's the resolved conflict:
+
+```python
+            "nmap_tophop",
+            list(ivre.db.db.nmap.topvalues("hop"))[0]['_id'])
+        self.check_value(
+            "nmap_tophop_10+",
+            list(ivre.db.db.nmap.topvalues("hop>10"))[0]['_id'])
+
+        cov.stop()
+        cov.save()
+        self.assertEqual(RUN(["./bin/scancli.py", "--init"],
+                              stdin=open(os.devnull))[0], 0)
+
+    def test_passive(self):
+
+        # Init DB
+        self.assertEqual(RUN(["./bin/ipinfo.py", "--count"])[1], "0\n")
+
+```

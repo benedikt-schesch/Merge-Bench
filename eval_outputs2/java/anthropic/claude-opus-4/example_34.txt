@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import Vector3, but from different packages:
+
+- HEAD wants: `import org.spout.math.vector.Vector3;`
+- The other branch wants: `import org.spout.api.math.Vector3;` (and also adds `import org.spout.api.geo.cuboid.Region;`)
+
+Based on the context and the fact that all other imports are from `org.spout.api.*` packages, it appears the intent is to use the API version of Vector3. The HEAD version seems to be using a different package structure (`org.spout.math.vector`) which might be from a refactoring or different version.
+
+The semantic intent appears to be:
+1. Import Vector3 (both sides want this)
+2. The incoming branch also wants to import Region
+
+Since the other imports are all from `org.spout.api.*`, I'll resolve this by using the API version of Vector3 and including the Region import:
+
+```java
+import org.spout.api.geo.LoadOption;
+import org.spout.api.geo.World;
+import org.spout.api.geo.WorldSource;
+import org.spout.api.geo.cuboid.Block;
+import org.spout.api.geo.cuboid.Chunk;
+import org.spout.api.geo.cuboid.Region;
+import org.spout.api.math.Vector3;
+import org.spout.api.util.StringUtil;
+
+/**
+ * Represents a position in a World
+ */
+
+```

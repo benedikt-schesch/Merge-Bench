@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The semantic intent of both branches is to define a function `on_task_ready` that polls for a task's completion. The single point of conflict is the default value for the polling interval, `i`.
+
+-   The `HEAD` branch sets this default interval to `500` ms.
+-   The other branch sets it to `200` ms.
+
+A lower interval (`200` ms) results in more frequent checks, leading to a more responsive feel at the cost of higher resource usage. A higher interval (`500` ms) is less resource-intensive but slightly less responsive.
+
+This type of change often represents a tuning decision. Without further context, it's ambiguous which value is "better". However, a common development pattern is to start with an aggressive value (like 200ms) and later adjust it to a more conservative one (like 500ms) for stability or to reduce system load after testing. Assuming the `HEAD` branch represents the more stable or recently corrected version of the code, choosing its value is the safer, more robust option.
+
+```javascript
+        return $image?.src?.split(';base64,')[1];
+    }
+
+
+    let last_image_data = null;
+    function on_task_ready(i=500) {
+        return new Promise(resolve => {
+            let checking = false;
+            const check_interval = setInterval(async () => {
+                if (checking) {
+                    return;
+
+```

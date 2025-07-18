@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding the `RequesterPays` field while the other branch doesn't modify that section. Since these changes are additive and non-conflicting at the semantic level, the resolution is to include the new field while preserving all existing fields. Here's the resolved snippet:
+
+```go
+	// S3
+	Endpoint       string
+	Region         string
+	RegionSet      bool
+	StorageClass   string
+	RequesterPays  bool
+	AccessKey      string
+	SecretKey      string
+	Profile        string
+	UseContentType bool
+	UseSSE         bool
+
+```
+
+**Resolution rationale:**  
+1. The `RequesterPays` field (from the incoming branch) is added after `StorageClass` since it represents new functionality
+2. All original fields (`AccessKey`, `SecretKey`, etc.) are preserved in their original order
+3. The field alignment and comments remain unchanged
+4. This maintains backward compatibility while adding new configuration capability
+
+The conflict is resolved by incorporating both changes since they're semantically compatible - the new field doesn't interfere with existing fields' meanings or usage.

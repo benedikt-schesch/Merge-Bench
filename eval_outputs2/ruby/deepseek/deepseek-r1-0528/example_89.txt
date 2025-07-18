@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+The conflict involves requiring different TinyMCE-related files. After analyzing both sides:
+
+1. **HEAD branch** requires a consolidated file (`tinymce/rails`)
+2. **Other branch** requires individual component files
+
+The conflict cannot be automatically resolved because:
+- The intent differs significantly (consolidated vs modular requires)
+- It's unclear if `tinymce/rails` already includes the other components
+- There's risk of duplicate loading or missing dependencies
+
+Here's the original snippet with conflict markers preserved:
+
+```ruby
+<<<<<<< HEAD
+require "tinymce/rails"
+=======
+require "tinymce/version"
+require "tinymce/railtie"
+require "tinymce/configuration"
+require "tinymce/tinymce_helper"
+>>>>>>> 73335b54fae6c17953039b0961b4f1eb1151ad64
+
+```
+
+Resolution requires manual intervention:
+1. Check if `tinymce/rails` loads the individual components
+2. Verify if any specific components were added intentionally
+3. Decide between consolidated vs explicit loading based on project needs

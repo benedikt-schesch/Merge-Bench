@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add the `googleClient` property to the class, but with different approaches:
+
+- HEAD: Adds the property with a TODO comment indicating the type needs to be found
+- The incoming branch: Adds the property with the proper type `GoogleClient` and also adds a new `stayAlive` property
+
+The semantic intent is clear: both sides want to add the `googleClient` property, and the incoming branch has the complete implementation with the proper type. The incoming branch also introduces an additional `stayAlive` property that should be preserved.
+
+Here's the resolved conflict:
+
+```typescript
+  private readonly histories: Collection<EventHistory>
+  private readonly client: TxOperations
+  private readonly systemTxOp: TxOperations
+  private readonly activeSync: Record<string, boolean> = {}
+  private readonly dummyWatches: DummyWatch[] = []
+  private readonly googleClient: GoogleClient
+  private stayAlive: boolean
+
+  private inactiveTimer: NodeJS.Timeout
+
+  isClosed: boolean = false
+
+
+```

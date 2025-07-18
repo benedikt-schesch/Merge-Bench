@@ -1,0 +1,69 @@
+<think>
+No reasoning found</think>
+The code snippet presents a merge conflict between two different usages of coroutine termination macros:
+
+```c
+    share_got_pkt_from_downstream(
+        cs, cs->recvbuf[4], cs->recvbuf + 5, cs->recvlen - 5);
+  }
+
+dead:;
+<<<<<<< HEAD
+  crFinish(1);
+=======
+  crFinishV;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void share_sent(Plug plug, int bufsize)
+{
+  /* struct ssh_sharing_connstate *cs = (struct ssh_sharing_connstate *)plug; */
+```
+
+---
+
+### Analysis
+
+The conflict lies between:
+
+- **`crFinish(1);`** – This suggests the developer intends to signal a completion with a status code `1`, which could, by convention, indicate failure or some custom signal.
+- **`crFinishV;`** – This seems to be a "void" version of the macro, possibly indicating normal or clean completion without an explicit value.
+
+The code around the conflict includes:
+- A call to `share_got_pkt_from_downstream` immediately before the `dead:` label, which implies this path may be a point of controlled or conditional termination.
+- `dead:` appears to be a named exit point — commonly used in C integration with coroutine mechanics — which proceeds to call the macro in conflict.
+
+---
+
+### Resolution Decision
+
+While `crFinish(1);` implies a deliberate value-based state transition (possibly error handling or signaling), `crFinishV` may indicate correctness within the coroutine's lifecycle design. However:
+
+- The exact meaning of `crFinish` and `crFinishV` depends on the library or internal codebase macros.
+- The presence of a coroutine label `dead:` suggests that this is not a simple clean exit, but possibly a controlled or conditional termination path — possibly due to an error or off-path event.
+- However, **without explicit documentation or context regarding how these macros are defined or intended to be used in this project**, the semantic difference is ambiguous.
+- Additionally, the absence of further commits or comments makes it unclear whether the intent of the original author or the merging branch takes precedence.
+
+---
+
+### Final Output
+
+As the intent between `crFinish(1);` and `crFinishV;` cannot be confidently resolved without external context, we follow the instruction rule: **when uncertain, return the snippet including the unresolved conflict.**
+
+```c
+    share_got_pkt_from_downstream(
+        cs, cs->recvbuf[4], cs->recvbuf + 5, cs->recvlen - 5);
+  }
+
+dead:;
+<<<<<<< HEAD
+  crFinish(1);
+=======
+  crFinishV;
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void share_sent(Plug plug, int bufsize)
+{
+  /* struct ssh_sharing_connstate *cs = (struct ssh_sharing_connstate *)plug; */
+```

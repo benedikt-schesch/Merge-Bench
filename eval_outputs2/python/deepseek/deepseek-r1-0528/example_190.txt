@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+I've analyzed the provided code snippet with the merge conflict. The conflict arises from two different approaches to handling multi-line string processing:
+
+1. The HEAD branch (current branch) focuses on conditional logic for processing lines as code
+2. The other branch (bbeee06) focuses on cleaning delimiter characters from lines before adding to documentation
+
+After careful consideration of the semantics, I find the intent ambiguous because:
+- The HEAD branch's condition might be necessary for correct state management
+- The other branch's delimiter removal is important for clean documentation output
+- It's unclear if these operations are mutually exclusive or need to be combined
+- The different approaches to indentation and control flow make reconciliation non-trivial
+
+Since I can't determine the exact semantic requirements, I'm returning the original conflicted snippet:
+
+```python
+            if (multi_line
+                    and line.strip().endswith(multiend)
+                    and len(line.strip()) > len(multiend)):
+                multi_line = False
+
+<<<<<<< HEAD
+            if((not line.strip().startswith(multistart) and not multi_line) or multi_string):
+=======
+            # Get rid of the delimiters so that they aren't in the final docs
+            line = line.replace(multistart, '')
+            line = line.replace(multiend, '')
+            docs_text += line.strip() + '\n'
+            indent_level = re.match("\s*", line).group(0)
+>>>>>>> bbeee06f1222fa47439717d2e4b642a41e9d7f4b
+
+                process_as_code = True
+
+                if(multi_string):
+                    multi_line = False
+
+```

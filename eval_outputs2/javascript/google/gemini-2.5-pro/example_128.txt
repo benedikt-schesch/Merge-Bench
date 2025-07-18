@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The conflict arises from two parallel changes:
+1.  **HEAD:** A file-level refactoring occurred, moving `lib/defaults.js` to `lib/defaults/index.js`. As part of this, the `require` paths were updated to be relative to the new location. New dependencies `AxiosError` and `transitionalDefaults` were also introduced.
+2.  **Other Branch:** New features were added to the original `lib/defaults.js` file, introducing dependencies on `enhanceError` and `toFormData`.
+
+The correct semantic resolution is to combine these changes. We will adopt the new file structure and dependency paths from `HEAD` while also including the new dependencies introduced in the other branch. This ensures that both the refactoring work and the new feature work are preserved.
+
+```javascript
+'use strict';
+
+var utils = require('../utils');
+var normalizeHeaderName = require('../helpers/normalizeHeaderName');
+var AxiosError = require('../core/AxiosError');
+var transitionalDefaults = require('./transitional');
+var enhanceError = require('../core/enhanceError');
+var toFormData = require('../helpers/toFormData');
+
+var DEFAULT_CONTENT_TYPE = {
+  'Content-Type': 'application/x-www-form-urlencoded'
+};
+
+
+```

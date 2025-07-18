@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD version ends the constructor setup without a closing brace or tearDown method
+2. The incoming change (8a08444b80550a21aa79eb24c96872111fe9cd01) adds a closing brace for what appears to be a setUp method, and includes a tearDown method that calls `parent::tearDown()` and `m::close()` (which is the proper cleanup for Mockery mocks)
+
+Based on the semantic intent:
+- Both sides want to set up the command with mocks
+- The incoming change properly closes the setUp method and adds necessary test cleanup
+- The `m::close()` call is important for Mockery to properly clean up after tests
+
+Here's the resolved code:
+
+```php
+
+        $this->command = new Run(
+            m::mock('Indatus\Dispatcher\Services\CommandService'),
+            m::mock('Indatus\Dispatcher\Drivers\Cron\ScheduleService')
+        );
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
+    public function testName()
+    {
+        $this->assertEquals('scheduled:run', $this->command->getName());
+
+```

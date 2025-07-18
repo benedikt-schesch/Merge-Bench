@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the version number:
+- HEAD (current branch) has version '1.37.0'
+- The incoming branch has version '1.35.5'
+
+Since HEAD has a higher version number (1.37.0 > 1.35.5), and in semantic versioning higher numbers represent newer versions, the intent appears to be to keep the most recent version. The conflict likely arose from parallel development where different version bumps were made.
+
+Here's the resolved code:
+
+```typescript
+  return {
+    manifest_version: 3,
+    name: '__MSG_appName__',
+    description: '__MSG_appDesc__',
+    default_locale: 'en',
+    version: '1.37.0',
+    icons: {
+      '16': 'src/assets/icon.png',
+      '32': 'src/assets/icon.png',
+      '48': 'src/assets/icon.png',
+      '128': 'src/assets/icon.png',
+```

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+                options.Notifications.MessageUnbound(unbindResult);
+
+                switch (unbindResult.Data.LocalName)
+                {
+                    case "LogoutRequest":
+                        VerifyMessageIsSigned(unbindResult, options);
+                        commandResult = HandleRequest(unbindResult, options);
+                        break;
+                    case "LogoutResponse":
+                        if (!options.SPOptions.Compatibility.AcceptUnsignedLogoutResponses)
+                        {
+                            VerifyMessageIsSigned(unbindResult, options);
+```

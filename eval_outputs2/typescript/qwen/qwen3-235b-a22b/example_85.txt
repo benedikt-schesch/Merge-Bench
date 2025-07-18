@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The intent of both sides is to destructure certain Electron-related APIs from the `useElectron` hook. One side focuses on acquiring a page title (`getPageTitle`), while the other side adds IPC communication functionality (`addIpcListener`, `removeIpcListener`). Both capabilities can coexist meaningfully in a typical Electron app, especially if the component both interacts with the Electron process and needs to respond to or update the window title.
+
+The appropriate resolution is to include **all three functions** from both sides of the conflict to retain the full functionality intended by both branches.
+
+Here is the **resolved code snippet** with the conflict markers removed and the corrected function list, returning the entire snippet as requested:
+
+```typescript
+    addDownloadItem,
+    addDownloadItems,
+    downloadItemsNow,
+    downloadNow,
+    getLocalIP,
+    getPageTitle,
+    addIpcListener,
+    removeIpcListener,
+  } = useElectron();
+  const appStore = useAppStore(useShallow(appStoreSelector));
+  const { t } = useTranslation();
+  const [localIP, setLocalIP] = useState<string>("");
+  const newFormRef = useRef<DownloadFormRef>(null);
+```

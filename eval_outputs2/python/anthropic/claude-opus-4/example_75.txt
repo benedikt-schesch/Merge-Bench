@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to format the `__init__` method signature, with the only difference being the line breaking style:
+
+- HEAD has the entire signature on one line
+- The other branch breaks it across multiple lines for better readability
+
+Since both versions are functionally identical and the multi-line format is generally preferred for long method signatures (following PEP 8 style guidelines), I'll resolve this by keeping the multi-line version:
+
+```python
+    Special class to use as a parent class for validators using sub-validators.
+    This class provides the `__voluptuous_compile__` method so the
+    sub-validators are compiled by the parent `Schema`.
+    """
+
+    def __init__(
+        self, *validators, msg=None, required=False, discriminant=None, **kwargs
+    ) -> None:
+        self.validators = validators
+        self.msg = msg
+        self.required = required
+        self.discriminant = discriminant
+
+
+```

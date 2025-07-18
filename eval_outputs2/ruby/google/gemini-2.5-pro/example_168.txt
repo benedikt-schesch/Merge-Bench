@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+An expert in semantic merge conflict resolution understands the intent behind the changes on both sides of a merge.
+
+*   **HEAD** (`def get_page(target_url)`): This side defines the method with a traditional required positional argument. The intent is clear: `target_url` is a mandatory parameter for this method to function.
+*   **d26f64b762b4b22ee1c64a9fbc20a393520e89e0** (`def get_page(target_url: nil)`): This side refactors the method to use a keyword argument, a more modern Ruby style. However, by providing a default value of `nil`, it incorrectly makes the argument optional. The method's body and documentation clearly show that a `target_url` is required, and passing `nil` would cause a runtime error.
+
+The semantic resolution is to combine the best of both intents:
+1.  Adopt the modern **keyword argument syntax** from the right side.
+2.  Preserve the **mandatory nature** of the argument from the left side.
+
+In modern Ruby (2.1+), this is achieved by defining a required keyword argument. This honors the syntactic refactoring while maintaining the method's correct and safe behavior.
+
+```ruby
+              ##
+              # Retrieve a single page of DomainInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of DomainInstance
+              def get_page(target_url:)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return DomainPage.new(@version, response, @solution)
+
+```

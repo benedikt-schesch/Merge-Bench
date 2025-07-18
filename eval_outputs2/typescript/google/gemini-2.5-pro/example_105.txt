@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires combining the intents of both branches.
+
+- The `HEAD` branch makes the `_onLeave` method `protected` and attempts to delete the client from the `clients` set. However, the client is deleted again in the common code block below, which would make the `if` condition always true, likely introducing a bug.
+- The `1a7da98c...` branch changes the method to `private` and adds a `debugMatchMaking` log statement. This branch's logic is sound, as it relies on the subsequent common code to perform the client deletion.
+
+A semantic resolution should combine the useful additions from both sides while maintaining correct logic. The addition of the debug log is beneficial. The choice between `protected` and `private` depends on whether subclasses should be able to override this method; `protected` is more flexible and common for such hooks in a framework. The redundant client deletion in `HEAD` is an error and should be discarded.
+
+The best resolution is to keep the `protected` visibility from `HEAD`, add the `debugMatchMaking` log from the other branch, and let the existing code below the conflict handle the client deletion.
+
+```typescript
+
+    // only effectively close connection when "onLeave" is fulfilled
+    this._onLeave(client, closeCode).then(() => client.leave(closeCode));
+  }
+
+  protected async _onLeave(client: Client, code?: number): Promise<any> {
+    debugMatchMaking('onLeave, sessionId: \'%s\'', client.sessionId);
+
+    // call 'onLeave' method only if the client has been successfully accepted.
+    client.state = ClientState.LEAVING;
+
+    if (!this.clients.delete(client)) {
+
+```

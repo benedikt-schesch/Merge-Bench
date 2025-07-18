@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+Based on the provided context, the conflict appears to be about the function name used to determine the listbox item under the cursor. The semantic intent of both branches is identical - to get the source item for a drag operation - but they use different function names. Without broader context about why the function name changed or which one exists in the current codebase, this is ambiguous.
+
+Since the intent is unclear and we can't verify which function is valid, the conflict should remain unresolved:
+
+```c
+         * FIXME: this causes scrollbar glitches if the count of
+         *        listbox contains >= its height. */
+        hdl->dummyitem =
+            SendDlgItemMessage(hwnd, hdl->listid, LB_ADDSTRING, 0, (LPARAM) "");
+
+<<<<<<< HEAD
+        hdl->srcitem = LBItemFromPt(dlm->hWnd, dlm->ptCursor, TRUE);
+=======
+        hdl->srcitem = p_LBItemFromPt(dlm->hWnd, dlm->ptCursor, TRUE);
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+        hdl->dragging = 0;
+        /* XXX hack Q183115 */
+        SetWindowLongPtr(hwnd, DWLP_MSGRESULT, TRUE);
+        ret |= 1;
+        break;
+
+``` 
+
+Reasons for not resolving:
+1. The change could be a refactoring (adding `p_` prefix) or a different function implementation
+2. There's no context about function declarations or project conventions
+3. Both sides have identical parameters and purpose
+4. The surrounding context doesn't provide clues about valid functions
+
+The merge should be resolved manually after checking:
+- Which function actually exists in the codebase
+- If this was a function rename vs. a different implementation
+- Project naming conventions for API wrappers

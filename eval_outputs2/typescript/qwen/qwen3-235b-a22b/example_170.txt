@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```typescript
+  }
+
+  /**
+   * If onlyDrop is true, will drop workspace from database, overwize remove only indexes and do full reindex.
+   */
+  async doCleanup (ctx: MeasureContext, workspace: BaseWorkspaceInfo, cleanIndexes: boolean): Promise<void> {
+    const { dbUrl } = prepareTools([])
+    const adapter = getWorkspaceDestroyAdapter(dbUrl)
+    await adapter.deleteWorkspace(ctx, sharedPipelineContextVars, workspace.uuid, workspace.dataId)
+
+    await this.doReindexFulltext(ctx, workspace, cleanIndexes)
+```

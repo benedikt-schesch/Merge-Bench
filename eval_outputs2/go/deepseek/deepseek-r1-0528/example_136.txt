@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different approaches to handling query parameters. The HEAD branch uses `UpdateMaskPaths` with the key `"update_mask.paths"`, while the other branch uses `UpdateMask` with the key `"updateMask"`. 
+
+Since these represent different fields and parameter names, they likely serve different purposes. The intent is ambiguous without knowing:
+1. If these are mutually exclusive features
+2. If the underlying API supports both parameters
+3. Whether the struct contains both fields simultaneously
+
+Given the ambiguity and semantic differences, I'm returning the unresolved conflict for developer decision:
+
+```go
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+<<<<<<< HEAD
+	if localVarOptionals != nil && localVarOptionals.UpdateMaskPaths.IsSet() {
+		localVarQueryParams.Add("update_mask.paths", parameterToString(localVarOptionals.UpdateMaskPaths.Value(), "multi"))
+=======
+	if localVarOptionals != nil && localVarOptionals.UpdateMask.IsSet() {
+		localVarQueryParams.Add("updateMask", parameterToString(localVarOptionals.UpdateMask.Value(), "multi"))
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6
+	}
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"application/json", "application/x-foo-mime"}
+
+	// set Content-Type header
+
+```

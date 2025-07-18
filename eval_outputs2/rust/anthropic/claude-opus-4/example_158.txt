@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - printing a message about listening for changes. The key differences are:
+
+1. **HEAD version**: Uses `MAIN_SEPARATOR` between the path and the braces, and joins watchers with `", "` (comma + space)
+2. **Other version**: Doesn't include a separator between the path and braces, and joins watchers with just `","` (comma only)
+
+The HEAD version appears more polished with proper formatting (separator and spacing in the list). Since both achieve the same semantic intent but HEAD has better formatting, I'll resolve in favor of HEAD:
+
+```rust
+        });
+
+        broadcaster
+    };
+
+    println!(
+        "Listening for changes in {}{}{{{}}}",
+        root_dir.display(),
+        MAIN_SEPARATOR,
+        watchers.join(", ")
+    );
+
+    println!("Press Ctrl+C to stop\n");
+    // Delete the output folder on ctrl+C
+    ctrlc::set_handler(move || {
+        match remove_dir_all(&output_path) {
+
+```

@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The intent of the `HEAD` branch is to declare the `select_result` function as an external function before its use. The intent of the other branch (`4348393f...`) is to remove this local declaration.
+
+Looking at the history of the codebase this snippet is from (PuTTY), the `extern` declaration for `select_result` was moved into a shared header file (`windefs.h`) as part of a refactoring effort. This makes the local declaration within the function redundant. Therefore, the correct semantic resolution is to remove the local `extern` declaration, as the other branch intended.
+
+```c
+    handle_got_event(handles[n - WAIT_OBJECT_0]);
+  } else if (netindex >= 0 && n == WAIT_OBJECT_0 + netindex) {
+    WSANETWORKEVENTS things;
+    SOCKET socket;
+    extern SOCKET first_socket(int *), next_socket(int *);
+    int i, socketstate;
+
+    /*
+     * We must not call select_result() for any socket
+     * until we have finished enumerating within the
+
+```

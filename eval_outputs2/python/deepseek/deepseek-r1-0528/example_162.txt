@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```python
+        return 'tvmaze_id'
+
+
+@event('plugin.register')
+def register_plugin():
+    plugin.register(PluginTVMazeLookup, 'tvmaze_lookup', api_ver=3, groups=['series_metainfo'])
+
+```
+
+**Resolution Reasoning:**
+1. **API Version Upgrade:** The incoming change (`api_ver=3`) supersedes the HEAD version (`api_ver=2`), indicating an intentional plugin API upgrade.
+2. **Additional Metadata:** The incoming change adds `groups=['series_metainfo']` which provides valuable context about the plugin's purpose without conflicting with existing functionality.
+3. **Semantic Compatibility:** The added `groups` parameter is backward-compatible and doesn't alter the core registration behavior, making it safe to include.
+
+The resolution preserves both the API upgrade and enhanced plugin metadata from the incoming change while removing the outdated API version.

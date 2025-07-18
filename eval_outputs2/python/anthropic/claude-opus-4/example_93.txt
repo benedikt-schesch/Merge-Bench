@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic result - they're both returning a list comprehension that finds workers. The only difference is the formatting:
+
+- HEAD version has the list comprehension split across two lines
+- The other version has it on a single line
+
+Since the semantic intent is identical and this is purely a formatting difference, I'll preserve the HEAD version's formatting as it's more readable for longer expressions.
+
+```python
+        if isinstance(host,basestring):
+            resq = ResQ(host)
+        elif isinstance(host, ResQ):
+            resq = host
+
+        return [Worker.find(w,resq)
+                for w in resq.redis.smembers('resque:workers') or []]
+
+    @classmethod
+    def working(cls, host):
+        if isinstance(host, basestring):
+            resq = ResQ(host)
+
+```

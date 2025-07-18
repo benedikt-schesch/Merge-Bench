@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD branch is adding a new function declaration `mraa_setup_uart` with its documentation
+- The other branch (d7c8f2a79431b8f9461597b86ef9f046357404c6) is adding C++ compatibility closing braces
+
+Both changes are semantically compatible and serve different purposes. The HEAD branch is extending the API with a new UART setup function, while the other branch is ensuring C++ compatibility by closing what appears to be an `extern "C"` block.
+
+The resolution should include both changes:
+
+```c
+ * @param pin physical pin to operate on
+ * @return out direction to setup. 1 for output 0 for input
+ */
+mraa_result_t mraa_swap_complex_gpio(int pin, int out);
+
+/** Setup uart muxes to exposes the pins physically.
+ *
+ * @param index of the uart in the board definition to expose physically
+ * @return mraa_result_t of operation
+ */
+mraa_result_t mraa_setup_uart(int index);
+
+#ifdef __cplusplus
+}
+#endif
+```

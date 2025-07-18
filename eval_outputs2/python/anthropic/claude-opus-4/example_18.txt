@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to handle the `import typing` statement, but they've placed it in different locations:
+
+- HEAD has `import typing` after the other imports
+- The other branch (1fcf849f16279d43010c89c5d8cf69d5de96a800) has removed this duplicate import
+
+Since `import typing` already appears at the very beginning of the file (first line), the second import in HEAD is redundant. The other branch correctly removed this duplication.
+
+Here's the resolved code:
+
+```python
+import typing
+
+from voluptuous import Invalid, MultipleInvalid
+from voluptuous.error import Error
+from voluptuous.schema_builder import Schema
+
+# fmt: on
+
+MAX_VALIDATION_ERROR_ITEM_LENGTH = 500
+
+
+```

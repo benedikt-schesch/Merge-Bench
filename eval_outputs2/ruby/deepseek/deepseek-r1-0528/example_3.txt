@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing calling conventions for `@page.call`. One side uses no arguments (`@page.call`), while the other passes an empty hash (`@page.call({})`). 
+
+After analyzing the surrounding context:
+1. The test above the conflict uses `@page.call` without arguments
+2. The test below the conflict isn't shown making a call
+3. Rack applications typically expect an environment hash argument
+4. The tests appear to be validating status codes, not request parameters
+
+Since both calling conventions could work and there's no clear semantic difference in this test context, **the conflict is preserved** due to ambiguity. The resolution requires understanding how `@page` is implemented elsewhere.
+
+```ruby
+    assert_equal 400, response.status
+  end
+  
+  def test_skips_with_false_condition
+    @facebook = Rack::Facebook.new(@app) { false }
+<<<<<<< HEAD
+    response = @page.call
+=======
+    response = @page.call({})
+>>>>>>> 79bd4f8864f3db0d5dac4b299e8f2b32fb1429ec
+    assert_equal 200, response.status
+  end
+  
+  def test_skips_with_true_condition_without_fb_sig
+    @facebook = Rack::Facebook.new(@app) { true }
+```

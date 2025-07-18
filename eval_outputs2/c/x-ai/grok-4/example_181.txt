@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```c
+	return retstat;
+}
+
+/** List extended attributes */
+int sfs_listxattr(const char *path, char *list, size_t size) {
+    int retstat = 0;
+    char fpath[PATH_MAX];
+    sfs_fullpath(fpath, path);
+
+	BEGIN_PERM;
+	retstat = llistxattr(fpath, list, size);
+	END_PERM;
+	if (retstat < 0) {
+
+```

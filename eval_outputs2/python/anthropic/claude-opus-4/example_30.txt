@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic intent - raising a `MultipleInvalid` exception with a `ValueInvalid` error. The only difference is formatting:
+
+- HEAD uses a single line with the list on the same line
+- The incoming change uses multi-line formatting with the list on a separate line
+
+Since both achieve the same result and the difference is purely stylistic, I'll preserve the more readable multi-line format from the incoming change:
+
+```python
+                raise er.SequenceTypeInvalid('expected a %s' % seq_type_name, path)
+
+            # Empty seq schema, reject any data.
+            if not schema:
+                if data:
+                    raise er.MultipleInvalid(
+                        [er.ValueInvalid('not a valid value', path if path else data)]
+                    )
+                return data
+
+            out = []
+            invalid = None
+            errors = []
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```rust
+    fn from(group: &'a GroupName) -> ConflictKindRef<'a> {
+        ConflictKindRef::Group(group)
+    }
+}
+
+impl<'a> PartialEq<ConflictKind> for ConflictKindRef<'a> {
+    fn eq(&self, other: &ConflictKind) -> bool {
+        other.as_ref() == *self
+    }
+}
+
+impl PartialEq<ConflictPackage> for ConflictPackageRef<'_> {
+    fn eq(&self, other: &ConflictPackage) -> bool {
+        other.as_ref() == *self
+    }
+}
+
+impl<'a> PartialEq<ConflictKindRef<'a>> for ConflictKind {
+```

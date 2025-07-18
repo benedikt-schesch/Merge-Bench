@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```python
+        elif isinstance(schema, (frozenset, set)):
+            return self._compile_set(schema)
+        type_ = type(schema)
+        if inspect.isclass(schema):
+            type_ = schema
+        if type_ in (*primitive_types, object, list, dict, type(None)) or callable(schema):
+            return _compile_scalar(schema)
+        raise er.SchemaError('unsupported schema data type %r' % type(schema).__name__)
+
+    def _compile_mapping(self, schema, invalid_msg=None):
+        """Create validator for given mapping."""
+
+```

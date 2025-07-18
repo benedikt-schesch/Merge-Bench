@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different function signatures that appear to be semantically incompatible. The HEAD branch defines `InitialiseTest` returning `InitialiseTestReturn`, while the other branch defines `Test` returning `bool` with additional parameters. Since the function names, return types, and parameters differ significantly, this indicates a fundamental disagreement in functionality rather than a simple additive change.
+
+Here's the original snippet with conflict markers preserved:
+
+```go
+		logger: logger,
+		mutex:  sync.Mutex{},
+	}
+}
+
+<<<<<<< HEAD
+func (t *tester) InitialiseTest(path string, proxyPort uint32, testReportPath string, appCmd string, testsets *[]string, appContainer, appNetwork string, Delay uint64, passThorughPorts []uint, apiTimeout uint64) InitialiseTestReturn {
+	var returnVal InitialiseTestReturn
+=======
+func (t *tester) Test(path string, proxyPort uint32, testReportPath string, appCmd string, testsets []string, appContainer, appNetwork string, Delay uint64, passThorughPorts []uint, apiTimeout uint64, noiseConfig map[string]interface{}) bool {
+
+	var ps *proxy.ProxySet
+>>>>>>> 7dea42d7b9709f2c68032e56d8d67995336c9378
+
+	stopper := make(chan os.Signal, 1)
+	signal.Notify(stopper, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGKILL)
+
+	models.SetMode(models.MODE_TEST)
+```
+
+Key reasons for not resolving:
+1. Function names differ (`InitialiseTest` vs `Test`)
+2. Return types are incompatible (`InitialiseTestReturn` vs `bool`)
+3. Parameter lists differ (pointer vs value for `testsets`, extra `noiseConfig` parameter)
+4. Internal variables serve different purposes (`returnVal` vs `ps`)
+5. The changes appear to represent two different implementations rather than complementary modifications
+
+A human decision is required to determine whether to:
+1. Keep one implementation and discard the other
+2. Refactor into two separate methods
+3. Create a new unified implementation that satisfies both requirements

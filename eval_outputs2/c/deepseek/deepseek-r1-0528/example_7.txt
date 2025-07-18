@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict was solely about indentation formatting in a multi-line condition. Both versions of the code were functionally identical, but used different indentation levels for the second part of the condition. The resolution maintains the HEAD version's indentation (16 spaces) for better visual distinction between the condition and the subsequent code block.
+
+Resolved code:
+```c
+        zend_unmangle_property_name(p->arKey, &cname, &mname);
+#  endif
+
+        /* lookup the member's info in parent and child */
+        if((zend_hash_find(&parent->properties_info, mname, strlen(mname)+1, &pinfo.ptr) == SUCCESS) &&
+                (zend_hash_find(&from->properties_info, mname, strlen(mname)+1, &cinfo.ptr) == SUCCESS)) {
+            /* If the static member points to the same value in parent and child, remove for proper inheritance during restore */
+            if(zend_hash_quick_find(&parent->default_static_members, p->arKey, p->nKeyLength, p->h, &pprop.ptr) == SUCCESS) {
+                if(*pprop.v == *cprop.v) {
+                    return ZEND_HASH_APPLY_REMOVE;
+                }
+
+```

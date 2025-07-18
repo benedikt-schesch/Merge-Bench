@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to initialize hooks, but with different approaches:
+
+- **HEAD**: Creates hooks using `returnVal.Ys` and assigns to `returnVal.LoadedHooks`
+- **Branch**: Creates hooks using `ys` and assigns to a local variable `loadedHooks`, plus adds a defer statement for panic recovery
+
+The semantic intent appears to be:
+1. Both want to create a new hook with the same parameters
+2. HEAD wants to store it in the return value structure
+3. Branch wants to add panic recovery functionality
+
+However, there's an issue: the branch version uses `ys` which doesn't exist in the context (it should be `returnVal.Ys` based on the code above). This suggests the branch might be based on older code.
+
+Since I cannot determine with certainty whether:
+- The panic recovery is still needed/wanted
+- Whether `loadedHooks` should be stored in `returnVal.LoadedHooks` or kept as a local variable
+- The exact intent of both changes
+
+I'm returning the snippet with the conflict unchanged:
+
+```go
+	// fetch the recorded testcases with their mocks
+	returnVal.Ys = yaml.NewYamlStore(path+"/tests", path, "", "", t.logger, tele)
+
+	routineId := pkg.GenerateRandomID()
+	// Initiate the hooks
+<<<<<<< HEAD
+	returnVal.LoadedHooks = hooks.NewHook(returnVal.Ys, routineId, t.logger)
+=======
+	loadedHooks := hooks.NewHook(ys, routineId, t.logger)
+
+	// Recover from panic and gracfully shutdown
+	defer loadedHooks.Recover(routineId)
+>>>>>>> 7dea42d7b9709f2c68032e56d8d67995336c9378
+
+	select {
+	case <-stopper:
+		returnVal.Ok = false
+		return returnVal
+
+```

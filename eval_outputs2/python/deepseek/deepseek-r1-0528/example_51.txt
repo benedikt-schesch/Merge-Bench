@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Resolved by selecting the more concise and PEP 8 compliant docstring format from the branch.
+
+```python
+    else:
+        assert False, "Did not raise Invalid for String"
+
+
+def test_number_validation_with_valid_precision_scale_yield_decimal_false():
+    """Test with Number with valid precision, scale and no yield_decimal"""
+    schema = Schema({"number": Number(precision=6, scale=2, yield_decimal=False)})
+    out_ = schema({"number": '1234.00'})
+    assert out_.get("number") == '1234.00'
+
+
+
+```
+
+Explanation:
+1. Kept context above (`else: assert...`) and below (schema/assert implementations) unchanged
+2. Resolved conflict by choosing the branch version (`1fcf...`) of the docstring which:
+   - Removes the extra space after opening triple quotes
+   - Matches common Python docstring style guidelines (PEP 257)
+3. Preserved all whitespace and newlines exactly as in original non-conflict areas
+4. Maintained semantic intent - both versions describe exactly the same test purpose
+5. Conflict resolution is unambiguous as only whitespace styling differs

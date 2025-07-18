@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the conflict is about whether to include a constant declaration `buildinfo_gtk_relevant` between the end of one function and the start of `gtk_askpass_main`.
+
+The HEAD version (current branch) has nothing between the two functions, while the incoming change adds a constant declaration. This appears to be a straightforward addition that doesn't conflict with the intent of the HEAD version - it's simply adding a new constant that's likely used elsewhere in the codebase.
+
+Here's the resolved version:
+
+```c
+
+  gtk_initialised = ret;
+  return ret;
+}
+
+const int buildinfo_gtk_relevant = TRUE;
+
+char *gtk_askpass_main(const char *display,
+                       const char *wintitle,
+                       const char *prompt,
+                       int *success)
+{
+
+```

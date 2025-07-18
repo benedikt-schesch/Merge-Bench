@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to analyze the intent of both sides:
+
+- **HEAD (current branch)**: Wants to throw an Error when the Google client operation fails, with a descriptive error message including workspace, userId, and event._id
+- **Incoming change**: Wants to log the error to console.error with the same descriptive message, but not throw
+
+The semantic intent appears to be different error handling strategies:
+- HEAD wants to propagate the error up (fail-fast approach)
+- Incoming wants to log and continue (fail-soft approach)
+
+Since both approaches have valid use cases and the intent is fundamentally different (throw vs log), I cannot definitively resolve this without more context about the desired error handling strategy for this application.
+
+Here is the snippet with the conflict preserved:
+
+```typescript
+          })
+        }
+      }
+    } catch (err: any) {
+      await this.googleClient.checkError(err)
+<<<<<<< HEAD
+      // eslint-disable-next-line
+      throw new Error(`Create event error, ${this.user.workspace}, ${this.user.userId}, ${event._id}, ${err?.message}`)
+=======
+      console.error(`Create event error, ${this.user.workspace}, ${this.user.userId}, ${event._id}, ${err?.message}`)
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+    }
+  }
+
+  async updateEvent (event: Event): Promise<void> {
+    const me = await this.googleClient.getMe()
+
+```

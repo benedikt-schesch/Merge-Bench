@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- **HEAD (current branch)**: Uses `debug.dbg()` for logging, which is consistent with the debug logging pattern used in the lines above the conflict.
+- **Incoming changes**: Introduces plain `print` statements and adds a new line that prints `user_scope` information.
+
+The semantic intent appears to be:
+1. Both sides want to log/print the `complete_scope`
+2. The incoming change adds additional debugging information about `user_scope`
+3. The codebase seems to be using `debug.dbg()` as the standard logging mechanism (based on context)
+
+The resolution should:
+- Use `debug.dbg()` for consistency with the surrounding code
+- Include both the `complete_scope` and the new `user_scope` information
+
+```python
+    # print a debug.dbg title
+    debug.dbg()
+    debug.dbg('-' * 70)
+    debug.dbg(' ' * 62 + 'complete')
+    debug.dbg('-' * 70)
+    debug.dbg('complete_scope', scope)
+    debug.dbg('user_scope', f.parser.user_scope.get_simple_for_line(row))
+
+    try:
+        path = f.get_row_path(column)
+    except ParserError as e:
+        path = []
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - destroying elements from index `new_active` to `size_active`. The difference is in the approach:
+
+- HEAD uses the standard C++ allocator-aware destruction method: `std::allocator_traits<allocator>::destroy(alloc, &items[i])`
+- The other branch uses direct destructor calls: `items[i].~T()`
+
+The HEAD version is more correct and follows modern C++ best practices because:
+1. It properly handles custom allocators that might have specialized destroy behavior
+2. It's consistent with how the allocator is likely used elsewhere in the code (given the presence of an `alloc` variable)
+3. It's the standard-compliant way to destroy objects managed by allocators
+
+Here's the resolved code:
+
+```c
+        assert(new_active <= new_alloced); 
+
+        /* destroy elements */
+        if (new_active < size_active) 
+        {
+          for (size_t i=new_active; i<size_active; i++)
+            std::allocator_traits<allocator>::destroy(alloc, &items[i]);
+          size_active = new_active;
+        }
+
+        /* only reallocate if necessary */
+        if (new_alloced == size_alloced) {
+
+```

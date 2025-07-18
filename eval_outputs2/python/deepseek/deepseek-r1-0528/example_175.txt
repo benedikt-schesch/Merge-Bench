@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```python
+            raise r
+        h, d = r
+        rcmd, size, pid = unpack("III", h)
+        if rcmd != cmd+1 or pid != self.packetid or size <= 4:
+            self.close()
+            raise Exception("incorrect answer (%s!=%s, %s!=%s, %d<=4", 
+                rcmd, cmd+1, pid, self.packetid, size)
+        if len(d) == 1 and ord(d[0]) != 0:
+            raise Error(ord(d[0]))
+        return d
+
+    def statfs(self):
+```

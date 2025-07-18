@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to accomplish the same thing - creating a HashMap to store data. The only difference is:
+
+- HEAD version: `new HashMap<ReturnableData, Object>()`
+- Other version: `new HashMap<>()`
+
+The second version uses the diamond operator (`<>`) which was introduced in Java 7 and allows the compiler to infer the type arguments from the context. Both versions are functionally identical, but the diamond operator version is more concise and is the modern Java style.
+
+Since both achieve the same intent and the diamond operator is the preferred modern syntax, I'll resolve in favor of the cleaner version:
+
+```java
+
+      synchronized (roundPlayers) {
+        for (final Player player : roundPlayers) {
+          final List<WhiteCard> cards = playedCards.getCards(player);
+          if (cards == null || cards.size() < blackCard.getPick()) {
+            final Map<ReturnableData, Object> data = new HashMap<>();
+            data.put(LongPollResponse.EVENT, LongPollEvent.HURRY_UP.toString());
+            data.put(LongPollResponse.GAME_ID, this.id);
+            final QueuedMessage q = new QueuedMessage(MessageType.GAME_EVENT, data);
+            player.getUser().enqueueMessage(q);
+          }
+
+```

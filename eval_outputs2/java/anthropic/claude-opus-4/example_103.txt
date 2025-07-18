@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same semantic change - they both want the same method signature for `isEqualTo(short expected)`. The only difference is the spacing before the opening curly brace:
+
+- HEAD version: `isEqualTo(short expected){` (no space before `{`)
+- The other version: `isEqualTo(short expected) {` (with space before `{`)
+
+Since this is purely a formatting difference with no semantic difference, I'll resolve this by choosing the version with the space before the curly brace, as this is the more common Java coding convention.
+
+```java
+
+  protected ShortAssert(Short actual, Description description) {
+    super(actual, ShortAssert.class, description);
+  }
+
+  public ShortAssert isEqualTo(short expected) {
+    shorts.assertEqualTo(description, actual, expected);
+    return this;
+  }
+
+
+```

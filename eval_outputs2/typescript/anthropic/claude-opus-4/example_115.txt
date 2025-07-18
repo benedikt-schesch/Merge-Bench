@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `sendFullState` method, but with different intents:
+
+- **HEAD**: Changes the visibility from `private` to `private` (no change in visibility) and uses `client.raw()` method
+- **Other branch**: Changes the visibility from `private` to `protected` and uses `client.enqueueRaw()` with a protocol wrapper
+
+The semantic intent appears to be:
+1. The visibility should be `protected` (allowing subclasses to access it)
+2. The message should be enqueued (not sent raw/directly)
+3. The message should be properly formatted using the protocol wrapper
+
+Here's the resolved conflict:
+
+```typescript
+        client.enqueueRaw(encodedMessage);
+      }
+    }
+  }
+
+  protected sendFullState(client: Client): void {
+    client.enqueueRaw(getMessageBytes[Protocol.ROOM_STATE](this._serializer.getFullState(client)));
+  }
+
+  private _dequeueAfterPatchMessages() {
+    const length = this._afterNextPatchQueue.length;
+
+
+```

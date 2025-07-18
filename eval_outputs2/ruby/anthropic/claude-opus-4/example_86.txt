@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to document the same method for drawing a cropped image, but they're using different naming conventions and parameter styles:
+
+- HEAD uses `draw_image_cropped` with object-based parameters (`position`, `crop_position`, `crop_size`)
+- The other branch uses `image_cropped` with individual numeric parameters (`x`, `y`, `crop_x`, `crop_y`, `crop_width`, `crop_height`)
+
+Based on the context and the existing parameter documentation below the conflict (which lists individual numeric parameters), it appears the intent is to have a method that draws a cropped portion of an image. The parameter documentation that follows matches the style of the second approach with individual coordinates.
+
+Here's the resolved version that aligns with the documented parameters:
+
+```ruby
+  # @return [nil]
+  # @example Draw a duck within a game
+  #   display.image(Image['images/duck.png'], 80, 80)
+  # Draw an image at a position.
+
+  # @!method image_cropped(image, x, y, crop_x, crop_y, crop_width, crop_height)
+  # @param [Image] image to draw
+  # @param [Numeric] x position
+  # @param [Numeric] y position
+  # @param [Numeric] x position of crop
+  # @param [Numeric] y position of crop
+
+```

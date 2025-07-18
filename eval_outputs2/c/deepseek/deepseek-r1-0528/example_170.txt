@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from initializing `qhead->prefixlen` immediately after allocation (HEAD) vs. skipping initialization (other branch). The HEAD version has a potential NULL dereference bug since `qhead->prefixlen = 0` executes before checking if `malloc` succeeded. The resolution moves the initialization after the NULL check to maintain the HEAD's intent safely while incorporating the other branch's structural change.
+
+Resolved snippet:
+```c
+  struct bucket *qhead, *qtail;
+  extern char **environ;
+  char **e;
+
+  qhead = (struct bucket *)malloc(sizeof(struct bucket));
+  if (!qhead) {
+    fprintf(stderr, "out of memory\n");
+    exit(1);
+  }
+  qhead->prefixlen = 0;
+<<<<<<< HEAD
+
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see it's about Tamil language translations for time expressions. Both sides are trying to translate "in X seconds" but with slightly different Tamil translations:
+
+- HEAD version: Uses "சில விநாடிகள்" (sila vinadigal - few seconds) for 1 second and "விநாடிகள்" (vinadigal - seconds) for 5 seconds
+- Incoming version: Uses "வினாடியில்" (vinadiyil - in second) for 1 second and "வினாடிகளில்" (vinadigalil - in seconds) for 5 seconds
+
+The incoming version appears more grammatically correct as:
+1. It uses singular form "வினாடியில்" for 1 second (not "few seconds")
+2. It uses the locative case ending "-இல்" (il) which means "in" and is appropriate for expressing time durations
+
+Here's the resolved code:
+
+```php
+    public function it_translates_from_now()
+    {
+        $oneAgo = Date::parse('1 second');
+        $fiveAgo = Date::parse('5 seconds');
+
+        $this->assertEquals('1 வினாடியில் இல்', $oneAgo->ago());
+        $this->assertEquals('5 வினாடிகளில் இல்', $fiveAgo->ago());
+
+        ///
+
+        $oneAgo = Date::parse('1 minute');
+        $fiveAgo = Date::parse('5 minutes');
+
+```

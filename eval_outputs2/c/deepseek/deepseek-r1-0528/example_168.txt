@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Here's the snippet with the conflict preserved due to ambiguous intent:
+
+```c
+     * channel.
+     */
+    if (xconn->c)
+      sshfwd_write_eof(xconn->c);
+  }
+<<<<<<< HEAD
+
+  return 1;
+=======
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+}
+
+static void x11_receive(Plug plug, int urgent, char *data, int len)
+{
+  struct X11Connection *xconn = (struct X11Connection *)plug;
+
+```
+
+**Reason for preservation:**  
+The conflict involves a critical semantic difference - the presence (`return 1;`) vs absence of a return statement. Since we lack visibility into:
+1. The function's return type declaration
+2. Control flow requirements
+3. Whether both branches are contextually valid
+resolving this would require assumptions about program logic. Without clearer context about the function's intended behavior in both branches, preserving the conflict is safer than choosing one side arbitrarily.

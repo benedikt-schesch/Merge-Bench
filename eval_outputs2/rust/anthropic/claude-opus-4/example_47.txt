@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add documentation for the `init_non_send_resource` method, while the other branch appears to have removed or not included this documentation.
+
+Given that documentation is generally beneficial and doesn't change the functionality of the code, and considering that the method signature and implementation remain the same in both branches, the semantic intent appears to be to have a documented method. The HEAD branch's documentation explains what the method does, which is valuable for API users.
+
+Here's the resolved code:
+
+```rust
+            self.insert_resource(resource);
+        }
+        self
+    }
+
+    /// Initialize a non-send resource in the current [`App`], if it does not exist yet.
+    ///
+    /// Adds a resource that implements `Default` or [`FromWorld`] trait.
+    pub fn init_non_send_resource<R>(&mut self) -> &mut Self
+    where
+        R: FromWorld + 'static,
+    {
+        // See perf comment in init_resource
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add an import for `org.spout.math.imaginary.Quaternion`, while the other branch (cc0703054530b4eeda07a2b1b619ed34e1e7d201) has removed it or doesn't include it.
+
+Given the context of the code which appears to be dealing with 3D transformations and physics (Transform, Vector3, CollisionShape), the Quaternion import is likely needed for rotation calculations in 3D space. Quaternions are commonly used in 3D graphics and physics engines for representing rotations.
+
+Since the intent appears to be adding functionality related to 3D transformations (which typically use quaternions), I'll resolve this by keeping the import from HEAD:
+
+```java
+import org.spout.api.geo.discrete.Point;
+import org.spout.api.geo.discrete.Transform;
+import org.spout.math.vector.Vector3;
+import org.spout.api.util.thread.annotation.SnapshotRead;
+import org.spout.api.util.thread.annotation.Threadsafe;
+import org.spout.math.imaginary.Quaternion;
+
+import org.spout.physics.collision.shape.CollisionShape;
+
+/**
+ * Component that gives the owner the characteristics to be a part of a Scene. <p> A Scene consists of {@link Transform}s which represent the snapshot state, the live state, and the rendering state.
+ * This component can be used to manipulate the object within the scene.
+
+```

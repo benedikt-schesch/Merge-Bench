@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add the same comment line, but with different indentation:
+
+- HEAD uses spaces for indentation
+- The other branch (8c12343b2...) uses tabs for indentation
+
+Since the surrounding code uses spaces (as seen in the lines above the conflict), the semantically correct resolution is to use the HEAD version with spaces to maintain consistent indentation throughout the file.
+
+Here's the resolved code:
+
+```python
+                print "fixing links in ", filepath
+                newtext = fixLinks(filetext, parser)
+                with open(filepath, 'w') as f:
+                    f.write(newtext)
+
+        # fix all localhost references, if new domain given
+        if arguments['--new-domain']:
+            filetypes = ['*.html', '*.xml', '*.xsl', 'robots.txt']
+            for root, dirs, filenames in os.walk(static_path):
+                for extension in filetypes:
+                    for filename in fnmatch.filter(filenames, extension):
+
+```

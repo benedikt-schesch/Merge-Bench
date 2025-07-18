@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing docblock annotations for the `setSchedule` method parameters. Both branches agree on the existence of `$minute`, `$hour`, `$dayOfMonth`, `$month`, and `$dayOfWeek` parameters, but HEAD additionally documents `$week` while the other branch does not. The resolution preserves all parameters with consistent typing (`int|array` for time-related parameters and `string|int|array` for `$week`), maintains the parameter order from the method signature, and keeps the blank line before the `@return` annotation.
+
+```php
+     * @param int|array        $dayOfMonth
+     * @param int|array        $month
+     * @param int|array        $dayOfWeek
+     * @param string|int|array $week
+     *
+     * @param int|array $minute
+     * @param int|array $hour
+     * @return $this
+     */
+    public function setSchedule($minute, $hour, $dayOfMonth, $month, $dayOfWeek, $week = self::NONE)
+    {
+        $month

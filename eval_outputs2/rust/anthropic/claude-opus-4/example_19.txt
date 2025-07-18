@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import items from `datafusion::common::tree_node`, but with different sets of types:
+
+- HEAD wants: `Transformed`, `TreeNode`, `VisitRecursion`
+- The other branch wants: `TreeNode`, `TreeNodeRecursion`
+
+Both sides agree on importing `TreeNode`, but differ on the other imports. This appears to be a case where the API has changed between versions - `VisitRecursion` seems to have been renamed to `TreeNodeRecursion`, and `Transformed` is only needed in HEAD.
+
+Since both sides need their respective imports to work with their code, the semantic resolution is to include all the imports that either side needs:
+
+```rust
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+use datafusion::common::tree_node::{Transformed, TreeNode, TreeNodeRecursion, VisitRecursion};
+use datafusion::datasource::listing::{ListingTable, ListingTableUrl};
+use datafusion::datasource::source_as_provider;
+use datafusion::error::DataFusionError;
+use std::any::type_name;
+use std::collections::HashMap;
+```

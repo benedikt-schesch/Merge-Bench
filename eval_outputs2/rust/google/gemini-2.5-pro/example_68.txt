@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```rust
+    /// generates new archetypes for the given world.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the `world.id()` does not equal the current [`QueryState`] internal id.
+    pub fn update_archetypes(&mut self, world: &World) {
+        self.validate_world(world);
+        let archetypes = world.archetypes();
+        let new_generation = archetypes.generation();
+        let old_generation = std::mem::replace(&mut self.archetype_generation, new_generation);
+        let archetype_index_range = old_generation.value()..new_generation.value();
+
+
+```

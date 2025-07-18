@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- **HEAD (current branch)**: Creates a `GruntParser` with only a `StringReader` parameter
+- **Incoming change**: Creates a `GruntParser` with both a `StringReader` and a `myPig` parameter
+
+The incoming change appears to be adding an additional parameter (`myPig`) to the `GruntParser` constructor. This is likely a refactoring where the parser now needs a reference to a Pig instance. Since this seems to be an API change where the constructor signature has been updated to require the additional parameter, the semantically correct resolution would be to accept the incoming change that includes both parameters.
+
+However, without seeing the rest of the code context (particularly where `myPig` is defined and the `GruntParser` class definition), I cannot be certain that this resolution won't cause compilation errors. Following the instruction to return the snippet with the conflict if the intent is ambiguous:
+
+```java
+                          + "using PigStorage(':') as (uname:chararray, passwd:chararray, uid:int,gid:int);"
+                          + "b = filter a by uid > 5;"
+                          + "describe b;"
+                          + "store b into '" + TMP_DIR + "/Pig-TestMultiQueryLocal1';\n";
+
+<<<<<<< HEAD
+            GruntParser parser = new GruntParser(new StringReader(script));
+=======
+            GruntParser parser = new GruntParser(new StringReader(script), myPig);
+>>>>>>> 2125666c1941d4a88c08ab87ebf92ee46be4f0ea
+            parser.setInteractive(false);
+            parser.parseStopOnError();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+```

@@ -1,0 +1,42 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing approaches to configuring settings for mobile devices and linear filtering support. Both branches set `config.DYE_RESOLUTION = 256` for mobile, but they handle `config.SHADING` differently:
+
+1. **HEAD branch** (current branch) sets both:
+   ```javascript
+   if (isMobile()) {
+       config.DYE_RESOLUTION = 256;
+       config.SHADING = false; // Force-disable shading on mobile
+   }
+   ```
+
+2. **Other branch** sets resolution for mobile separately from shading (which is disabled only when linear filtering is unsupported):
+   ```javascript
+   if (isMobile())
+       { config.DYE_RESOLUTION = 256; }
+   if (!ext.supportLinearFiltering)
+       { config.SHADING = false; } // Disable shading if no linear filtering
+   ```
+
+**Resolution**: Combine both intents:
+- Keep mobile resolution setting from both branches
+- Preserve HEAD's mobile shading disable
+- Keep other branch's linear filtering check
+
+Resolved code:
+```javascript
+
+var ref = getWebGLContext(canvas);
+var gl = ref.gl;
+var ext = ref.ext;
+
+if (isMobile()) {
+    config.DYE_RESOLUTION = 256;
+    config.SHADING = false;
+}
+if (!ext.supportLinearFiltering)
+    { config.SHADING = false; }
+
+startGUI();
+
+```

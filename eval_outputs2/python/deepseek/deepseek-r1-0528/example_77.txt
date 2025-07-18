@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in the type annotation for the `path` parameter and formatting style. The resolution adopts the more general `typing.Hashable` type for `path` to accommodate non-string keys, while preserving the multi-line formatting for readability. The method's functionality remains unchanged.
+
+```python
+            self.__class__.__name__,
+            ", ".join(repr(v) for v in self.validators),
+            self.msg,
+        )
+
+    def _exec(
+        self,
+        funcs: typing.Iterable,
+        v,
+        path: typing.Optional[typing.List[typing.Hashable]] = None,
+    ):
+        raise NotImplementedError()
+
+
+class Any(_WithSubValidators):
+    """Use the first validated value.
+```

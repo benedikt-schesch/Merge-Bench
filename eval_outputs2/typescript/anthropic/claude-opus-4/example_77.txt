@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to handle the error case in the catch block, with slight differences:
+
+**HEAD (left side):**
+- Logs "Error parsing log line" with `console.log`
+- Then logs the error with `console.error(e)`
+- Returns `logLine` without type assertion
+
+**Incoming (right side):**
+- Logs a combined error message with `console.error`
+- Returns `logLine as LogLineEval` with explicit type assertion
+
+The semantic intent of both sides is the same: log the error and return the original logLine. The incoming change is cleaner with a single console.error statement and includes the type assertion which is more explicit about the return type.
+
+Here's the resolved code:
+
+```typescript
+              entry.type === "object" ? JSON.parse(entry.value) : entry.value,
+            ]),
+          )
+        : undefined,
+    } as LogLineEval;
+  } catch (error) {
+    console.error(`Error parsing log line:`, logLine);
+    return logLine as LogLineEval;
+  }
+}
+
+export class EvalLogger {
+  logs: LogLineEval[] = [];
+
+```

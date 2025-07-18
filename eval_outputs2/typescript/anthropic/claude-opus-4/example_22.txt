@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same goal - creating an options object that combines DEFAULTS with the provided opts parameter. The key differences are:
+
+1. **Type annotation**: HEAD uses `Options` while the other branch uses `RegisterOptions`
+2. **Object merging approach**: HEAD uses spread syntax (`...`) while the other branch uses `Object.assign`
+
+Since both approaches achieve the same semantic result (merging objects), and without additional context about which type name is correct or which syntax style is preferred in the codebase, I cannot determine which resolution would be more appropriate.
+
+Here is the code snippet with the conflict preserved:
+
+```typescript
+}
+
+/**
+ * Register TypeScript compiler instance onto node.js
+ */
+<<<<<<< HEAD
+export function register (opts: Options = {}): Register {
+  const options = { ...DEFAULTS, ...opts }
+=======
+export function register (opts: RegisterOptions = {}): Register {
+  const options = Object.assign({}, DEFAULTS, opts)
+>>>>>>> 3d92f25dfb00a44a45a02bcd6afa6c655ca63a81
+  const originalJsHandler = require.extensions['.js'] // tslint:disable-line
+  const service = create(options)
+  const extensions = ['.ts']
+
+  // Enable additional extensions when JSX or `allowJs` is enabled.
+
+```

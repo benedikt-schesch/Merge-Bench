@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+I notice this merge conflict involves two different approaches to handling a warning message when the Laravel installer fails to automatically register API routes. After analyzing both versions:
+
+1. The HEAD version includes:
+   - A specific file path in the warning (`{$appBootstrapPath}`)
+   - A `return` statement after the warning
+   
+2. The other branch uses:
+   - A generic "bootstrap file" message
+   - No `return` statement
+
+The conflict appears ambiguous because:
+- The file path in HEAD provides valuable debugging context
+- The presence/absence of `return` significantly changes control flow
+- Without seeing the full function context, I can't determine if the `return` is necessary
+
+Since I can't confidently reconcile these semantic differences, I'm returning the original conflicted snippet:
+
+```php
+                'web: __DIR__.\'/../routes/web.php\',',
+                'web: __DIR__.\'/../routes/web.php\','.PHP_EOL.'        api: __DIR__.\'/../routes/api.php\',',
+                $appBootstrapPath,
+            );
+        } else {
+<<<<<<< HEAD
+            $this->components->warn("Unable to automatically add API route definition to [{$appBootstrapPath}]. API route file should be registered manually.");
+
+            return;
+=======
+            $this->components->warn('Unable to automatically add API route definition to bootstrap file. API route file should be registered manually.');
+>>>>>>> 43bcb81c412ef988dd818891a50d859d577a2df6
+        }
+    }
+
+    /**
+     * Install Laravel Sanctum into the application.
+
+```

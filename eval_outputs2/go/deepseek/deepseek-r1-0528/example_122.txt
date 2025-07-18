@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Based on the context, both branches are attempting to annotate the incoming context for gRPC Gateway request handling. The key difference is in the `runtime.AnnotateIncomingContext` call where:
+
+1. **HEAD branch** uses the older 3-argument signature
+2. **Incoming branch** uses the newer 4-argument signature that explicitly specifies the gRPC method path
+
+The 4-argument version is more explicit and matches the pattern used elsewhere in gRPC Gateway codebases. Since the method path `"/grpc.gateway.examples.internal.proto.examplepb.ABitOfEverythingService/CreateBook"` correctly identifies the RPC method being handled, this is likely the intended behavior.
+
+Here's the resolved version:
+
+```go
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/grpc.gateway.examples.internal.proto.examplepb.ABitOfEverythingService/CreateBook")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_ABitOfEverythingService_CreateBook_0(rctx, inboundMarshaler, server, req, pathParams)
+```

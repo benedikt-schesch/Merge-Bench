@@ -1,0 +1,14 @@
+<think>
+No reasoning found</think>
+```c
+*/
+static int store_property_access_check(Bucket * p, zend_class_entry * from)
+{
+    zend_class_entry *parent = from->parent;
+    zend_property_info* child_info = (zend_property_info*)p->pData;
+    zend_property_info* parent_info = NULL;
+
+#ifdef ZEND_ENGINE_2_2
+    return (child_info->ce != from);
+#endif
+```

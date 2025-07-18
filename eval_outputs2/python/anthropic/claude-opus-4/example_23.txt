@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same result - they're both setting `result_required` and `result_extra` based on whether the parameters `required` and `extra` are `None` or not.
+
+The only difference is stylistic:
+- HEAD uses parentheses around the conditional expression
+- The other branch doesn't use parentheses
+
+Since both achieve the same semantic intent and the difference is purely cosmetic, I'll resolve this by choosing the version without parentheses as it's more concise and follows common Python style:
+
+```python
+            else:
+                result[key] = value
+
+        # recompile and send old object
+        result_cls = type(self)
+        result_required = required if required is not None else self.required
+        result_extra = extra if extra is not None else self.extra
+        return result_cls(result, required=result_required, extra=result_extra)
+
+
+def _compile_scalar(schema):
+    """A scalar value.
+
+```

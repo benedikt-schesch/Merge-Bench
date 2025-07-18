@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and resolved it by preserving the configurable delay functionality from the HEAD branch while maintaining the default value of 1000 ms. This maintains the semantic intent of both branches:
+
+```javascript
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'input=' + encodeURIComponent(src_url) + '&lang=' + lang,
+        });
+        document.querySelector('#audio-response').value = res;
+
+        let delay = parseInt(settings.recaptcha_solve_delay_time);
+        delay = delay ? delay : 1000;
+        const delta = settings.recaptcha_solve_delay ? (delay - (Time.time() - solve_start)) : 0;
+        if (delta > 0) {
+            await Time.sleep(delta);
+        }
+
+        submit();
+```
+
+Key resolution points:
+1. Kept the configurable delay from HEAD (`settings.recaptcha_solve_delay_time`)
+2. Maintained the default 1000 ms delay from both branches
+3. Preserved the delta calculation logic that accounts for solve duration
+4. Maintained all spacing and context exactly as provided
+
+This resolution allows:
+- Configurable delay times through settings
+- Default 1000 ms behavior when no setting is specified
+- Proper timing adjustment based on solve duration
+- Full backward compatibility with both branches' behaviors

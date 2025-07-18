@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+```go
+	newtios.Lflag &^= syscall.ECHO | syscall.ECHONL | syscall.ICANON |
+		syscall.ISIG | syscall.IEXTEN
+	newtios.Cflag &^= syscall.CSIZE | syscall.PARENB
+	newtios.Cflag |= syscall.CS8
+
+	// We wake up only when at least 1 byte has arrived
+	newtios.Cc[syscall.VMIN] = 1
+	newtios.Cc[syscall.VTIME] = 0
+
+	tios = uintptr(unsafe.Pointer(&newtios))
+
+	ioc = uintptr(syscall.TIOCSETA)
+	if _, _, e1 := syscall.Syscall6(syscall.SYS_IOCTL, fd, ioc, tios, 0, 0, 0); e1 != 0 {
+		e = e1
+```
+
+**Resolution Reasoning:**  
+The conflict centers around VMIN/VTIME terminal settings. The HEAD version explicitly sets these to enable blocking reads until at least 1 byte arrives (`VMIN=1, VTIME=0`). The other branch removes these settings. 
+
+Since:
+1. The comment clarifies the intentional blocking behavior
+2. These settings are critical for proper terminal I/O in raw mode
+3. Removing them would change fundamental semantics
+4. The other branch provides no alternative implementation
+
+We retain the HEAD version to preserve the documented blocking behavior. The settings are necessary for correct terminal operation as ICANON was disabled earlier.

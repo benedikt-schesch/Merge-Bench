@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same functionality - inserting UI elements into sizers. The only differences are:
+
+1. **HEAD**: Has spacing around operators (`index*2` and `index*2+1`)
+2. **Branch d523b6a0**: Has spaces around operators (`index * 2` and `index * 2 + 1`) 
+3. **HEAD**: Includes an additional line `self.hSizer_labels.Layout()`
+
+The spacing difference is just a style preference, but the `Layout()` call in HEAD is functionally important - it ensures the UI updates properly after inserting new elements.
+
+Here's the resolved conflict, keeping the spacing style from the branch (which follows PEP 8) and the `Layout()` call from HEAD:
+
+```python
+        if not (index >= 0 and index < self.GetPageCount()):
+            return
+        label = LinkStaticText(self.hSizer_panel, text, None, font_colour=wx.BLACK)
+        label.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        sline = wx.StaticLine(self.hSizer_panel, -1, style=wx.LI_VERTICAL)
+        self.hSizer_labels.Insert(index * 2, label, 0, wx.RIGHT | wx.LEFT | wx.CENTER, self.lspace)
+        self.hSizer_labels.Insert(index * 2 + 1, sline, 0, wx.EXPAND | wx.CENTER | wx.TOP | wx.BOTTOM, 5)
+        self.hSizer_labels.Layout()
+        page.Show(False)
+        szr_index = index - 1 if self.ad else index
+        self.hSizer_panels.Insert(szr_index, page, 100, wx.EXPAND)
+        self.labels.insert(index, label)
+        self.panels.insert(index, page)
+
+```

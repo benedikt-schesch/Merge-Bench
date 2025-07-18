@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing method parameter styles. The HEAD version uses a required positional argument, while the other branch uses an optional keyword argument. Since the method body passes `target_url` directly to the request without handling `nil` cases, and the parameter is described as required in documentation, the positional argument is more appropriate to maintain correctness.
+
+Resolved version:
+```ruby
+              ##
+              # Retrieve a single page of MessageInstance records from the API.
+              # Request is executed immediately.
+              # @param [String] target_url API-generated URL for the requested results page
+              # @return [Page] Page of MessageInstance
+              def get_page(target_url)
+                response = @version.domain.request(
+                    'GET',
+                    target_url
+                )
+                return MessagePage.new(@version, response, @solution)
+```

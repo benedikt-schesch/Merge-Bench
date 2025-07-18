@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to update the same comment line that describes where the `.jaxl` directory is created.
+
+- HEAD version says: "Create .jaxl directory for our /tmp, /run and /log folders"
+- The other branch says: "Create .jaxl directory in JAXL_CWD for our /tmp, /run and /log folders"
+
+The semantic difference is that the second version is being more specific about WHERE the directory is created (in JAXL_CWD). This appears to be a documentation improvement to make the comment more precise about the location.
+
+Since the more specific comment provides better documentation without changing the intent, I'll resolve this by keeping the more descriptive version:
+
+```php
+            pcntl_signal(SIGHUP, array($this, 'signal_handler'));
+            pcntl_signal(SIGINT, array($this, 'signal_handler'));
+            pcntl_signal(SIGTERM, array($this, 'signal_handler'));
+        }
+
+        // Create .jaxl directory in JAXL_CWD for our /tmp, /run and /log folders
+        // overwrite these using jaxl config array
+        $this->priv_dir = $this->cfg['priv_dir'];
+        $this->tmp_dir = $this->priv_dir."/tmp";
+        $this->pid_dir = $this->priv_dir."/run";
+        $this->log_dir = $this->priv_dir."/log";
+
+```

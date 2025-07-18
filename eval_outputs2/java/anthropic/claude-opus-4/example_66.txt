@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to initialize the same `ArrayList`, but with slightly different syntax:
+
+- **HEAD**: Uses explicit type parameter in the constructor: `new ArrayList<List<Map<WhiteCardData, Object>>>(playedCards.size())`
+- **Branch**: Uses the diamond operator (Java 7+): `new ArrayList<>(playedCards.size())`
+
+Both achieve the same semantic intent - creating an ArrayList with an initial capacity of `playedCards.size()`. The branch version uses the more modern Java diamond operator syntax which infers the type from the declaration.
+
+Since both versions are functionally identical and the diamond operator is the more modern/preferred approach in Java 7+, I'll resolve this by using the branch version:
+
+```java
+    } else {
+      // getPlayerForUser synchronizes on players. This has caused a deadlock in the past.
+      // Good idea to not nest synchronizes if possible anyway.
+      final Player player = getPlayerForUser(user);
+      synchronized (playedCards) {
+        final List<List<Map<WhiteCardData, Object>>> cardData = new ArrayList<>(playedCards.size());
+        int faceDownCards = playedCards.size();
+        if (playedCards.hasPlayer(player)) {
+          cardData.add(getWhiteCardData(playedCards.getCards(player)));
+          faceDownCards--;
+        }
+
+```

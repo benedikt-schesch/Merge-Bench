@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```rust
+pub trait WorldQuery {
+    type Fetch: for<'world, 'state> Fetch<'world, 'state, State = Self::State>;
+    type State: FetchState;
+}
+
+pub type QueryItem<'w, 's, Q> = <<Q as WorldQuery>::Fetch as Fetch<'w, 's>>::Item;
+
+pub trait Fetch<'world, 'state>: Sized {
+    type Item;
+    type State: FetchState;
+
+    /// Creates a new instance of this fetch.
+```

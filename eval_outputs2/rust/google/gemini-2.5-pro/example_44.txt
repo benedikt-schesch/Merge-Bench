@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```rust
+    /// Each stage that uses `State<T>` for system run criteria needs a driver. If you need to use
+    /// your state in more than one stage, consider manually adding [State::get_driver] to the
+    //  stages you need it in.
+    pub fn add_state_to_stage<T>(&mut self, stage: impl StageLabel, initial: T) -> &mut Self
+    where
+        T: StateData,
+    {
+        self.insert_resource(State::new(initial))
+            .add_system_set_to_stage(stage, State::<T>::get_driver())
+    }
+
+
+```

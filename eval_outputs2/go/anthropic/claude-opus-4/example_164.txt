@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to call `decodePostgresOutgoing` with slightly different parameters. The key difference is in the last two parameters:
+
+- HEAD version: `p.hooks, p.logger, ctx`
+- Other version: `h, logger, ctx`
+
+Given the context and the pattern established in the `MODE_RECORD` case (which uses `p.hooks, p.logger`), it appears that the HEAD version is consistent with the existing code structure where `p` is the receiver and we're accessing its fields.
+
+The other version seems to be using undefined variables `h` and `logger` which don't appear to be in scope based on the function signature.
+
+Here's the resolved code:
+
+```go
+func(p *PostgresParser) ProcessOutgoing(requestBuffer []byte, clientConn, destConn net.Conn, ctx context.Context) {
+	switch models.GetMode() {
+	case models.MODE_RECORD:
+		encodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	case models.MODE_TEST:
+		decodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	default:
+		p.logger.Info("Invalid mode detected while intercepting outgoing http call", zap.Any("mode", models.GetMode()))
+	}
+
+}
+```

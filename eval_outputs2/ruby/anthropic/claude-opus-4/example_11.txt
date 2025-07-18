@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar goals with slight differences:
+
+1. **HEAD side**: Uses `sadd("processes", key)` and `exists(key)`
+2. **Other side**: Uses `sadd("processes", [key])` and `exists?(key)`
+
+The semantic differences are:
+- `sadd` can accept either a single value or an array. Both `key` and `[key]` will work the same way for adding a single element.
+- `exists` vs `exists?` - In recent versions of Redis gems, `exists?` is the preferred method as it returns a boolean, while `exists` returns an integer (0 or 1).
+
+Based on Redis gem best practices and the intent to check existence, the resolution should use `exists?` for cleaner boolean semantics, while for `sadd`, both forms are functionally equivalent, so we can keep the simpler form without the array wrapper.
+
+```ruby
+        fails = procd = 0
+        kb = memory_usage(::Process.pid)
+
+        _, exists, _, _, msg = redis { |conn|
+          conn.multi { |transaction|
+            transaction.sadd("processes", key)
+            transaction.exists?(key)
+            transaction.hmset(key, "info", to_json,
+              "busy", curstate.size,
+              "beat", Time.now.to_f,
+              "rtt_us", rtt,
+              "quiet", @done.to_s,
+
+```

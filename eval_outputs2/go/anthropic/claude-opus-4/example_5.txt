@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD (current branch) is adding a field `esc string` to what appears to be a struct (likely `EventMouse` based on the method below)
+- The incoming branch (a221f2faf4f9a059c8eba8f91c5d0dbd9845a985) does not have this field
+
+Since the HEAD branch is actively adding a new field while the other branch simply doesn't have it, the intent seems clear: the current branch wants to extend the struct with an `esc` field (possibly for escape sequence handling in mouse events).
+
+Here's the resolved code:
+
+```go
+	btn    ButtonMask
+	mod    ModMask
+	motion bool
+	x      int
+	y      int
+	esc    string
+}
+
+// When returns the time when this EventMouse was created.
+func (ev *EventMouse) When() time.Time {
+	return ev.t
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD (current branch): Wants to keep the function as it was, directly creating a timer
+- Incoming change: Wants to add a call to get the current user (`getMe()`) before setting up the timer
+
+Without more context about why `getMe()` was added in the incoming change, and since it's assigned to `me` but `me` doesn't appear to be used in the visible code, I cannot determine the semantic intent clearly enough to resolve this conflict.
+
+Here is the code snippet with the conflict preserved:
+
+```typescript
+      await this.dummyWatch(calendarId)
+    }
+  }
+
+  private async dummyWatch (calendarId: string): Promise<void> {
+<<<<<<< HEAD
+=======
+    const me = await this.googleClient.getMe()
+>>>>>>> e0ec8d420647866ae4cfd29946496b49106838ce
+    const timer = setTimeout(
+      () => {
+        void this.sync(calendarId)
+      },
+      6 * 60 * 60 * 1000
+```

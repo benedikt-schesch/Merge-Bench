@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two changes:
+1. HEAD branch added `customMarkdownLintConfig` with multi-line formatting
+2. Other branch added `dateFormatISO8601` property and kept `customMarkdownLintConfig` single-line
+
+The resolution preserves both changes while keeping the multi-line formatting for readability since:
+- Both branches add `customMarkdownLintConfig` with same functionality
+- Other branch adds a new `dateFormatISO8601` property
+- No functional overlap exists between the changes
+
+Resolved code:
+```javascript
+        matchingTriples: this.refs.matchingTriples.value,
+        explodingPairs: this.refs.explodingPairs.value,
+        spellcheck: this.refs.spellcheck.checked,
+        enableSmartPaste: this.refs.enableSmartPaste.checked,
+        enableMarkdownLint: this.refs.enableMarkdownLint.checked,
+        customMarkdownLintConfig: this.customMarkdownLintConfigCM
+          .getCodeMirror()
+          .getValue(),
+        dateFormatISO8601: this.refs.dateFormatISO8601.checked,
+        prettierConfig: this.prettierConfigCM.getCodeMirror().getValue(),
+        deleteUnusedAttachments: this.refs.deleteUnusedAttachments.checked,
+        rtlEnabled: this.refs.rtlEnabled.checked
+      },
+      preview: {
+```

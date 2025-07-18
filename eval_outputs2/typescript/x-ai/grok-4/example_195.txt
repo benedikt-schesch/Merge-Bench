@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```typescript
+  private getAttendees (event: Event, me: string): string[] {
+    const res = new Set<string>()
+    const email = this.getEmail()
+    for (const participant of event.participants) {
+      const integrations = this.workspace.integrations.byContact.get(participant) ?? []
+      const integration = integrations.find((p) => p === me) ?? integrations[0]
+      if (integration !== undefined && integration !== '') {
+        res.add(integration)
+      } else {
+        const contact = this.workspace.contacts.byId.get(participant)
+        if (contact !== undefined) {
+
+```

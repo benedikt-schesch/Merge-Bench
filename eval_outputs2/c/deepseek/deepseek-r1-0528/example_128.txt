@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+```c
+         */
+        if (s->addr) {
+          sk_addr_free(s->addr);
+          s->addr = NULL;
+        }
+<<<<<<< HEAD
+        return plug_receive(s->plug, 2, buf, ret);
+=======
+        plug_receive(s->plug, 2, buf, ret);
+>>>>>>> 4348393f562c8011ebca43d6198e98638aa115b5
+      }
+      break;
+    }
+
+    /*
+```
+
+**Reasoning:**  
+The conflict involves a critical semantic difference - one branch returns the function's result while the other discards it. Since this impacts control flow (returning vs continuing execution) and we lack context about:
+1. The function's expected return behavior
+2. Whether callers depend on the return value
+3. The surrounding logic after the conflict  
+
+I've preserved the conflict markers as the intent is ambiguous without broader context. Resolving this requires understanding whether the function should exit immediately or continue to the `break` statement.

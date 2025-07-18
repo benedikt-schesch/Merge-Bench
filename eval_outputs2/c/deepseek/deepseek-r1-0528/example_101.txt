@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different ways to define the `types` character array. Both versions aim to provide three valid characters ('A', 'N', 'V') for indexing. The key differences are:
+
+1. **HEAD version** (`const char *types = "ANV";`):
+   - Uses a string literal (null-terminated, 4-byte array)
+   - Pointer-based declaration
+   - `lenof(types)` would incorrectly calculate pointer size instead of array length
+
+2. **Other branch version** (`const char types[] = {'A', 'N', 'V'};`):
+   - Explicit array initialization (3-byte array, no null terminator)
+   - Correctly works with `lenof` macro in the assertion
+   - Matches the required 3-element array for button indexing
+
+The array version is semantically correct because:
+- `lenof` macro (likely `sizeof(arr)/sizeof(arr[0])`) requires a true array, not a pointer
+- No null terminator is needed since we're only using indexes 0-2
+- Explicit array size matches the 3-button requirement
+
+Resolved code:
+```c
+      const char *key;
+      char *str, *val;
+      char type;
+
+      {
+        const char types[] = {'A', 'N', 'V'};
+        int button = dlg_radiobutton_get(td->valradio, dlg);
+        assert(button >= 0 && button < lenof(types));
+        type = types[button];
+      }
+```

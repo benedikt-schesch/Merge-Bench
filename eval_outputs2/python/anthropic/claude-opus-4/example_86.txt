@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- **HEAD** (current branch): Imports `datetime`, `time`, and `b64encode` from base64
+- **Incoming change** (7c5e11da...): Only imports `datetime`
+
+Since this is a backend implementation file (RedisBackend), both sides likely need the basic imports. The HEAD version seems to be adding additional functionality that requires `time` and `b64encode`, while the incoming change is more minimal.
+
+Without seeing the rest of the implementation, it's difficult to know if `time` and `b64encode` are actually needed. Since the intent is ambiguous and I cannot determine whether the additional imports in HEAD are required for the RedisBackend implementation, I'll return the conflict as-is:
+
+```python
+<<<<<<< HEAD
+import datetime, time
+from base64 import b64encode
+
+=======
+import datetime
+>>>>>>> 7c5e11da51608646c0dc8d70f8fff39ba19b0a75
+from base import BaseBackend
+from pyres import ResQ
+
+class RedisBackend(BaseBackend):
+    """Extends the ``BaseBackend`` to provide a Redis backend for failed jobs."""
+
+```

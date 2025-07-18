@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to constructing the `weinrePath` variable. The key differences are:
+
+1. **HEAD version** uses `config.port`
+2. **Other branch** uses `config.weinreport`
+
+After analyzing the semantics:
+- `config.weinreport` is more specific and indicates a deliberate change to use a dedicated port configuration for Weinre
+- This change likely reflects a requirement for Weinre to run on a separate port from the main application
+- The rest of the logic remains semantically consistent between both versions
+
+Resolved version uses `config.weinreport` since it provides explicit configuration for Weinre's port:
+
+```javascript
+var weinreScriptFile = path.join(config.ASSESTS_PATH, 'js/weinre.js');
+var weinreScript = fs.readFileSync(weinreScriptFile, {encoding: 'utf8'});
+var weinreHtmlScript = '\r\n<script>' + weinreScript + '</script>\r\n';
+
+function getScript(host, name, isHtml, isHttps) {
+  var weinrePath = config.WEBUI_PATH + 'weinre.' + config.weinreport;
+  var result = weinreHtmlScript;
+  if (!isHtml) {
+    result = weinreScript;
+    weinrePath = (isHttps ? 'https://' : 'http://') + host + weinrePath;
+  }
+
+```

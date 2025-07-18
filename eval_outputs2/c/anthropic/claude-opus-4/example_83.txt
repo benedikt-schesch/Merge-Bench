@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to load the `gai_strerror` function, but they differ in:
+
+1. **HEAD**: Uses `wship6_module` as the module source
+2. **Incoming change**: Uses `winsock_module` as the module source and explicitly uses `GET_WINDOWS_FUNCTION_NO_TYPECHECK`
+
+The incoming change includes a comment "See comment above about type check" which suggests there's a specific reason for using the no-typecheck variant and the different module.
+
+Without more context about which module is correct for `gai_strerror` or what the "comment above" refers to, I cannot definitively resolve this conflict. The semantic intent is clear (both want to load `gai_strerror`), but the implementation details differ in a way that could be significant.
+
+Here's the snippet with the conflict preserved:
+
+```c
+      logevent(NULL, "WSH IPv6 support detected");
+#endif
+      GET_WINDOWS_FUNCTION(wship6_module, getaddrinfo);
+      GET_WINDOWS_FUNCTION(wship6_module, freeaddrinfo);
+      GET_WINDOWS_FUNCTION(wship6_module, getnameinfo);
+<<<<<<< HEAD
+      GET_WINDOWS_FUNCTION(wship6_module, gai_strerror);
+=======
+      /* See comment above about type check */
+      GET_WINDOWS_FUNCTION_NO_TYPECHECK(winsock_module, gai_strerror);
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+    } else {
+#ifdef NET_SETUP_DIAGNOSTICS
+      logevent(NULL, "No IPv6 support detected");
+#endif
+    }
+
+```

@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The code snippet with the **unresolved semantic merge conflict** is preserved below. The ambiguity lies in the use of `map<AdapterContext>({...})` (custom or library-specific) versus `createContext<AdapterContext>({...})` (standard React API). The two functions may have different internal behaviors, and changing one for the other could break intended functionality without more context on `map`.
+
+```typescript
+
+export type AdapterContext = {
+  useAdapter: UseAdapterHook
+}
+
+<<<<<<< HEAD
+export const context = map<AdapterContext>({
+=======
+export const context: Context<AdapterContext> = createContext<AdapterContext>({
+>>>>>>> 8458d55f197c8a6f60d2c01c2182c473c2a45c3c
+  useAdapter() {
+    throw new Error(error(404))
+  }
+})
+
+```

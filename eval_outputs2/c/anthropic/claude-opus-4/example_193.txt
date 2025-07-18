@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD version simply closes the direction and returns MRAA_SUCCESS
+2. The incoming change adds a conditional check for a post-direction callback function before returning
+
+The semantic intent appears to be:
+- Both sides want to close the direction file descriptor
+- The incoming change wants to add support for a post-direction callback that can be executed after setting the GPIO direction
+- This follows a common pattern where hardware abstraction layers allow for platform-specific hooks
+
+The resolution should include both the close operation and the callback check, as they serve different purposes and don't conflict semantically.
+
+```c
+        close(direction);
+        return MRAA_ERROR_INVALID_RESOURCE;
+    }
+
+    close(direction);
+    if (advance_func.gpio_dir_post != NULL)
+        return advance_func.gpio_dir_post(dev,dir);
+    return MRAA_SUCCESS;
+}
+
+int
+mraa_gpio_read(mraa_gpio_context dev)
+
+```

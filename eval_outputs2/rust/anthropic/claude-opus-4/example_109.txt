@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- The HEAD side is adding `use anyhow::Result;`
+- The other side (f5ff96f927ab1d6309becbbf27f62c2a15eb8cae) is removing or not including this import
+
+Since this is a semantic merge conflict resolution, I need to consider whether the `Result` type from `anyhow` is actually being used in this file. Without seeing the rest of the file, I cannot determine if this import is necessary or not. The conflict appears to be about whether to include this dependency.
+
+Given the ambiguity about whether `Result` is actually used in the code and the lack of context to make an informed decision about the intent, I should return the snippet with the conflict preserved:
+
+```rust
+//! Analysis for finding expected vs actual permission on path usage.
+mod path_visitor;
+
+<<<<<<< HEAD
+use anyhow::Result;
+=======
+>>>>>>> f5ff96f927ab1d6309becbbf27f62c2a15eb8cae
+use either::Either;
+use flowistry::mir::utils::{OperandExt, SpanExt};
+use path_visitor::get_path_boundaries;
+use rustc_hir::HirId;
+use rustc_middle::mir::{Rvalue, Statement, StatementKind};
+
+```

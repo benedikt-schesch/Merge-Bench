@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same `PHONE_ALT_FORMAT_62` variable with a `NumberFormat` object, but with slight differences:
+
+1. **Pattern difference**: 
+   - HEAD: `(\\d{2})(\\d{4})(\\d{4})` - expects exactly 4 digits in the second and third groups
+   - Other branch: `(\\d{2})(\\d{3,4})(\\d{4})` - allows 3 or 4 digits in the second group
+
+2. **Format string difference**:
+   - HEAD: `'\\1 \\2'` - regular string
+   - Other branch: `u'\\1 \\2'` - unicode string (Python 2 style)
+
+The semantic intent appears to be updating the phone number pattern to be more flexible (allowing 3 or 4 digits in the middle group). The unicode prefix `u` is likely from Python 2/3 compatibility considerations, but in modern Python 3, it's not necessary as all strings are unicode by default.
+
+The most sensible resolution would be to take the more flexible pattern from the other branch while using the modern string format from HEAD:
+
+```python
+"""Auto-generated file, do not edit by hand. 62 metadata"""
+from ..phonemetadata import NumberFormat
+
+PHONE_ALT_FORMAT_62 = [NumberFormat(pattern='(\\d{2})(\\d{3,4})(\\d{4})', format='\\1 \\2', leading_digits_pattern=['2[124]|[36]1'])]
+```

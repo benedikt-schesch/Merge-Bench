@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+The code snippet involves a merge conflict where only the formatting of a raised exception string is at issue. The semantic intent of both conflicting lines is identical: to raise a `MatchInvalid` exception with a correctly built error message.
+
+- In the `HEAD` version, the string is formatted as a single line.
+- In the other (incoming) change, the same line is split across multiple lines for potential enhanced readability or adherence to line-length conventions like PEP8 (e.g., maximum line length constraints).
+
+Since the goal of a semantic merge resolve is to preserve the meaning rather than style unless explicitly specified, and the multi-line version offers no functional change but potentially improves formatting, **preference toward a cleaner, more readable structure can be justified** in this case.
+
+Thus, resolving the conflict by choosing the incoming change results in a more structured formatting of the exception without any loss of semantic clarity.
+
+Here is the fully resolved code snippet, with full surrounding context including preserved spacing:
+
+```python
+        try:
+            match = self.pattern.match(v)
+        except TypeError:
+            raise MatchInvalid("expected string or buffer")
+        if not match:
+            raise MatchInvalid(
+                self.msg
+                or 'does not match regular expression {}'.format(self.pattern.pattern)
+            )
+        return v
+
+    def __repr__(self):
+        return 'Match(%r, msg=%r)' % (self.pattern.pattern, self.msg)
+```

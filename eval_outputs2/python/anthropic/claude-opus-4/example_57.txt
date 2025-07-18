@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are testing the same validation error scenario but with different assertion approaches:
+
+- The HEAD version uses a try-except pattern to catch the `MultipleInvalid` exception and verify its string representation
+- The incoming change uses pytest's context manager (`with pytest.raises`) to catch the exception and then asserts on the number of errors
+
+The incoming change is already using the `with pytest.raises` context manager (which is the more modern pytest idiom), and it appears both sides want to verify that the exception is raised with appropriate error information. The key difference is that HEAD checks the error message while the incoming change checks the error count.
+
+Since both assertions provide valuable validation and the `with pytest.raises` pattern is already established, we can combine both checks:
+
+```python
+    schema(frozenset(['abc']))
+    schema(frozenset([42, 'abc']))
+
+    with pytest.raises(MultipleInvalid, match="invalid value in frozenset") as ctx:
+        schema(frozenset([None]))
+    assert len(ctx.value.errors) == 1
+
+
+def test_lower_util_handles_various_inputs():
+    assert Lower(3) == "3"
+    assert Lower(u"3") == u"3"
+
+```

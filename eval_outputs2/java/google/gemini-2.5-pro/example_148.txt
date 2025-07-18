@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals that both sides address the same logic, which is to initialize `ScriptState` only if it hasn't been initialized already (e.g., in `Main`).
+
+*   The `HEAD` branch adds a comment *before* the `if` block to explain its purpose.
+*   The `2125666c1941d4a88c08ab87ebf92ee46be4f0ea` branch removes this comment.
+*   Crucially, there is already a more specific and explanatory comment *inside* the `if` block that is present in both branches.
+
+The comment added in `HEAD` is largely redundant given the more detailed comment that already exists inside the conditional. The intent of the incoming change appears to be a cleanup to remove this redundant comment. This resolution results in cleaner, less repetitive code while preserving the necessary explanation. Therefore, the best semantic resolution is to accept the incoming change, which removes the outer comment.
+
+```java
+
+        addJarsFromProperties();
+        markPredeployedJarsFromProperties();
+
+        PigStats.start(pigContext.getExecutionEngine().instantiatePigStats());
+
+        if (ScriptState.get() == null) {
+            // If Pig was started via command line, ScriptState should have been
+            // already initialized in Main. If so, we should not overwrite it.
+            ScriptState.start(pigContext.getExecutionEngine().instantiateScriptState());
+        }
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Based on the semantic intent analysis, the conflict occurs because one branch added a type alias `QueryItem` after the `WorldQuery` trait definition while the other branch didn't. Since both changes are compatible and serve different purposes, the resolution is to keep both the trait definition and the type alias.
+
+Here's the resolved snippet:
+
+```rust
+pub trait WorldQuery {
+    type Fetch: for<'world, 'state> Fetch<'world, 'state, State = Self::State>;
+    type State: FetchState;
+}
+
+pub type QueryItem<'w, 's, Q> = <<Q as WorldQuery>::Fetch as Fetch<'w, 's>>::Item;
+
+pub trait Fetch<'world, 'state>: Sized {
+    type Item;
+    type State: FetchState;
+
+    /// Creates a new instance of this fetch.
+```
+
+Resolution rationale:
+1. The `WorldQuery` trait definition remains unchanged as it's foundational
+2. The `QueryItem` type alias is preserved since it provides useful semantics for working with query items
+3. The `Fetch` trait follows naturally after both definitions
+4. No ambiguity exists since the type alias complements rather than conflicts with the traits
+5. All spacing and formatting is preserved exactly as in the original context

@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```java
+        /// <param name="sourceAccessCondition">The source access condition to apply to the request.</param>
+        /// <param name="destAccessCondition">The destination access condition to apply to the request.</param>
+        /// <param name="content"> The HTTP entity body and content headers.</param>
+        /// <param name="operationContext">An <see cref="OperationContext"/> object that represents the context for the current operation.</param>
+        /// <returns>A <see cref="System.Net.HttpWebRequest"/> object.</returns>
+        public static StorageRequestMessage AppendBlock(Uri uri, Uri sourceUri, long? offset, long? count, Checksum sourceContentChecksum, int? timeout, AccessCondition sourceAccessCondition,
+            AccessCondition destAccessCondition, HttpContent content, OperationContext operationContext, ICanonicalizer canonicalizer, StorageCredentials credentials, BlobRequestOptions options)
+        {
+            UriQueryBuilder builder = new UriQueryBuilder();
+            builder.Add(Constants.QueryConstants.Component, "appendblock");
+
+            StorageRequestMessage request = HttpRequestMessageFactory.CreateRequestMessage(HttpMethod.Put, uri, timeout, builder, content, operationContext, canonicalizer, credentials);
+```

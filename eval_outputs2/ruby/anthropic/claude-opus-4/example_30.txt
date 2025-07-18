@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add method options to the `setup` command, but with different additions:
+
+- HEAD is adding:
+  - `appgroup` option with default 'staff'
+  - `platform` option with default 'mac'
+
+- The other branch is adding:
+  - `gitolite` option with default 'GITUSER_HOME/gitolite'
+  - `platform` option without a default
+
+The semantic intent appears to be that both sides want to add configuration options. The only actual conflict is with the `platform` option where HEAD provides a default value ('mac') while the other branch doesn't specify a default.
+
+Since both sides clearly want the `platform` option and providing a default value is generally better for user experience, I'll keep the version with the default. All three options should be included to preserve the intent of both changes.
+
+```ruby
+  class_option :config, :type => :string, :desc => "Configuration file"
+  class_option :debug, :type => :boolean, :desc => "Show backtraces"
+
+  desc "setup DIR", "set up dokuen in the given directory"
+  method_option :appuser, :desc => "Username of app user", :default => 'dokuen'
+  method_option :appgroup, :desc => "Group of app user", :default => 'staff'
+  method_option :gitolite, :desc => "Path to gitolite directory", :default => 'GITUSER_HOME/gitolite'
+  method_option :platform, :desc => "Which platform to install. Can be 'mac', 'ubuntu', or 'centos'", :default => 'mac'  
+  def setup(dir)
+    @current_script = File.expand_path($0)
+    @current_bin_path = File.dirname(@current_script)
+
+    Dir.chdir(dir) do
+
+```

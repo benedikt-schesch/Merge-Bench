@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to import different items from `crate::engine`:
+
+- HEAD wants to import `EngineView` and `EngineViewMut`
+- The other branch wants to import `EngineTaskSender` (plus `Document` from a different module)
+
+Since both sides are importing from the same `engine` module but different items, and there's no apparent semantic conflict between these imports, the resolution should include all of them. Here's the resolved version:
+
+```rust
+use crate::document::Document;
+use crate::engine::{EngineTaskSender, EngineView, EngineViewMut};
+use crate::store::StrokeKey;
+use crate::{DrawOnDocBehaviour, WidgetFlags};
+use piet::RenderContext;
+use rnote_compose::color;
+use rnote_compose::helpers::{AABBHelpers, Vector2Helpers};
+
+```

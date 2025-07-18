@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```java
+
+            //code to emulate an external trade provider
+            var tradeLoader = GenerateTradesAndMaintainCache();
+
+            //expire closed items from the cache ro avoid unbounded data
+<<<<<<< HEAD
+           var expirer = _tradesSource
+               .ExpireAfter(t => t.Status == TradeStatus.Closed ? TimeSpan.FromMinutes(1) : (TimeSpan?)null,TimeSpan.FromMinutes(1),schedulerProvider.Background)
+               .Subscribe(x=>_logger.Info("{0} filled trades have been removed from memory",x.Count()));
+=======
+            var expirer = _tradesSource
+                .ExpireAfter(t => t.Status == TradeStatus.Closed ? TimeSpan.FromMinutes(1) : (TimeSpan?) null, TimeSpan.FromMinutes(1), schedulerProvider.TaskPool)
+                .Subscribe(x => _logger.Info("{0} filled trades have been removed from memory", x.Count()));
+>>>>>>> 7ae882948b01a2fcf55cf27a7ad4bef74ca8aef1
+
+            //log changes
+            var loggerWriter = LogChanges();
+
+            _cleanup = new CompositeDisposable(All, _tradesSource, tradeLoader, loggerWriter, expirer);
+
+```

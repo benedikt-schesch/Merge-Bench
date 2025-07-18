@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to export modules from the core directory. The HEAD branch has the existing exports, while the incoming branch is adding a new export for `nonInteractiveToolExecutor.js`.
+
+Since both sides are simply adding exports and there's no conflicting logic, the resolution should include all exports from both sides:
+
+```typescript
+export * from './core/logger.js';
+export * from './core/prompts.js';
+export * from './core/turn.js';
+export * from './core/geminiRequest.js';
+export * from './core/coreToolScheduler.js';
+export * from './core/nonInteractiveToolExecutor.js';
+
+// Export utilities
+export * from './utils/paths.js';
+export * from './utils/schemaValidator.js';
+export * from './utils/errors.js';
+
+```

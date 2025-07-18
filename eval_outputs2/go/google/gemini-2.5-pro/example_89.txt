@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```go
+	ctx := parentCtx
+	if callOpts.perCallTimeout != 0 {
+		ctx, cancel = context.WithTimeout(ctx, callOpts.perCallTimeout)
+	}
+	if attempt > 0 && callOpts.includeHeader {
+		mdClone := metadata.ExtractOutgoing(ctx).Clone().Set(AttemptMetadataKey, strconv.FormatUint(uint64(attempt), 10))
+		ctx = mdClone.ToOutgoing(ctx)
+	}
+	return ctx, cancel
+}
+
+
+```

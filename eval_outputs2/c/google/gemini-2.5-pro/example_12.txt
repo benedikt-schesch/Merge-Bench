@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The goal of both sides of the conflict is to destroy the elements held in the `items` array before deallocating the memory.
+
+The `HEAD` version uses `std::allocator_traits<allocator>::destroy(alloc, &items[i])`. This is the modern, idiomatic C++ approach for allocator-aware containers. It correctly handles custom allocators that might have their own `destroy` logic, and defaults to calling the object's destructor (`p->~T()`) if no special logic is provided by the allocator. This makes the code more robust and compliant with the C++ standard library.
+
+The other version directly calls the destructor `items[i].~T()`. This works for standard allocators but is less generic and may not be correct for custom allocators that require a specific `destroy` method.
+
+The `allocator_traits` approach is functionally a superset of the direct destructor call; it does the right thing in more cases. Therefore, it represents the superior and more semantically correct implementation for a generic container.
+
+```c
+      }
+
+      __forceinline void clear() 
+      {
+        /* destroy elements */
+        for (size_t i=0; i<size_active; i++)
+          std::allocator_traits<allocator>::destroy(alloc, &items[i]);
+        
+        /* free memory */
+        alloc.deallocate(items,size_alloced); 
+        items = nullptr;
+        size_active = size_alloced = 0;
+
+```

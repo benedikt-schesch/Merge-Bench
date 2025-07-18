@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Based on analyzing the semantic intent of both changes:
+
+1. The `HEAD` version focuses solely on the WSAIoctl interface list query
+2. The incoming change adds socket inheritance prevention for child processes
+3. Both changes are compatible and address different concerns
+4. The added inheritance flag is a safe practice that doesn't conflict with the interface query
+
+Here's the resolved version preserving all context:
+
+```c
+    return 1; /* loopback addresses are local */
+  if (!n_local_interfaces) {
+    SOCKET s = p_socket(AF_INET, SOCK_DGRAM, 0);
+    DWORD retbytes;
+
+    SetHandleInformation((HANDLE)s, HANDLE_FLAG_INHERIT, 0);
+
+    if (p_WSAIoctl && p_WSAIoctl(s,
+                                 SIO_GET_INTERFACE_LIST,
+                                 NULL,
+                                 0,
+                                 local_interfaces,
+```
+
+Resolution rationale:
+- Added `SetHandleInformation` from incoming branch to prevent handle inheritance
+- Maintained the existing WSAIoctl interface query logic
+- Both changes are preserved since they address separate concerns (security vs interface discovery)
+- The socket flag change happens before the interface query so doesn't affect its operation

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Resolving this conflict requires understanding the semantic intent of each change.
+
+*   **HEAD:** This side defines the `number_format` argument.
+*   **5c84a7c6adf3553370fdfd1fa138328f0629615f:** This side makes two changes:
+    1.  It defines the same `number_format` argument but uses unicode string literals (`u'...'`) for the `format` values. This is likely a change to improve Python 2 compatibility and is harmless in Python 3.
+    2.  It adds a new boolean argument `mobile_number_portable_region=True`.
+
+The second branch's changes are a superset of the first. It includes the `number_format` definition and adds a new feature flag. The correct resolution is to combine these changes by accepting the version from the second branch, which includes both the `number_format` list and the new `mobile_number_portable_region` flag.
+
+```python
+    voip=PhoneNumberDesc(national_number_pattern='30\\d{7}', possible_number_pattern='\\d{9}', example_number='301234567'),
+    pager=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    uan=PhoneNumberDesc(national_number_pattern='70(?:7\\d|8[17])\\d{5}', possible_number_pattern='\\d{9}', example_number='707123456'),
+    voicemail=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    no_international_dialling=PhoneNumberDesc(national_number_pattern='NA', possible_number_pattern='NA'),
+    number_format=[NumberFormat(pattern='(2\\d)(\\d{3})(\\d{4})', format='\\1 \\2 \\3', leading_digits_pattern=['2[12]']),
+        NumberFormat(pattern='([2-46-9]\\d{2})(\\d{3})(\\d{3})', format='\\1 \\2 \\3', leading_digits_pattern=['2[3-9]|[346-9]'])],
+    mobile_number_portable_region=True)
+
+```

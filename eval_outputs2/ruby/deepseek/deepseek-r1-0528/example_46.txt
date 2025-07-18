@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict and resolved it by preserving the intended semantics while choosing the most appropriate formatting. Both versions aim to describe the `max_iterations` parameter, but one uses a multi-line string format for better readability which aligns with the style of the subsequent parameters.
+
+Here's the resolved code:
+
+```ruby
+    class KMeans < Clusterer
+      
+      attr_reader :data_set, :number_of_clusters
+      attr_reader :clusters, :centroids, :iterations
+      attr_reader :history
+      
+      parameters_info(
+        max_iterations: "Maximum number of iterations to " +
+          "build the clusterer. By default it is uncapped.",
+        distance_function: "Custom implementation of distance function. " +
+          "It must be a closure receiving two data items and return the " +
+          "distance between them. By default, this algorithm uses " +
+          "euclidean distance of numeric attributes to the power of 2.",
+        centroid_function: "Custom implementation to calculate the " +
+```
+
+Key resolution points:
+1. Kept the empty line before `parameters_info` for visual separation (from the other branch)
+2. Used the multi-line string format for `max_iterations` (from the other branch) to match the style of subsequent parameters
+3. Maintained identical content for the parameter descriptions
+4. Preserved all surrounding context exactly as provided
+5. The multi-line format improves readability and maintains consistency with the `distance_function` and `centroid_function` parameters below

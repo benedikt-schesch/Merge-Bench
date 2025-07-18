@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch is adding OAuth2-related imports:
+   - `use OAuth2\OAuth2;`
+   - `use OAuth2\OAuth2AuthenticateException;`
+   - `use OAuth2\OAuth2ServerException;`
+
+2. The incoming branch is adding:
+   - `use Symfony\Component\HttpFoundation\Response;`
+
+These imports serve different purposes and are not conflicting in terms of functionality. The OAuth2 imports are for OAuth authentication handling, while the Response import is for HTTP response handling. Both are likely needed for the complete functionality of this OAuth authentication provider.
+
+Here's the resolved version that includes both sets of imports:
+
+```php
+ */
+
+namespace FOS\OAuthServerBundle\Security\Authentication\Provider;
+
+use FOS\OAuthServerBundle\Security\Authentication\Token\OAuthToken;
+use OAuth2\OAuth2;
+use OAuth2\OAuth2AuthenticateException;
+use OAuth2\OAuth2ServerException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserCheckerInterface;
+
+```

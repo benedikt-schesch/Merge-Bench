@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to call a function to initialize common controls, but they're using different naming conventions:
+
+- HEAD uses: `InitCommonControls();` (PascalCase)
+- The other branch uses: `init_common_controls();` (snake_case)
+
+Since this appears to be a simple naming convention difference rather than a semantic difference (both are trying to initialize common controls), I cannot definitively determine which naming convention should be used without more context about the codebase's style guidelines.
+
+Here is the snippet with the conflict preserved:
+
+```c
+  char **argv;
+  int ret;
+
+  dll_hijacking_protection();
+
+<<<<<<< HEAD
+  InitCommonControls();
+=======
+  init_common_controls();
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+  hinst = inst;
+  hwnd = NULL;
+
+  /*
+   * See if we can find our Help file.
+
+```

@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Resolving this merge conflict requires understanding the distinct goals of each branch.
+
+*   **HEAD's Intent:** The primary change in `HEAD` is the addition of `.js` extensions to all import paths. This is a common requirement when migrating a TypeScript project to support native ECMAScript Modules (ESM), where explicit file extensions in imports are often mandatory.
+*   **Branch `1a7da98c...`'s Intent:** This branch's goal is to refactor the code's dependency. It changes an import from a specific, internal type (`IRoomCache` from `LocalDriver.js`) to a more generic, public-facing interface (`IRoomListingData` from the `driver`'s index). This is a good architectural improvement, as it decouples the lobby from a specific driver implementation.
+
+The best resolution combines these two intents: it adopts the superior, more abstract API from the branch while adhering to the new, project-wide ESM import style from `HEAD`.
+
+1.  We will use `IRoomListingData` as it is the semantically correct type for a lobby.
+2.  The import `{ IRoomListingData } from '../matchmaker/driver'` from the branch implies an import from an index file within the `driver` directory. To comply with the explicit ESM-style imports from `HEAD`, this path must be resolved to `../matchmaker/driver/index.js`.
+3.  All other imports will also have the `.js` extension added, consistent with the `HEAD` branch's changes.
+
+```typescript
+
+import * as matchMaker from '../MatchMaker.js';
+import { IRoomListingData } from '../matchmaker/driver/index.js';
+import { subscribeLobby } from '../matchmaker/Lobby.js';
+import { Room } from '../Room.js';
+import { Client } from '../Transport.js';
+
+// TODO: use Schema state & filters on version 1.0.0
+
+// class DummyLobbyState extends Schema { // tslint:disable-line
+//   @type("number") public _: number;
+
+```

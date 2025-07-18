@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (HEAD) adds a line calculating `countSize` based on `*maxSymbolValuePtr`, while the other side removes it. Given the context of histogram counting with workspace allocation for Counting1-4 arrays, the `countSize` variable appears to be related to determining the size needed for the count array.
+
+However, I notice that `countSize` is defined but not used in the visible context. Without seeing how this variable is used later in the code, I cannot determine whether it should be kept or removed. The intent is ambiguous - it could be that:
+1. HEAD added it for future use
+2. The other branch removed it as unnecessary
+3. There's usage further down that would clarify the intent
+
+Since I cannot determine the correct resolution without more context, I'm returning the snippet with the conflict preserved:
+
+```c
+                                HIST_checkInput_e check,
+                                U32* const workSpace)
+{
+    const BYTE* ip = (const BYTE*)source;
+    const BYTE* const iend = ip+sourceSize;
+<<<<<<< HEAD
+    size_t const countSize = (*maxSymbolValuePtr + 1) * sizeof(*count);
+=======
+>>>>>>> ce01506e08348f945b1e392207b613580a2d2746
+    unsigned max=0;
+    U32* const Counting1 = workSpace;
+    U32* const Counting2 = Counting1 + 256;
+    U32* const Counting3 = Counting2 + 256;
+    U32* const Counting4 = Counting3 + 256;
+
+```

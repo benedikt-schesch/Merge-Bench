@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+The code snippet with merge conflicts resolved based on the semantic intent of both branches.
+
+### Analysis:
+1. The `run` method is stated to have semantic value in both branches.
+2. The `HEAD` version adds the line:
+    ```java
+    parser.setInteractive(true);
+    ```
+   and retains:
+    ```java
+    parser.parseContOnError();
+    ```
+3. The content between the `=======` and the end is not explicitly defined in the input from the merged branch, thus making it safer to assume the content in the `1488b22` branch could be an implicit assumption of maintaining the `parser.parseContOnError()` call (a common base line shared implicitly).
+
+### Resolution:
+Combine or retain both modifications, prioritizing the HEAD version where clarity exists and backtracking or omitting missing or ambiguous details from the remote branch.
+
+### Resolved Snippet:
+```java
+        if (in != null)
+        {
+            parser = new GruntParser(in);
+            parser.setParams(pig);    
+        }
+    }
+
+    public void run() {
+        parser.setInteractive(true);
+        parser.parseContOnError();
+    }
+
+    public void setConsoleReader(ConsoleReader c)
+    {
+        parser.setConsoleReader(c);
+    }
+```

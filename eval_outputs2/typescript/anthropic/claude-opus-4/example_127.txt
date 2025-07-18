@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD (current branch):**
+- Imports only `ICommandService` from `@univerjs/core`
+- Includes imports for menu-related types from local paths (`../../services/menu/menu` and `../../Interfaces/Menu`)
+- Imports `joinClassNames` from `../../Utils/util`
+
+**Incoming changes:**
+- Imports both `ICommandService` and `isRealNum` from `@univerjs/core`
+- Imports menu-related types (`BaseMenuProps`, `BaseMenuState`, `BaseMenuItem`, `BaseMenuStyle`) from `../../Interfaces`
+- Imports `joinClassNames` from `../../Utils`
+- Imports `CustomLabel` component
+
+The semantic intent appears to be:
+1. Both sides need `ICommandService` from `@univerjs/core`
+2. The incoming side additionally needs `isRealNum` from the same package
+3. Both sides need menu-related interfaces/types (though they're importing from slightly different paths)
+4. Both sides need `joinClassNames` utility
+5. The incoming side needs the `CustomLabel` component
+6. HEAD has additional imports for `ICustomComponentOption`, `IDisplayMenuItem`, `IMenuItem`, `IValueOption`, `isValueOptions`
+
+Here's the resolved conflict:
+
+```typescript
+import { Component, ComponentChild, createRef } from 'preact';
+import { Subscription } from 'rxjs';
+import { ICommandService, isRealNum } from '@univerjs/core';
+import styles from './index.module.less';
+import { AppContext } from '../../Common/AppContext';
+import { ICustomComponentOption, IDisplayMenuItem, IMenuItem, IValueOption, isValueOptions } from '../../services/menu/menu';
+import { BaseMenuItem, BaseMenuProps, BaseMenuStyle, BaseMenuState } from '../../Interfaces/Menu';
+import { joinClassNames } from '../../Utils/util';
+import { CustomLabel } from '../CustomLabel';
+
+```

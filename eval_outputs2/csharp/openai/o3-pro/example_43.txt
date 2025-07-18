@@ -1,0 +1,13 @@
+<think>
+No reasoning found</think>
+```java
+        {
+            CommonUtility.AssertNotNull("source", source);
+            BlobRequestOptions modifiedOptions = BlobRequestOptions.ApplyDefaults(options, BlobType.Unspecified, this.ServiceClient);
+            return Executor.ExecuteAsync(
+                this.StartCopyImpl(this.attributes, source, contentChecksum, false /* incrementalCopy */, syncCopy, premiumPageBlobTier, standardBlockBlobTier, rehydratePriority, sourceAccessCondition, destAccessCondition, modifiedOptions),
+                modifiedOptions.RetryPolicy,
+                operationContext,
+                cancellationToken);
+        }
+```

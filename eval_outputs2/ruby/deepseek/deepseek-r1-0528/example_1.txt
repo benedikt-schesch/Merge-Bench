@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, I've resolved the conflict by preserving the additional parameter (`auth_type`) from the HEAD branch while keeping the common parameters (`display` and `scope`) from both branches. This maintains the intended functionality from both sides of the merge.
+
+```ruby
+      #
+      # /auth/facebook?display=popup
+      #
+      def authorize_params
+        super.tap do |params|
+          %w[display scope auth_type].each do |v|
+            if request.params[v]
+              params[v.to_sym] = request.params[v]
+            end
+          end
+
+
+```
+
+**Resolution reasoning:**
+1. Both branches agree on including `display` and `scope` parameters
+2. The HEAD branch adds `auth_type` which appears to be a valid Facebook OAuth parameter
+3. The additional parameter doesn't conflict with the other branch's functionality
+4. The loop structure remains consistent with both implementations
+5. The solution maintains backward compatibility while adding new functionality
+
+The resolved code safely includes all three parameters since the loop conditionally adds them only if present in the request.

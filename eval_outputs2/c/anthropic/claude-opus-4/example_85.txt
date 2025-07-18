@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the conflict is about whether to include a `SetHandleInformation` call after socket creation.
+
+The HEAD version (current branch) doesn't have this call, while the incoming change adds:
+```c
+SetHandleInformation((HANDLE)s, HANDLE_FLAG_INHERIT, 0);
+```
+
+This function call is disabling handle inheritance for the socket, which is typically a good security practice in Windows to prevent child processes from inadvertently inheriting socket handles.
+
+Since this appears to be a beneficial addition that doesn't conflict with the surrounding logic (it's just adding a configuration step after socket creation and before setting socket options), I'll resolve by accepting the incoming change:
+
+```c
+    err = p_WSAGetLastError();
+    ret->error = winsock_error_string(err);
+    return (Socket)ret;
+  }
+
+  SetHandleInformation((HANDLE)s, HANDLE_FLAG_INHERIT, 0);
+
+  ret->oobinline = 0;
+
+  p_setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const char *)&on, sizeof(on));
+
+#ifndef NO_IPV6
+
+```

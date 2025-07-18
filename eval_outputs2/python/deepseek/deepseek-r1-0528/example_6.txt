@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing method signatures for `AddButton`. The HEAD branch introduces an optional `right_spacer` parameter while the other branch maintains a simpler two-parameter version. Since the method body doesn't reference `right_spacer` in the visible code, but the parameter might be used elsewhere in the HEAD branch, we preserve it as an optional parameter to maintain compatibility with both branches. The default value ensures existing callers from both branches won't break.
+
+```python
+        self.hide_buttons = True
+        self.AddButtons()
+
+    def AddButtons(self):
+        pass
+        
+    def AddButton(self, label, handler, right_spacer = 10):
+        if handler == None or label == None:
+            return
+
+        button = ProgressButton(self, -1, label)
+        button.Bind(wx.EVT_LEFT_UP, handler)
+```

@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+As a semantic merge conflict resolution expert, I will analyze the intents of both sides of the merge and produce a clean, resolved version of the code.
+
+### Analysis of the Conflict
+
+1.  **`HEAD` Branch Intent:**
+    - If an error (`err`) occurred during the connection attempt, call `plug_closing` to report the error and then `return` the result of that function.
+    - If there was no error, `return 1` to signal success.
+    - The key intent here is that the function **returns a status value** (`int` or similar) and that it **exits** after handling the connection result, preventing execution from falling through to the code below.
+
+2.  **`4348393f562c8011ebca43d6198e98638aa115b5` Branch Intent:**
+    - If an error (`err`) occurred, call `plug_closing` to report it.
+    - Afterwards, unconditionally `return`.
+    - The key intent here is that the function **returns `void`** and that it **exits** after handling the connection result.
+
+### Semantic Resolution
+
+The core conflict is the function's return type. The `HEAD` branch assumes the function returns a status value, while the other branch assumes it returns `void`.
+
+Typically, functions like `plug_closing` which notify other parts of a system about an event (like a closed connection) have a `void` return type. Assuming `plug_closing` returns `void`, the code in `HEAD` (`return plug_closing(...)`) is a syntax error in C/C++.
+
+The code in the `434839...` branch is syntactically correct for a `void` function. It correctly implements the shared intent of both branches: to handle the connection result and then exit the current block of logic (which is specific to the `SOCKET_STATE_CONNECTING` state) to prevent falling through to the generic event handling `switch` statement below.
+
+Therefore, the most logical resolution is to adopt the changes from the `434839...` branch, as it appears to be a fix for the syntactically incorrect code in `HEAD`, bringing it in line with the probable `void` return type of the enclosing function.
+
+### Resolved Code
+
+```c
+      while (err && s->addr && sk_nextaddr(s->addr, &s->step)) {
+        err = try_connect(s);
+      }
+    }
+    if (err != 0)
+      plug_closing(s->plug, winsock_error_string(err), err, 0);
+    return;
+  }
+
+  noise_ultralight(lParam);
+
+  switch (WSAGETSELECTEVENT(lParam)) {
+
+```

@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see it's about a Georgian language translation in a test. The conflict is between two slightly different expected strings:
+
+- HEAD: `'3 თვე, 1 კვირის, დღე, 3 საათი, 20 წუთი'`
+- Incoming: `'3 თვე, 1 კვირა, 1 დღე, 3 საათი, 20 წუთი'`
+
+The differences are:
+1. `კვირის` vs `კვირა` (different forms of "week" in Georgian)
+2. `დღე` vs `1 დღე` (missing "1" before "day" in HEAD)
+
+The incoming change appears to be more complete and consistent, as it includes the number "1" before "დღე" (day), matching the pattern used for other time units. The `კვირა` form also appears to be the more standard nominative form for "week" in Georgian.
+
+Here's the resolved code:
+
+```php
+    public function testTimespanTranslated()
+    {
+        $date = new Date(1403619368);
+        $date = $date->sub('-100 days -3 hours -20 minutes');
+
+        $this->assertSame('3 თვე, 1 კვირა, 1 დღე, 3 საათი, 20 წუთი', $date->timespan(1403619368));
+    }
+
+    public function testCreateFromFormat()
+    {
+        $date = Date::createFromFormat('d F Y', '1 იანვარი 2015');
+
+```

@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+This is a common merge conflict in RSpec tests where one branch updates the test to use a more idiomatic matcher.
+
+*   **HEAD** (`Term.color?.should be false`): This branch uses the strict `be false` matcher, which passes only if the result is exactly the boolean `false`.
+*   **Incoming** (`Term.color?.should be_falsey`): This branch uses the `be_falsey` matcher. This is generally preferred in the RSpec community as it is more robust, passing for anything that Ruby considers "falsey" (`false` or `nil`).
+
+**Intent:** Both sides intend to test that when `STDOUT` is not a TTY, the system reports that color is not available.
+
+**Resolution:** The `be_falsey` matcher from the incoming branch is a better choice. It's a common style improvement that makes the test less brittle to implementation details (e.g., if the method changed to return `nil` instead of `false`). This change correctly captures the intent of the test while adhering to modern RSpec best practices. The stray conflict markers are removed to produce a clean, resolved file.
+
+```ruby
+    end
+
+    it 'marks color as unavailable' do
+      STDOUT.stub(:tty?).and_return(false)
+      Term.color?.should be_falsey
+    end
+
+    it 'marks color as available' do
+      STDOUT.stub(:tty?).and_return(true)
+
+```

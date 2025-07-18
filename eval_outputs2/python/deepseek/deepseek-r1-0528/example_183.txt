@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict in the `save` method. The key differences are:
+1. Connection retrieval method: `get_connection` vs `connections.get_connection`
+2. Return behavior: void call vs returning the result
+
+After considering the semantics:
+- The connection method change appears to be a refactoring to use a connections manager
+- The return value addition provides useful feedback to callers
+- These changes are compatible and complementary
+
+Here's the resolved version preserving all context:
+
+```python
+        if self.order is not None:
+            d['order'] = self.order
+        return d
+
+    def save(self, using=None):
+        es = connections.get_connection(using or self._index._using)
+        return es.indices.put_template(name=self._template_name, body=self.to_dict())
+
+class Index(object):
+    def __init__(self, name, using='default'):
+        """
+        :arg name: name of the index
+```

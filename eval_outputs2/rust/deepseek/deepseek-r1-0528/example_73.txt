@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict arises because the trait bound for `T` differs between the branches. Based on the semantic meaning of `OptionResMutState` and `ResMut` (which typically accesses resources in Bevy), the `Resource` bound is more appropriate than `Component`. Here's the resolved snippet:
+
+```rust
+    }
+
+    fn default_config() {}
+}
+
+impl<'w, 's, T: Resource> SystemParamFetch<'w, 's> for OptionResMutState<T> {
+    type Item = Option<ResMut<'w, T>>;
+
+    #[inline]
+    unsafe fn get_param(
+        state: &'s mut Self,
+```
+
+Reasoning:
+1. `OptionResMutState` suggests it deals with optional resource access
+2. `ResMut<'w, T>` is specifically for resources
+3. The `Resource` trait bound maintains consistency with Bevy's ECS conventions
+4. Using `Component` here would be semantically incorrect since components are accessed via `Query` not `ResMut`
+
+The context remains unchanged as requested, with only the conflict markers removed and the correct trait bound preserved.

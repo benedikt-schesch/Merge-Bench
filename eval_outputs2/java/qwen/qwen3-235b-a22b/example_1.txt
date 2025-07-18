@@ -1,0 +1,20 @@
+<think>
+No reasoning found</think>
+The correct version of the code should resolve to using the hardcoded "BungeeCord" in the version string, as this ensures compatibility with expected format semantics for the protocol field. `bungee.getConfig().getCustomServerName()` may allow dynamic configuration but could break clients expecting the standard format where the prefix is fixed. Since this is part of proxy status and follows a standardized form, the hardcoded prefix is preferred and reflects clearer semantic intent.
+
+Here is the fully resolved code snippet:
+
+```java
+
+                data.put( "hostname", listener.getMotd() );
+                data.put( "gametype", "SMP" );
+                // Start Extra Info
+                data.put( "game_id", "MINECRAFT" );
+                data.put( "version", "BungeeCord " + bungee.getGameVersion() );
+                data.put( "plugins", "" );
+                // End Extra Info
+                data.put( "map", "BungeeCord_Proxy" );
+                data.put( "numplayers", Integer.toString( bungee.getOnlineCount() ) );
+                data.put( "maxplayers", Integer.toString( listener.getMaxPlayers() ) );
+
+```

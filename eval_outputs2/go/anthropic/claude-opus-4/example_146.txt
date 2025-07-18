@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve a module restructuring/migration:
+
+- **HEAD**: Using the v1 path structure with `protoc-gen-grpc-gateway/descriptor/types.go` and the older `github.com/golang/protobuf` import
+- **Incoming change**: Using the v2 path structure with `internal/descriptor/types.go` and the newer `google.golang.org/protobuf` imports
+
+The semantic intent is clearly to migrate from v1 to v2 of the grpc-gateway module and from the deprecated `github.com/golang/protobuf` to the newer `google.golang.org/protobuf`. The incoming change represents the desired end state.
+
+Here's the resolved code:
+
+```go
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/grpc-ecosystem/grpc-gateway/v2/internal/casing"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule"
+	"google.golang.org/protobuf/types/descriptorpb"
+	"google.golang.org/protobuf/types/pluginpb"
+)
+
+// IsWellKnownType returns true if the provided fully qualified type name is considered 'well-known'.
+func IsWellKnownType(typeName string) bool {
+	_, ok := wellKnownTypeConv[typeName]
+
+```

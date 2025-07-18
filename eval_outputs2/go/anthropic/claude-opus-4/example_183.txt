@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define a method for the `tester` type, but with different signatures and purposes:
+
+- HEAD side: `InitialiseTest` method that takes a `TestConfig` and returns `InitialiseTestReturn` and an error
+- Other side: `Test` method that takes multiple string parameters and options, returning a bool
+
+The conflict appears to be about which method should exist at this point in the code. Both methods seem to have different purposes - one for initialization and one for running tests. Without more context about the intended architecture, I cannot determine which one should be kept or if both should exist.
+
+Here is the code snippet with the conflict preserved:
+
+```go
+		logger: logger,
+		mutex:  sync.Mutex{},
+	}
+}
+
+<<<<<<< HEAD
+func (t *tester) InitialiseTest(cfg *TestConfig) (InitialiseTestReturn, error) {
+	var returnVal InitialiseTestReturn
+=======
+func (t *tester) Test(path, testReportPath string, appCmd string, options TestOptions) bool {
+
+	var ps *proxy.ProxySet
+>>>>>>> e4e1eb9b70ad7642e1296bc79aeecc4953e607c9
+
+	stopper := make(chan os.Signal, 1)
+	signal.Notify(stopper, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGKILL)
+
+	models.SetMode(models.MODE_TEST)
+
+```

@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+```go
+		value:      value,
+		cost:       cost,
+		expiration: expiration,
+	}
+	// Attempt to immediately update hashmap value and set flag to update so the
+<<<<<<< HEAD
+	// cost is eventually updated. The expiration must also be immediately updated
+	// to prevent items from being prematurely removed from the map.
+	if c.store.Update(i, c.ttlMap) {
+=======
+	// cost is eventually updated.
+	if c.store.Update(keyHash, conflictHash, i.value) {
+>>>>>>> 29b4dd7a077785696ba5422081b3c301d4c1e5f1
+		i.flag = itemUpdate
+	}
+	// Attempt to send item to policy.
+	select {
+	case c.setBuf <- i:
+```

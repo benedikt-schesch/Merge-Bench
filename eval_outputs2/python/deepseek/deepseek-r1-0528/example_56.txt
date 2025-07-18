@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs due to two different approaches for validating an exception in a test case. The HEAD version uses explicit exception handling with `except`/`else`, while the incoming branch uses `pytest.raises` context manager properties. The two approaches are semantically incompatible as they represent different testing paradigms.
+
+After analyzing both sides:
+1. The context manager `pytest.raises` already validates the exception occurrence
+2. The HEAD's explicit exception handling is redundant
+3. The branch's version adds valuable error validation (`len(ctx.value.errors)`)
+4. The context manager's `match` parameter already validates the exception message
+
+The optimal solution preserves the conciseness of the branch version while keeping the important element count validation.
+
+Resolved code:
+```python
+    schema(set(['abc']))
+    schema(set([42, 'abc']))
+
+    with pytest.raises(MultipleInvalid, match="invalid value in set") as ctx:
+        schema(set([None]))
+    assert len(ctx.value.errors) == 1
+
+
+def test_frozenset_of_integers_and_strings():
+    schema = Schema(frozenset([int, str]))
+    with raises(Invalid, 'expected a frozenset'):
+```

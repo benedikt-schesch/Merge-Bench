@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+- HEAD version: includes `list, dict,` in the primitive types check
+- Other version: excludes `list, dict,` from the primitive types check
+
+The key insight is that this is a type checking condition that determines whether to call `_compile_scalar(schema)`. The presence of a separate `_compile_mapping` method suggests that `dict` (and likely `list`) have their own specialized compilation methods and shouldn't be treated as scalars.
+
+The HEAD version appears to be incorrectly including `list` and `dict` as types that should be compiled as scalars, while the other version correctly excludes them. This makes semantic sense because lists and dicts are complex types that would need specialized handling, not scalar compilation.
+
+Here's the resolved code:
+
+```python
+        elif isinstance(schema, (frozenset, set)):
+            return self._compile_set(schema)
+        type_ = type(schema)
+        if inspect.isclass(schema):
+            type_ = schema
+        if type_ in (*primitive_types, object, type(None)) or callable(schema):
+            return _compile_scalar(schema)
+        raise er.SchemaError('unsupported schema data type %r' % type(schema).__name__)
+
+    def _compile_mapping(self, schema, invalid_msg=None):
+        """Create validator for given mapping."""
+
+```

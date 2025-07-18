@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two independent changes that can be safely combined since they operate on different tables. The HEAD adds an index to the `stages` table, while the other branch introduces a new `user_project_links` table. Both changes are valid and non-overlapping.
+
+Resolved code:
+```ruby
+    t.text     "alert_emails"
+    t.integer  "locked_by_deployment_id"
+    t.integer  "locked",                  :default => 0
+  end
+
+  add_index "stages", ["project_id"], :name => "index_stages_on_project_id"
+
+  create_table "user_project_links", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "login"
+    t.string   "email"
+    t.string   "crypted_password",          :limit => 40
+```
+
+Changes made:
+1. Kept `add_index` from HEAD (properly placed right after `stages` table definition)
+2. Kept `create_table` for `user_project_links` from the other branch
+3. Preserved the original structure and spacing
+4. Maintained the correct order: stages index → new table → users table
+
+This resolution:
+- Maintains the index on `stages` for performance
+- Adds the new join table `user_project_links`
+- Preserves the original context formatting
+- Keeps all table definitions in logical order

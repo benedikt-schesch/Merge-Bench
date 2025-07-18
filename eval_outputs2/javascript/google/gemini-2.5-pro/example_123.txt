@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Resolving the conflict requires understanding the evolution of the Axios library's error handling and configuration.
+
+- **The `HEAD` branch** (`left side`) is using an older style of error handling (`createError`, `enhanceError`, `Cancel`) but has been updated to import `transitionalDefaults`, which were introduced to help users migrate away from deprecated options.
+- **The `d8d43c1ffd4...` branch** (`right side`) represents a major refactoring where the error handling was modernized to use `Error` subclasses (`AxiosError`, `CanceledError`). This is the newer, preferred approach. This branch also shows an import for the main `defaults`.
+
+**Intent & Resolution:**
+
+The semantic intent is to combine the modern error handling from the right side with the necessary configuration logic from the left side. The new `AxiosError` and `CanceledError` classes semantically replace the older `createError`, `enhanceError`, and `Cancel` utilities. Therefore, the resolution is to adopt the new error classes and keep the `transitionalDefaults` import, which represents a separate and necessary feature.
+
+```javascript
+var httpFollow = require('follow-redirects').http;
+var httpsFollow = require('follow-redirects').https;
+var url = require('url');
+var zlib = require('zlib');
+var VERSION = require('./../env/data').version;
+var transitionalDefaults = require('../defaults/transitional');
+var AxiosError = require('../core/AxiosError');
+var CanceledError = require('../cancel/CanceledError');
+
+var isHttps = /https:?/;
+
+/**
+ *
+
+```

@@ -1,0 +1,43 @@
+<think>
+No reasoning found</think>
+The conflict arises from a decision about which component to insert when spawning an entity: `Foo(0.0f32)` in one branch and `0.0f32` directly in the other.
+
+---
+
+Analyzing the subsequent code:
+
+- The system `removal` is executed twice via `stage.run(&mut world);`.
+- Lastly, there's an assertion that the resource of type `usize` holds the value `1`.
+
+This implies an intent: the spawning and insertion step should affect behavior within the `removal` system such that it performs an action that leads to the resource being incremented to `1`.
+
+---
+
+Tagging the value `0.0f32` with a type `Foo`, i.e. inserting `Foo(0.0f32)`, enables the `removal` system to target it specifically if it acts upon `Foo` components. Otherwise—had only a bare `0.0f32` been inserted—there’s a good chance it would not be affected by the `removal` system at all, assuming it doesn't act on `f32` directly.
+
+This distinction is crucial. The assertion only makes sense if the `removal` system removed a `Foo`, thereby triggering whatever logic increments the resource.
+
+Thus, the version from `HEAD`:
+
+```rust
+world.spawn().insert(Foo(0.0f32));
+```
+
+serves the semantically correct intent embedded in the test: inserting a `Foo` allows the removal system to act and correctly updates the resource to meet the condition in the assertion.
+
+---
+
+Here's the full code snippet with the resolved conflict, preserving space and context exactly as provided:
+
+```rust
+                commands.entity(entity).remove::<Foo>();
+            }
+        }
+
+        let mut stage = SystemStage::parallel().with_system(removal);
+        world.spawn().insert(Foo(0.0f32));
+        world.insert_resource(0usize);
+        stage.run(&mut world);
+        stage.run(&mut world);
+        assert_eq!(*world.get_resource::<usize>().unwrap(), 1);
+```

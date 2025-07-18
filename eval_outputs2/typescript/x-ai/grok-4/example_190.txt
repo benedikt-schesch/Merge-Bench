@@ -1,0 +1,17 @@
+<think>
+No reasoning found</think>
+```typescript
+  }
+
+  private async syncEvent (calendarId: string, event: calendar_v3.Schema$Event, accessRole: string): Promise<void> {
+    this.updateTimer()
+    if (event.id != null) {
+      const me = await this.googleClient.getMe()
+      const calendars = this.workspace.getMyCalendars(me)
+      const _calendar =
+        calendars.find((p) => p.externalId === event.organizer?.email) ??
+        calendars.find((p) => p.externalId === calendarId) ??
+        calendars[0]
+      if (_calendar !== undefined) {
+
+```

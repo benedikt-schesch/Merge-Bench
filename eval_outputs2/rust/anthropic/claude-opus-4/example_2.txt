@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- The HEAD branch adds a new method `as_text()` that converts the context to textual format
+- The other branch (84a17829ad8fd425591d9f0cfd2ed89463bd757b) doesn't have this method
+
+Since this appears to be a simple addition of a new method with no conflicting changes, the semantic intent is to add the `as_text()` method to the implementation. The conflict likely arose because both branches modified the same area of the file, but there's no actual semantic conflict here.
+
+Here's the resolved version:
+
+```rust
+
+    #[allow(dead_code)]
+    pub(crate) fn insert_summary(&self, _summary: &str) -> Context {
+        todo!()
+    }
+
+    /// Converts the context to textual format
+    pub fn as_text(&self) -> String {
+        todo!()
+    }
+}
+
+#[async_trait]
+pub trait ContextRepository {
+    /// Get the context for the current path
+
+```

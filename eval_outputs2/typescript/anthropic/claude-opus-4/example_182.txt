@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the `e0ec8d420647866ae4cfd29946496b49106838ce` branch is adding a `release()` method that sets `stayAlive` to false and calls `updateTimer()`. This appears to be a cleanup/shutdown method for the calendar client.
+
+Since the HEAD branch doesn't have any conflicting changes in this location (it's just empty), the intent seems clear - to add the release method. The semantic intent is to provide a way to properly clean up the calendar client instance.
+
+Here's the resolved code:
+
+```typescript
+      calendarClient.updateTimer()
+    }
+    return calendarClient
+  }
+
+  async release (): Promise<void> {
+    this.stayAlive = false
+    this.updateTimer()
+  }
+
+  async authorize (code: string): Promise<string> {
+    this.updateTimer()
+    const me = await this.googleClient.authorize(code)
+    if (me === undefined) {
+```

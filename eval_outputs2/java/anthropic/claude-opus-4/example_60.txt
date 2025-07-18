@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to declare the same HashMap, but with slightly different syntax:
+
+- HEAD version: `new HashMap<ReturnableData, Object>()`
+- Other version: `new HashMap<>()`
+
+The second version uses the diamond operator (`<>`) which was introduced in Java 7 and allows the compiler to infer the type parameters from the declaration. Both versions are functionally equivalent, but the diamond operator is more concise and is the preferred modern Java style.
+
+Since both sides have the same intent (creating a HashMap with the same type parameters), I'll resolve this by using the more modern syntax with the diamond operator:
+
+```java
+    // have to do this all synchronized in case they play while we're processing this
+    synchronized (roundTimerLock) {
+      killRoundTimer();
+
+      if (state == GameState.JUDGING) {
+        final Map<ReturnableData, Object> data = new HashMap<>();
+        data.put(LongPollResponse.EVENT, LongPollEvent.HURRY_UP.toString());
+        data.put(LongPollResponse.GAME_ID, this.id);
+        final QueuedMessage q = new QueuedMessage(MessageType.GAME_EVENT, data);
+        getJudge().getUser().enqueueMessage(q);
+      }
+
+```

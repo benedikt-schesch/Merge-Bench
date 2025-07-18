@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to get URL information from a background script, but they're using different method names:
+
+- HEAD side: `BG.exec('Tab.info')`
+- Other side: `BG.exec('info_tab')`
+
+Without more context about which is the correct API or whether this is a refactoring where the method name was changed, I cannot determine which one should be used. The semantic intent is the same (getting tab/URL information), but the specific method name differs.
+
+Here's the snippet with the conflict preserved:
+
+```javascript
+
+    async function on_click(index) {
+        const task = get_task();
+        const image = get_image();
+        if (task && image) {
+<<<<<<< HEAD
+            const url = (await BG.exec('Tab.info'))?.url;
+=======
+            const url = (await BG.exec('info_tab'))?.url;
+>>>>>>> a9ce98f97aaed5e50c711de3913c3138d4188b24
+            const data = {task, image, index, url};
+
+            if (SUBMISSION_STRATEGY.startsWith('l')) {
+                window.parent.postMessage({nopecha: true, action: 'append', data: data}, '*');
+            }
+
+```

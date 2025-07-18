@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the `updateGameSettings` method signature. The key differences are:
+
+- HEAD version: Adds `final int newMaxBlanks` parameter
+- Other branch: Adds `final int newMaxSpectators` parameter
+
+Looking at the method body, I can see that `this.maxSpectators = newMaxSpectators;` is being set, which means the `newMaxSpectators` parameter is definitely needed.
+
+The `newMaxBlanks` parameter from HEAD doesn't appear to be used in the visible method body, but it's likely used later in the method (outside the visible snippet).
+
+Since both parameters seem to serve different purposes and one is already being used in the visible code, the semantic intent appears to be to include both parameters in the method signature.
+
+Here's the resolved code:
+
+```java
+  public String getPassword() {
+    return password;
+  }
+
+  public void updateGameSettings(final int newScoreGoal, final int newMaxPlayers,
+      final int newMaxSpectators,
+      final Set<CardSet> newCardSets, final int newMaxBlanks, final String newPassword,
+      final boolean newUseTimer) {
+    this.scoreGoal = newScoreGoal;
+    this.maxPlayers = newMaxPlayers;
+    this.maxSpectators = newMaxSpectators;
+    synchronized (this.cardSets) {
+      this.cardSets.clear();
+
+```

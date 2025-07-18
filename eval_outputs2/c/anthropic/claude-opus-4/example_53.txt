@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD (current branch): Uses `UINT_MAX` as the upper limit for the count
+- Incoming change: Uses `USHRT_MAX` as the upper limit for the count
+
+The code is searching for a mappable page by incrementing both `addr` and `count` by `pagesize` in each iteration. The conflict is about what maximum value to use for the count variable.
+
+Given that:
+1. `UINT_MAX` is significantly larger than `USHRT_MAX` (4,294,967,295 vs 65,535 on most systems)
+2. The count is being incremented by `pagesize` (typically 4096 bytes)
+3. Using `USHRT_MAX` would limit the search to only ~16 pages (65,535 / 4,096)
+4. The comment indicates this is searching for a page starting from the end of the text segment
+
+The HEAD version with `UINT_MAX` seems more appropriate as it allows for a much more extensive search for available memory pages. The incoming change with `USHRT_MAX` appears too restrictive and could cause the search to fail prematurely.
+
+Here's the resolved code:
+
+```c
+  if (libruby) {
+    /* There is a libruby. Start at the end of the text segment and search for
+     * a page.
+     */
+    addr = info->text_segment + info->text_segment_len;
+    for (; count < UINT_MAX; addr += memprof_config.pagesize, count += memprof_config.pagesize) {
+      ret = mmap(addr, memprof_config.pagesize, PROT_WRITE|PROT_READ|PROT_EXEC, MAP_ANON|MAP_PRIVATE, -1, 0);
+      if (ret != MAP_FAILED) {
+        memset(ret, 0x90, memprof_config.pagesize);
+        return ret;
+      }
+
+```

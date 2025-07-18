@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD** (current branch): Uses the modern Python syntax `'queue' in data` to check if the 'queue' key exists in the `data` dictionary
+- **Incoming branch**: Uses the older Python 2 syntax `data.has_key('queue')` for the same check
+
+Both sides are trying to check if the 'queue' key exists in the `data` dictionary. The semantic intent is identical - they just use different syntax. The modern Python way (`in` operator) is preferred as `has_key()` was removed in Python 3.
+
+Here's the resolved code:
+
+```python
+                'host': host,
+                'pid':pid,
+                'w':str(w)
+            }
+            item['queue'] = w.job().get('queue')
+            if 'queue' in data:
+                item['data'] = True
+                item['code'] = data['payload']['class']
+                item['runat'] = str(datetime.datetime.fromtimestamp(float(data['run_at'])))
+            else:
+                item['data'] = False
+
+```

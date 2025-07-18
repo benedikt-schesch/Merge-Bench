@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different ways of calling the `construct` method: one uses `self.rsa.construct` while the other uses `RSA.construct`. Since the surrounding context consistently uses `self.rsa.construct` in both preceding and subsequent tests, maintaining consistency is crucial for readability and to avoid potential errors due to context differences.
+
+Resolved code:
+```python
+        key = self.rsa.construct([self.n, self.e])
+        derKey = key.exportKey("DER")
+        self.assertEqual(derKey, self.rsaPublicKeyDER)
+
+    def testExportKey3(self):
+        key = self.rsa.construct([self.n, self.e, self.d, self.p, self.q, self.pInv])
+        pemKey = key.exportKey("PEM")
+        self.assertEqual(pemKey, b(self.rsaKeyPEM))
+
+    def testExportKey4(self):
+        key = self.rsa.construct([self.n, self.e])
+
+```

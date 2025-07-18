@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD version has an empty implementation for the `RefreshToken` event (just returning `false`)
+2. The incoming change adds token refresh logic that checks if the token has expired and refreshes it if needed
+3. Below the conflict, there's commented-out code that appears to be an async version of similar logic
+
+The semantic intent seems to be adding token refresh functionality. The incoming change implements this synchronously while the commented code suggests there might have been plans for an async implementation.
+
+Since the incoming change provides the actual implementation while HEAD is empty, and the commented code below suggests this functionality was intended, I'll resolve by accepting the incoming change:
+
+```rust
+            event::Event::GetCurrentPlayback => {
+                self.update_current_playback_state(state)?;
+                false
+            }
+            event::Event::RefreshToken => {
+                let expires_at = state.player.read().unwrap().auth_token_expires_at;
+                if SystemTime::now() > expires_at {
+                    state.player.write().unwrap().auth_token_expires_at = self.refresh_token()?;
+                }
+                false
+                // let expires_at = state.player.read().unwrap().auth_token_expires_at;
+                // if SystemTime::now() > expires_at {
+                //     state.player.write().unwrap().auth_token_expires_at =
+                //         self.refresh_token().await?;
+
+```

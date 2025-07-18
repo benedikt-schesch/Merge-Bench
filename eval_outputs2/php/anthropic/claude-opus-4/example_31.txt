@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same thing - they both want to set a hash value in Redis using `hset`. The only difference is the indentation:
+
+- HEAD version uses a tab character for indentation
+- The other branch uses spaces for indentation
+
+Since the semantic intent is identical (both sides want to execute the same `hset` operation with the same parameters), I'll resolve this by keeping the version with spaces to maintain consistency with the surrounding code, which appears to use spaces for indentation.
+
+```php
+		
+        $this -> redis -> lpush("razor_clientdata", serialize($data));
+        
+		//For realtime User sessions
+        $key = "razor_r_u_p_" . $productId . "_" . date('Y-m-d-H-i', time());
+        $this -> redis -> hset($key, array($data["deviceid"] => $productId));
+        $this -> redis -> expire($key, 30 * 60);
+
+        //For realtime areas
+        $key = "razor_r_arc_p_" . $productId . "_c_" . $data["country"] . "_" . date('Y-m-d-H-i', time());
+        $this -> redis -> hset($key, array($data["country"] => $productId));
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to fix what appears to be a variable name issue. The conflict is about whether to use `type` or `event->type` in the switch statement.
+
+Based on the context and common patterns in event handling code (this appears to be GTK/GDK event handling), the correct resolution would likely be `event->type` since we're checking the type field of an event structure. However, without seeing more context about where the `type` variable comes from or whether `event` is available in this scope, I cannot definitively resolve this conflict.
+
+Here is the same snippet with the conflict markers preserved:
+
+```c
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+    button = MBT_WHEEL_DOWN;
+  else
+    return FALSE; /* don't even know what button! */
+
+<<<<<<< HEAD
+  switch (type) {
+=======
+  switch (event->type) {
+>>>>>>> fc089d5df72a9c0eba5b6f11dffc4f9bafae18b5
+  case GDK_BUTTON_PRESS:
+    act = MA_CLICK;
+    break;
+  case GDK_BUTTON_RELEASE:
+    act = MA_RELEASE;
+
+```

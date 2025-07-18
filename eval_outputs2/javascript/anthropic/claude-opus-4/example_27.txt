@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD (current branch) has: `const isCacheable = req => true` - which always returns true, making every request cacheable
+- The incoming change has: `const isCacheable = req => useMicroCache` - which returns the value of a `useMicroCache` variable
+
+Based on the comment above that explains the caching behavior ("since this app has no user-specific content, every page is micro-cacheable"), and considering both sides are trying to control whether caching is enabled:
+
+- The HEAD version implements a simple "always cache" approach
+- The incoming version wants to make caching configurable via a `useMicroCache` variable
+
+The semantic intent appears to be adding configurability to the caching behavior. The incoming change is more flexible as it allows toggling micro-caching on/off, while still supporting the "always cache" behavior when `useMicroCache` is true.
+
+Here's the resolved code:
+
+```javascript
+
+// since this app has no user-specific content, every page is micro-cacheable.
+// if your app involves user-specific content, you need to implement custom
+// logic to determine whether a request is cacheable based on its url and
+// headers.
+const isCacheable = req => useMicroCache
+
+app.get('*', (req, res) => {
+  if (!renderer) {
+    return res.end('waiting for compilation... refresh in a moment.')
+  }
+
+```

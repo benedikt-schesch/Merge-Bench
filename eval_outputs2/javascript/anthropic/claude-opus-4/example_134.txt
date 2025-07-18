@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that HEAD (the current branch) is trying to add a new setting `hiddenSSID: false` to what appears to be a settings/configuration object, while the other branch (df6d62c) doesn't have this addition.
+
+The semantic intent seems clear: HEAD wants to introduce a new configuration option for marking a network as hidden SSID, with a default value of `false`. The other branch simply doesn't have this feature yet.
+
+Since this appears to be an additive change that doesn't conflict with the existing structure (it's just adding a new property to an object), the resolution should include the new setting:
+
+```javascript
+    password: '',
+    // Settings: Network encryption mode
+    encryptionMode: 'WPA',
+    // Settings: Hide password on the printed card
+    hidePassword: false,
+    // Settings: Mark your network as hidden SSID
+    hiddenSSID: false,
+    // Settings: Portrait orientation
+    portrait: false,
+  });
+  const [errors, setErrors] = useState({
+    ssidError: '',
+
+```

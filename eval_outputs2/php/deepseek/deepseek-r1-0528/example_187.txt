@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict involves two different class names for the `ScheduleService` mock. Since there's no additional context to determine which namespace is correct, and both changes are mutually exclusive, I'm unable to resolve this conflict. The intent appears ambiguous as both sides are trying to mock a service but with different class paths.
+
+Here's the unchanged snippet with the conflict preserved:
+
+```php
+
+    public function setUp()
+    {
+        parent::setUp();
+
+<<<<<<< HEAD
+        $scheduleService = m::mock('Indatus\Dispatcher\Drivers\DateTime\ScheduleService');
+=======
+        $scheduleService = m::mock('Indatus\Dispatcher\Services\ScheduleService');
+>>>>>>> 8a08444b80550a21aa79eb24c96872111fe9cd01
+        $scheduleService->shouldDeferMissing();
+        $this->commandService = new CommandService($scheduleService);
+
+        //default all commands to unix
+        $this->app->instance('Indatus\Dispatcher\Platform', m::mock('Indatus\Dispatcher\Platform', function ($m) {
+
+```

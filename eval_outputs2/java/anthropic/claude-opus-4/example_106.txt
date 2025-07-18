@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to import `org.junit.*` while the other branch (06e86330876dee7fcb1356794176b04a7161cf65) wants to remove that import.
+
+Given the context:
+1. This is a test class (as indicated by the javadoc mentioning "Tests for...")
+2. The file already imports test-related classes from org.fest
+3. The import statement is between other imports and the class javadoc
+
+Without seeing the rest of the file, it's difficult to determine if JUnit imports are actually needed. Since I cannot be certain about the intent (whether the code uses JUnit annotations or assertions), I should preserve the conflict as requested.
+
+```java
+
+import org.fest.assertions.api.AbstractAssert;
+import org.fest.assertions.api.ConcreteAssert;
+import org.fest.assertions.description.Description;
+import org.fest.test.ExpectedException;
+<<<<<<< HEAD
+import org.junit.*;
+=======
+>>>>>>> 06e86330876dee7fcb1356794176b04a7161cf65
+
+/**
+ * Tests for <code>{@link AbstractAssert#as(Description)}</code>
+ * 
+ * @author Alex Ruiz
+
+```

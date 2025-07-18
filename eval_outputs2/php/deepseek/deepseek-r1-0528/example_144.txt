@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+To resolve this merge conflict, we need to consider the intent and semantics of both branches. The HEAD branch specifies default values of `0` for `LFT` and `RGT` columns and uses `self` constants, while the other branch (`afbb006`) changes to `static` constants and removes the default values. 
+
+The key insights are:
+1. Using `static::` (late static binding) maintains consistency with the subsequent `static::getDefaultColumns()` call
+2. The default values (`->default(0)`) should be preserved to maintain data integrity guarantees from HEAD
+3. The columns should remain non-null with defaults for proper nested set behavior
+
+The resolution combines these required changes by:
+- Using `static::` for constant references
+- Keeping `->default(0)` for `LFT` and `RGT`
+- Maintaining `->nullable()` for `PARENT_ID`
+
+Here's the resolved code:
+
+```php
+     *
+     * @param \Illuminate\Database\Schema\Blueprint $table
+     */
+    public static function columns(Blueprint $table)
+    {
+        $table->unsignedInteger(static::LFT)->default(0);
+        $table->unsignedInteger(static::RGT)->default(0);
+        $table->unsignedInteger(static::PARENT_ID)->nullable();
+
+        $table->index(static::getDefaultColumns());
+    }
+
+    /**
+
+```

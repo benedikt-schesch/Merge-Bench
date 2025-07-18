@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+- HEAD has commented out "caiyun", "tencent", and "youdao"
+- The incoming branch (0de97d34) has these three translators uncommented
+
+The conflict appears to be about whether these three translator types should be active or commented out. Since the incoming branch represents a more recent change that actively enables these translators (while HEAD had them disabled), and there's no clear indication that these should remain disabled, I'll resolve this by accepting the incoming changes that enable these translators.
+
+```typescript
+
+export const translatorTypes = [
+  "baidu",
+  "google",
+  // "sogou",
+  "caiyun",
+  "tencent",
+  "youdao",
+  "baidu-domain",
+] as const;
+
+export const recognizerTypes = ["baidu-ocr"] as const;
+export const frequencies = ["basic", "advance"] as const;
+
+```

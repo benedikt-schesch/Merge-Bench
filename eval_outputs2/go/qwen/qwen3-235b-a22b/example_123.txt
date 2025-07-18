@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+The merge conflict reveals a difference in the **`runtime.AnnotateContext`** invocation between two versions:
+
+- The **HEAD** version passes three arguments: `ctx`, `mux`, and `req`.
+- The branch version passes a fourth argument: a string that identifies the gRPC method – `"/grpc.gateway.examples.internal.proto.examplepb.ABitOfEverythingService/CreateBook"`.
+
+This additional fourth parameter is essential in gRPC Gateway-generated code. It provides the method path that `AnnotateContext` uses to map HTTP requests to the correct gRPC endpoint and ensure proper request metadata and routing.
+
+Given this semantic intent—to bind the HTTP handler to the gRPC service method for context annotation—it is clear that the **four-argument version is the correct one to preserve** functionality, especially if the underlying gRPC Gateway runtime now expects this parameter.
+
+Accordingly, the corrected code with the merge conflict resolved is:
+
+```go
+
+	mux.Handle("POST", pattern_ABitOfEverythingService_CreateBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/grpc.gateway.examples.internal.proto.examplepb.ABitOfEverythingService/CreateBook")
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_ABitOfEverythingService_CreateBook_0(rctx, inboundMarshaler, client, req, pathParams)
+```

@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing opinions on whether a cast to `node_t *` is necessary when assigning `nnode->data` to `n`. Both sides of the merge intend to extract the `node_t` pointer from the data stored in `nnode`, leading to the same core functionality regardless of the presence of the cast.
+
+From a semantic standpoint, in standard C, assigning a `void *` to a typed pointer (e.g., `node_t *`) does not require an explicit cast. However, some codebases or compilers may enforce its use for stricter type checking or compatibility with certain environments or older standards.
+
+Given that the intent of both versions is functionally identical and that the only difference is stylistic or related to compiler expectations without further clarification, the ambiguity prevents us from definitively choosing one path over the other.
+
+---
+
+### Resolution
+
+As the codebases differ only by the cast and since its necessity is not apparent from the provided context, the conflict **remains unresolved**, and the merge markers should stay intact.
+
+Here is the snippet as-is, with the conflict preserved:
+
+```c
+	/* Remove all edges and subnets owned by unreachable nodes. */
+
+	for(nnode = node_tree->head; nnode; nnode = nnext) {
+		nnext = nnode->next;
+<<<<<<< HEAD
+		n = (node_t *) nnode->data;
+=======
+		n = nnode->data;
+>>>>>>> af86a3226ea42375644b3f99c182c778d327de1e
+
+		if(!n->status.reachable) {
+			ifdebug(SCARY_THINGS) logger(LOG_DEBUG, _("Purging node %s (%s)"), n->name,
+					   n->hostname);
+```

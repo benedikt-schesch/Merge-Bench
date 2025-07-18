@@ -1,0 +1,49 @@
+<think>
+No reasoning found</think>
+To resolve the merge conflict, we examine the intent behind the change and ensure it aligns with how the `JSONArray` object behaves in this context.
+
+The conflict occurs on this line:
+
+```java
+final List<String> strs = new ArrayList<>(textParts.size());
+```
+
+vs.
+
+```java
+final List<String> strs = new ArrayList<>(textParts.length());
+```
+
+The method `formatBlackCard` takes a `JSONArray` as input, which in many implementations (e.g., `org.json.JSONArray`) provides a `length()` method to get the array's size and **not** a `size()` method. Since using `size()` would lead to a compilation error if `textParts` is indeed a `JSONArray`, the correct method to use is `length()`.
+
+---
+
+### ✅ Resolution
+
+We resolve the conflict by choosing the correct form, based on the semantic understanding of `JSONArray` in standard libraries:
+
+```java
+final List<String> strs = new ArrayList<>(textParts.length());
+```
+
+---
+
+### 📌 Merged Snippet
+
+Here is the full snippet, including unmodified context, with the conflict resolved:
+
+```java
+  private CustomCardFormatHelper() {
+  }
+
+  public static String formatBlackCard(final JSONArray textParts) {
+    // TODO this is going to need some work to look pretty.
+    final List<String> strs = new ArrayList<>(textParts.length());
+    for (final Object o : textParts) {
+      strs.add((String) o);
+    }
+    final String text = StringUtils.join(strs, "____");
+    return StringEscapeUtils.escapeXml11(text);
+  }
+
+```

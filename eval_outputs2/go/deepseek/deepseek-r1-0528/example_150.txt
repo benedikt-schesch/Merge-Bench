@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict regarding the `output` type in the test struct. Based on semantic understanding:
+
+1. Both branches are trying to define a test case for duration conversion
+2. The conflict is about which duration type to use:
+   - HEAD uses `*duration.Duration`
+   - Other branch uses `*durationpb.Duration`
+3. Without seeing the full context of imports and implementation, it's ambiguous which type is correct
+4. Both types could be valid depending on package structure and implementation details
+
+Since the intent is ambiguous, I'm returning the unresolved conflict as requested:
+
+```go
+
+func TestConvertDuration(t *testing.T) {
+	specs := []struct {
+		name    string
+		input   string
+<<<<<<< HEAD
+		output  *duration.Duration
+=======
+		output  *durationpb.Duration
+>>>>>>> 0e11f6f8faadec71484fea2af292dcb6c56230d6
+		wanterr bool
+	}{
+		{
+			name:  "a valid duration",
+			input: `"123.456s"`,
+```

@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from differing method signatures for `get_page`. The HEAD version uses a required positional parameter `target_url`, while the other branch uses an optional keyword parameter with a default value of `nil`. 
+
+Since the method body unconditionally uses `target_url` in the request, and the parameter is documented as required ("API-generated URL for the requested results page"), the optional keyword approach could allow nil values to propagate and cause runtime errors. 
+
+The positional parameter approach better enforces the required nature of the URL. However, without additional context about callers (which might expect a keyword interface), the conflict remains semantically ambiguous. Therefore, the conflict is preserved for manual resolution.
+
+```ruby
+          ##
+          # Retrieve a single page of AvailableAddOnInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of AvailableAddOnInstance
+<<<<<<< HEAD
+          def get_page(target_url)
+=======
+          def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return AvailableAddOnPage.new(@version, response, @solution)
+```

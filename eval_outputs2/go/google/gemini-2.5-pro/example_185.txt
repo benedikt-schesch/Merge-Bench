@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```go
+	case <-stopper:
+		returnVal.LoadedHooks.Stop(true)
+		return returnVal, errors.New("Keploy was interupted by stopper")
+	default:
+		// start the proxy
+		returnVal.ProxySet = proxy.BootProxy(t.logger, proxy.Option{MongoPassword: options.MongoPassword, Port: options.ProxyPort}, appCmd, options.AppContainer, 0, "", options.PassThorughPorts, loadedHooks, context.Background())
+	}
+
+	// proxy update its state in the ProxyPorts map
+	//Sending Proxy Ip & Port to the ebpf program
+	if err := returnVal.LoadedHooks.SendProxyInfo(returnVal.ProxySet.IP4, returnVal.ProxySet.Port, returnVal.ProxySet.IP6); err != nil {
+
+```

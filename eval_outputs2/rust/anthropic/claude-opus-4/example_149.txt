@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what each side is trying to achieve:
+
+**HEAD side**: Imports specific modules from `super::penbehaviour` and uses `EngineView`, `EngineViewMut` from the engine module, plus some other imports.
+
+**Other side**: Imports `EngineTaskSender` from the engine module and several other types like `Camera`, `Document`, `StrokeStore`, `SurfaceFlags`.
+
+Both sides want to import from the `crate::engine` module but with different items, and both want to import `DrawOnDocBehaviour` from the crate root. The HEAD side also wants `WidgetFlags` while the other side wants additional types.
+
+Since both sides have legitimate imports that appear to be needed, the semantic resolution is to merge all the imports together, combining what both sides need:
+
+```rust
+use super::penbehaviour::{PenBehaviour, PenProgress};
+use crate::engine::{EngineTaskSender, EngineView, EngineViewMut};
+use crate::{Camera, Document, DrawOnDocBehaviour, StrokeStore, SurfaceFlags, WidgetFlags};
+use piet::RenderContext;
+use rnote_compose::color;
+use rnote_compose::helpers::AABBHelpers;
+use rnote_compose::penhelpers::PenEvent;
+use rnote_compose::penpath::Element;
+```

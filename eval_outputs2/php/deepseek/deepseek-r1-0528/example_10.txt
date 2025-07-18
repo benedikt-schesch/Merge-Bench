@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing `@return` annotations in the function's docblock. Both branches agree the function returns a value, but the second branch adds `|void` to indicate it might not return anything. Since PHP functions without a return statement implicitly return `null` (which falls under `mixed`), the more concise `@return mixed` is sufficient. 
+
+Resolved version:
+```php
+ *
+ * @since 1.4.0
+ *
+ * @param string $message Message to use in admin notice. Optional. Default empty string.
+ * @param bool   $success Whether or not a success. Optional. Default true.
+ * @return mixed
+ */
+function cptui_admin_notices_helper( $message = '', $success = true ) {
+
+	$class       = array();
+	$class[]     = ( $success ) ? 'updated' : 'error';
+```

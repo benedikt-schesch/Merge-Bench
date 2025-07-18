@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+```ruby
+                ##
+                # Retrieve a single page of MonthlyInstance records from the API.
+                # Request is executed immediately.
+                # @param [String] target_url API-generated URL for the requested results page
+                # @return [Page] Page of MonthlyInstance
+<<<<<<< HEAD
+                def get_page(target_url)
+=======
+                def get_page(target_url: nil)
+>>>>>>> d26f64b762b4b22ee1c64a9fbc20a393520e89e0
+                  response = @version.domain.request(
+                      'GET',
+                      target_url
+                  )
+                  return MonthlyPage.new(@version, response, @solution)
+```
+
+**Resolution Explanation:**  
+The conflict remains unresolved due to semantic ambiguity. The key differences are:
+
+1. **HEAD version** uses a required positional argument `(target_url)`
+2. **Other branch** uses an optional keyword argument `(target_url: nil)`
+
+The intent behind these changes is unclear without broader context:
+- Was the keyword argument added for flexibility/readability?
+- Does the calling code expect different invocation patterns?
+- Is there validation logic elsewhere that depends on argument type?
+
+Since both versions fundamentally require a target URL to function (as evidenced by the `request('GET', target_url)` call), but the argument handling semantics are incompatible, this conflict requires human decision based on:
+1. How the method is called throughout the codebase
+2. Project-wide argument passing conventions
+3. Whether `nil` should be allowed as a valid input
+
+Possible resolutions would require choosing one approach and updating all call sites accordingly, but this cannot be safely determined from the given snippet.

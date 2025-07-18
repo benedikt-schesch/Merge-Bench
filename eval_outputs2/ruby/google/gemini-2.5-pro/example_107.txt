@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Both sides of this merge conflict are trying to adjust the code that silences deprecation warnings for Rails 4.
+
+*   The `HEAD` branch adds a new `TODO` comment (`# TODO: has_many conditions is deprecated for a scoped block`) and ensures the deprecation silencing line is commented out within an active `if` block.
+*   The other branch (`1bc1a86d...`) comments out the *entire* block, including the `if` statement.
+
+The semantic intent of both branches is to disable the deprecation silencing. The `HEAD` branch also adds a useful `TODO` comment for future work. The best resolution is to combine these intentions: keep the new `TODO` comment and use the cleaner, syntactically valid structure from the `HEAD` branch, which leaves the `if` block intact but comments out the active line. This makes it easier to re-enable in the future.
+
+```ruby
+MissingSourceFile::REGEXPS.push([/^cannot load such file -- (.+)$/i, 1])
+
+# Silence Rails 4 deprecation warnings in test suite
+# TODO: Model.scoped is deprecated
+# TODO: Eager loading Post.includes(:comments).where("comments.title = 'foo'") becomes Post.includes(:comments).where("comments.title = 'foo'").references(:comments)
+# TODO: has_many conditions is deprecated for a scoped block
+if Rails.version >= '4'
+#  ActiveSupport::Deprecation.silenced = true
+end
+
+puts "Testing against rails #{Rails::VERSION::STRING}"
+
+RAILS_ROOT = File.dirname(__FILE__)
+
+
+```

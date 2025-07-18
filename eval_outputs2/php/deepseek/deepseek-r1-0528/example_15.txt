@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The conflict involves two different ways of constructing an exception message string. Both versions achieve the same semantic goal of including the `$name` variable in the error message, but use different syntax:
+
+1. **HEAD version**: Uses `sprintf()` with a formatted string
+2. **Other branch**: Uses string concatenation with embedded variable
+
+Since both approaches are functionally equivalent and the intent is clear, I've resolved the conflict by selecting the more concise string concatenation approach which:
+- Avoids unnecessary function call overhead
+- Maintains better readability
+- Uses consistent string syntax with surrounding code
+
+The resolved code preserves all context and spacing while maintaining the original functionality.
+
+```php
+     */
+    public function add($name, $helper)
+    {
+        if (!is_callable($helper) && ! $helper instanceof Helper) {
+            throw new \InvalidArgumentException(
+                "$name Helper is not a callable or ".
+                "doesn't implement the Helper interface."
+            );
+        }
+        $this->helpers[$name] = $helper;
+    }
+
+
+```

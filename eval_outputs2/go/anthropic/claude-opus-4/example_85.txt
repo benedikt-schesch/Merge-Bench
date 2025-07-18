@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to implement a `Del` method that removes a key from metadata, but they have different approaches:
+
+- **HEAD (left side)**: Uses `NiceMD` type and converts the key to lowercase with `strings.ToLower(key)`
+- **Right side**: Uses `MD` type and uses an `encodeKeyValue` function to process the key
+
+The semantic intent of both sides is to safely delete a key from the metadata map. The key difference is in how they handle the key normalization - one uses simple lowercase conversion while the other uses a more sophisticated encoding function.
+
+Given that the right side uses `encodeKeyValue` which appears to be a more robust approach (especially considering the comment about being "binary-key safe"), and it's handling the encoding properly, I'll resolve in favor of the right side's approach while keeping the type name from HEAD:
+
+```go
+//
+// It works analogously to http.Header.Del, deleting all values if they exist.
+//
+// The function is binary-key safe.
+
+func (m NiceMD) Del(key string) NiceMD {
+	k, _ := encodeKeyValue(key, "")
+	delete(m, k)
+	return m
+}
+
+// Set sets the given value in a metadata.
+
+```

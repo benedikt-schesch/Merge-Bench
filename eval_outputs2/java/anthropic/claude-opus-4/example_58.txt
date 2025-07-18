@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to create an ArrayList of WhiteCard objects with an initial capacity based on `newBlackCard.getDraw()`.
+
+The only difference between the two versions is:
+- HEAD uses the explicit type parameter: `new ArrayList<WhiteCard>(newBlackCard.getDraw())`
+- The other branch uses the diamond operator: `new ArrayList<>(newBlackCard.getDraw())`
+
+Since Java 7, the diamond operator (`<>`) is the preferred approach as it reduces redundancy - the compiler can infer the type from the left-hand side of the declaration. Both achieve the same result, but the diamond operator is more concise and follows modern Java conventions.
+
+Here's the resolved code:
+
+```java
+      synchronized (players) {
+        for (final Player player : players) {
+          if (getJudge() == player) {
+            continue;
+          }
+          final List<WhiteCard> cards = new ArrayList<>(newBlackCard.getDraw());
+          for (int i = 0; i < newBlackCard.getDraw(); i++) {
+            cards.add(getNextWhiteCard());
+          }
+          player.getHand().addAll(cards);
+          sendCardsToPlayer(player, cards);
+
+```

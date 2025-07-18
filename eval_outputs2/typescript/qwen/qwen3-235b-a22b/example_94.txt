@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```typescript
+        assert.ok(true);
+      });
+
+      it("unsubscribe from non-existing callback", async () => {
+        let callCount = 0;
+        await presence.subscribe("topic", (_) => { callCount++; });
+        await presence.unsubscribe("topic", function() {});
+        await presence.publish("topic", "hello world!");
+        await timeout(10);
+        assert.strictEqual(1, callCount);
+      });
+
+<<<<<<< HEAD
+
+```

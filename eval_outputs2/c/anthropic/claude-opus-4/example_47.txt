@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one branch (the feature branch) is trying to add an `extern bool tunnelserver;` declaration between the struct definition and the comment about maximum string size.
+
+Since this appears to be a simple addition of a global variable declaration with no conflicting changes, the semantic intent seems clear - to make the `tunnelserver` variable accessible in this context. The resolution would be to include this declaration.
+
+Here's the resolved code:
+
+```c
+typedef struct past_request_t {
+	char *request;
+	time_t firstseen;
+} past_request_t;
+
+extern bool tunnelserver;
+
+/* Maximum size of strings in a request */
+
+#define MAX_STRING_SIZE 2048
+#define MAX_STRING "%2048s"
+
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to set the `window` field of the `event_button`, but they differ in whether to add a reference count to the window object.
+
+The semantic intent here is clear:
+- HEAD version: Simple assignment without reference counting
+- Incoming change: Assignment with explicit reference counting using `g_object_ref()`
+
+The incoming change (`g_object_ref(event->window)`) is implementing proper reference counting for the GObject-based window, which is important for memory management in GLib/GTK applications. This prevents potential use-after-free bugs if the original window object is destroyed while the event still holds a reference to it.
+
+Here's the resolved code:
+
+```c
+    button = 5;
+  else
+    return FALSE;
+
+  event_button = (GdkEventButton *)gdk_event_new(GDK_BUTTON_PRESS);
+  event_button->window = g_object_ref(event->window);
+  event_button->send_event = event->send_event;
+  event_button->time = event->time;
+  event_button->x = event->x;
+  event_button->y = event->y;
+  event_button->axes = NULL;
+
+```

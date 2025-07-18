@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Here's the resolved snippet preserving the original context exactly and resolving the semantic merge conflict in Java manager initializations. The change adopts the design intent from the merged branch while aligning with field initialization best practices:
+
+```java
+	private final PluginManager pluginManager = new PluginManager(this, securityManager, 0.0);
+	private final ConsoleManager consoleManager;
+	private final EventManager eventManager = new SimpleEventManager();
+	private final RecipeManager recipeManager = new SimpleRecipeManager();
+	private final ServiceManager serviceManager = new ServiceManager();
+	private final SnapshotManager snapshotManager = new SnapshotManager();
+	protected final SnapshotableLinkedHashMap<String, SpoutPlayer> players = new SnapshotableLinkedHashMap<String, SpoutPlayer>(snapshotManager);
+	private final WorldGenerator defaultGenerator = new EmptyWorldGenerator();
+	protected final SpoutSessionRegistry sessions = new SpoutSessionRegistry();
+	protected final SpoutScheduler scheduler = new SpoutScheduler(this);
+	protected final SpoutParallelTaskManager parallelTaskManager = new SpoutParallelTaskManager(this);
+	private final AtomicBoolean setupComplete = new AtomicBoolean(false);
+	private final SpoutConfiguration config = new SpoutConfiguration();
+	private final SpoutInputConfiguration inputConfig = new SpoutInputConfiguration();
+
+```
+
+**Resolution Analysis:**  
+The conflict resulted from two different approaches to `snapshotManager` declaration:
+1. Original: `protected` field declaration
+2. Merge commit: `private` field declaration with dependent fields (`players`, `defaultGenerator`, `sessions`) directly following
+
+**Semantic Resolution:**
+- Maintained `private` access for `snapshotManager` to encapsulate its usage
+- Retained the dependent fields added in the merge commit that rely on `snapshotManager`
+- Preserved all original field declarations and their sequence that follow this section
+- Ensured field initialization order remains valid (fields initialized before being used in dependent objects)
+
+This resolution maintains encapsulation while supporting the added functionality that requires the `snapshotManager` reference during initialization of persistent collections.

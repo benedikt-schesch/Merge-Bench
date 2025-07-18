@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Both sides of the conflict are asserting that no console errors or warnings were logged during the test. The `HEAD` branch uses the inline snapshot `Array []`, while the incoming branch uses `[]` and also casts `console.error` and `console.warn` to `any` to satisfy a type-checker (likely Flow or TypeScript) which wouldn't otherwise know about the `.mock` property added by the test runner.
+
+The intent is identical. The version with the `any` cast is slightly more robust in a typed environment, and the snapshot format difference is cosmetic. We will adopt the version with the type cast.
+
+```javascript
+    render(<StyledDivWithId />, {
+      hydrate: true,
+      container: safeQuerySelector('#root')
+    })
+
+    expect((console.error: any).mock.calls).toMatchInlineSnapshot(`[]`)
+    expect((console.warn: any).mock.calls).toMatchInlineSnapshot(`[]`)
+  })
+
+  test('no hydration mismatch for css prop when using useId', async () => {
+    const finalHTML = await disableBrowserEnvTemporarily(() => {
+      resetAllModules()
+
+```

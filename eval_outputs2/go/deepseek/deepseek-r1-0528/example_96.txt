@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Based on the semantic context, I'll resolve this conflict by selecting the newer implementation from the other branch since it's more explicit about the source file and uses the modern GZIP helper function. Here's the resolved snippet:
+
+```go
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HelloRequest.ProtoReflect.Descriptor instead.
+func (*HelloRequest) Descriptor() ([]byte, []int) {
+	return file_examples_internal_helloworld_helloworld_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *HelloRequest) GetName() string {
+	if x != nil {
+		return x.Name
+```
+
+Key reasons for this resolution:
+1. Both implementations serve the same purpose (returning descriptor data)
+2. The branch version is more maintainable as it:
+   - Explicitly references the proto file path
+   - Uses the generated GZIP helper function
+   - Matches modern protoc-gen-go patterns
+3. The HEAD version uses an opaque generated variable name
+4. The deprecation notice suggests this is internal/generated code
+5. Preserves identical return signature `([]byte, []int)`
+
+The surrounding context remains unchanged as requested.

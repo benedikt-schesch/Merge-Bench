@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same imports, but they differ in whether to include the `.js` file extension:
+
+- HEAD version: includes `.js` extensions (e.g., `'../../util/core.js'`)
+- Other version: excludes `.js` extensions (e.g., `'../../util/core'`)
+
+Since modern JavaScript modules (especially in browsers and with proper bundler configuration) often require explicit file extensions, and the HEAD version appears to be following this more explicit pattern, I'll resolve the conflict by keeping the HEAD version with the `.js` extensions:
+
+```javascript
+import { isExternal, noop } from '../../util/core.js';
+import { on } from '../../util/dom.js';
+import { parseQuery, getPath } from '../util.js';
+import { History } from './base.js';
+
+export class HTML5History extends History {
+  mode = 'history';
+
+  getCurrentPath() {
+
+```

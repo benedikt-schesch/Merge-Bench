@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Both sides of this merge are attempting to format a code example in Rust's documentation comments.
+*   The `HEAD` branch adds a blank line (`///`), which is a common way to separate a paragraph from an indented code block.
+*   The `7ec2c00b...` branch adds `/// ```txt`, which explicitly starts a fenced code block. This is the more modern and explicit way to format code in rustdoc.
+
+The best resolution is to combine both intents to create well-formatted documentation. We will add a blank line for separation, as intended by `HEAD`, and then begin the fenced code block, as intended by `7ec2c00b...`. This results in a clean separation between the introductory text and the code example, with the example being correctly formatted.
+
+```rust
+/// In addition to `lhs <- rhs;` performing the monadic bind, there
+/// is `lhs !<- rhs;` which is equivalent to `lhs <- no_backtracking(rhs);`.
+/// The final expression given is wrapped in an `Ok((input, expr, location))`
+///
+/// for example:
+///
+/// ```txt
+/// parser!(basic_definition loc =
+///     name <- variable;
+///     _ <- expect(Token::Equal);
+///     value !<- expression;
+///     Expr::definition(name, value, loc, ())
+
+```

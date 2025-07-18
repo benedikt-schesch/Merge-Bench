@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same function `getPackageVCSDetails`, but with different approaches:
+
+- HEAD: Defines it as a regular function with a return type annotation `: VCS`
+- The incoming change: Exports the function using `export function` but without the return type annotation
+
+Based on the semantic intent, it appears both sides want this function to be accessible (the incoming change explicitly exports it) and the HEAD version provides type safety with the return type. The best resolution would be to combine both intentions: export the function AND keep the return type annotation.
+
+Here's the resolved code:
+
+```typescript
+  const [, org, repo] = specMatch
+
+  return { org, repo, provider: "GitHub" }
+}
+
+export function getPackageVCSDetails(packageDetails: PackageDetails): VCS {
+  const repository = require(resolve(join(packageDetails.path, "package.json")))
+    .repository as undefined | string | { url: string }
+
+  if (!repository) {
+    return null
+
+```

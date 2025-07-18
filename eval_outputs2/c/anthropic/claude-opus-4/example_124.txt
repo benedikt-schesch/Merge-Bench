@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (the branch being merged in) is trying to add a declaration for variable `j` that's used in the `sscanf` call below, while HEAD doesn't have this declaration.
+
+The intent is clear: the variable `j` needs to be declared before it can be used in the `sscanf` call. The branch being merged in is fixing what appears to be a missing variable declaration.
+
+Here's the resolved code:
+
+```c
+          errmsg = "unsupported cipher";
+          goto error;
+        }
+        p = strchr(p, ',') + 1; /* always non-NULL, by above checks */
+        for (i = 0; i < ivlen; i++) {
+          unsigned j;
+          if (1 != sscanf(p, "%2x", &j)) {
+            errmsg = "expected more iv data in DEK-Info";
+            goto error;
+          }
+          ret->iv[i] = j;
+```

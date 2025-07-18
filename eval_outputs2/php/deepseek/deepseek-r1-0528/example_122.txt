@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+The conflict arises from differences in the docblock parameters. Both versions agree on the constructor parameters (`BuildableRepositoryInterface $database, array $fixtures, $generator`), but the docblock comments differ:
+
+1. **HEAD version** documents only two parameters (`$database` and `$fixtures`)
+2. **Branch version** documents all three parameters (adding `$generator`)
+
+Since the constructor actually uses three parameters, the branch version provides the correct documentation. The resolution keeps all three parameters in the docblock.
+
+Resolved code:
+```php
+
+    /**
+     * Create a new Builder instance.
+     *
+     * @param BuildableRepositoryInterface $database
+     * @param array $fixtures
+     * @param mixed $generator
+     */
+    public function __construct(BuildableRepositoryInterface $database, array $fixtures, $generator)
+    {
+        $this->database = $database;
+        $this->fixtures = $fixtures;
+
+```

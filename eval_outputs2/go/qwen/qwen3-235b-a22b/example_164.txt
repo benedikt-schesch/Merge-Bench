@@ -1,0 +1,15 @@
+<think>
+No reasoning found</think>
+```go
+func(p *PostgresParser) ProcessOutgoing(requestBuffer []byte, clientConn, destConn net.Conn, ctx context.Context) {
+	switch models.GetMode() {
+	case models.MODE_RECORD:
+		encodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	case models.MODE_TEST:
+		decodePostgresOutgoing(requestBuffer, clientConn, destConn, p.hooks, p.logger, ctx)
+	default:
+		p.logger.Info("Invalid mode detected while intercepting outgoing http call", zap.Any("mode", models.GetMode()))
+	}
+
+}
+```

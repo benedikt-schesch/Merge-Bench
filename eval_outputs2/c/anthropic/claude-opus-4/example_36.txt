@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to access the `data` field of `enode`, but they differ in whether to use an explicit cast to `(edge_t *)`.
+
+The semantic intent is the same - both versions are retrieving an edge from the node's data field. The difference is purely stylistic:
+- The HEAD version uses an explicit cast: `e = (edge_t *) enode->data;`
+- The incoming version omits the cast: `e = enode->data;`
+
+Since modern C compilers handle void pointer conversions automatically, and the intent is identical, I'll resolve this by choosing the cleaner version without the cast:
+
+```c
+
+		if(!n->status.reachable) {
+			for(enode = edge_weight_tree->head; enode; enode = enext) {
+				enext = enode->next;
+				e = enode->data;
+
+				if(e->to == n)
+					break;
+			}
+
+
+```

@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the `Descriptor()` method, but they're using different approaches:
+
+- HEAD is using a file descriptor variable: `fileDescriptor_fd8fde893e1fcf9f`
+- The incoming change is using a function call: `file_examples_internal_helloworld_helloworld_proto_rawDescGZIP()`
+
+This appears to be a protobuf generated code update where the code generation has changed between versions. The newer protobuf compiler versions tend to use the function-based approach (the incoming change) rather than the global variable approach (HEAD).
+
+Since both sides have the same intent (returning the descriptor for the HelloRequest message) and the incoming change appears to be the more modern approach, I'll resolve this by accepting the incoming change:
+
+```go
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HelloRequest.ProtoReflect.Descriptor instead.
+func (*HelloRequest) Descriptor() ([]byte, []int) {
+	return file_examples_internal_helloworld_helloworld_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *HelloRequest) GetName() string {
+	if x != nil {
+		return x.Name
+```

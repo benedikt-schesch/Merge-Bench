@@ -1,0 +1,16 @@
+<think>
+No reasoning found</think>
+```c
+        /* reallocate and copy items */
+        T* old_items = items;
+        items = alloc.allocate(new_alloced);
+        for (size_t i=0; i<size_active; i++) {
+          ::new (&items[i]) T(std::move(old_items[i]));
+          std::allocator_traits<allocator>::destroy(alloc, &old_items[i]);
+        }
+
+        for (size_t i=size_active; i<new_active; i++) {
+          ::new (&items[i]) T;
+        }
+
+```

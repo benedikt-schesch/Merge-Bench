@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the same URL, with the only difference being the protocol:
+- HEAD uses `http://`
+- The incoming change uses `https://`
+
+Since the intent appears to be updating to use HTTPS (which is more secure and is now the standard), and the rest of the URL remains identical, the semantic intent is clear: use the secure version of the URL.
+
+Here's the resolved code:
+
+```c
+
+    case IDA_WEB:
+      /* Load web browser */
+      ShellExecute(hwnd,
+                   "open",
+                   "https://www.chiark.greenend.org.uk/~sgtatham/putty/",
+                   0,
+                   0,
+                   SW_SHOWDEFAULT);
+      return 0;
+    }
+
+```

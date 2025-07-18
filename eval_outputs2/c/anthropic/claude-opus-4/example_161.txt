@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD version: `if (connopen && back->connected(backhandle))`
+- Incoming version: `if (back->connected(backhandle))`
+
+The conflict is about whether to include the `connopen` check before checking if the backend is connected. 
+
+Based on the context, this appears to be error handling code that writes to stdout/stderr and then potentially unthrottles the backend connection. The HEAD version adds an additional guard condition (`connopen`) before checking the backend connection status.
+
+The semantic intent seems to be:
+- HEAD wants to ensure both that `connopen` is true AND the backend is connected before unthrottling
+- The incoming change only cares about whether the backend is connected
+
+Without more context about what `connopen` represents and why it was added, the safer resolution would be to keep the more restrictive condition from HEAD, as it likely prevents some edge case issue.
+
+Here's the resolved code:
+
+```c
+            "Unable to write to standard %s: %s\n",
+            (h == stdout_handle ? "output" : "error"),
+            buf);
+    cleanup_exit(0);
+  }
+  if (connopen && back->connected(backhandle)) {
+    back->unthrottle(
+        backhandle,
+        (handle_backlog(stdout_handle) + handle_backlog(stderr_handle)));
+  }
+}
+```

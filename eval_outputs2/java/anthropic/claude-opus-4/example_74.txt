@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add a service provider field, but with different names:
+
+- HEAD wants: `customDecksServiceProvider` of type `CustomCardsService`
+- The incoming branch wants: `cardcastServiceProvider` of type `CardcastService`
+
+These appear to be two different services with different purposes, not a simple rename. Without more context about the intent behind each change, it's ambiguous whether:
+1. Both services should coexist
+2. One service is replacing the other
+3. They serve the same purpose with different implementations
+
+Since I cannot determine the semantic intent with certainty, I'm returning the snippet with the conflict preserved:
+
+```java
+  /**
+   * Lock to prevent missing timer updates.
+   */
+  private final Object roundTimerLock = new Object();
+  private final ScheduledThreadPoolExecutor globalTimer;
+<<<<<<< HEAD
+  private final Provider<CustomCardsService> customDecksServiceProvider;
+=======
+  private final Provider<CardcastService> cardcastServiceProvider;
+>>>>>>> 5adedd24812861bedaf540555ec046744b42b42a
+  private final Provider<String> uniqueIdProvider;
+  private Player host;
+  private BlackDeck blackDeck;
+  private BlackCard blackCard;
+  private WhiteDeck whiteDeck;
+```

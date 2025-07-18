@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```javascript
+            return true;
+        });
+        def(AST_Arrow, mark_func_expr);
+        def(AST_Assign, function(tw) {
+            var node = this;
+            if (node.left instanceof AST_Destructuring) {
+                node.left.walk(suppressor);
+                return;
+            }
+            if (!(node.left instanceof AST_SymbolRef)) return;
+            var d = node.left.definition();
+            var fixed = d.fixed;
+            if (!fixed && node.operator != "=") return;
+            if (!safe_to_assign(tw, d, node.right)) return;
+            d.references.push(node.left);
+```

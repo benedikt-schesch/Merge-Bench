@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to add a parameter to the function signature, but they're adding different parameters:
+
+- HEAD is adding: `is_already_polyfilled: &mut bool,` and `ctx: &ShareBundleContext,`
+- The other branch is adding: `is_patch_esm_flag: &mut bool,`
+
+Since both sides seem to have legitimate reasons for adding their respective parameters (one for tracking polyfill state and context, the other for tracking ESM patching), and the function appears to need all of these parameters, the semantic resolution would be to include both sets of parameters.
+
+Here's the resolved code:
+
+```rust
+  export: &ExternalReferenceExport,
+  bundle_variable: &BundleVariable,
+  module_analyzer_manager: &ModuleAnalyzerManager,
+  polyfill: &mut SimplePolyfill,
+  is_already_polyfilled: &mut bool,
+  ctx: &ShareBundleContext,
+  is_patch_esm_flag: &mut bool,
+) -> Result<Vec<ModuleItem>> {
+  match (&export.module_system, ctx.options.format) {
+    // hybrid dynamic es module cannot support, if hybrid, only export static export
+    (_, ModuleFormat::EsModule) => EsmGenerate::generate_export(
+      should_reexport_raw,
+```

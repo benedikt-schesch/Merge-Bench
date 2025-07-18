@@ -1,0 +1,35 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from changes to the `LoadDir` method where:
+1. The HEAD branch added directory initialization logic (`inode.updatedir`, `inode.nlinks`, and `PushInode`)
+2. The other branch (8107f26) removed this initialization logic
+
+The conflict is semantic and cannot be automatically resolved because:
+- The HEAD branch's additions appear critical for directory state initialization
+- The other branch's removal suggests this logic may be obsolete or relocated
+- Without context about `inode` existence or usage of `p`, intent is ambiguous
+
+Here's the unchanged snippet with conflict markers:
+
+```javascript
+    }
+};
+
+FS.prototype.LoadDir = function(parentid, children)
+{
+<<<<<<< HEAD
+    inode.updatedir = true;
+    inode.nlinks = 2; // . and ..
+
+    var p = this.inodes.length;
+    this.PushInode(inode);
+
+=======
+>>>>>>> 8107f26f1056279286f37db2b6230ebf1bd634a0
+    for(var i = 0; i < children.length; i++) {
+        this.LoadRecursive(children[i], parentid);
+    }
+};
+
+
+```

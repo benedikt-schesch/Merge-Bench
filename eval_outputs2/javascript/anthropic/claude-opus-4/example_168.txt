@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to close the same code block (likely a function or object), but with slightly different syntax:
+
+- HEAD version uses `}` (without semicolon)
+- The other branch uses `};` (with semicolon)
+
+Since this appears to be closing an object literal or a prototype method definition (given the context showing `FS.prototype.FillDirectory`), the semantically correct choice would be to use `};` with the semicolon, as this is the proper syntax for closing object literals and prototype assignments in JavaScript.
+
+Here's the resolved code:
+
+```javascript
+                    }
+                }
+            }
+        }
+    }
+};
+
+FS.prototype.FillDirectory = function(dirid) {
+    const inode = this.inodes[dirid];
+    if(this.is_forwarder(inode))
+    {
+```

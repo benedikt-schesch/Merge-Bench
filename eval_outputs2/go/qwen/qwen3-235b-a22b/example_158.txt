@@ -1,0 +1,23 @@
+<think>
+No reasoning found</think>
+The merge conflict occurs between two branches modifying the `detectors` function. One branch (`HEAD`) has made no explicit changes to the position between `GoDetector` and `PHPDetector`, while the incoming (`270f8b2a010f03386d4dcd192eb89535df7b674b`) inserted a `NodeJSDetector` there.
+
+The intent here is clear semantically: the incoming branch added support for detecting Node.js projects, and the `PHPDetector`, `PoetryDetector`, and `PythonDetector` were present in both the base and the incoming changes. There is no indication of a change from `HEAD` that contradicts the addition, nor a semantic conflict such as a removal or a reordering from the `HEAD` side.
+
+Thus, the best resolution without losing the added functionality and with the most reasonable preservation of both sides’ intent is to **retain the newly added `NodeJSDetector`** and then continue with the rest of the detectors as they are common between the two versions.
+
+Here is the full context with the conflict resolved:
+
+```go
+}
+
+func detectors(path string) []detector.Detector {
+	return []detector.Detector{
+		&detector.GoDetector{Root: path},
+		&detector.NodeJSDetector{Root: path},
+		&detector.PHPDetector{Root: path},
+		&detector.PoetryDetector{Root: path},
+		&detector.PythonDetector{Root: path},
+	}
+}
+```

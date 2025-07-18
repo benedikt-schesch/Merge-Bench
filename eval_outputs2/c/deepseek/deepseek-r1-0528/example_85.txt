@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+The conflict arises from one branch adding a call to `SetHandleInformation` for socket inheritance control while the other branch doesn't have this change. The added line configures the socket handle to prevent inheritance by child processes, which is a valid socket configuration step that doesn't conflict with the subsequent OOBINLINE setting and socket options. Since both changes are additive and semantically compatible (socket configuration vs socket options), the resolution incorporates both changes.
+
+```c
+    err = p_WSAGetLastError();
+    ret->error = winsock_error_string(err);
+    return (Socket)ret;
+  }
+
+  SetHandleInformation((HANDLE)s, HANDLE_FLAG_INHERIT, 0);
+
+  ret->oobinline = 0;
+
+  p_setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const char *)&on, sizeof(on));
+
+#ifndef NO_IPV6
+```

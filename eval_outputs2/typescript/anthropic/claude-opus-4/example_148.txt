@@ -1,0 +1,39 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+**HEAD (left side)**: Defines `icon` as accepting:
+- `boolean` (presumably to show/hide icons)
+- A function that takes `IconProps` and returns `React.ReactNode`
+- `React.ReactElement<IconProps>` (a React element with IconProps)
+- `string`
+- `number`
+
+**Incoming change (right side)**: Defines `icon` as accepting:
+- `React.ReactNode` (which already includes string, number, React elements, etc.)
+- `false` (explicitly for hiding icons)
+- A function that takes `iconProps` and returns `React.ReactNode`
+
+Both sides seem to want to:
+1. Allow custom icons (React elements, strings, numbers)
+2. Allow a function that returns an icon
+3. Allow disabling icons (HEAD uses `boolean`, incoming uses `false`)
+
+The incoming change is more concise by using `React.ReactNode` which already encompasses string, number, and React elements. It also explicitly uses `false` instead of `boolean`, which is clearer about the intent (since `true` doesn't make semantic sense for an icon prop).
+
+The semantic resolution should use the incoming change's approach as it's cleaner and more precise:
+
+```typescript
+
+  /**
+   * Used to display a custom icon. Set it to `false` to prevent
+   * the icons from being displayed
+   */
+  icon?: React.ReactNode | false | ((iconProps: IconProps) => React.ReactNode);
+
+  /**
+   * Theme to use.
+   * `One of: 'light', 'dark', 'colored'`
+   * `Default: 'light'`
+
+```

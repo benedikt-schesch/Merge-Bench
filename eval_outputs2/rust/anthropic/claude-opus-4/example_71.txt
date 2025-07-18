@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD: Uses `T: Resource` as the trait bound
+- Other branch: Uses `T: Component` as the trait bound
+
+This appears to be a conflict where one branch updated the trait bound from `Component` to `Resource` (or vice versa). Given that this is implementing `SystemParamFetch` for `OptionResState<T>` and the return type is `Option<Res<'w, T>>`, the semantically correct choice is `Resource` since `Res` is typically used for resources, not components.
+
+Here's the resolved code:
+
+```rust
+    }
+
+    fn default_config() {}
+}
+
+impl<'w, 's, T: Resource> SystemParamFetch<'w, 's> for OptionResState<T> {
+    type Item = Option<Res<'w, T>>;
+
+    #[inline]
+    unsafe fn get_param(
+        state: &'s mut Self,
+
+```

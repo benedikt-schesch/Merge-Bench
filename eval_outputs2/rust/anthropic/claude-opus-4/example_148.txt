@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to calculate `page_width`, but they differ in how they handle the type conversion for `self.document.format.width`.
+
+- HEAD: Assumes `self.document.format.width` is already `f64` or can be implicitly converted
+- The other branch: Explicitly converts `self.document.format.width` to `f64` using `f64::from()`
+
+The explicit conversion in the second branch suggests that `self.document.format.width` is likely not already an `f64` type (possibly `u32`, `i32`, or another numeric type). This is the safer and more explicit approach that prevents potential compilation errors.
+
+Here's the resolved code:
+
+```rust
+        pos: na::Vector2<f64>,
+        bytes: Vec<u8>,
+    ) -> oneshot::Receiver<anyhow::Result<Vec<Stroke>>> {
+        let (oneshot_sender, oneshot_receiver) = oneshot::channel::<anyhow::Result<Vec<Stroke>>>();
+
+        let page_width = (f64::from(self.document.format.width)
+            * (self.pdf_import_width_perc / 100.0))
+            .round() as i32;
+
+        let pdf_import_as_vector = self.pdf_import_as_vector;
+
+        rayon::spawn(move || {
+            let result = || -> anyhow::Result<Vec<Stroke>> {
+
+```

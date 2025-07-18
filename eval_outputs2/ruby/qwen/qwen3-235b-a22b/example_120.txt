@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```ruby
+      upload = Factory.create :upload
+      comment = Factory.create :comment, :upload_ids => [upload.id.to_s],
+        :body => "Can't touch this"
+      Comment.update_all({:updated_at => 15.minutes.ago}, :id => comment.id)
+
+<<<<<<< HEAD
+      comment.reload.updated_at.should be_close(15.minutes.ago, 5)
+      upload.reload.destroy
+      comment.reload.updated_at.should be_close(Time.now, 5)
+=======
+      comment.reload.updated_at.should be_within(1).of(15.minutes.ago)
+      upload.reload.destroy
+      comment.reload.updated_at.should be_within(1).of(Time.now)
+>>>>>>> c91f301d8e8bc0b83797bd94a82dd1c8b1838234
+    end
+  end
+  
+  context "hours" do
+    it "assigns human hours" do
+
+```

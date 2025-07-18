@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Resolving the conflict requires understanding the intent of both changes.
+
+*   **The `HEAD` branch** aims to translate symbolic sizes into numeric sizes for both the `:size` and `:s` keys in the options hash. This adds support for a convenient shorthand (`:s`).
+*   **The `4d94e...` branch** implements the same translation but only for the `:size` key.
+
+The intent of the `HEAD` branch is a superset of the other branch's intent. It provides the same functionality for `:size` while also adding a new feature (support for `:s`). Therefore, the most logical resolution is to accept the implementation from the `HEAD` branch as it incorporates the goals of both changes.
+
+```ruby
+  def self.sizes
+    { :small => 50, :medium => 100, :large => 150, :big => 150 }
+  end
+  
+  def parse_options(profile, options)
+    #pass :gravatar_size through, but translate :size or :s to a number if possible
+    parsed_options = parse_options_without_size(profile, options)
+    [:size, :s].each do |k|
+      parsed_options[k] = self.class.sizes[options[k]] if self.class.sizes.has_key?(options[k])
+    end
+    parsed_options
+  end
+  
+end
+```

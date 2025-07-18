@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+I'll help resolve this merge conflict while preserving the context exactly as provided. Based on analyzing the intent of both changes:
+
+1. For the first conflict in the 'marks color as unavailable' test:
+   - Both sides are trying to verify that color is unavailable
+   - The difference is in the RSpec matcher style: `be false` vs `be_falsey`
+   - `be_falsey` is more robust as it covers both `false` and `nil` values
+   - The right side's version (`be_falsey`) is preferable as it's a common RSpec convention
+
+2. For the second conflict in the 'marks color as available' test:
+   - Only the left side (HEAD) is shown in the snippet
+   - Since we don't have the right side's version, we must preserve the conflict
+
+Here's the resolved snippet with full context preserved:
+
+```ruby
+>>>>>>> 88e81a1828af3c87c3b3ef7563bc67326d6774d9
+    end
+
+    it 'marks color as unavailable' do
+      STDOUT.stub(:tty?).and_return(false)
+      Term.color?.should be_falsey
+    end
+
+    it 'marks color as available' do
+      STDOUT.stub(:tty?).and_return(true)
+<<<<<<< HEAD
+
+```

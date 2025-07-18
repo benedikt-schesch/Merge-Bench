@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to register the same file with `proto.RegisterFile`, but with different paths:
+
+- HEAD side: `"proto2_proto/test.proto"` with file descriptor `fileDescriptor_e5b3e7ca68f98362`
+- Other side: `"test_proto/test.proto"` with file descriptor `fileDescriptor_8ca34d01332f1402`
+
+Based on the context:
+1. The HEAD side shows the file is located at `internal/testprotos/proto2_proto/test.pb.go`
+2. The other side shows the file at `proto/test_proto/test.pb.go`
+3. The file descriptor hash used after the conflict (`fileDescriptor_e5b3e7ca68f98362`) matches the HEAD side
+
+This appears to be a file that was moved/renamed between branches. Since the code after the conflict uses the HEAD's file descriptor hash, the semantic intent is to use the HEAD's version.
+
+```go
+	proto.RegisterExtension(E_DefaultString)
+	proto.RegisterExtension(E_DefaultBytes)
+	proto.RegisterExtension(E_DefaultEnum)
+}
+
+func init() { proto.RegisterFile("proto2_proto/test.proto", fileDescriptor_e5b3e7ca68f98362) }
+
+var fileDescriptor_e5b3e7ca68f98362 = []byte{
+	// 4330 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x5b, 0x4b, 0x73, 0xdb, 0x58,
+	0x76, 0x36, 0xc0, 0xf7, 0x21, 0x25, 0x42, 0xb7, 0xd5, 0x36, 0x2d, 0xb5, 0x6d, 0x98, 0x3d, 0x3d,
+```

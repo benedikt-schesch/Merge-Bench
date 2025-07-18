@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis, both changes appear to be independent additions that can coexist. The HEAD change adds a function declaration for `ngx_http_cache_purge_response_type_conf`, while the other branch adds two static helper functions. Since these serve different purposes and there are no naming conflicts, we can include both.
+
+Here's the resolved snippet:
+
+```c
+char       *ngx_http_uwsgi_cache_purge_conf(ngx_conf_t *cf,
+        ngx_command_t *cmd, void *conf);
+ngx_int_t   ngx_http_uwsgi_cache_purge_handler(ngx_http_request_t *r);
+# endif /* NGX_HTTP_UWSGI */
+
+char        *ngx_http_cache_purge_response_type_conf(ngx_conf_t *cf, 
+                ngx_command_t *cmd, void *conf);
+static ngx_int_t
+ngx_http_purge_file_cache_noop(ngx_tree_ctx_t *ctx, ngx_str_t *path);
+static ngx_int_t
+ngx_http_purge_file_cache_delete_file(ngx_tree_ctx_t *ctx, ngx_str_t *path);
+
+ngx_int_t   ngx_http_cache_purge_access_handler(ngx_http_request_t *r);
+ngx_int_t   ngx_http_cache_purge_access(ngx_array_t *a, ngx_array_t *a6,
+                                        struct sockaddr *s);
+
+```
+
+Resolution rationale:
+1. Preserved HEAD's `ngx_http_cache_purge_response_type_conf` declaration
+2. Kept both static helper functions from the other branch
+3. Maintained original formatting and context
+4. Ordered declarations logically (new feature function first, then helper functions)
+5. Verified no naming conflicts or overlapping functionality

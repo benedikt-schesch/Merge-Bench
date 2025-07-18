@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+I cannot resolve this conflict confidently based on semantic intent alone, as there are two distinct changes in conflicting regions that could affect both error handling semantics (`Result` vs `$crate::_detail::Result`) and macro body expansion (`$(body)*` vs `$body`).
+
+Returning the unmodified snippet with the conflict markers preserved as requested:
+
+```rust
+            $crate::py_coerce_item!{
+                impl $class {
+                    fn __traverse__(&$slf,
+                    $py: $crate::Python,
+                    $visit: $crate::py_class::gc::VisitProc)
+<<<<<<< HEAD
+                    -> Result<(), $crate::py_class::gc::TraverseError> {
+                        let _ = $py;
+                        $($body)*
+                    }
+=======
+                    -> $crate::_detail::Result<(), $crate::py_class::gc::TraverseError>
+                    $body
+>>>>>>> f2fa212f7ae068505676a86e36b38a4af977bd77
+                }
+            }
+        }
+        $members $props
+    }};
+
+```

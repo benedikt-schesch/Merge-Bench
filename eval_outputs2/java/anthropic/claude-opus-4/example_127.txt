@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to format the same message about making a repository public, but with different emphasis through HTML bold tags.
+
+- HEAD version: emphasizes the action "made" and the state "public"
+- Other version: emphasizes the repository name
+
+Since both versions are semantically trying to convey the same information and the conflict is purely about styling/emphasis, I'll preserve the conflict as-is since the intent is ambiguous - it's not clear which emphasis pattern is preferred without more context about the project's formatting conventions.
+
+```java
+        return event.payload.action + " " + "<b>" + event.repo.name + "#" + event.payload.issue.number + "</b>";
+      case MemberEvent:
+        return " " + event.payload.action + " " + "<b>" + event.payload.member.login + "</b>" + " " + " to " + event.repo.name;
+      case PublicEvent:
+        if (event.repo != null) {
+<<<<<<< HEAD
+          return " <b>made</b> " + event.repo.name + " <b>public</b>";
+=======
+          return " made <b>" + event.repo.name + "</b> public";
+>>>>>>> ca63bf35d05c86122ad0b10a2887245523f1ca2f
+        } else {
+          return "";
+        }
+      case PullRequestEvent:
+        String action = event.payload.action;
+
+```

@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to address a security concern when loading Windows DLLs. The HEAD version has the basic implementation, while the incoming change adds an important security fix to prevent DLL hijacking by ensuring `sspicli.dll` is loaded from the correct system directory before `GetUserNameExA` is called.
+
+The semantic intent is clear: both sides want to load `GetUserNameExA` from `secur32.dll`, but the incoming change adds a crucial security improvement. This should be merged by including both changes.
+
+Here's the resolved version:
+
+```c
+  {
+    static int tried_usernameex = FALSE;
+    if (!tried_usernameex) {
+      /* Not available on Win9x, so load dynamically */
+      HMODULE secur32 = load_system32_dll("secur32.dll");
+      /* If MIT Kerberos is installed, the following call to
+         GET_WINDOWS_FUNCTION makes Windows implicitly load
+         sspicli.dll WITHOUT proper path sanitizing, so better
+         load it properly before */
+      HMODULE sspicli = load_system32_dll("sspicli.dll");
+      GET_WINDOWS_FUNCTION(secur32, GetUserNameExA);
+      tried_usernameex = TRUE;
+    }
+  }
+
+
+```

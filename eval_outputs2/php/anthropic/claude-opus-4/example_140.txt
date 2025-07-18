@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- The HEAD side is creating a new `Item` object and pushing it to the `items` collection
+- The other side is storing the last inserted item's id in `$this->last_id`
+
+Both changes seem complementary rather than conflicting - one side is adding the item creation/storage logic, while the other is tracking the last inserted item's id. The semantic intent appears to be to both create/store the item AND track its id.
+
+Here's the resolved version that combines both intents:
+
+```php
+	public function add($title, $options = '')
+	{
+	
+		$id = isset($options['id']) ? $options['id'] : $this->id();
+
+		$item = new Item($this, $id, $title, $options);
+		
+		$this->items->push($item);
+		
+		// storing the last inserted item's id
+		$this->last_id = $item->id;
+		
+		return $item;
+	}
+
+	/**
+
+```

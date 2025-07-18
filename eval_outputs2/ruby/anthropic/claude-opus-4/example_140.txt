@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides appear to have the same intent - they want to add a blank line after the `end` statement and before the `unless affected_rows == 1` check. The only difference is:
+
+- HEAD has one blank line
+- The other branch (3e5c37308ee51d35b9fae438da419cb40770a95b) has one blank line but with trailing whitespace
+
+Since trailing whitespace is generally considered undesirable in code, and both sides agree on having a blank line at this location, I'll resolve this by keeping the cleaner version from HEAD:
+
+```ruby
+          SET `locked_at`=#{quote_value(now)} 
+          WHERE #{self.class.primary_key} = #{quote_value(id)} AND (`locked_by`=#{quote_value(worker)})
+        end_sql
+
+      end
+
+      unless affected_rows == 1
+        raise LockError, "Attempted to aquire exclusive lock failed"
+      end
+
+      self.locked_at    = now
+      self.locked_by    = worker
+
+```

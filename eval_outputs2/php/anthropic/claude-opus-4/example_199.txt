@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the method signature, specifically the `$constructorArgs` parameter and the return type.
+
+**HEAD (left side):**
+- Has `array $constructorArgs = null` (without nullable type)
+- Has explicit return type `: IMock`
+
+**Other branch (right side):**
+- Has `?array $constructorArgs = null` (with nullable type syntax)
+- No return type specified
+
+From a semantic perspective, both sides appear to agree that `$constructorArgs` should be nullable with a default value of `null`. The modern PHP way to express this is with the nullable type syntax (`?array`), which the right side uses. The left side achieves the same effect but with older syntax.
+
+The left side also adds a return type declaration (`: IMock`), which is a good practice for type safety.
+
+The resolution should combine both improvements: use the modern nullable type syntax from the right side AND keep the return type declaration from the left side.
+
+```php
+    public function mock(
+        string|array $mockedClassList,
+        ClassGenerator\MockClass $mockGenerator,
+        CallRecorder\Recorder $callRecorder,
+        Stubber\IAnswer $defaultAnswer,
+        ?array $constructorArgs = null
+    ): IMock {
+        $mockedClassList = (array) $mockedClassList;
+
+        foreach ($mockedClassList as $mockedClass) {
+            if (!class_exists($mockedClass, true) && !interface_exists($mockedClass, true)) {
+                throw new \InvalidArgumentException("The class / interface [{$mockedClass}] does not exist. Check the spelling and make sure it is loadable.");
+
+```

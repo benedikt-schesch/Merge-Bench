@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing styles in a Rails version check condition. Both sides intend to conditionally define `attr_accessible` for Rails versions below 4. The differences are:
+1. HEAD uses double quotes (`"4"`), the other branch uses single quotes (`'4'`)
+2. The other branch adds an extra blank line after the condition
+
+Since the intent is identical and Ruby treats single/double quotes equivalently here, we preserve the HEAD version's quote style and remove the unnecessary blank line for consistency with surrounding code.
+
+Resolved version:
+```ruby
+end
+class Company < ActiveRecord::Base
+  has_many :test_attrs
+  has_many :branches
+  belongs_to :country
+  if Rails.version < "4"
+    attr_accessible :name, :country, :country_id
+  end
+end
+class SmallCompany < Company
+  def self.decl_auth_context
+```

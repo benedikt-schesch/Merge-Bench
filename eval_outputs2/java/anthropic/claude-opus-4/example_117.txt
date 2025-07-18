@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- **HEAD (current branch)**: Sets `repoInfo.branch` to `selectedBranch.getName()` - using the branch name
+- **Incoming change**: Sets `repoInfo.branch` to `selectedBranch.getCommit().getSha()` - using the commit SHA
+
+The method is called `openCommits()` and it's creating an intent for `BranchCommitsActivity`. Given the context and the activity name, it seems most logical that the activity would expect a branch name rather than a commit SHA, since it's specifically a "Branch" commits activity.
+
+The semantic intent appears to be to open a view of commits for a particular branch, which would require the branch name to properly identify which branch's commits to display.
+
+Therefore, the HEAD version using `selectedBranch.getName()` is the semantically correct choice.
+
+```java
+  private void openCommits() {
+    if (selectedBranch != null) {
+      RepoInfo repoInfo = new RepoInfo();
+      repoInfo.owner = repo.getOwner().getLogin();
+      repoInfo.name = repo.name;
+      repoInfo.branch = selectedBranch.getName();
+      Intent intent = BranchCommitsActivity.createLauncherIntent(this, repoInfo);
+      startActivity(intent);
+    }
+  }
+
+
+```

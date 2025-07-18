@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict in the provided code snippet involves a terminal settings configuration decision. On one side (HEAD), the code sets `VMIN=1` and `VTIME=0`, which ensures that read operations block until at least one byte of input is available. This is a commonly used setting when the program needs to wait for definite input before proceeding, and the accompanying comment helps clarify the intended semantics of this behavior.
+
+On the other side, the code in the `a221f2f` branch appears to either not set these values or to remove them entirely, as there are no lines between the `=======` and `>>>>>>>` markers that alter or reconfigure these terminal settings. This causes a semantic conflict: should the code ensure blocking behavior on input reads or not?
+
+Crucially, the snippet does not provide any alternative configuration in the other branch. So there is no competing intent that could be interpreted as replacing or modifying these values in a different but equally valid way. Since the lines inside `HEAD` represent an intentional change with a clear semantic purpose (blocking until at least one character is received), and no conflicting logic is introduced in the other branch, it is safe and semantically appropriate to preserve the HEAD version.
+
+Therefore, the correct resolution of this conflict is to accept the code in `HEAD`, keeping the setting of `VMIN` and `VTIME` as specified.
+
+Here is the full, resolved code in markdown:
+
+```go
+	newtios.Lflag &^= syscall.ECHO | syscall.ECHONL | syscall.ICANON |
+		syscall.ISIG | syscall.IEXTEN
+	newtios.Cflag &^= syscall.CSIZE | syscall.PARENB
+	newtios.Cflag |= syscall.CS8
+
+	// We wake up only when at least 1 byte has arrived
+	newtios.Cc[syscall.VMIN] = 1
+	newtios.Cc[syscall.VTIME] = 0
+	tios = uintptr(unsafe.Pointer(&newtios))
+
+	ioc = uintptr(syscall.TIOCSETA)
+	if _, _, e1 := syscall.Syscall6(syscall.SYS_IOCTL, fd, ioc, tios, 0, 0, 0); e1 != 0 {
+		e = e1
+```

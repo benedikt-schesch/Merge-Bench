@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that the HEAD branch is trying to add imports for `tokio::prelude::Future` and `tokio::runtime::TaskExecutor`, while the other branch (2cc67a0957b29b57e65c0234c31703b3868e29f7) has removed these imports.
+
+The key observation is that there's already a `use std::future::Future;` import present in both versions. The `tokio::prelude::Future` import would conflict with this as it would import the same trait name `Future` from a different module.
+
+Given that:
+1. The more recent branch has removed the tokio imports
+2. There's already a `std::future::Future` import that serves the same purpose
+3. Modern Rust code typically uses `std::future::Future` rather than the older tokio-specific Future trait
+
+The semantic intent appears to be moving away from tokio-specific imports to standard library imports. Therefore, the conflict should be resolved by accepting the version without the tokio imports.
+
+```rust
+use glfw::Context;
+use parking_lot::Mutex;
+use std::ffi::c_void;
+use std::future::Future;
+use std::sync::Arc;
+
+pub(crate) struct GlfwFlutterEngineHandler {
+    pub(crate) glfw: glfw::Glfw,
+    pub(crate) window: Arc<Mutex<glfw::Window>>,
+    pub(crate) resource_window: Arc<Mutex<glfw::Window>>,
+
+```

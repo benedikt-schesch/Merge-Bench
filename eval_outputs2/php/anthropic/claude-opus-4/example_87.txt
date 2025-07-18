@@ -1,0 +1,37 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to instantiate XEP (XMPP Extension Protocol) classes, but with different approaches:
+
+- **HEAD** side: Uses a simple approach with just `$classname = 'XEP'.$xep;`
+- **Other branch** side: Uses a more elaborate approach with:
+  - A filename variable for the XEP file
+  - An underscore in the class name (`XEP_` instead of `XEP`)
+  - A `require_once` statement to include the XEP file
+
+The semantic intent of both sides is to:
+1. Define the class name for the XEP
+2. Instantiate the XEP class
+3. Add callbacks for the XEP
+
+The key difference is that the other branch explicitly handles file inclusion, which suggests it's addressing a need to load XEP classes from separate files. This is likely the more complete solution.
+
+Here's the resolved conflict, choosing the more complete implementation from the other branch:
+
+```php
+        if (!is_array($xeps)) {
+            $xeps = array($xeps);
+        }
+        
+        foreach ($xeps as $xep) {
+            $filename = 'xep_'.$xep.'.php';
+            $classname = 'XEP_'.$xep;
+
+            // include xep
+            require_once JAXL_CWD.'/xep/'.$filename;
+            $this->xeps[$xep] = new $classname($this);
+
+            // add necessary requested callback on events
+            foreach ($this->xeps[$xep]->init() as $ev => $cb) {
+                $this->add_cb($ev, array($this->xeps[$xep], $cb));
+
+```

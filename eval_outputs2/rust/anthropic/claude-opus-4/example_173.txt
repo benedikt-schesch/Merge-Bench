@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve:
+
+- HEAD is adding `Random` to what appears to be an enum of operations
+- The other branch (403680f17) is adding `Quantized` to the same enum
+
+Both changes seem to be adding new operation types to the enum, and there's no semantic conflict between having both a `Random` operation and a `Quantized` operation. They appear to be independent additions that can coexist.
+
+The resolution is to include both additions:
+
+```rust
+    Ternary,
+    Cast,
+    Reduce,
+    Mfa,
+    Conv,
+    Random,
+    Quantized,
+}
+
+macro_rules! ops{
+    ($($name:ident),+) => {
+
+
+```

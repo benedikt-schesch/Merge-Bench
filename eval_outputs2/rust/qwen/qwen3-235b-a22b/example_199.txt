@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+The merge conflict centers around the addition of a single import statement `use log::trace;`. This change originated from a different branch, which inserted the import below `use common::http::Client;`.
+
+To reason through this, we consider the nature of import statements in Rust. Their presence is often dictated by the actual usage of the imported identifiers (e.g., `trace!` macro in this case). However, **this snippet does not show usage of `trace!`**, nor does it offer insight into whether such a usage is expected to have been added elsewhere in the file that is not included here.
+
+Since the `HEAD` branch has no addition in this area while the incoming change insists on the presence of the `use log::trace;` line, it is unclear whether the semantic intent behind adding the import is valid in the combined context. Thus, the intent appears **ambiguous** based solely on the provided code snippet.
+
+As per your instruction — if the intent is ambiguous, the resolution should **preserve the conflict as-is** without modification.
+
+Here is the original snippet with conflict preserved:
+
+```rust
+use crate::metrics::Metrics;
+use crate::stream_context::StreamContext;
+use common::configuration::{Configuration, Overrides, PromptGuards, PromptTarget, Tracing};
+use common::http::Client;
+<<<<<<< HEAD
+=======
+use log::trace;
+>>>>>>> 28ee14a75cbb06310e0da03b61eba7789b71a7ed
+use proxy_wasm::traits::*;
+use proxy_wasm::types::*;
+use std::cell::RefCell;
+use std::collections::HashMap;
+use std::rc::Rc;
+```

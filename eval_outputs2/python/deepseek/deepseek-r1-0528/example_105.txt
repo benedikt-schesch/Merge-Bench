@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+The conflict arises from differing variable names (`font_type` vs `suffix`) and condition logic in the `elif` statements. After analyzing both changes:
+
+1. The branch introducing `suffix` adds support for "pfb" font types
+2. The HEAD branch maintains support for empty string font types (`font_type == ""`)
+3. Both branches handle "afm" types identically
+
+The resolution preserves both changes by:
+- Using the `suffix` variable for consistency with the updated logic
+- Expanding the condition to include both "pfb" and empty string support
+- Maintaining identical handling logic within the blocks
+
+Here's the resolved version:
+
+```python
+                                addMapping(fontName, bold, italic, fullFontName)
+
+                    # Register "normal" name and the place holder for style
+                    self.registerFont(fontName, [*fontAlias, fullFontName])
+
+            elif suffix in {"afm", "pfb", ""}:
+                if suffix == "afm":
+                    afm = file.getNamedFile()
+                    tfile = pisaFileObject(baseName + ".pfb", basepath=file.basepath)
+                    pfb = tfile.getNamedFile()
+                else:
+                    pfb = file.getNamedFile()
+```

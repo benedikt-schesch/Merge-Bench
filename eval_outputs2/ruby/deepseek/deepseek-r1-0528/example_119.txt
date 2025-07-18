@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+The conflict involves two key changes that cannot be automatically resolved due to semantic ambiguity:
+
+1. **Validation syntax update**: The incoming branch (c91f301) modernizes the duplicate check validation by replacing `validate_on_create` with `validate :on => :create`, which is preferred in newer Rails versions.
+
+2. **Conditional logic divergence**: 
+   - HEAD adds an extra condition (`c.google_docs.any?`) to the body presence validation
+   - The incoming branch removes this condition while keeping the core logic
+
+Since we can't determine whether `google_docs` should be part of the validation condition (this depends on unknown business requirements), we preserve the conflict.
+
+```ruby
+  scope :latest, :order => 'id DESC'
+
+  # TODO: investigate how we can enable this and not break nested attributes
+  # validates_presence_of :target_id, :user_id, :project_id
+  
+<<<<<<< HEAD
+  validate_on_create :check_duplicate, :if => lambda { |c| c.target_id? and not c.hours? }
+  validates_presence_of :body, :unless => lambda { |c| c.task_comment? or c.uploads.to_a.any? or c.google_docs.any? }
+=======
+  validate :check_duplicate, :if => lambda { |c| c.target_id? and not c.hours? }, :on => :create
+  validates_presence_of :body, :unless => lambda { |c| c.task_comment? or c.uploads.to_a.any? }
+>>>>>>> c91f301d8e8bc0b83797bd94a82dd1c8b1838234
+
+  # was before_create, but must happen before format_attributes
+  before_save   :copy_ownership_from_target, :if => lambda { |c| c.new_record? and c.target_id? }
+  after_create  :trigger_target_callbacks
+  after_destroy :cleanup_activities, :cleanup_conversation
+```

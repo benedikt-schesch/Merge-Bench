@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```typescript
+export async function gracefullyShutdown(): Promise<any> {
+  if (state === MatchMakerState.SHUTTING_DOWN) {
+    return Promise.reject('already_shutting_down');
+  }
+
+  debugMatchMaking(`${processId} is shutting down!`);
+
+  isGracefullyShuttingDown = true;
+
+  state = MatchMakerState.SHUTTING_DOWN;
+
+  onReady = undefined;
+
+  // - lock existing rooms
+```

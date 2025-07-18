@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+```php
+	if ( ! array_key_exists( 'plugins', $extras ) || ! is_array( $extras['plugins'] ) ) {
+		return;
+	}
+
+	// Was CPTUI updated?
+	if ( ! in_array( 'custom-post-type-ui/custom-post-type-ui.php', $extras['plugins'], true ) ) {
+		return;
+	}
+
+	// If we are already known as not new, return.
+	if ( cptui_is_new_install() ) {
+
+```
+
+**Resolution Reasoning:**  
+1. Both branches check if the plugin exists in the `$extras['plugins']` array
+2. The HEAD version adds a strict type check (`true` parameter) to `in_array()`
+3. The strict check is safer and more precise (prevents type juggling issues)
+4. Since the array contains plugin paths (strings), strict checking is appropriate
+5. No functional conflict exists - the strict check improves correctness without altering intent
+6. Context shows this is part of a plugin update check where accuracy is important
+
+The resolved version maintains the safer strict comparison while preserving identical behavior for valid plugin entries.

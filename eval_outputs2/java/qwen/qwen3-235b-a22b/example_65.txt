@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```java
+  public List<List<Map<WhiteCardData, Object>>> getWhiteCards(final User user) {
+    // if we're in judge mode, return all of the cards and ignore which user is asking
+    if (state == GameState.JUDGING) {
+      return getWhiteCards();
+    } else if (state != GameState.PLAYING) {
+      /* HEAD -> returns empty list with explicit type declaration */
+      /* 5adedd24 -> returns empty list with diamond type inference */
+      /* Both variants fulfill the same semantic purpose - returning an empty list */
+      return new ArrayList<>();
+    } else {
+      // getPlayerForUser synchronizes on players. This has caused a deadlock in the past.
+      // Good idea to not nest synchronizes if possible anyway.
+      final Player player = getPlayerForUser(user);
+      synchronized (playedCards) {
+```

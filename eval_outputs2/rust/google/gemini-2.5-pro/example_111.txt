@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+The merge conflict arises from two different refactorings of the library's public API, specifically concerning where `ProgressStyle` and iterators are exported from.
+
+*   **The `HEAD` branch** consolidates `ProgressStyle` into the `progress` module and adds a new, optional `rayon` feature for parallel iterators. This simplifies the top-level namespace.
+*   **The other branch (`8811...`)** moves `ProgressStyle` into its own `style` module. It also adds `ProgressBarIter` to the `progress` module's exports, which is redundant as it's already exported from the `iter` module.
+
+The most sensible resolution is to adopt the changes from `HEAD`. Consolidating related items like `ProgressBar` and `ProgressStyle` into a single module (`progress`) is a common and clean refactoring pattern. The addition of the `rayon` feature is a clear, self-contained improvement that should be preserved. The changes from the other branch represent an alternative refactoring that is in direct conflict and less streamlined.
+
+By choosing the `HEAD` version, we achieve both goals: a cleaner API structure and the new parallel iteration feature.
+
+```rust
+mod utils;
+
+pub use format::{BinaryBytes, DecimalBytes, FormattedDuration, HumanBytes, HumanDuration};
+pub use iter::{ProgressBarIter, ProgressIterator};
+pub use progress::{
+    MultiProgress, ProgressBar, ProgressBarRead, ProgressDrawTarget, ProgressStyle,
+};
+
+#[cfg(feature = "with_rayon")]
+pub use iter::rayon::{ParProgressBarIter, ParallelProgressIterator};
+
+```

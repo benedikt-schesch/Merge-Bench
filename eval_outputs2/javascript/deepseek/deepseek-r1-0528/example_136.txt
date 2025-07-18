@@ -1,0 +1,38 @@
+<think>
+No reasoning found</think>
+Here's the resolved code snippet preserving the surrounding context and resolving the semantic conflict:
+
+```javascript
+                  value="nopass"
+                  onChange={(e) => {
+                    setNetwork({
+                      ...network,
+                      encryptionMode: e.target.value,
+                      password: '',
+                      hidePassword: false,
+                    });
+                  }}
+                />
+                <label htmlFor="encrypt-none">None</label>
+                <input
+```
+
+**Resolution Explanation:**
+1. **Semantic Intent Analysis:**
+   - Both branches aim to update encryption mode
+   - The other branch (d240bc3) adds password reset logic when switching to "nopass" (no password)
+   - This is semantically correct - changing to no-password mode should clear existing password fields
+   - The `hidePassword: false` reset ensures password fields remain visible (but empty) for potential mode changes
+
+2. **Conflict Resolution:**
+   - Removed conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`)
+   - Kept both changes since they are complementary:
+     - `encryptionMode` update (from HEAD)
+     - Password field reset (from other branch)
+
+3. **Preservation of Context:**
+   - Maintained exact spacing and surrounding code
+   - Kept all adjacent JSX elements unchanged
+   - Preserved the full structure of the state setter function
+
+The resolution ensures that when switching to no-password mode, the password fields are properly reset while maintaining the encryption mode update functionality.

@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve similar goals with some differences:
+
+**HEAD (left side):**
+- Uses Python 3 print syntax with parentheses: `print(s)`
+- Doesn't set a `tests_pass` variable
+
+**Right side:**
+- Adds logic to track if tests pass: sets `tests_pass = False` if there are any fails
+- Uses Python 2 print syntax without parentheses: `print s`
+
+The semantic intent appears to be:
+1. Both sides want to print the test results
+2. The right side also wants to track whether all tests passed
+
+To resolve this conflict, I'll combine both intents using Python 3 syntax:
+
+```python
+        if f_name.endswith(".py"):
+            path = os.path.join(completion_test_dir, f_name)
+            f = open(path)
+            num_tests, fails = completion_test(f.read())
+            s = 'run %s tests with %s fails (%s)' % (num_tests, fails, f_name)
+            if fails:
+                tests_pass = False
+            print(s)
+            summary.append(s)
+
+print('\nSummary:')
+for s in summary:
+
+```

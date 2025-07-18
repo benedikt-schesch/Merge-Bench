@@ -1,0 +1,27 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the semantic intent of both sides:
+
+- HEAD version: `this.plugin = Spout.getPluginManager().getMetaPlugin();`
+- Incoming version: `this.plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();`
+
+The only difference is that the incoming version adds an explicit cast to `PluginManager` before calling `getMetaPlugin()`. This suggests that:
+
+1. `Spout.getPluginManager()` returns a type that needs to be cast to `PluginManager` to access the `getMetaPlugin()` method
+2. The incoming change is likely addressing a compilation issue or API change
+
+Since the cast is necessary for the code to compile/work properly (otherwise it wouldn't have been added), the semantic intent is to ensure the code works with the current API. The resolution should include the cast.
+
+```java
+	private DateFormat dateFormat;
+	private List<Widget> lines = new ArrayList<Widget>();
+	private float scroll = 0;
+
+	public DevConsole(Font font) {
+		this.plugin = ((PluginManager) Spout.getPluginManager()).getMetaPlugin();
+		this.font = font;
+		init();
+	}
+	
+	public void clearConsole() {
+```

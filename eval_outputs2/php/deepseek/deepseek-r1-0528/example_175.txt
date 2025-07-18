@@ -1,0 +1,33 @@
+<think>
+No reasoning found</think>
+I've analyzed the merge conflict in the provided PHP snippet. The conflict arises from two different approaches to setting up a mock dependency:
+
+1. **HEAD version** uses `new Table()`
+2. **Other branch** uses `$this->console`
+
+After considering the context and semantics:
+- Both are trying to provide a dependency to the `ScheduleService` mock
+- The closure that follows doesn't interact with this dependency
+- The test logic appears to depend on command scheduling behavior, not the specific dependency type
+- Without additional context about the test class or `ScheduleService` requirements, the intent is ambiguous
+
+Since I can't determine which dependency is correct for this test scenario, I'm returning the original code with the conflict markers intact as instructed.
+
+```php
+
+    public function testLogNotScheduled()
+    {
+        $command = m::mock('Indatus\Dispatcher\Scheduling\ScheduledCommand');
+        $scheduleService = m::mock('Indatus\Dispatcher\Services\ScheduleService[getScheduledCommands,isDue]', [
+<<<<<<< HEAD
+                new Table()
+=======
+                $this->console
+>>>>>>> 8a08444b80550a21aa79eb24c96872111fe9cd01
+            ], function ($m) use (&$command) {
+                $scheduler = m::mock('Indatus\Dispatcher\Scheduling\Schedulable');
+                $command->shouldReceive('schedule')->once()
+                    ->andReturn($scheduler);
+
+
+```

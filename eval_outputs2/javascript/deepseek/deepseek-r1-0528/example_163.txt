@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict arises from both branches adding new settings properties after `settings.fdb = undefined;`. The HEAD branch adds uart1-uart3 settings with default values, while the other branch adds cmdline and MAC preservation settings without defaults. Since these are independent settings, the resolution combines both sets of assignments.
+
+Resolved code:
+```javascript
+    settings.vga_memory_size = options["vga_memory_size"] || 8 * 1024 * 1024;
+    settings.boot_order = options["boot_order"] || 0x213;
+    settings.fastboot = options["fastboot"] || false;
+    settings.fda = undefined;
+    settings.fdb = undefined;
+    settings.uart1 = options["uart1"] || false;
+    settings.uart2 = options["uart2"] || false;
+    settings.uart3 = options["uart3"] || false;
+    settings.cmdline = options["cmdline"];
+    settings.preserve_mac_from_state_image = options["preserve_mac_from_state_image"];
+
+    if(options["network_relay_url"])
+    {
+        this.network_adapter = new NetworkAdapter(options["network_relay_url"], this.bus);
+    }
+```

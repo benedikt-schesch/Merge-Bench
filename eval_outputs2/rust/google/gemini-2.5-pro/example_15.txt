@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+An analysis of the conflict reveals two main differences:
+
+1.  **`tree_node` imports**: The `HEAD` branch imports `Transformed`, while the other branch imports `RewriteRecursion`. In recent versions of DataFusion, the `TreeNodeRewriter` API was updated to use `RewriteRecursion` instead of `Transformed`. This indicates that the `e1ca74e7c68e4949504e902f91d2e2b152cfc910` branch contains a more modern version of the code that has been updated to the new API.
+2.  **`datafusion_common` imports**: The `HEAD` branch explicitly imports `DataFusionError`, while the other branch does not. This is often a stylistic change or part of a refactoring where the explicit import is no longer needed (e.g., it's brought in by a prelude or only used via the `Result` type alias).
+
+The semantic intent of the `e1ca74e7c68e4949504e902f91d2e2b152cfc910` branch is to upgrade the code to a newer, refactored API. The correct resolution is to adopt these modernizations fully. Therefore, we should use the imports from the `e1ca74e7c68e4949504e902f91d2e2b152cfc910` branch.
+
+```rust
+use crate::{OptimizerConfig, OptimizerRule};
+use arrow::datatypes::{
+    DataType, TimeUnit, MAX_DECIMAL_FOR_EACH_PRECISION, MIN_DECIMAL_FOR_EACH_PRECISION,
+};
+use arrow::temporal_conversions::{MICROSECONDS, MILLISECONDS, NANOSECONDS};
+use datafusion_common::tree_node::{RewriteRecursion, TreeNodeRewriter};
+use datafusion_common::{internal_err, DFSchema, DFSchemaRef, Result, ScalarValue};
+use datafusion_expr::expr::{BinaryExpr, Cast, InList, TryCast};
+use datafusion_expr::expr_rewriter::rewrite_preserving_name;
+use datafusion_expr::utils::merge_schema;
+use datafusion_expr::{
+    binary_expr, in_list, lit, Expr, ExprSchemable, LogicalPlan, Operator,
+
+```

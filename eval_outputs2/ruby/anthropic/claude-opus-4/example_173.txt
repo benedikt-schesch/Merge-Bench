@@ -1,0 +1,34 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to modify the method signature for `get_page`. 
+
+The HEAD version has:
+```ruby
+def get_page(target_url)
+```
+
+The incoming change has:
+```ruby
+def get_page(target_url: nil)
+```
+
+The semantic intent here appears to be that the incoming change is trying to make the `target_url` parameter a named parameter with a default value of `nil`, which would make it optional. This is a common Ruby pattern for improving API flexibility.
+
+Since the method body uses `target_url` directly without any nil checks or conditional logic, and the comment indicates this is for retrieving "a single page" from an "API-generated URL", it seems the parameter should be required. Making it optional with a nil default could lead to runtime errors when `@version.domain.request` is called with a nil URL.
+
+Therefore, I'll resolve this by keeping the HEAD version which maintains the parameter as required:
+
+```ruby
+          ##
+          # Retrieve a single page of HostedNumberOrderInstance records from the API.
+          # Request is executed immediately.
+          # @param [String] target_url API-generated URL for the requested results page
+          # @return [Page] Page of HostedNumberOrderInstance
+          def get_page(target_url)
+            response = @version.domain.request(
+                'GET',
+                target_url
+            )
+            return HostedNumberOrderPage.new(@version, response, @solution)
+
+```

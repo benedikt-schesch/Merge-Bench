@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that:
+
+1. The HEAD branch has tests for error cases (checking that certain invalid arguments throw exceptions)
+2. The incoming branch adds a new test case for parsing capabilities from command line arguments
+3. Both changes appear to be additive - they're testing different aspects of the argument parser
+
+Since both sides are adding different, non-conflicting test cases, the resolution should include both sets of tests.
+
+```javascript
+    (() => {p.parse_args(['-dc', '42']);}).should.throw();
+    (() => {p.parse_args(['-dc', 'false']);}).should.throw();
+    (() => {p.parse_args(['-dc', 'null']);}).should.throw();
+    (() => {p.parse_args(['-dc', 'does/not/exist.json']);}).should.throw();
+  });
+  it('should parse args that are caps into default capabilities', function () {
+    let defaultCapabilities = {localizableStringsDir: '/my/dir'};
+    let args = p.parse_args(['--localizable-strings-dir', '/my/dir']);
+    args.defaultCapabilities.should.eql(defaultCapabilities);
+  });
+  it('should parse --allow-insecure correctly', function () {
+    p.parse_args([]).allowInsecure.should.eql([]);
+    p.parse_args(['--allow-insecure', '']).allowInsecure.should.eql([]);
+    p.parse_args(['--allow-insecure', 'foo']).allowInsecure.should.eql(['foo']);
+    p.parse_args(['--allow-insecure', 'foo,bar']).allowInsecure.should.eql(['foo', 'bar']);
+
+```

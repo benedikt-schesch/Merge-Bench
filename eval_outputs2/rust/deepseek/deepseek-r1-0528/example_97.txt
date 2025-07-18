@@ -1,0 +1,31 @@
+<think>
+No reasoning found</think>
+I've analyzed the provided merge conflict. The conflict occurs in two separate sections:
+
+1. The first conflict is about an `extern crate user_lib;` declaration - present in HEAD but absent in the other branch
+2. The second conflict is about a `use` statement importing from user_lib - present in HEAD but absent in the other branch
+
+After considering both sides:
+- The `extern crate alloc;` declaration appears to be common to both branches
+- The second `extern crate user_lib;` appears to be common to both branches
+- The `use` statement exists only in HEAD
+
+Since the intent behind removing the `use` statement in the other branch is unclear (it might be intentional removal or part of a larger refactoring), and we don't have enough context to determine if this import is still needed, I'm leaving the conflict unresolved.
+
+The exact original code with preserved conflicts:
+
+```rust
+#![no_std]
+#![no_main]
+
+<<<<<<< HEAD
+extern crate user_lib;
+=======
+>>>>>>> 59480f5d0d3e107a6abbe4bf061f32f0ab92dc7f
+extern crate alloc;
+extern crate user_lib;
+
+<<<<<<< HEAD
+use user_lib::{VIRTGPU_XRES, VIRTGPU_YRES, Display};
+
+```

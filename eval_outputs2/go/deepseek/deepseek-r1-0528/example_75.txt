@@ -1,0 +1,21 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different approaches to iterating over network interfaces and storing references. Both versions aim to avoid the common Go pitfall of capturing a loop variable's address by creating a local copy. The semantic intent is identical - only the variable naming differs. 
+
+The resolution uses the HEAD version since it consistently uses the `iface` variable name for both storing the interface reference and subsequent operations, improving code readability. The other branch's `t` variable adds unnecessary indirection.
+
+```go
+	sort.Sort(rtr.v6)
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return nil, err
+	}
+	for _, tmp := range ifaces {
+		iface := tmp
+		rtr.ifaces[iface.Index] = &iface
+		var addrs ipAddrs
+		ifaceAddrs, err := iface.Addrs()
+		if err != nil {
+			return nil, err
+		}
+```

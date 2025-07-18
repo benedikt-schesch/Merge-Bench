@@ -1,0 +1,25 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to define the same method signature for `getString()` in an interface. The only difference is:
+
+- HEAD version: includes the `public` modifier
+- Other version: omits the `public` modifier
+
+In Java interfaces, all methods are implicitly `public abstract`, so the `public` modifier is redundant and not necessary. Modern Java style guides typically recommend omitting redundant modifiers in interfaces for cleaner code.
+
+Since both versions are semantically identical and the version without `public` follows more modern Java conventions, I'll resolve by using the cleaner version:
+
+```java
+   */
+  public interface Localizable {
+    /**
+     * @return The user-visible string that is associated with this enum value.
+     */
+    String getString();
+  }
+
+  /**
+   * Enums that implement this interface have two user-visible strings associated with them.
+   * <p>
+
+```

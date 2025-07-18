@@ -1,0 +1,18 @@
+<think>
+No reasoning found</think>
+```typescript
+        [Property in keyof T]: MaybeRefDeep<T[Property]>
+      }
+    : T
+>
+
+export type MaybeRef<T> = Ref<T> | T
+
+export type MaybeRefOrGetter<T> = MaybeRef<T> | (() => T)
+
+export type DeepUnwrapRef<T> = T extends UnwrapLeaf
+  ? T
+  : T extends Ref<infer U>
+  ? DeepUnwrapRef<U>
+  : T extends {}
+```

@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to update the copyright year in the eAccelerator extension entry. 
+
+The HEAD branch has updated the copyright to extend through 2015:
+- `"Copyright (c) 2004-2015 eAccelerator",`
+
+While the other branch (51c6ba6bdbfa638ab8fa4984a561dcfe703ce967) has it as:
+- `"Copyright (c) 2004-2014 eAccelerator",`
+
+Since copyright ranges should typically extend to the most recent year being claimed, and HEAD has the later year (2015), the semantic intent appears to be updating the copyright to reflect continued development/maintenance. The resolution should use the HEAD version with 2015.
+
+Here's the resolved code:
+
+```c
+static zend_extension eaccelerator_extension_entry = {
+    EACCELERATOR_EXTENSION_NAME,
+    EACCELERATOR_VERSION,
+    "eAccelerator",
+    "http://eaccelerator.net",
+    "Copyright (c) 2004-2015 eAccelerator",
+    eaccelerator_zend_startup,
+    NULL,
+    NULL,   /* void (*activate)() */
+    NULL,   /* void (*deactivate)() */
+    NULL,   /* void (*message_handle)(int message, void *arg) */
+
+```

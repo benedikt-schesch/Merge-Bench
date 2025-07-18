@@ -1,0 +1,30 @@
+<think>
+No reasoning found</think>
+Based on the semantic analysis of both changes, the resolution maintains the more descriptive function name from the merge branch while preserving the functionality from both branches. Here's the resolved version:
+
+```rust
+            })
+        }
+    }
+
+    #[inline]
+    pub fn get_or_insert_non_send_resource_id<T: Any>(&mut self) -> ComponentId {
+        // SAFE: The [`ComponentDescriptor`] matches the [`TypeId`]
+        unsafe {
+            self.get_or_insert_resource_with(TypeId::of::<T>(), || {
+                ComponentDescriptor::new_non_send::<T>(StorageType::default())
+            })
+```
+
+**Resolution rationale:**
+1. The function name `get_or_insert_non_send_resource_id` (from the merge branch) more accurately reflects the behavior:
+   - `get_or_insert` matches the `get_or_insert_resource_with` call
+   - `non_send_resource_id` clarifies the purpose vs the HEAD's generic `init_non_send`
+   
+2. Both branches share identical implementation logic, so no functional changes are needed
+
+3. The longer name maintains consistency with common Rust patterns for resource accessors while improving self-documentation
+
+4. The unsafe block and descriptor initialization remain unchanged since they were identical in both branches
+
+The resolution maintains the semantic intent of both branches while improving code clarity through more precise naming.

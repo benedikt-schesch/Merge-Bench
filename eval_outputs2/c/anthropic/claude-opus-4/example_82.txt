@@ -1,0 +1,29 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to load the `gai_strerror` function, but they differ in their approach:
+
+- HEAD uses the standard `GET_WINDOWS_FUNCTION` macro
+- The incoming change uses `GET_WINDOWS_FUNCTION_NO_TYPECHECK` with a comment explaining why
+
+The comment in the incoming change provides important context: there's a type-check issue due to VS header files providing an inline definition with `__cdecl` instead of `WINAPI`. This is a valid technical concern that should be preserved.
+
+Since the incoming change includes both the fix (using NO_TYPECHECK) and documentation of why it's necessary, it represents the more complete and correct solution.
+
+Here's the resolved code:
+
+```c
+    logevent(NULL, "Native WinSock IPv6 support detected");
+#endif
+    GET_WINDOWS_FUNCTION(winsock_module, getaddrinfo);
+    GET_WINDOWS_FUNCTION(winsock_module, freeaddrinfo);
+    GET_WINDOWS_FUNCTION(winsock_module, getnameinfo);
+    /* This function would fail its type-check if we did one,
+     * because the VS header file provides an inline definition
+     * which is __cdecl instead of WINAPI. */
+    GET_WINDOWS_FUNCTION_NO_TYPECHECK(winsock_module, gai_strerror);
+  } else {
+    /* Fall back to wship6.dll for Windows 2000 */
+    wship6_module = load_system32_dll("wship6.dll");
+    if (wship6_module) {
+#ifdef NET_SETUP_DIAGNOSTICS
+```

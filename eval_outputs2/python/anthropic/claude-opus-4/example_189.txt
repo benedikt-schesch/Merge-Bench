@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand the intent of both sides:
+
+- HEAD (local) side: Introduces a `process_as_code = False` variable before the multiline comment check
+- Remote side: Does not have this variable initialization
+
+The context suggests this is part of a comment parsing logic where the code is checking for multiline comment delimiters. The `process_as_code` variable appears to be a flag that would likely be used later in the loop to determine how to process the current line.
+
+Since the HEAD side is adding functionality (the flag initialization) that doesn't conflict with the remote side's logic, and this appears to be intentional code to track processing state, the semantic resolution is to keep the HEAD's addition while maintaining the rest of the code structure.
+
+```python
+    multistart, multiend = language.get("multistart"), language.get("multiend")
+    comment_matcher = language['comment_matcher']
+
+    for line in lines:
+        process_as_code = False
+
+        # Only go into multiline comments section when one of the delimiters is
+        # found to be at the start of a line
+        if multistart and multiend and \
+            any(line.lstrip().startswith(delim) or line.rstrip().endswith(delim)
+                for delim in (multistart, multiend)):
+```

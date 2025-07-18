@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The conflict arises from two different approaches to testing exception handling. The receiving branch (HEAD) uses try-except logic to assert the exception message, while the incoming branch uses `pytest.raises` context manager to check the number of errors. The correct resolution combines the strengths of both approaches:
+
+1. Keeps `pytest.raises` context manager to verify exception type and message pattern
+2. Adds explicit check for error count from incoming branch
+3. Removes redundant try-except block which was incorrect outside context manager
+
+Resolved code maintains pytest best practices while validating both error message pattern and error count:
+
+```python
+    schema(frozenset(['abc']))
+    schema(frozenset([42, 'abc']))
+
+    with pytest.raises(MultipleInvalid, match="invalid value in frozenset") as ctx:
+        schema(frozenset([None]))
+    assert len(ctx.value.errors) == 1
+
+def test_lower_util_handles_various_inputs():
+    assert Lower(3) == "3"
+    assert Lower(u"3") == u"3"
+```

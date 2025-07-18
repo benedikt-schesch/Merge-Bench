@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+The `HEAD` branch adds a variable initialization `open = 1;`, while the other branch has no code in this location. The commit message for the other branch (`4348393f562c8011ebca43d6198e98638aa115b5`) indicates the removal of an unused variable.
+
+The intent of the incoming change is to clean up dead code. The `do-while` loop that follows correctly handles the socket-draining logic based on the return value of `p_recv` without needing an `open` flag. Therefore, the correct resolution is to accept the deletion of the unused variable.
+
+```c
+    if (bufsize_after < bufsize_before)
+      plug_sent(s->plug, bufsize_after);
+  } break;
+  case FD_CLOSE:
+    /* Signal a close on the socket. First read any outstanding data. */
+    do {
+      ret = p_recv(s->s, buf, sizeof(buf), 0);
+      if (ret < 0) {
+        err = p_WSAGetLastError();
+        if (err == WSAEWOULDBLOCK)
+
+```

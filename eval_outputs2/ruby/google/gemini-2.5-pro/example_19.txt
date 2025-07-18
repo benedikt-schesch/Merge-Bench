@@ -1,0 +1,19 @@
+<think>
+No reasoning found</think>
+```ruby
+      module Trace
+        class SpanTest < Minitest::Test
+          Segment = Struct.new(:guid, :transaction)
+          Transaction = Struct.new(:trace_id)
+
+          def setup
+            @tracer = NewRelic::Agent::OpenTelemetry::Trace::Tracer.new
+          end
+
+          def teardown
+            NewRelic::Agent.instance.transaction_event_aggregator.reset!
+            NewRelic::Agent.instance.span_event_aggregator.reset!
+          end
+
+
+```

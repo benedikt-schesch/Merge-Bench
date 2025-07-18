@@ -1,0 +1,32 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve similar improvements to the code, with some differences in approach:
+
+**HEAD side:**
+- Uses `let` for the query variable
+- Directly calls `normalizeMatch(match)` inline within `Object.entries()`
+
+**Other side (ea888dcb):**
+- Extracts `normalizeMatch(match)` into a separate `const` variable for clarity
+- Uses `const` for the query variable (which is better practice since it's not reassigned)
+- Adds an empty line for better readability
+
+Both sides maintain the same functionality, but the other side has better code quality practices. Here's the resolved version that combines the best of both:
+
+```javascript
+
+  return newMatch;
+}
+
+async function total(match, params) {
+  const normalizedMatch = normalizeMatch(match);
+  const query = knex("links");
+  
+  Object.entries(normalizedMatch).forEach(([key, value]) => {
+    query.andWhere(key, ...(Array.isArray(value) ? value : [value]));
+  });
+
+  if (params?.search) {
+    query.andWhereRaw(
+
+```

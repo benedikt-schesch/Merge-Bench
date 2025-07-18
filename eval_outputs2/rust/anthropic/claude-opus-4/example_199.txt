@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that one side (HEAD) has the imports without the `log::trace` import, while the other side adds `use log::trace;`. 
+
+Since this is just an import statement addition with no conflicting changes, the semantic intent is clear: the branch `28ee14a75cbb06310e0da03b61eba7789b71a7ed` added logging functionality that requires the `trace` macro from the `log` crate. This is a non-conflicting addition that should be included.
+
+Here's the resolved code:
+
+```rust
+use crate::metrics::Metrics;
+use crate::stream_context::StreamContext;
+use common::configuration::{Configuration, Overrides, PromptGuards, PromptTarget, Tracing};
+use common::http::Client;
+use common::stats::Gauge;
+use log::trace;
+use proxy_wasm::traits::*;
+use proxy_wasm::types::*;
+use std::cell::RefCell;
+use std::collections::HashMap;
+use std::rc::Rc;
+
+```

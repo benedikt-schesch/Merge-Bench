@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+```rust
+/// # use bevy_app::prelude::*;
+/// # use bevy_ecs::prelude::*;
+///
+/// fn main() {
+///    App::new()
+///        .add_system(hello_world_system)
+///        .run();
+/// }
+///
+/// fn hello_world_system() {
+///    println!("hello world");
+```
+
+**Resolution Reasoning:**  
+The conflict arises from Bevy API changes between versions. Earlier versions required `.system()` for registration, while newer versions accept bare functions. The resolution keeps the modern syntax (without `.system()`) since:
+1. It's cleaner and idiomatic for current Bevy
+2. Preserves the core intent of adding the system
+3. Both versions are functionally equivalent in newer Bevy
+4. The surrounding context shows no legacy API usage
+
+The resolution maintains semantic correctness while adopting the more current pattern.

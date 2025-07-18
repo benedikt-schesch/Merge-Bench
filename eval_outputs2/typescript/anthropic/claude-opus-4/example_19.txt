@@ -1,0 +1,26 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I need to understand what both sides are trying to achieve with the `context` property.
+
+- HEAD side: `context: {},` - wants an empty object for context
+- The other side: `context: Object.assign({}, extractedFn),` - wants to create a new object with all properties from `extractedFn`
+
+From a semantic perspective, the second approach seems more intentional - it's explicitly copying the `extractedFn` properties into the context. The HEAD side's empty object might have been a placeholder or incomplete implementation.
+
+Since `extractedFn` is already being spread into the middleware parameters (`...extractedFn`), and the other side wants to also pass it as context, this suggests the context should contain the same information as `extractedFn` for the middleware to process.
+
+Here's the resolved code:
+
+```typescript
+          return executeMiddleware(resolvedMiddleware, 'client', {
+            ...extractedFn,
+            method: resolvedOptions.method,
+            data: opts?.data as any,
+            headers: opts?.headers,
+            context: Object.assign({}, extractedFn),
+          }).then((d) => {
+            if (d.error) throw d.error
+            return d.result
+          })
+        },
+```

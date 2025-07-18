@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+Since the intent behind the parameter type is ambiguous (one side specifies `int|array` while the other uses `mixed`), and the context doesn't provide enough information about `parseTimeParameter()`'s expected behavior, the conflict cannot be safely resolved. The original snippet with the conflict is preserved below:
+
+```php
+        return $this;
+    }
+
+    /**
+     * Set the minutes under which this command will run
+<<<<<<< HEAD:src/Indatus/Dispatcher/Drivers/DateTime/Scheduler.php
+     * @param  int|array $minutesIntoTheHour
+=======
+     * @param  mixed $minutesIntoTheHour
+>>>>>>> 8a08444b80550a21aa79eb24c96872111fe9cd01:src/Indatus/Dispatcher/Drivers/Cron/Scheduler.php
+     * @return $this
+     */
+    public function minutes($minutesIntoTheHour)
+    {
+        $this->setScheduleMinute($this->parseTimeParameter($minutesIntoTheHour));
+
+```

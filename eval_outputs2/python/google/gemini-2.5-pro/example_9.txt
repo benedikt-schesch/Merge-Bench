@@ -1,0 +1,22 @@
+<think>
+No reasoning found</think>
+The `HEAD` branch adds a call to `self.hSizer_labels.Layout()`. In wxPython, after adding items to a sizer, calling `Layout()` is often necessary to make the UI update immediately to show the new widgets. The other branch omits this call, which could lead to the new label not appearing until the next layout event (like a window resize).
+
+The intent of `HEAD` appears to be a bug fix or an improvement to ensure the UI behaves as expected. Therefore, the resolution will keep the `Layout()` call. I will also adopt the `|` pipe operator for combining flags, as it is the standard and more explicit way to perform a bitwise OR.
+
+```python
+
+    def AddPage(self, page, text, select=False):
+        label = LinkStaticText(self.hSizer_panel, text, None, font_colour=wx.BLACK)
+        label.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        sline = wx.StaticLine(self.hSizer_panel, -1, style=wx.LI_VERTICAL)
+        self.hSizer_labels.Add(label, 0, wx.RIGHT | wx.LEFT | wx.CENTER, self.lspace)
+        self.hSizer_labels.Add(sline, 0, wx.EXPAND | wx.ALL | wx.CENTER | wx.TOP | wx.BOTTOM, 5)
+        self.hSizer_labels.Layout()
+        page.Show(False)
+        index = len(self.hSizer_panels.GetChildren()) - 1 if self.ad else len(self.hSizer_panels.GetChildren())
+        self.hSizer_panels.Insert(index, page, 100, wx.EXPAND)
+        self.labels.append(label)
+        self.panels.append(page)
+
+```

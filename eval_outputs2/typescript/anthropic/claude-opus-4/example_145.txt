@@ -1,0 +1,24 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, both sides are trying to achieve the same thing - allowing fullscreen on the iframe element. The only difference is:
+
+- HEAD uses the React convention `allowFullScreen` (without a value, which defaults to true)
+- The other branch uses `allowFullScreen={true}` with an explicit true value and a self-closing `></iframe>` tag
+
+Since both achieve the same semantic intent, I'll resolve this by using the more concise React convention from HEAD, which is also more idiomatic:
+
+```typescript
+          height="315"
+          src="https://www.youtube.com/embed/_An9EsKPhp0"
+          title="Explain Like I'm 5: Docusaurus"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    </div>
+  );
+}
+
+
+```

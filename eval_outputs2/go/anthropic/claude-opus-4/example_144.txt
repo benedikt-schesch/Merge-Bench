@@ -1,0 +1,28 @@
+<think>
+No reasoning found</think>
+Looking at this merge conflict, I can see that both sides are trying to achieve the same goal - extracting some kind of schema/option and updating a swagger object. The key differences are:
+
+1. **HEAD**: Uses `extractJSONSchemaFromFieldDescriptor` and calls `updateSwaggerObjectFromJSONSchema`
+2. **Incoming**: Uses `getFieldOpenAPIOption` and calls `updateswaggerObjectFromJSONSchema` (note the lowercase 's')
+
+The semantic intent appears to be the same - both want to extract schema information and update the swagger object. The incoming change seems to be a refactoring that:
+- Renamed the function from `extractJSONSchemaFromFieldDescriptor` to `getFieldOpenAPIOption`
+- Changed the function name casing from `updateSwaggerObjectFromJSONSchema` to `updateswaggerObjectFromJSONSchema`
+
+Given that both sides have the same intent and the incoming change appears to be a deliberate refactoring (possibly part of a larger rename from swagger to openapi terminology), I'll resolve by accepting the incoming changes:
+
+```go
+			schemaCore: core,
+			Properties: props,
+		}
+	}
+
+	if j, err := getFieldOpenAPIOption(reg, f); err == nil {
+		updateswaggerObjectFromJSONSchema(&ret, j, reg, f)
+	}
+
+	return ret
+}
+
+
+```

@@ -1,0 +1,36 @@
+<think>
+No reasoning found</think>
+The conflict arises from different approaches to handling the `externKey` parameter. The HEAD branch unconditionally converts `externKey` and `passphrase` to bytes, while the other branch conditionally converts only PEM-formatted unicode keys. The resolution preserves both intents by:
+
+1. Keeping the passphrase conversion from HEAD
+2. First converting unicode PEM keys using the other branch's method
+3. Then converting any remaining non-bytes keys using HEAD's `tobytes` method
+4. Maintaining all existing comments and spacing
+
+This ensures:
+- PEM keys are properly handled with ASCII encoding
+- Non-PEM keys get bytes conversion
+- Passphrase is always converted when present
+- The subsequent PEM check works reliably
+
+Resolved code:
+```python
+        :Type passphrase: string
+        
+        :Raise ValueError/IndexError/TypeError:
+            When the given key cannot be parsed (possibly because the pass phrase is wrong).
+        """
+        if passphrase is not None:
+            passphrase = tobytes(passphrase)
+
+        if isinstance(externKey, unicode) and externKey.startswith("-----"):
+            # Convert unicode to bytes for PEM encoded keys
+            externKey = externKey.encode('ascii')
+        elif not isinstance(externKey, bytes):
+            externKey = tobytes(externKey)
+
+        if externKey.startswith(b('-----')):
+                # This is probably a PEM encoded key
+                lines = externKey.replace(b(" "),b('')).split()
+                keyobj = None
+```
