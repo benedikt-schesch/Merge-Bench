@@ -287,7 +287,140 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
     print(f"Saved stacked bar chart: {output_file}")
 
 
-def main():
+def create_summary_table(df: pd.DataFrame, output_dir: Path) -> None:
+    """Create a summary table with averages across all languages, highlighting best values."""
+
+    # Extract unique languages from column names
+    languages = []
+    for col in df.columns:
+        if col.endswith("_Correct"):
+            lang = col.replace("_Correct", "")
+            languages.append(lang)
+
+    # Calculate averages for each model
+    summary_data = []
+    for _, row in df.iterrows():
+        model = row["Model"]
+
+        # Calculate averages across all languages
+        correct_values = [row[f"{lang}_Correct"] for lang in languages]
+        semantic_values = [row[f"{lang}_Semantic"] for lang in languages]
+        conflict_values = [row[f"{lang}_Conflict"] for lang in languages]
+
+        avg_correct = sum(correct_values) / len(correct_values)
+        avg_semantic = sum(semantic_values) / len(semantic_values)
+        avg_conflict = sum(conflict_values) / len(conflict_values)
+
+        summary_data.append(
+            {
+                "Model": model,
+                "Avg_Correct": avg_correct,
+                "Avg_Semantic": avg_semantic,
+                "Avg_Conflict": avg_conflict,
+            }
+        )
+
+    # Create summary DataFrame
+    summary_df = pd.DataFrame(summary_data)
+
+    # Find best values
+    best_correct = summary_df["Avg_Correct"].max()
+    best_semantic = summary_df["Avg_Semantic"].max()
+
+    # Create markdown table with bold formatting for best values
+    markdown_lines = []
+    markdown_lines.append("# Model Performance Summary (Averaged Across All Languages)")
+    markdown_lines.append("")
+    markdown_lines.append(
+        "| Model | Avg Correct Merges (%) | Avg Semantic Merges (%) | Avg Conflict Detection (%) |"
+    )
+    markdown_lines.append(
+        "|-------|------------------------|-------------------------|----------------------------|"
+    )
+
+    for _, row in summary_df.iterrows():
+        model = row["Model"]
+        correct = row["Avg_Correct"]
+        semantic = row["Avg_Semantic"]
+        conflict = row["Avg_Conflict"]
+
+        # Format with bold for best values
+        correct_str = (
+            f"**{correct:.2f}%**" if correct == best_correct else f"{correct:.2f}%"
+        )
+        semantic_str = (
+            f"**{semantic:.2f}%**" if semantic == best_semantic else f"{semantic:.2f}%"
+        )
+        conflict_str = f"{conflict:.2f}%"
+
+        markdown_lines.append(
+            f"| {model} | {correct_str} | {semantic_str} | {conflict_str} |"
+        )
+
+    # Save markdown table
+    output_file = output_dir / "performance_summary_table.md"
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write("\n".join(markdown_lines))
+
+    print(f"Saved summary table: {output_file}")
+
+    # Create LaTeX table
+    latex_lines = []
+    latex_lines.append("\\begin{table}[htbp]")
+    latex_lines.append("\\centering")
+    latex_lines.append(
+        "\\caption{Model Performance Summary (Averaged Across All Languages)}"
+    )
+    latex_lines.append("\\label{tab:model_performance_summary}")
+    latex_lines.append("\\begin{tabular}{|l|c|c|c|}")
+    latex_lines.append("\\hline")
+    latex_lines.append(
+        "\\textbf{Model} & \\textbf{Avg Correct Merges (\\%)} & \\textbf{Avg Semantic Merges "
+        "(\\%)} & \\textbf{Avg Conflict Detection (\\%)} \\\\"
+    )
+    latex_lines.append("\\hline")
+
+    for _, row in summary_df.iterrows():
+        model = (
+            row["Model"].replace("_", "\\_").replace("&", "\\&")
+        )  # Escape LaTeX special chars
+        correct = row["Avg_Correct"]
+        semantic = row["Avg_Semantic"]
+        conflict = row["Avg_Conflict"]
+
+        # Format with bold for best values
+        correct_str = (
+            f"\\textbf{{{correct:.2f}\\%}}"
+            if correct == best_correct
+            else f"{correct:.2f}\\%"
+        )
+        semantic_str = (
+            f"\\textbf{{{semantic:.2f}\\%}}"
+            if semantic == best_semantic
+            else f"{semantic:.2f}\\%"
+        )
+        conflict_str = f"{conflict:.2f}\\%"
+
+        latex_lines.append(
+            f"{model} & {correct_str} & {semantic_str} & {conflict_str} \\\\"
+        )
+
+    latex_lines.append("\\hline")
+    latex_lines.append("\\end{tabular}")
+    latex_lines.append("\\end{table}")
+
+    # Save LaTeX table
+    latex_output_file = output_dir / "performance_summary_table.tex"
+    with open(latex_output_file, "w", encoding="utf-8") as f:
+        f.write("\n".join(latex_lines))
+
+    print(f"Saved LaTeX summary table: {latex_output_file}")
+
+    # Also print to console for immediate viewing
+    print("\n" + "\n".join(markdown_lines))
+
+
+def main() -> None:
     """Main function to parse arguments and generate the stacked bar chart."""
     parser = argparse.ArgumentParser(
         description="Plot performance table from markdown file"
@@ -321,7 +454,11 @@ def main():
     print("\nGenerating stacked bar chart...")
     create_stacked_bar_chart(df, output_dir)
 
-    print(f"\nPlot saved to: {output_dir}")
+    # Generate summary table
+    print("\nGenerating summary table...")
+    create_summary_table(df, output_dir)
+
+    print(f"\nFiles saved to: {output_dir}")
 
 
 if __name__ == "__main__":
