@@ -375,8 +375,8 @@ def create_summary_table(df: pd.DataFrame, output_dir: Path) -> None:
     latex_lines.append("\\begin{tabular}{|l|c|c|c|}")
     latex_lines.append("\\hline")
     latex_lines.append(
-        "\\textbf{Model} & \\textbf{Avg Correct Merges (\\%)} & \\textbf{Avg Semantic Merges "
-        "(\\%)} & \\textbf{Avg Conflict Detection (\\%)} \\\\"
+        "\\textbf{Model} & \\textbf{Avg Correct Merges (\\%)} & \\textbf{Avg "
+        "Normalized Correct Merges (\\%)} & \\textbf{Avg Conflict Detection (\\%)} \\\\"
     )
     latex_lines.append("\\hline")
 
