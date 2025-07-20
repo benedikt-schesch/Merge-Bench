@@ -281,8 +281,8 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
     plt.tight_layout()
 
     # Save the plot
-    output_file = output_dir / "performance_stacked_bar_chart.png"
-    plt.savefig(output_file, dpi=300, bbox_inches="tight")
+    output_file = output_dir / "performance_stacked_bar_chart.pdf"
+    plt.savefig(output_file, bbox_inches="tight")
     plt.close()
     print(f"Saved stacked bar chart: {output_file}")
 
