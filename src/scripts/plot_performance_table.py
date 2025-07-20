@@ -105,7 +105,7 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
             languages.append(lang)
 
     # Set up the figure
-    _, ax = plt.subplots(figsize=(16, 10))
+    _, ax = plt.subplots(figsize=(20, 10))
 
     # Prepare data for stacking
     models = df["Model"].tolist()
@@ -225,7 +225,6 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         )
 
     # Customize the plot
-    ax.set_xlabel("Programming Languages", fontsize=14)
     ax.set_ylabel("Percentage (%)", fontsize=14)
     ax.set_title(
         "Model Performance - Stacked Segments Analysis", fontsize=16, fontweight="bold"
@@ -248,10 +247,10 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
 
     # Segment color legend
     segment_labels = [
-        "Equivalent to developer (Correct)",
-        "Code normalized equivalent (Semantic - Correct)",
+        "Equivalent to developer",
+        "Code normalized equivalent to developer",
         "Conflicts",
-        "Different from normalized",
+        "Different from code normalized to developer",
     ]
 
     segment_legend = []
@@ -264,7 +263,7 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         handles=model_legend,
         loc="upper left",
         bbox_to_anchor=(1.02, 1),
-        title="Models (Patterns)",
+        title="Models",
         frameon=True,
     )
     ax.add_artist(legend1)
@@ -273,7 +272,7 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         handles=segment_legend,
         loc="upper left",
         bbox_to_anchor=(1.02, 0.6),
-        title="Segments (Colors)",
+        title="Segments",
         frameon=True,
     )
 
