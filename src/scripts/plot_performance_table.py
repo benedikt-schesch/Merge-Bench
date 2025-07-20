@@ -12,9 +12,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def parse_markdown_table(file_path: str) -> pd.DataFrame:
+def parse_markdown_table(file_path: str) -> pd.DataFrame:  # pylint: disable=too-many-branches
     """Parse the markdown table and extract performance data."""
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     # Find header lines
@@ -94,56 +94,201 @@ def parse_markdown_table(file_path: str) -> pd.DataFrame:
     return df
 
 
-def create_combined_bar_charts(df: pd.DataFrame, output_dir: Path) -> None:
-    """Create a single plot with 3 stacked bar charts for all metrics."""
+def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pylint: disable=too-many-locals
+    """Create a stacked bar chart with 4 segments for each model-language combination."""
 
-    # Set up the figure with 3 subplots stacked vertically
-    fig, axes = plt.subplots(3, 1, figsize=(16, 18))
+    # Extract unique languages from column names
+    languages = []
+    for col in df.columns:
+        if col.endswith("_Correct"):
+            lang = col.replace("_Correct", "")
+            languages.append(lang)
 
-    metrics = ["Correct", "Semantic", "Conflict"]
-    titles = ["Correct Merges (%)", "Semantic Merges (%)", "Conflict Detection (%)"]
-    colors = ["#2E8B57", "#4169E1", "#DC143C"]  # Green, Blue, Red
+    # Set up the figure
+    _, ax = plt.subplots(figsize=(16, 10))
 
-    for i, (metric, title, color) in enumerate(zip(metrics, titles, colors)):
-        # Extract columns for the specific metric
-        metric_cols = [col for col in df.columns if col.endswith(f"_{metric}")]
-        if not metric_cols:
-            print(f"No columns found for metric: {metric}")
-            continue
+    # Prepare data for stacking
+    models = df["Model"].tolist()
+    n_models = len(models)
+    n_languages = len(languages)
 
-        # Create pivot table - transpose so languages are on x-axis
-        bar_data = df[["Model"] + metric_cols].set_index("Model")
-        bar_data.columns = [col.replace(f"_{metric}", "") for col in bar_data.columns]
-        bar_data = bar_data.T  # Transpose: languages as rows, models as columns
+    # Calculate the 4 segments for each model-language combination
+    segment1_data = []  # Equivalent to developer (Correct)
+    segment2_data = []  # Code Normalized Equivalent (Semantic - Correct)
+    segment3_data = []  # Conflicts
+    segment4_data = []  # Different from normalized (100 - Semantic - Conflict)
 
-        # Create grouped bar chart
-        bar_data.plot(kind="bar", ax=axes[i], width=0.8)
+    for lang in languages:
+        correct_col = f"{lang}_Correct"
+        semantic_col = f"{lang}_Semantic"
+        conflict_col = f"{lang}_Conflict"
 
-        axes[i].set_title(
-            f"Model Performance - {title}", fontsize=16, fontweight="bold"
+        # Get values for this language
+        correct_vals = df[correct_col].values
+        semantic_vals = df[semantic_col].values
+        conflict_vals = df[conflict_col].values
+
+        # Calculate segments
+        seg1 = correct_vals
+        seg2 = semantic_vals - correct_vals
+        seg3 = conflict_vals
+        seg4 = 100 - semantic_vals - conflict_vals
+
+        segment1_data.append(seg1)
+        segment2_data.append(seg2)
+        segment3_data.append(seg3)
+        segment4_data.append(seg4)
+
+    # Convert to numpy arrays for easier manipulation
+    import numpy as np
+
+    segment1_data = np.array(segment1_data).T  # Transpose to get models x languages
+    segment2_data = np.array(segment2_data).T
+    segment3_data = np.array(segment3_data).T
+    segment4_data = np.array(segment4_data).T
+
+    # Create x positions for bars
+    x = np.arange(n_languages)
+    width = 0.8 / n_models  # Width of each bar
+
+    # Define consistent colors for each segment type
+    segment_colors = [
+        "#2E8B57",
+        "#90EE90",
+        "#DC143C",
+        "#808080",
+    ]  # Dark green, Light green, Red, Gray
+
+    # Define patterns for each model
+    model_patterns = {
+        "Claude opus-4": "",  # Solid fill
+        "DeepSeek deepseek-r1-0528": "///",  # Diagonal lines
+        "Gemini 2.5-pro": "...",  # Dots
+        "Openai/O3 Pro": "---",  # Horizontal lines
+        "Qwen qwen3-235B-a22B": "|||",  # Vertical lines
+        "X.AI grok-4": "+++",  # Cross-hatch
+    }
+
+    # Plot stacked bars for each model
+    for i, model in enumerate(models):
+        offset = (i - n_models / 2 + 0.5) * width
+
+        # Get pattern for this model
+        pattern = model_patterns.get(model, "")
+
+        # Stack the segments with consistent colors and model-specific patterns
+        ax.bar(
+            x + offset,
+            segment1_data[i],
+            width,
+            color=segment_colors[0],
+            alpha=0.9,
+            edgecolor="black",
+            linewidth=0.5,
+            hatch=pattern,
         )
-        axes[i].set_xlabel("Programming Languages", fontsize=12)
-        axes[i].set_ylabel("Percentage (%)", fontsize=12)
-        axes[i].legend(title="Models", bbox_to_anchor=(1.05, 1), loc="upper left")
-        axes[i].grid(True, alpha=0.3)
 
-        # Rotate x-axis labels for better readability
-        axes[i].tick_params(axis="x", rotation=45)
+        ax.bar(
+            x + offset,
+            segment2_data[i],
+            width,
+            bottom=segment1_data[i],
+            color=segment_colors[1],
+            alpha=0.9,
+            edgecolor="black",
+            linewidth=0.5,
+            hatch=pattern,
+        )
 
-        # Set y-axis limits for better comparison
-        axes[i].set_ylim(0, 100)
+        ax.bar(
+            x + offset,
+            segment3_data[i],
+            width,
+            bottom=segment1_data[i] + segment2_data[i],
+            color=segment_colors[2],
+            alpha=0.9,
+            edgecolor="black",
+            linewidth=0.5,
+            hatch=pattern,
+        )
 
-    # Adjust layout to prevent overlap
+        ax.bar(
+            x + offset,
+            segment4_data[i],
+            width,
+            bottom=segment1_data[i] + segment2_data[i] + segment3_data[i],
+            color=segment_colors[3],
+            alpha=0.9,
+            edgecolor="black",
+            linewidth=0.5,
+            hatch=pattern,
+        )
+
+    # Customize the plot
+    ax.set_xlabel("Programming Languages", fontsize=14)
+    ax.set_ylabel("Percentage (%)", fontsize=14)
+    ax.set_title(
+        "Model Performance - Stacked Segments Analysis", fontsize=16, fontweight="bold"
+    )
+    ax.set_xticks(x)
+    ax.set_xticklabels(languages, rotation=45, ha="right")
+    ax.set_ylim(0, 100)
+    ax.grid(True, alpha=0.3, axis="y")
+
+    # Create custom legend with both model patterns and segment colors
+    from matplotlib.patches import Patch
+
+    # Model pattern legend
+    model_legend = []
+    for model in models:
+        pattern = model_patterns.get(model, "")
+        model_legend.append(
+            Patch(facecolor="lightgray", edgecolor="black", hatch=pattern, label=model)
+        )
+
+    # Segment color legend
+    segment_labels = [
+        "Equivalent to developer (Correct)",
+        "Code normalized equivalent (Semantic - Correct)",
+        "Conflicts",
+        "Different from normalized",
+    ]
+
+    segment_legend = []
+    for i, (color, label) in enumerate(zip(segment_colors, segment_labels)):
+        patch = Patch(facecolor=color, edgecolor="black", label=label)
+        segment_legend.append(patch)
+
+    # Create two separate legends
+    legend1 = ax.legend(
+        handles=model_legend,
+        loc="upper left",
+        bbox_to_anchor=(1.02, 1),
+        title="Models (Patterns)",
+        frameon=True,
+    )
+    ax.add_artist(legend1)
+
+    ax.legend(
+        handles=segment_legend,
+        loc="upper left",
+        bbox_to_anchor=(1.02, 0.6),
+        title="Segments (Colors)",
+        frameon=True,
+    )
+
+    # Adjust layout
     plt.tight_layout()
 
-    # Save the combined plot
-    output_file = output_dir / "performance_bar_charts.png"
+    # Save the plot
+    output_file = output_dir / "performance_stacked_bar_chart.png"
     plt.savefig(output_file, dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"Saved combined bar charts: {output_file}")
+    print(f"Saved stacked bar chart: {output_file}")
 
 
 def main():
+    """Main function to parse arguments and generate the stacked bar chart."""
     parser = argparse.ArgumentParser(
         description="Plot performance table from markdown file"
     )
@@ -172,9 +317,9 @@ def main():
     print(f"Parsed data shape: {df.shape}")
     print(f"Models: {df['Model'].tolist()}")
 
-    # Generate single combined visualization
-    print("\nGenerating combined bar charts...")
-    create_combined_bar_charts(df, output_dir)
+    # Generate single stacked bar chart visualization
+    print("\nGenerating stacked bar chart...")
+    create_stacked_bar_chart(df, output_dir)
 
     print(f"\nPlot saved to: {output_dir}")
 
