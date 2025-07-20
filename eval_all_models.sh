@@ -3,9 +3,7 @@
 set -e
 
 # Default maximum number of parallel workers for eval.py
-MAX_WORKERS=${1:-8}
-
-MAX_SAMPLES=${2:-200}
+MAX_WORKERS=${1:-32}
 
 # List of all available languages from merges/ directory
 LANGUAGES=(
@@ -45,7 +43,7 @@ evaluate_model() {
         local total=${#LANGUAGES[@]}
 
         echo "[$model_name] [$progress/$total] Evaluating $language"
-        python3 eval.py --model_name "$model" --language "$language" --max_samples "$MAX_SAMPLES" --max_workers "$MAX_WORKERS"
+        python3 eval.py --model_name "$model" --language "$language" --max_workers "$MAX_WORKERS"
     done
 
     echo "[$model_name] Completed all languages"
