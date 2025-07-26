@@ -82,7 +82,7 @@ format_model_name() {
 
     case "$model" in
         "deepseek/deepseek-r1-0528")
-            display_model="R1 0528"
+            display_model="R1-0528 671B"
             ;;
         "google/gemini-2.5-pro")
             display_model="Gemini 2.5 Pro"
@@ -354,7 +354,23 @@ build_performance_table() {
                 correct_rounded=$(printf "%.1f" "$correct")
                 semantic_rounded=$(printf "%.1f" "$semantic")
                 conflict_rounded=$(printf "%.1f" "$conflict")
-                latex_row="${latex_row} & ${correct_rounded}\\% & ${semantic_rounded}\\% & ${conflict_rounded}\\%"
+
+                # Add phantom spacing for single-digit percentages
+                latex_correct="${correct_rounded}\\%"
+                latex_semantic="${semantic_rounded}\\%"
+                latex_conflict="${conflict_rounded}\\%"
+
+                if (( $(echo "$correct_rounded < 10" | bc -l) )); then
+                    latex_correct="\\phantom{0}${correct_rounded}\\%"
+                fi
+                if (( $(echo "$semantic_rounded < 10" | bc -l) )); then
+                    latex_semantic="\\phantom{0}${semantic_rounded}\\%"
+                fi
+                if (( $(echo "$conflict_rounded < 10" | bc -l) )); then
+                    latex_conflict="\\phantom{0}${conflict_rounded}\\%"
+                fi
+
+                latex_row="${latex_row} & ${latex_correct} & ${latex_semantic} & ${latex_conflict}"
             fi
 
             # Add to Markdown row
@@ -470,12 +486,12 @@ build_summary_table() {
     cat << 'EOF' > "$MD_SUMMARY_FILE"
 # Model Performance Summary (Averaged Across All Languages)
 
-| Model | Avg Correct Merges (%) | Avg Semantic Merges (%) | Avg Conflict Detection (%) |
-|-------|------------------------|-------------------------|----------------------------|
+| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer |
+|-------|-------------------------|----------------------------------------|-----------|---------------------------------------------|
 EOF
 
     # Create LaTeX summary table body only
-    echo '\textbf{Model} & \textbf{Avg Correct Merges (\%)} & \textbf{Avg Normalized Correct Merges (\%)} & \textbf{Avg Conflict Detection (\%)} \\' > "$LATEX_SUMMARY_FILE"
+    echo '\textbf{Model} & \textbf{Equivalent to developer (\%)} & \textbf{Code normalized equivalent to developer (\%)} & \textbf{Conflicts (\%)} & \textbf{Different from code normalized to developer (\%)} \\' > "$LATEX_SUMMARY_FILE"
 
     # Second pass: generate table rows with formatting
     for model_data in "${model_averages[@]}"; do
@@ -483,12 +499,15 @@ EOF
 
         if [[ "$avg_correct" == "N/A" ]]; then
             # Markdown row
-            echo "| $display_model | -- | -- | -- |" >> "$MD_SUMMARY_FILE"
+            echo "| $display_model | -- | -- | -- | -- |" >> "$MD_SUMMARY_FILE"
 
             # LaTeX row
             latex_model=$(echo "$display_model" | sed 's/_/\\_/g; s/&/\\&/g')
-            echo "$latex_model & -- & -- & -- \\\\" >> "$LATEX_SUMMARY_FILE"
+            echo "$latex_model & -- & -- & -- & -- \\\\" >> "$LATEX_SUMMARY_FILE"
         else
+            # Calculate 4th segment: Different from code normalized to developer
+            avg_different=$(echo "scale=2; 100 - $avg_semantic - $avg_conflict" | bc -l)
+
             # Format values with bold for best and underline for second-best performers
             # Markdown formatting
             if (( $(echo "$avg_correct == $best_avg_correct" | bc -l) )); then
@@ -508,6 +527,7 @@ EOF
             fi
 
             md_conflict="$(printf "%.1f" "$avg_conflict")%"
+            md_different="$(printf "%.1f" "$avg_different")%"
 
             # LaTeX formatting
             if (( $(echo "$avg_correct == $best_avg_correct" | bc -l) )); then
@@ -527,12 +547,61 @@ EOF
             fi
 
             latex_conflict="$(printf "%.1f" "$avg_conflict")\\%"
+            latex_different="$(printf "%.1f" "$avg_different")\\%"
+
+            # Add phantom spacing for single-digit percentages in summary
+            if (( $(echo "$(printf "%.1f" "$avg_correct") < 10" | bc -l) )); then
+                if [[ "$latex_correct" =~ ^\\\\textbf\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+                    number=$(echo "$latex_correct" | sed 's/\\textbf{\([0-9.]*\)\\%}/\1/')
+                    latex_correct="\\textbf{\\phantom{0}${number}\\%}"
+                elif [[ "$latex_correct" =~ ^\\\\underline\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+                    number=$(echo "$latex_correct" | sed 's/\\underline{\([0-9.]*\)\\%}/\1/')
+                    latex_correct="\\underline{\\phantom{0}${number}\\%}"
+                else
+                    number=$(echo "$latex_correct" | sed 's/\([0-9.]*\)\\%/\1/')
+                    latex_correct="\\phantom{0}${number}\\%"
+                fi
+            fi
+
+            if (( $(echo "$(printf "%.1f" "$avg_semantic") < 10" | bc -l) )); then
+                if [[ "$latex_semantic" =~ ^\\\\textbf\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+                    number=$(echo "$latex_semantic" | sed 's/\\textbf{\([0-9.]*\)\\%}/\1/')
+                    latex_semantic="\\textbf{\\phantom{0}${number}\\%}"
+                elif [[ "$latex_semantic" =~ ^\\\\underline\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+                    number=$(echo "$latex_semantic" | sed 's/\\underline{\([0-9.]*\)\\%}/\1/')
+                    latex_semantic="\\underline{\\phantom{0}${number}\\%}"
+                else
+                    number=$(echo "$latex_semantic" | sed 's/\([0-9.]*\)\\%/\1/')
+                    latex_semantic="\\phantom{0}${number}\\%"
+                fi
+            fi
+
+            if (( $(echo "$(printf "%.1f" "$avg_conflict") < 10" | bc -l) )); then
+                latex_conflict="\\phantom{0}$(printf "%.1f" "$avg_conflict")\\%"
+            fi
+
+            if (( $(echo "$(printf "%.1f" "$avg_different") < 10" | bc -l) )); then
+                latex_different="\\phantom{0}$(printf "%.1f" "$avg_different")\\%"
+            fi
+
+            # Apply phantom spacing for LaTeX alignment
+            latex_model=$(echo "$display_model" | sed 's/_/\\_/g; s/&/\\&/g')
+            case "$display_model" in
+                "R1 1.5B")
+                    latex_model="R1 \\phantom{0}1.5B"
+                    ;;
+                "R1 8B")
+                    latex_model="R1 \\phantom{0}8B"
+                    ;;
+                "Qwen3 8B")
+                    latex_model="Qwen3 \\phantom{0}8B"
+                    ;;
+            esac
 
             # Write rows
-            echo "| $display_model | $md_correct | $md_semantic | $md_conflict |" >> "$MD_SUMMARY_FILE"
+            echo "| $display_model | $md_correct | $md_semantic | $md_conflict | $md_different |" >> "$MD_SUMMARY_FILE"
 
-            latex_model=$(echo "$display_model" | sed 's/_/\\_/g; s/&/\\&/g')
-            echo "$latex_model & $latex_correct & $latex_semantic & $latex_conflict \\\\" >> "$LATEX_SUMMARY_FILE"
+            echo "$latex_model & $latex_correct & $latex_semantic & $latex_conflict & $latex_different \\\\" >> "$LATEX_SUMMARY_FILE"
         fi
     done
 

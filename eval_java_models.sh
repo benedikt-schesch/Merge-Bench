@@ -50,7 +50,7 @@ format_model_name() {
 
     case "$model" in
         "deepseek/deepseek-r1-0528")
-            display_model="R1 0528"
+            display_model="R1-0528 671B"
             ;;
         "google/gemini-2.5-pro")
             display_model="Gemini 2.5 Pro"
@@ -219,32 +219,65 @@ build_performance_table() {
             segment3=$(printf "%.1f" "$segment3")
             segment4=$(printf "%.1f" "$segment4")
 
-            # Apply highlighting to both segments
-            latex_seg1="${segment1}\\%"
-            latex_seg2="${segment2}\\%"
-            md_seg1="${segment1}%"
-            md_seg2="${segment2}%"
+        # Apply highlighting to both segments
+        latex_seg1="${segment1}\\%"
+        latex_seg2="${segment2}\\%"
+        md_seg1="${segment1}%"
+        md_seg2="${segment2}%"
 
-            # Highlight segment1 (Equivalent to developer)
-            if (( $(echo "$segment1 == $best_segment1" | bc -l) )); then
-                latex_seg1="\\textbf{${segment1}\\%}"
-                md_seg1="**${segment1}%**"
-            elif [[ "$second_segment1" != "0" ]] && (( $(echo "$segment1 == $second_segment1" | bc -l) )); then
-                latex_seg1="\\underline{${segment1}\\%}"
-                md_seg1="<u>${segment1}%</u>"
-            fi
+        # Highlight segment1 (Equivalent to developer)
+        if (( $(echo "$segment1 == $best_segment1" | bc -l) )); then
+            latex_seg1="\\textbf{${segment1}\\%}"
+            md_seg1="**${segment1}%**"
+        elif [[ "$second_segment1" != "0" ]] && (( $(echo "$segment1 == $second_segment1" | bc -l) )); then
+            latex_seg1="\\underline{${segment1}\\%}"
+            md_seg1="<u>${segment1}%</u>"
+        fi
 
-            # Highlight segment2 (Code normalized equivalent to developer)
-            if (( $(echo "$segment2 == $best_segment2" | bc -l) )); then
-                latex_seg2="\\textbf{${segment2}\\%}"
-                md_seg2="**${segment2}%**"
-            elif [[ "$second_segment2" != "0" ]] && (( $(echo "$segment2 == $second_segment2" | bc -l) )); then
-                latex_seg2="\\underline{${segment2}\\%}"
-                md_seg2="<u>${segment2}%</u>"
-            fi
+        # Highlight segment2 (Code normalized equivalent to developer)
+        if (( $(echo "$segment2 == $best_segment2" | bc -l) )); then
+            latex_seg2="\\textbf{${segment2}\\%}"
+            md_seg2="**${segment2}%**"
+        elif [[ "$second_segment2" != "0" ]] && (( $(echo "$segment2 == $second_segment2" | bc -l) )); then
+            latex_seg2="\\underline{${segment2}\\%}"
+            md_seg2="<u>${segment2}%</u>"
+        fi
 
-            latex_row="$display_model & ${latex_seg1} & ${latex_seg2} & ${segment3}\\% & ${segment4}\\% \\\\"
-            md_row="| $display_model | ${md_seg1} | ${md_seg2} | ${segment3}% | ${segment4}% |"
+        # Apply phantom spacing for single-digit percentages
+        latex_seg3="${segment3}\\%"
+        latex_seg4="${segment4}\\%"
+
+        # Add phantom spacing for single-digit numbers
+        if (( $(echo "$segment3 < 10" | bc -l) )); then
+            latex_seg3="\\phantom{0}${segment3}\\%"
+        fi
+        if (( $(echo "$segment4 < 10" | bc -l) )); then
+            latex_seg4="\\phantom{0}${segment4}\\%"
+        fi
+
+        # Also check if segments 1 and 2 need phantom spacing
+        if [[ "$latex_seg1" =~ ^[0-9]\.[0-9]\\%$ ]]; then
+            latex_seg1="\\phantom{0}${latex_seg1}"
+        elif [[ "$latex_seg1" =~ ^\\\\textbf\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+            number=$(echo "$latex_seg1" | sed 's/\\textbf{\([0-9.]*\)\\%}/\1/')
+            latex_seg1="\\textbf{\\phantom{0}${number}\\%}"
+        elif [[ "$latex_seg1" =~ ^\\\\underline\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+            number=$(echo "$latex_seg1" | sed 's/\\underline{\([0-9.]*\)\\%}/\1/')
+            latex_seg1="\\underline{\\phantom{0}${number}\\%}"
+        fi
+
+        if [[ "$latex_seg2" =~ ^[0-9]\.[0-9]\\%$ ]]; then
+            latex_seg2="\\phantom{0}${latex_seg2}"
+        elif [[ "$latex_seg2" =~ ^\\\\textbf\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+            number=$(echo "$latex_seg2" | sed 's/\\textbf{\([0-9.]*\)\\%}/\1/')
+            latex_seg2="\\textbf{\\phantom{0}${number}\\%}"
+        elif [[ "$latex_seg2" =~ ^\\\\underline\{[0-9]\.[0-9]\\\\%\}$ ]]; then
+            number=$(echo "$latex_seg2" | sed 's/\\underline{\([0-9.]*\)\\%}/\1/')
+            latex_seg2="\\underline{\\phantom{0}${number}\\%}"
+        fi
+
+        latex_row="$display_model & ${latex_seg1} & ${latex_seg2} & ${latex_seg3} & ${latex_seg4} \\\\"
+        md_row="| $display_model | ${md_seg1} | ${md_seg2} | ${segment3}% | ${segment4}% |"
         fi
 
         echo "$latex_row" >> "$OUTPUT_FILE"
