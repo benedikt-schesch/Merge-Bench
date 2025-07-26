@@ -144,6 +144,48 @@ build_performance_table() {
 
     echo "📝 Processing ${#MODELS[@]} models for Java"
 
+    # ─── First pass: find best and second best scores ────────────────────────
+    local best_correct=0
+    local second_correct=0
+    local best_semantic=0
+    local second_semantic=0
+
+    # Collect all scores first
+    declare -a correct_scores
+    declare -a semantic_scores
+
+    for model in "${MODELS[@]}"; do
+        read correct semantic conflict < <(get_metrics "$model")
+        if [[ "$correct" != "N/A" && "$correct" != "" ]]; then
+            correct_scores+=("$correct")
+        fi
+        if [[ "$semantic" != "N/A" && "$semantic" != "" ]]; then
+            semantic_scores+=("$semantic")
+        fi
+    done
+
+    # Sort and find best/second best for correct scores
+    if [[ ${#correct_scores[@]} -gt 0 ]]; then
+        IFS=$'\n' sorted_correct=($(sort -nr <<<"${correct_scores[*]}"))
+        unset IFS
+        best_correct=${sorted_correct[0]}
+        if [[ ${#sorted_correct[@]} -gt 1 ]]; then
+            second_correct=${sorted_correct[1]}
+        fi
+    fi
+
+    # Sort and find best/second best for semantic scores
+    if [[ ${#semantic_scores[@]} -gt 0 ]]; then
+        IFS=$'\n' sorted_semantic=($(sort -nr <<<"${semantic_scores[*]}"))
+        unset IFS
+        best_semantic=${sorted_semantic[0]}
+        if [[ ${#sorted_semantic[@]} -gt 1 ]]; then
+            second_semantic=${sorted_semantic[1]}
+        fi
+    fi
+
+    echo "📊 Best scores found - Correct: ${best_correct}% (2nd: ${second_correct}%), Semantic: ${best_semantic}% (2nd: ${second_semantic}%)"
+
     # ─── LaTeX Table Creation ─────────────────────────────────────────────────
     cat << EOF > "$OUTPUT_FILE"
 \\begin{table}[ht]
@@ -159,25 +201,57 @@ EOF
     echo "| Model | Correct | Semantic | Conflict |" > "$MD_OUTPUT_FILE"
     echo "| --- | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
 
-    # ─── Process each model ────────────────────────────────────────────────────
+    # ─── Second pass: build table with bolding ────────────────────────────────
     for model in "${MODELS[@]}"; do
         echo "⚙️ Processing model: $model"
 
         display_model=$(format_model_name "$model")
         read correct semantic conflict < <(get_metrics "$model")
 
-        # LaTeX row
+        # LaTeX row with bolding and underlining
         if [[ "$correct" == "N/A" ]]; then
             latex_row="$display_model & -- & -- & -- \\\\"
         else
-            latex_row="$display_model & ${correct}\\% & ${semantic}\\% & ${conflict}\\% \\\\"
+            # Check if this is the best/second best score and format accordingly
+            latex_correct="${correct}\\%"
+            latex_semantic="${semantic}\\%"
+
+            if (( $(echo "$correct == $best_correct" | bc -l) )); then
+                latex_correct="\\textbf{${correct}\\%}"
+            elif [[ "$second_correct" != "0" ]] && (( $(echo "$correct == $second_correct" | bc -l) )); then
+                latex_correct="\\underline{${correct}\\%}"
+            fi
+
+            if (( $(echo "$semantic == $best_semantic" | bc -l) )); then
+                latex_semantic="\\textbf{${semantic}\\%}"
+            elif [[ "$second_semantic" != "0" ]] && (( $(echo "$semantic == $second_semantic" | bc -l) )); then
+                latex_semantic="\\underline{${semantic}\\%}"
+            fi
+
+            latex_row="$display_model & ${latex_correct} & ${latex_semantic} & ${conflict}\\% \\\\"
         fi
 
-        # Markdown row
+        # Markdown row with bolding and underlining
         if [[ "$correct" == "N/A" ]]; then
             md_row="| $display_model | -- | -- | -- |"
         else
-            md_row="| $display_model | ${correct}% | ${semantic}% | ${conflict}% |"
+            # Check if this is the best/second best score and format accordingly
+            md_correct="${correct}%"
+            md_semantic="${semantic}%"
+
+            if (( $(echo "$correct == $best_correct" | bc -l) )); then
+                md_correct="**${correct}%**"
+            elif [[ "$second_correct" != "0" ]] && (( $(echo "$correct == $second_correct" | bc -l) )); then
+                md_correct="<u>${correct}%</u>"
+            fi
+
+            if (( $(echo "$semantic == $best_semantic" | bc -l) )); then
+                md_semantic="**${semantic}%**"
+            elif [[ "$second_semantic" != "0" ]] && (( $(echo "$semantic == $second_semantic" | bc -l) )); then
+                md_semantic="<u>${semantic}%</u>"
+            fi
+
+            md_row="| $display_model | ${md_correct} | ${md_semantic} | ${conflict}% |"
         fi
 
         echo "$latex_row" >> "$OUTPUT_FILE"
