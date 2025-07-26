@@ -415,8 +415,14 @@ build_summary_table() {
     declare -a model_averages
     best_avg_correct=0
     best_avg_semantic=0
+    second_avg_correct=0
+    second_avg_semantic=0
 
-    # First pass: calculate averages and find best values
+    # Collect all average scores first
+    declare -a correct_averages
+    declare -a semantic_averages
+
+    # First pass: calculate averages
     for model in "${MODELS[@]}"; do
         display_model=$(format_model_name "$model")
 
@@ -443,13 +449,8 @@ build_summary_table() {
             avg_semantic=$(echo "scale=2; $total_semantic / $valid_count" | bc -l)
             avg_conflict=$(echo "scale=2; $total_conflict / $valid_count" | bc -l)
 
-            # Track best values
-            if (( $(echo "$avg_correct > $best_avg_correct" | bc -l) )); then
-                best_avg_correct=$avg_correct
-            fi
-            if (( $(echo "$avg_semantic > $best_avg_semantic" | bc -l) )); then
-                best_avg_semantic=$avg_semantic
-            fi
+            correct_averages+=("$avg_correct")
+            semantic_averages+=("$avg_semantic")
         else
             avg_correct="N/A"
             avg_semantic="N/A"
@@ -459,7 +460,27 @@ build_summary_table() {
         model_averages+=("$model|$display_model|$avg_correct|$avg_semantic|$avg_conflict")
     done
 
-    echo "📊 Best averages found - Correct: ${best_avg_correct}%, Semantic: ${best_avg_semantic}%"
+    # Sort and find best/second best for correct averages
+    if [[ ${#correct_averages[@]} -gt 0 ]]; then
+        IFS=$'\n' sorted_correct=($(sort -nr <<<"${correct_averages[*]}"))
+        unset IFS
+        best_avg_correct=${sorted_correct[0]}
+        if [[ ${#sorted_correct[@]} -gt 1 ]]; then
+            second_avg_correct=${sorted_correct[1]}
+        fi
+    fi
+
+    # Sort and find best/second best for semantic averages
+    if [[ ${#semantic_averages[@]} -gt 0 ]]; then
+        IFS=$'\n' sorted_semantic=($(sort -nr <<<"${semantic_averages[*]}"))
+        unset IFS
+        best_avg_semantic=${sorted_semantic[0]}
+        if [[ ${#sorted_semantic[@]} -gt 1 ]]; then
+            second_avg_semantic=${sorted_semantic[1]}
+        fi
+    fi
+
+    echo "📊 Best averages found - Correct: ${best_avg_correct}% (2nd: ${second_avg_correct}%), Semantic: ${best_avg_semantic}% (2nd: ${second_avg_semantic}%)"
 
     # Create Markdown summary table
     cat << 'EOF' > "$MD_SUMMARY_FILE"
@@ -493,16 +514,20 @@ EOF
             latex_model=$(echo "$display_model" | sed 's/_/\\_/g; s/&/\\&/g')
             echo "$latex_model & -- & -- & -- \\\\" >> "$LATEX_SUMMARY_FILE"
         else
-            # Format values with bold for best performers - using single digit precision
+            # Format values with bold for best and underline for second-best performers
             # Markdown formatting
             if (( $(echo "$avg_correct == $best_avg_correct" | bc -l) )); then
                 md_correct="**$(printf "%.1f" "$avg_correct")%**"
+            elif [[ "$second_avg_correct" != "0" ]] && (( $(echo "$avg_correct == $second_avg_correct" | bc -l) )); then
+                md_correct="<u>$(printf "%.1f" "$avg_correct")%</u>"
             else
                 md_correct="$(printf "%.1f" "$avg_correct")%"
             fi
 
             if (( $(echo "$avg_semantic == $best_avg_semantic" | bc -l) )); then
                 md_semantic="**$(printf "%.1f" "$avg_semantic")%**"
+            elif [[ "$second_avg_semantic" != "0" ]] && (( $(echo "$avg_semantic == $second_avg_semantic" | bc -l) )); then
+                md_semantic="<u>$(printf "%.1f" "$avg_semantic")%</u>"
             else
                 md_semantic="$(printf "%.1f" "$avg_semantic")%"
             fi
@@ -512,12 +537,16 @@ EOF
             # LaTeX formatting
             if (( $(echo "$avg_correct == $best_avg_correct" | bc -l) )); then
                 latex_correct="\\textbf{$(printf "%.1f" "$avg_correct")\\%}"
+            elif [[ "$second_avg_correct" != "0" ]] && (( $(echo "$avg_correct == $second_avg_correct" | bc -l) )); then
+                latex_correct="\\underline{$(printf "%.1f" "$avg_correct")\\%}"
             else
                 latex_correct="$(printf "%.1f" "$avg_correct")\\%"
             fi
 
             if (( $(echo "$avg_semantic == $best_avg_semantic" | bc -l) )); then
                 latex_semantic="\\textbf{$(printf "%.1f" "$avg_semantic")\\%}"
+            elif [[ "$second_avg_semantic" != "0" ]] && (( $(echo "$avg_semantic == $second_avg_semantic" | bc -l) )); then
+                latex_semantic="\\underline{$(printf "%.1f" "$avg_semantic")\\%}"
             else
                 latex_semantic="$(printf "%.1f" "$avg_semantic")\\%"
             fi
