@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Default maximum number of parallel workers for eval.py
+# Function to show help
 MAX_WORKERS=${1:-32}
 
 # Fixed language - Java only
@@ -144,62 +144,56 @@ build_performance_table() {
 
     echo "📝 Processing ${#MODELS[@]} models for Java"
 
-    # ─── First pass: find best and second best scores ────────────────────────
-    local best_correct=0
-    local second_correct=0
-    local best_semantic=0
-    local second_semantic=0
+    # ─── First pass: find best and second best scores for segments ─────────────
+    local best_segment1=0
+    local second_segment1=0
+    local best_segment2=0
+    local second_segment2=0
 
     # Collect all scores first
-    declare -a correct_scores
-    declare -a semantic_scores
+    declare -a segment1_scores
+    declare -a segment2_scores
 
     for model in "${MODELS[@]}"; do
         read correct semantic conflict < <(get_metrics "$model")
         if [[ "$correct" != "N/A" && "$correct" != "" ]]; then
-            correct_scores+=("$correct")
-        fi
-        if [[ "$semantic" != "N/A" && "$semantic" != "" ]]; then
-            semantic_scores+=("$semantic")
+            # Calculate segment1 (correct) and segment2 (semantic - no subtraction)
+            local seg1=$(printf "%.1f" "$correct")
+            local seg2=$(printf "%.1f" "$semantic")
+
+            segment1_scores+=("$seg1")
+            segment2_scores+=("$seg2")
         fi
     done
 
-    # Sort and find best/second best for correct scores
-    if [[ ${#correct_scores[@]} -gt 0 ]]; then
-        IFS=$'\n' sorted_correct=($(sort -nr <<<"${correct_scores[*]}"))
+    # Sort and find best/second best for segment1 scores
+    if [[ ${#segment1_scores[@]} -gt 0 ]]; then
+        IFS=$'\n' sorted_seg1=($(sort -nr <<<"${segment1_scores[*]}"))
         unset IFS
-        best_correct=${sorted_correct[0]}
-        if [[ ${#sorted_correct[@]} -gt 1 ]]; then
-            second_correct=${sorted_correct[1]}
+        best_segment1=${sorted_seg1[0]}
+        if [[ ${#sorted_seg1[@]} -gt 1 ]]; then
+            second_segment1=${sorted_seg1[1]}
         fi
     fi
 
-    # Sort and find best/second best for semantic scores
-    if [[ ${#semantic_scores[@]} -gt 0 ]]; then
-        IFS=$'\n' sorted_semantic=($(sort -nr <<<"${semantic_scores[*]}"))
+    # Sort and find best/second best for segment2 scores
+    if [[ ${#segment2_scores[@]} -gt 0 ]]; then
+        IFS=$'\n' sorted_seg2=($(sort -nr <<<"${segment2_scores[*]}"))
         unset IFS
-        best_semantic=${sorted_semantic[0]}
-        if [[ ${#sorted_semantic[@]} -gt 1 ]]; then
-            second_semantic=${sorted_semantic[1]}
+        best_segment2=${sorted_seg2[0]}
+        if [[ ${#sorted_seg2[@]} -gt 1 ]]; then
+            second_segment2=${sorted_seg2[1]}
         fi
     fi
 
-    echo "📊 Best scores found - Correct: ${best_correct}% (2nd: ${second_correct}%), Semantic: ${best_semantic}% (2nd: ${second_semantic}%)"
+    echo "📊 Best scores found - Segment1: ${best_segment1}% (2nd: ${second_segment1}%), Segment2: ${best_segment2}% (2nd: ${second_segment2}%)"
 
     # ─── LaTeX Table Creation ─────────────────────────────────────────────────
-    cat << EOF > "$OUTPUT_FILE"
-\\begin{table}[ht]
-\\centering
-\\footnotesize
-\\begin{tabular}{lccc}
-\\toprule
-Model & Correct & Semantic & Conflict \\\\
-\\midrule
-EOF
+    echo 'Model & Equivalent to developer & Code normalized equivalent to developer & Conflicts & Different from code normalized to developer \\' > "$OUTPUT_FILE"
 
     # ─── Markdown Table Creation ───────────────────────────────────────────────
-    echo "| Model | Correct | Semantic | Conflict |" > "$MD_OUTPUT_FILE"
-    echo "| --- | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
+    echo "| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer |" > "$MD_OUTPUT_FILE"
+    echo "| --- | ---: | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
 
     # ─── Second pass: build table with bolding ────────────────────────────────
     for model in "${MODELS[@]}"; do
@@ -208,74 +202,56 @@ EOF
         display_model=$(format_model_name "$model")
         read correct semantic conflict < <(get_metrics "$model")
 
-        # LaTeX row with bolding and underlining
+        # Calculate the 4 segments from raw metrics
         if [[ "$correct" == "N/A" ]]; then
-            latex_row="$display_model & -- & -- & -- \\\\"
+            latex_row="$display_model & -- & -- & -- & -- \\\\"
+            md_row="| $display_model | -- | -- | -- | -- |"
         else
-            # Round to 1 decimal place
-            local correct_rounded=$(printf "%.1f" "$correct")
-            local semantic_rounded=$(printf "%.1f" "$semantic")
-            local conflict_rounded=$(printf "%.1f" "$conflict")
+            # Calculate 4 segments - segment2 is full semantic, not subtracted
+            local segment1=$(printf "%.1f" "$correct")  # Equivalent to developer
+            local segment2=$(printf "%.1f" "$semantic")  # Code normalized equivalent (full semantic)
+            local segment3=$(printf "%.1f" "$conflict")  # Conflicts
+            local segment4=$(echo "scale=1; 100 - $segment2 - $segment3" | bc -l)  # Different from normalized
 
-            # Check if this is the best/second best score and format accordingly
-            latex_correct="${correct_rounded}\\%"
-            latex_semantic="${semantic_rounded}\\%"
+            # Format segments with proper rounding
+            segment1=$(printf "%.1f" "$segment1")
+            segment2=$(printf "%.1f" "$segment2")
+            segment3=$(printf "%.1f" "$segment3")
+            segment4=$(printf "%.1f" "$segment4")
 
-            if (( $(echo "$correct == $best_correct" | bc -l) )); then
-                latex_correct="\\textbf{${correct_rounded}\\%}"
-            elif [[ "$second_correct" != "0" ]] && (( $(echo "$correct == $second_correct" | bc -l) )); then
-                latex_correct="\\underline{${correct_rounded}\\%}"
+            # Apply highlighting to both segments
+            latex_seg1="${segment1}\\%"
+            latex_seg2="${segment2}\\%"
+            md_seg1="${segment1}%"
+            md_seg2="${segment2}%"
+
+            # Highlight segment1 (Equivalent to developer)
+            if (( $(echo "$segment1 == $best_segment1" | bc -l) )); then
+                latex_seg1="\\textbf{${segment1}\\%}"
+                md_seg1="**${segment1}%**"
+            elif [[ "$second_segment1" != "0" ]] && (( $(echo "$segment1 == $second_segment1" | bc -l) )); then
+                latex_seg1="\\underline{${segment1}\\%}"
+                md_seg1="<u>${segment1}%</u>"
             fi
 
-            if (( $(echo "$semantic == $best_semantic" | bc -l) )); then
-                latex_semantic="\\textbf{${semantic_rounded}\\%}"
-            elif [[ "$second_semantic" != "0" ]] && (( $(echo "$semantic == $second_semantic" | bc -l) )); then
-                latex_semantic="\\underline{${semantic_rounded}\\%}"
+            # Highlight segment2 (Code normalized equivalent to developer)
+            if (( $(echo "$segment2 == $best_segment2" | bc -l) )); then
+                latex_seg2="\\textbf{${segment2}\\%}"
+                md_seg2="**${segment2}%**"
+            elif [[ "$second_segment2" != "0" ]] && (( $(echo "$segment2 == $second_segment2" | bc -l) )); then
+                latex_seg2="\\underline{${segment2}\\%}"
+                md_seg2="<u>${segment2}%</u>"
             fi
 
-            latex_row="$display_model & ${latex_correct} & ${latex_semantic} & ${conflict_rounded}\\% \\\\"
-        fi
-
-        # Markdown row with bolding and underlining
-        if [[ "$correct" == "N/A" ]]; then
-            md_row="| $display_model | -- | -- | -- |"
-        else
-            # Round to 1 decimal place
-            local correct_rounded=$(printf "%.1f" "$correct")
-            local semantic_rounded=$(printf "%.1f" "$semantic")
-            local conflict_rounded=$(printf "%.1f" "$conflict")
-
-            # Check if this is the best/second best score and format accordingly
-            md_correct="${correct_rounded}%"
-            md_semantic="${semantic_rounded}%"
-
-            if (( $(echo "$correct == $best_correct" | bc -l) )); then
-                md_correct="**${correct_rounded}%**"
-            elif [[ "$second_correct" != "0" ]] && (( $(echo "$correct == $second_correct" | bc -l) )); then
-                md_correct="<u>${correct_rounded}%</u>"
-            fi
-
-            if (( $(echo "$semantic == $best_semantic" | bc -l) )); then
-                md_semantic="**${semantic_rounded}%**"
-            elif [[ "$second_semantic" != "0" ]] && (( $(echo "$semantic == $second_semantic" | bc -l) )); then
-                md_semantic="<u>${semantic_rounded}%</u>"
-            fi
-
-            md_row="| $display_model | ${md_correct} | ${md_semantic} | ${conflict_rounded}% |"
+            latex_row="$display_model & ${latex_seg1} & ${latex_seg2} & ${segment3}\\% & ${segment4}\\% \\\\"
+            md_row="| $display_model | ${md_seg1} | ${md_seg2} | ${segment3}% | ${segment4}% |"
         fi
 
         echo "$latex_row" >> "$OUTPUT_FILE"
         echo "$md_row" >> "$MD_OUTPUT_FILE"
     done
 
-    # Close LaTeX table
-    cat << 'EOF' >> "$OUTPUT_FILE"
-\bottomrule
-\end{tabular}
-\caption{Java model performance. Metrics shown are: Correct merges (\%), Semantic merges (\%), and Raising conflict (\%).}
-\label{tab:java-results}
-\end{table}
-EOF
+    # No table closing - only output the body
 
     echo "📊 Performance tables generated:"
     echo "   LaTeX: $OUTPUT_FILE"

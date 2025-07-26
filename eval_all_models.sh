@@ -221,14 +221,6 @@ build_performance_table() {
         col_spec="${col_spec}ccc"
     done
 
-    cat << EOF > "$OUTPUT_FILE"
-\\begin{table}[ht]
-\\centering
-\\footnotesize
-\\begin{tabular}{${col_spec}}
-\\toprule
-EOF
-
     # Create multi-level headers
     # First header row: Model + Language names spanning 3 columns each
     header1="Model"
@@ -275,7 +267,7 @@ EOF
         header1="${header1} & \\multicolumn{3}{c}{${lang_display}}"
     done
     header1="${header1} \\\\"
-    echo "$header1" >> "$OUTPUT_FILE"
+    echo "$header1" > "$OUTPUT_FILE"
 
     # Second header row: empty + metric names for each language
     header2=""
@@ -284,8 +276,6 @@ EOF
     done
     header2="${header2} \\\\"
     echo "$header2" >> "$OUTPUT_FILE"
-
-    echo "\\midrule" >> "$OUTPUT_FILE"
 
     # ─── Markdown Table Creation ───────────────────────────────────────────────
     md_header1="| Model"
@@ -387,13 +377,7 @@ EOF
         echo "$md_row" >> "$MD_OUTPUT_FILE"
     done
 
-    # Close out the LaTeX table
-    cat << 'EOF' >> "$OUTPUT_FILE"
-\bottomrule
-\end{tabular}
-\caption{Model performance across programming languages. Metrics shown are: Correct merges (\%), Semantic merges (\%), and Raising conflict (\%).}
-\end{table}
-EOF
+    # No table closing - only output the body
 
     echo "📊 Performance tables generated:"
     echo "   LaTeX: $OUTPUT_FILE"
@@ -490,17 +474,8 @@ build_summary_table() {
 |-------|------------------------|-------------------------|----------------------------|
 EOF
 
-    # Create LaTeX summary table
-    cat << 'EOF' > "$LATEX_SUMMARY_FILE"
-\begin{table}[htbp]
-\centering
-\caption{Model Performance Summary (Averaged Across All Languages)}
-\label{tab:model_performance_summary}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Model} & \textbf{Avg Correct Merges (\%)} & \textbf{Avg Normalized Correct Merges (\%)} & \textbf{Avg Conflict Detection (\%)} \\
-\hline
-EOF
+    # Create LaTeX summary table body only
+    echo '\textbf{Model} & \textbf{Avg Correct Merges (\%)} & \textbf{Avg Normalized Correct Merges (\%)} & \textbf{Avg Conflict Detection (\%)} \\' > "$LATEX_SUMMARY_FILE"
 
     # Second pass: generate table rows with formatting
     for model_data in "${model_averages[@]}"; do
@@ -561,12 +536,7 @@ EOF
         fi
     done
 
-    # Close LaTeX table
-    cat << 'EOF' >> "$LATEX_SUMMARY_FILE"
-\hline
-\end{tabular}
-\end{table}
-EOF
+    # No table closing - only output the body
 
     echo "📊 Summary tables generated:"
     echo "   Markdown: $MD_SUMMARY_FILE"

@@ -161,12 +161,12 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
 
     # Define patterns for each model
     model_patterns = {
-        "Claude opus-4": "",  # Solid fill
-        "DeepSeek deepseek-r1-0528": "///",  # Diagonal lines
-        "Gemini 2.5-pro": "...",  # Dots
-        "Openai/O3 Pro": "---",  # Horizontal lines
-        "Qwen qwen3-235B-a22B": "|||",  # Vertical lines
-        "X.AI grok-4": "+++",  # Cross-hatch
+        "Claude Opus 4": "",  # Solid fill
+        "R1 0528": "///",  # Diagonal lines
+        "Gemini 2.5 Pro": "...",  # Dots
+        "o3 Pro": "---",  # Horizontal lines
+        "Qwen3 235B": "|||",  # Vertical lines
+        "Grok 4": "+++",  # Cross-hatch
     }
 
     # Plot stacked bars for each model
