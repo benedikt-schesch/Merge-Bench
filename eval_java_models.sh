@@ -50,7 +50,7 @@ format_model_name() {
 
     case "$model" in
         "deepseek/deepseek-r1-0528")
-            display_model="DeepSeek R1 0528"
+            display_model="R1 0528"
             ;;
         "google/gemini-2.5-pro")
             display_model="Gemini 2.5 Pro"
@@ -68,7 +68,7 @@ format_model_name() {
             display_model="o3 Pro"
             ;;
         "outputs/unsloth/DeepSeek-R1-Distill-Qwen-14B/checkpoint-2000")
-            display_model="LLmergeJ"
+            display_model="LLMergeJ 14B"
             ;;
         "qwen/qwq-32b")
             display_model="QwQ 32B"
