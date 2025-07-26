@@ -212,46 +212,56 @@ EOF
         if [[ "$correct" == "N/A" ]]; then
             latex_row="$display_model & -- & -- & -- \\\\"
         else
+            # Round to 1 decimal place
+            local correct_rounded=$(printf "%.1f" "$correct")
+            local semantic_rounded=$(printf "%.1f" "$semantic")
+            local conflict_rounded=$(printf "%.1f" "$conflict")
+
             # Check if this is the best/second best score and format accordingly
-            latex_correct="${correct}\\%"
-            latex_semantic="${semantic}\\%"
+            latex_correct="${correct_rounded}\\%"
+            latex_semantic="${semantic_rounded}\\%"
 
             if (( $(echo "$correct == $best_correct" | bc -l) )); then
-                latex_correct="\\textbf{${correct}\\%}"
+                latex_correct="\\textbf{${correct_rounded}\\%}"
             elif [[ "$second_correct" != "0" ]] && (( $(echo "$correct == $second_correct" | bc -l) )); then
-                latex_correct="\\underline{${correct}\\%}"
+                latex_correct="\\underline{${correct_rounded}\\%}"
             fi
 
             if (( $(echo "$semantic == $best_semantic" | bc -l) )); then
-                latex_semantic="\\textbf{${semantic}\\%}"
+                latex_semantic="\\textbf{${semantic_rounded}\\%}"
             elif [[ "$second_semantic" != "0" ]] && (( $(echo "$semantic == $second_semantic" | bc -l) )); then
-                latex_semantic="\\underline{${semantic}\\%}"
+                latex_semantic="\\underline{${semantic_rounded}\\%}"
             fi
 
-            latex_row="$display_model & ${latex_correct} & ${latex_semantic} & ${conflict}\\% \\\\"
+            latex_row="$display_model & ${latex_correct} & ${latex_semantic} & ${conflict_rounded}\\% \\\\"
         fi
 
         # Markdown row with bolding and underlining
         if [[ "$correct" == "N/A" ]]; then
             md_row="| $display_model | -- | -- | -- |"
         else
+            # Round to 1 decimal place
+            local correct_rounded=$(printf "%.1f" "$correct")
+            local semantic_rounded=$(printf "%.1f" "$semantic")
+            local conflict_rounded=$(printf "%.1f" "$conflict")
+
             # Check if this is the best/second best score and format accordingly
-            md_correct="${correct}%"
-            md_semantic="${semantic}%"
+            md_correct="${correct_rounded}%"
+            md_semantic="${semantic_rounded}%"
 
             if (( $(echo "$correct == $best_correct" | bc -l) )); then
-                md_correct="**${correct}%**"
+                md_correct="**${correct_rounded}%**"
             elif [[ "$second_correct" != "0" ]] && (( $(echo "$correct == $second_correct" | bc -l) )); then
-                md_correct="<u>${correct}%</u>"
+                md_correct="<u>${correct_rounded}%</u>"
             fi
 
             if (( $(echo "$semantic == $best_semantic" | bc -l) )); then
-                md_semantic="**${semantic}%**"
+                md_semantic="**${semantic_rounded}%**"
             elif [[ "$second_semantic" != "0" ]] && (( $(echo "$semantic == $second_semantic" | bc -l) )); then
-                md_semantic="<u>${semantic}%</u>"
+                md_semantic="<u>${semantic_rounded}%</u>"
             fi
 
-            md_row="| $display_model | ${md_correct} | ${md_semantic} | ${conflict}% |"
+            md_row="| $display_model | ${md_correct} | ${md_semantic} | ${conflict_rounded}% |"
         fi
 
         echo "$latex_row" >> "$OUTPUT_FILE"
