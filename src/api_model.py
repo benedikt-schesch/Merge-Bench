@@ -19,6 +19,7 @@ API_MODEL_PREFIXES = (
     "x-ai/",
     "deepseek/",
     "o3",
+    "meta-llama",
 )
 
 
