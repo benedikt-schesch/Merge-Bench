@@ -120,15 +120,17 @@ get_metrics() {
             /Percentage correctly resolved merges:/ { correct = $NF; sub(/%$/,"",correct) }
             /Percentage semantically correctly resolved merges:/ { semantic = $NF; sub(/%$/,"",semantic) }
             /Percentage correctly raising merge conflict:/ { conflict = $NF; sub(/%$/,"",conflict) }
+            /Percentage with valid markdown format:/ { markdown = $NF; sub(/%$/,"",markdown) }
             END {
                 if (correct == "") correct = "N/A"
                 if (semantic == "") semantic = "N/A"
                 if (conflict == "") conflict = "N/A"
-                print correct, semantic, conflict
+                if (markdown == "") markdown = "N/A"
+                print correct, semantic, conflict, markdown
             }
         ' "$logfile"
     else
-        echo "N/A N/A N/A"
+        echo "N/A N/A N/A N/A"
     fi
 }
 
@@ -155,7 +157,7 @@ build_performance_table() {
     declare -a segment2_scores
 
     for model in "${MODELS[@]}"; do
-        read correct semantic conflict < <(get_metrics "$model")
+        read correct semantic conflict markdown < <(get_metrics "$model")
         if [[ "$correct" != "N/A" && "$correct" != "" ]]; then
             # Calculate segment1 (correct) and segment2 (semantic - no subtraction)
             local seg1=$(printf "%.1f" "$correct")
@@ -189,35 +191,49 @@ build_performance_table() {
     echo "📊 Best scores found - Segment1: ${best_segment1}% (2nd: ${second_segment1}%), Segment2: ${best_segment2}% (2nd: ${second_segment2}%)"
 
     # ─── LaTeX Table Creation ─────────────────────────────────────────────────
-    echo 'Model & Equivalent to developer & Code normalized equivalent to developer & Conflicts & Different from code normalized to developer \\' > "$OUTPUT_FILE"
+    echo 'Model & Equivalent to developer & Code normalized equivalent to developer & Conflicts & Different from code normalized to developer & Valid Markdown \\' > "$OUTPUT_FILE"
 
     # ─── Markdown Table Creation ───────────────────────────────────────────────
-    echo "| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer |" > "$MD_OUTPUT_FILE"
-    echo "| --- | ---: | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
+    echo "| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer | Valid Markdown |" > "$MD_OUTPUT_FILE"
+    echo "| --- | ---: | ---: | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
 
     # ─── Second pass: build table with bolding ────────────────────────────────
     for model in "${MODELS[@]}"; do
         echo "⚙️ Processing model: $model"
 
         display_model=$(format_model_name "$model")
-        read correct semantic conflict < <(get_metrics "$model")
+        read correct semantic conflict markdown < <(get_metrics "$model")
 
-        # Calculate the 4 segments from raw metrics
+        # Calculate the 5 segments from raw metrics
         if [[ "$correct" == "N/A" ]]; then
-            latex_row="$display_model & -- & -- & -- & -- \\\\"
-            md_row="| $display_model | -- | -- | -- | -- |"
+            latex_row="$display_model & -- & -- & -- & -- & -- \\\\"
+            md_row="| $display_model | -- | -- | -- | -- | -- |"
         else
-            # Calculate 4 segments - segment2 is full semantic, not subtracted
+            # Calculate 5 segments
             local segment1=$(printf "%.1f" "$correct")  # Equivalent to developer
             local segment2=$(printf "%.1f" "$semantic")  # Code normalized equivalent (full semantic)
-            local segment3=$(printf "%.1f" "$conflict")  # Conflicts
-            local segment4=$(echo "scale=1; 100 - $segment2 - $segment3" | bc -l)  # Different from normalized
+
+            # Handle markdown format percentage
+            if [[ "$markdown" != "N/A" && "$markdown" != "" ]]; then
+                local segment3=$(printf "%.1f" "$markdown")  # Valid markdown format
+                # Different from normalized = markdown% - semantic%
+                local segment5=$(echo "scale=1; $markdown - $segment2" | bc -l)
+            else
+                local segment3="N/A"  # Valid markdown format not available
+                # Fallback to original calculation if markdown not available
+                local segment5=$(echo "scale=1; 100 - $segment2 - $conflict" | bc -l)
+            fi
+
+            local segment4=$(printf "%.1f" "$conflict")  # Conflicts
 
             # Format segments with proper rounding
             segment1=$(printf "%.1f" "$segment1")
             segment2=$(printf "%.1f" "$segment2")
-            segment3=$(printf "%.1f" "$segment3")
+            if [[ "$segment3" != "N/A" ]]; then
+                segment3=$(printf "%.1f" "$segment3")
+            fi
             segment4=$(printf "%.1f" "$segment4")
+            segment5=$(printf "%.1f" "$segment5")
 
         # Apply highlighting to both segments
         latex_seg1="${segment1}\\%"
@@ -243,16 +259,29 @@ build_performance_table() {
             md_seg2="<u>${segment2}%</u>"
         fi
 
+        # Apply formatting for segment3 (markdown format)
+        if [[ "$segment3" == "N/A" ]]; then
+            latex_seg3="--"
+            md_seg3="--"
+        else
+            latex_seg3="${segment3}\\%"
+            md_seg3="${segment3}%"
+            # Add phantom spacing for single-digit numbers
+            if (( $(echo "$segment3 < 10" | bc -l) )); then
+                latex_seg3="\\phantom{0}${segment3}\\%"
+            fi
+        fi
+
         # Apply phantom spacing for single-digit percentages
-        latex_seg3="${segment3}\\%"
         latex_seg4="${segment4}\\%"
+        latex_seg5="${segment5}\\%"
 
         # Add phantom spacing for single-digit numbers
-        if (( $(echo "$segment3 < 10" | bc -l) )); then
-            latex_seg3="\\phantom{0}${segment3}\\%"
-        fi
         if (( $(echo "$segment4 < 10" | bc -l) )); then
             latex_seg4="\\phantom{0}${segment4}\\%"
+        fi
+        if (( $(echo "$segment5 < 10" | bc -l) )); then
+            latex_seg5="\\phantom{0}${segment5}\\%"
         fi
 
         # Also check if segments 1 and 2 need phantom spacing
@@ -276,8 +305,12 @@ build_performance_table() {
             latex_seg2="\\underline{\\phantom{0}${number}\\%}"
         fi
 
-        latex_row="$display_model & ${latex_seg1} & ${latex_seg2} & ${latex_seg3} & ${latex_seg4} \\\\"
-        md_row="| $display_model | ${md_seg1} | ${md_seg2} | ${segment3}% | ${segment4}% |"
+        latex_row="$display_model & ${latex_seg1} & ${latex_seg2} & ${latex_seg4} & ${latex_seg5} & ${latex_seg3} \\\\"
+        if [[ "$segment3" == "N/A" ]]; then
+            md_row="| $display_model | ${md_seg1} | ${md_seg2} | ${segment4}% | ${segment5}% | -- |"
+        else
+            md_row="| $display_model | ${md_seg1} | ${md_seg2} | ${segment4}% | ${segment5}% | ${segment3}% |"
+        fi
         fi
 
         echo "$latex_row" >> "$OUTPUT_FILE"
@@ -305,7 +338,7 @@ display_summary() {
 
     for model in "${MODELS[@]}"; do
         display_model=$(format_model_name "$model")
-        read correct semantic conflict < <(get_metrics "$model")
+        read correct semantic conflict markdown < <(get_metrics "$model")
 
         if [[ "$correct" == "N/A" ]]; then
             printf "%-20s %10s %10s %10s\n" "$display_model" "--" "--" "--"
