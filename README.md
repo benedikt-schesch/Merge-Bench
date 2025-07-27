@@ -65,10 +65,6 @@ A benchmarking toolkit for evaluating Large Language Models (LLMs) on merge conf
 
 ## Prerequisites
 
-- Python 3.8 or later
-- CUDA-enabled GPU (optional, for local models)
-- API keys for cloud-based models (if using)
-
 ## Installation ⚙️
 
 1. Clone the repository:
@@ -78,18 +74,9 @@ A benchmarking toolkit for evaluating Large Language Models (LLMs) on merge conf
    cd Merge-Bench
    ```
 
-2. Create and activate a virtual environment:
+2. Install dependencies:
 
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   pip install --upgrade pip
-   pip install uv
    uv sync
    ```
 
@@ -146,22 +133,8 @@ python eval.py --model_name "unsloth/DeepSeek-R1-Distill-Qwen-14B" --language ja
 # With verbose output
 python eval.py --model_name "api/deepseek-r1" --language python --verbose
 
-# Limit samples for testing
-python eval.py --model_name "anthropic/claude-3.5-sonnet" --language javascript --max_samples 10
-```
-
-#### API Model Evaluation
-
-For API-based models, set the appropriate environment variables:
-
-```bash
-# For DeepSeek
-export DEEPSEEK_API_KEY="your-api-key"
-python eval.py --model_name "api/deepseek-r1" --language java
-
-# For OpenRouter models
-export OPENROUTER_API_KEY="your-api-key"
-python eval.py --model_name "anthropic/claude-3.5-sonnet" --language python
+# Limit samples for testing and have multiple parallel workers
+python eval.py --model_name "google/gemini-2.5-pro" --language javascript --max_samples 10 --max_workers 32
 ```
 
 #### Batch Evaluation Scripts
@@ -185,20 +158,13 @@ The evaluation scripts automatically generate performance tables in both LaTeX a
 
 The evaluation framework measures five key metrics:
 
-1. **Correct Merges**: Percentage of conflicts resolved exactly matching the ground truth
-2. **Semantic Merges**: Percentage of conflicts resolved semantically correctly (ignoring whitespace/comments)
+1. **Equivalent to developer**: Percentage of conflicts resolved exactly matching the ground truth
+2. **Code normalized equivalent to developer**: Percentage of conflicts resolved semantically correctly (ignoring whitespace/comments)
 3. **Raising Conflict**: Percentage where the model preserves the original conflict markers
 4. **Valid Markdown Format**: Percentage of responses with properly formatted code blocks (language-specific)
 5. **Valid Thinking Format**: Percentage of responses following the expected thinking format (if applicable)
 
 ## API Configuration
-
-### Supported API Models
-
-- **DeepSeek**: `api/deepseek-r1`
-- **OpenAI**: Models starting with `openai/`
-- **Anthropic**: Models starting with `anthropic/`
-- **Other providers via OpenRouter**: `qwen/`, `meta/`, `google/`, `x-ai/`, `deepseek/`
 
 ### Environment Variables
 
