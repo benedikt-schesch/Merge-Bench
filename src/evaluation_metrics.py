@@ -31,16 +31,40 @@ def format_reward(completion: str) -> float:
     return 0.5 if THINKING_RE.match(completion) else 0.0
 
 
-def code_markdown_reward(completion: str) -> float:
+def code_markdown_reward(completion: str, language: str = "generic") -> float:
     """
-    Evaluates if the answer contains a properly formatted code block.
+    Evaluates if the answer contains a properly formatted code block for the specified language.
+
+    Args:
+        completion: The model's completion
+        language: The programming language to match (e.g., "java", "python", "javascript")
 
     Returns:
-        1.0 if the answer contains ```...``` markdown
+        1.0 if the answer contains ```language...``` markdown
         0.0 otherwise
     """
-    # Match any code block with any language specifier (or none)
-    pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
+    # Create a language-specific pattern
+    if language == "generic":
+        # Match any code block with any language specifier (or none)
+        pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
+    else:
+        # Match code blocks with the specific language
+        # Handle special cases for language names
+        lang_pattern = language
+        if language == "cpp":
+            lang_pattern = r"(?:cpp|c\+\+)"
+        elif language == "csharp":
+            lang_pattern = r"(?:csharp|c#)"
+        elif language == "javascript":
+            lang_pattern = r"(?:javascript|js)"
+        elif language == "typescript":
+            lang_pattern = r"(?:typescript|ts)"
+        else:
+            lang_pattern = re.escape(language)
+
+        pattern = re.compile(
+            rf"```\s*{lang_pattern}\s*\n(.*?)\n```", re.DOTALL | re.IGNORECASE
+        )
 
     answer = extract_answer(completion)
     return 1.0 if pattern.search(answer) else 0.0

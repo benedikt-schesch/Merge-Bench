@@ -200,7 +200,7 @@ def main() -> None:
             count_thinking += 1
 
         # Evaluate the code markdown formatting
-        if code_markdown_reward(completion) > 0:
+        if code_markdown_reward(completion, args.language) > 0:
             count_code_md += 1
 
         # Evaluate merge conflict resolution
