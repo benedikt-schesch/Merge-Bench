@@ -191,10 +191,10 @@ build_performance_table() {
     echo "📊 Best scores found - Segment1: ${best_segment1}% (2nd: ${second_segment1}%), Segment2: ${best_segment2}% (2nd: ${second_segment2}%)"
 
     # ─── LaTeX Table Creation ─────────────────────────────────────────────────
-    echo 'Model & Equivalent to developer & Code normalized equivalent to developer & Conflicts & Different from code normalized to developer & Valid Markdown \\' > "$OUTPUT_FILE"
+    echo 'Model & Equivalent to developer & Code normalized equivalent to developer & Conflicts & Different from code normalized to developer & Invalid Markdown \\' > "$OUTPUT_FILE"
 
     # ─── Markdown Table Creation ───────────────────────────────────────────────
-    echo "| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer | Valid Markdown |" > "$MD_OUTPUT_FILE"
+    echo "| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer | Invalid Markdown |" > "$MD_OUTPUT_FILE"
     echo "| --- | ---: | ---: | ---: | ---: | ---: |" >> "$MD_OUTPUT_FILE"
 
     # ─── Second pass: build table with bolding ────────────────────────────────
@@ -215,14 +215,13 @@ build_performance_table() {
 
             # Handle markdown format percentage
             if [[ "$markdown" != "N/A" && "$markdown" != "" ]]; then
-                local segment3=$(printf "%.1f" "$markdown")  # Valid markdown format
-                # Different from normalized = markdown% - semantic%
-                local segment5=$(echo "scale=1; $markdown - $segment2" | bc -l)
+                local segment3=$(echo "scale=1; 100 - $markdown" | bc -l)  # Invalid markdown format (100 - valid)
             else
-                local segment3="N/A"  # Valid markdown format not available
-                # Fallback to original calculation if markdown not available
-                local segment5=$(echo "scale=1; 100 - $segment2 - $conflict" | bc -l)
+                local segment3=0  # Default to 0 if markdown format not available
             fi
+
+            # Always use consistent equation: Different = 100% - semantic% - conflicts% - invalid_markdown%
+            local segment5=$(echo "scale=1; 100 - $segment2 - $conflict - $segment3" | bc -l)
 
             local segment4=$(printf "%.1f" "$conflict")  # Conflicts
 
@@ -332,18 +331,26 @@ display_summary() {
     echo "Language: $LANGUAGE"
     echo ""
 
-    # Create a simple summary table
-    printf "%-20s %10s %10s %10s\n" "Model" "Correct" "Semantic" "Conflict"
-    printf "%-20s %10s %10s %10s\n" "--------------------" "----------" "----------" "----------"
+    # Create a simple summary table with Invalid Markdown column
+    printf "%-20s %10s %10s %10s %12s\n" "Model" "Correct" "Semantic" "Conflict" "Invalid MD"
+    printf "%-20s %10s %10s %10s %12s\n" "--------------------" "----------" "----------" "----------" "------------"
 
     for model in "${MODELS[@]}"; do
         display_model=$(format_model_name "$model")
         read correct semantic conflict markdown < <(get_metrics "$model")
 
         if [[ "$correct" == "N/A" ]]; then
-            printf "%-20s %10s %10s %10s\n" "$display_model" "--" "--" "--"
+            printf "%-20s %10s %10s %10s %12s\n" "$display_model" "--" "--" "--" "--"
         else
-            printf "%-20s %10s %10s %10s\n" "$display_model" "${correct}%" "${semantic}%" "${conflict}%"
+            # Calculate invalid markdown percentage
+            if [[ "$markdown" != "N/A" && "$markdown" != "" ]]; then
+                invalid_markdown=$(echo "scale=1; 100 - $markdown" | bc -l)
+                invalid_markdown_display=$(printf "%.1f" "$invalid_markdown")"%"
+            else
+                invalid_markdown_display="0.0%"
+            fi
+
+            printf "%-20s %10s %10s %10s %12s\n" "$display_model" "${correct}%" "${semantic}%" "${conflict}%" "$invalid_markdown_display"
         fi
     done
     echo ""

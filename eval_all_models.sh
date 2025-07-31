@@ -188,15 +188,17 @@ get_metrics() {
             /Percentage correctly resolved merges:/ { correct = $NF; sub(/%$/,"",correct) }
             /Percentage semantically correctly resolved merges:/ { semantic = $NF; sub(/%$/,"",semantic) }
             /Percentage correctly raising merge conflict:/ { conflict = $NF; sub(/%$/,"",conflict) }
+            /Percentage with valid markdown format:/ { markdown = $NF; sub(/%$/,"",markdown) }
             END {
                 if (correct == "") correct = "N/A"
                 if (semantic == "") semantic = "N/A"
                 if (conflict == "") conflict = "N/A"
-                print correct, semantic, conflict
+                if (markdown == "") markdown = "N/A"
+                print correct, semantic, conflict, markdown
             }
         ' "$logfile"
     else
-        echo "N/A N/A N/A"
+        echo "N/A N/A N/A N/A"
     fi
 }
 
@@ -344,7 +346,7 @@ build_performance_table() {
 
         # Get metrics for each language
         for lang in "${LANGUAGES[@]}"; do
-            read correct semantic conflict < <(get_metrics "$model" "$lang")
+            read correct semantic conflict markdown < <(get_metrics "$model" "$lang")
 
             # Add to LaTeX row
             if [[ "$correct" == "N/A" ]]; then
@@ -429,16 +431,25 @@ build_summary_table() {
         total_correct=0
         total_semantic=0
         total_conflict=0
+        total_markdown=0
         valid_count=0
 
         # Sum across all languages
         for lang in "${LANGUAGES[@]}"; do
-            read correct semantic conflict < <(get_metrics "$model" "$lang")
+            read correct semantic conflict markdown < <(get_metrics "$model" "$lang")
 
             if [[ "$correct" != "N/A" && "$correct" != "" ]]; then
                 total_correct=$(echo "$total_correct + $correct" | bc -l)
                 total_semantic=$(echo "$total_semantic + $semantic" | bc -l)
                 total_conflict=$(echo "$total_conflict + $conflict" | bc -l)
+
+                # Handle markdown data - default to 100 (valid) if not available
+                if [[ "$markdown" != "N/A" && "$markdown" != "" ]]; then
+                    total_markdown=$(echo "$total_markdown + $markdown" | bc -l)
+                else
+                    total_markdown=$(echo "$total_markdown + 100" | bc -l)
+                fi
+
                 valid_count=$((valid_count + 1))
             fi
         done
@@ -448,6 +459,7 @@ build_summary_table() {
             avg_correct=$(echo "scale=2; $total_correct / $valid_count" | bc -l)
             avg_semantic=$(echo "scale=2; $total_semantic / $valid_count" | bc -l)
             avg_conflict=$(echo "scale=2; $total_conflict / $valid_count" | bc -l)
+            avg_markdown=$(echo "scale=2; $total_markdown / $valid_count" | bc -l)
 
             correct_averages+=("$avg_correct")
             semantic_averages+=("$avg_semantic")
@@ -455,9 +467,10 @@ build_summary_table() {
             avg_correct="N/A"
             avg_semantic="N/A"
             avg_conflict="N/A"
+            avg_markdown="N/A"
         fi
 
-        model_averages+=("$model|$display_model|$avg_correct|$avg_semantic|$avg_conflict")
+        model_averages+=("$model|$display_model|$avg_correct|$avg_semantic|$avg_conflict|$avg_markdown")
     done
 
     # Sort and find best/second best for correct averages
@@ -486,27 +499,34 @@ build_summary_table() {
     cat << 'EOF' > "$MD_SUMMARY_FILE"
 # Model Performance Summary (Averaged Across All Languages)
 
-| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer |
-|-------|-------------------------|----------------------------------------|-----------|---------------------------------------------|
+| Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer | Invalid Markdown |
+|-------|-------------------------|----------------------------------------|-----------|---------------------------------------------|------------------|
 EOF
 
     # Create LaTeX summary table body only
-    echo '\textbf{Model} & \textbf{Equivalent to developer (\%)} & \textbf{Code normalized equivalent to developer (\%)} & \textbf{Conflicts (\%)} & \textbf{Different from code normalized to developer (\%)} \\' > "$LATEX_SUMMARY_FILE"
+    echo '\textbf{Model} & \textbf{Equivalent to developer (\%)} & \textbf{Code normalized equivalent to developer (\%)} & \textbf{Conflicts (\%)} & \textbf{Different from code normalized to developer (\%)} & \textbf{Invalid Markdown (\%)} \\' > "$LATEX_SUMMARY_FILE"
 
     # Second pass: generate table rows with formatting
     for model_data in "${model_averages[@]}"; do
-        IFS='|' read -r model display_model avg_correct avg_semantic avg_conflict <<< "$model_data"
+        IFS='|' read -r model display_model avg_correct avg_semantic avg_conflict avg_markdown <<< "$model_data"
 
         if [[ "$avg_correct" == "N/A" ]]; then
             # Markdown row
-            echo "| $display_model | -- | -- | -- | -- |" >> "$MD_SUMMARY_FILE"
+            echo "| $display_model | -- | -- | -- | -- | -- |" >> "$MD_SUMMARY_FILE"
 
             # LaTeX row
             latex_model=$(echo "$display_model" | sed 's/_/\\_/g; s/&/\\&/g')
-            echo "$latex_model & -- & -- & -- & -- \\\\" >> "$LATEX_SUMMARY_FILE"
+            echo "$latex_model & -- & -- & -- & -- & -- \\\\" >> "$LATEX_SUMMARY_FILE"
         else
-            # Calculate 4th segment: Different from code normalized to developer
-            avg_different=$(echo "scale=2; 100 - $avg_semantic - $avg_conflict" | bc -l)
+            # Calculate invalid markdown percentage (100 - valid markdown)
+            if [[ "$avg_markdown" != "N/A" && "$avg_markdown" != "" ]]; then
+                avg_invalid_markdown=$(echo "scale=2; 100 - $avg_markdown" | bc -l)
+            else
+                avg_invalid_markdown=0
+            fi
+
+            # Calculate 4th segment using consistent equation: Different = 100% - semantic% - conflicts% - invalid_markdown%
+            avg_different=$(echo "scale=2; 100 - $avg_semantic - $avg_conflict - $avg_invalid_markdown" | bc -l)
 
             # Format values with bold for best and underline for second-best performers
             # Markdown formatting
@@ -528,6 +548,7 @@ EOF
 
             md_conflict="$(printf "%.1f" "$avg_conflict")%"
             md_different="$(printf "%.1f" "$avg_different")%"
+            md_invalid_markdown="$(printf "%.1f" "$avg_invalid_markdown")%"
 
             # LaTeX formatting
             if (( $(echo "$avg_correct == $best_avg_correct" | bc -l) )); then
@@ -548,6 +569,7 @@ EOF
 
             latex_conflict="$(printf "%.1f" "$avg_conflict")\\%"
             latex_different="$(printf "%.1f" "$avg_different")\\%"
+            latex_invalid_markdown="$(printf "%.1f" "$avg_invalid_markdown")\\%"
 
             # Add phantom spacing for single-digit percentages in summary
             if (( $(echo "$(printf "%.1f" "$avg_correct") < 10" | bc -l) )); then
@@ -599,9 +621,9 @@ EOF
             esac
 
             # Write rows
-            echo "| $display_model | $md_correct | $md_semantic | $md_conflict | $md_different |" >> "$MD_SUMMARY_FILE"
+            echo "| $display_model | $md_correct | $md_semantic | $md_conflict | $md_different | $md_invalid_markdown |" >> "$MD_SUMMARY_FILE"
 
-            echo "$latex_model & $latex_correct & $latex_semantic & $latex_conflict & $latex_different \\\\" >> "$LATEX_SUMMARY_FILE"
+            echo "$latex_model & $latex_correct & $latex_semantic & $latex_conflict & $latex_different & $latex_invalid_markdown \\\\" >> "$LATEX_SUMMARY_FILE"
         fi
     done
 
