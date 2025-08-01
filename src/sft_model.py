@@ -14,6 +14,34 @@ class SFTModel(ModelInterface):
     """SFT model using exact same logic as LLMerge eval.py"""
 
     def __init__(self, model_name: str):
+        """Initialize SFT model with debug output."""
+        import sys
+
+        print(f"[DEBUG] SFTModel trying to load from: {model_name}")
+        print(
+            f"[DEBUG] Full path: {os.path.abspath(model_name) if os.path.exists(model_name) else \
+                                  'PATH DOES NOT EXIST'}"
+        )
+        print(f"[DEBUG] Current working directory: {os.getcwd()}")
+
+        # Check if path exists and what's in it
+        if os.path.exists(model_name):
+            print("[DEBUG] Path exists! Contents:")
+            try:
+                contents = os.listdir(model_name)
+                for item in contents[:10]:  # Show first 10 items
+                    print(f"[DEBUG]   - {item}")
+                if len(contents) > 10:
+                    print(f"[DEBUG]   ... and {len(contents) - 10} more items")
+            except Exception as e:
+                print(f"[DEBUG] Error listing contents: {e}")
+        else:
+            print("[DEBUG] Path does not exist!")
+
+        print("[DEBUG] Exiting for testing purposes...")
+        sys.exit(0)
+
+        # Original initialization code (won't be reached)
         self._model_name = model_name
         self._model: Optional[Any] = None
         self._tokenizer: Optional[Any] = None

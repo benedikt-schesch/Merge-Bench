@@ -38,10 +38,11 @@ format_wd() {
 generate_model_configs() {
     local -a configs=()
 
-    for lr in "${LR[@]}"; do
-        for wd in "${WEIGHT_DECAY[@]}"; do
-            for sched in "${SCHEDULER[@]}"; do
-                for epochs in "${EPOCHS[@]}"; do
+    # Changed loop order: epochs first (primary sort), then lr, wd, scheduler
+    for epochs in "${EPOCHS[@]}"; do
+        for lr in "${LR[@]}"; do
+            for wd in "${WEIGHT_DECAY[@]}"; do
+                for sched in "${SCHEDULER[@]}"; do
                     local lr_fmt=$(format_lr "$lr")
                     local wd_fmt=$(format_wd "$wd")
                     local model_path="outputs/unsloth/Qwen3-14B/direct_sft_lr${lr_fmt}_epochs${epochs}_wd${wd_fmt}_${sched}"
