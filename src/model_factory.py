@@ -4,6 +4,7 @@
 from loguru import logger
 from .model_interface import ModelInterface
 from .api_model import APIModel
+from .sft_model import SFTModel
 from .unsloth_model import UnSlothModel
 
 
@@ -29,6 +30,12 @@ class ModelFactory:  # pylint: disable=too-few-public-methods
             # Check if it's an API model
             if APIModel.is_api_model(model_name):
                 return APIModel(model_name)
+
+            # Check if it's an SFT model
+            if SFTModel.is_sft_model(model_name):
+                return SFTModel(model_name)
+
+            # Default to regular UnSloth model
             return UnSlothModel(model_name)
 
         except Exception as e:
