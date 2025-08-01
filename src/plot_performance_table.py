@@ -225,12 +225,12 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         )
 
     # Customize the plot
-    ax.set_ylabel("Percentage (%)", fontsize=18)
+    ax.set_ylabel("Percentage (%)", fontsize=20)
     ax.set_title(
-        "Model Performance - Stacked Segments Analysis", fontsize=20, fontweight="bold"
+        "Model Performance - Stacked Segments Analysis", fontsize=22, fontweight="bold"
     )
     ax.set_xticks(x)
-    ax.set_xticklabels(languages, rotation=45, ha="right", fontsize=14)
+    ax.set_xticklabels(languages, rotation=45, ha="right", fontsize=16)
     ax.tick_params(axis="y", labelsize=12)
     ax.set_ylim(0, 100)
     ax.grid(True, alpha=0.3, axis="y")
@@ -251,7 +251,7 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         "Equivalent to developer",
         "Code normalized\nequivalent to developer",
         "Conflicts",
-        "Different from\ncode normalized to developer",
+        "Different from code\nnormalized to developer",
     ]
 
     segment_legend = []
@@ -266,8 +266,8 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         bbox_to_anchor=(1.02, 1),
         title="Models",
         frameon=True,
-        fontsize=14,
-        title_fontsize=16,
+        fontsize=18,
+        title_fontsize=20,
     )
     ax.add_artist(legend1)
 
@@ -277,8 +277,8 @@ def create_stacked_bar_chart(df: pd.DataFrame, output_dir: Path) -> None:  # pyl
         bbox_to_anchor=(1.02, 0.6),
         title="Segments",
         frameon=True,
-        fontsize=14,
-        title_fontsize=16,
+        fontsize=18,
+        title_fontsize=20,
     )
 
     # Adjust layout

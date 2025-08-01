@@ -11,9 +11,9 @@ LANGUAGE="java"
 # List of models to evaluate specifically for Java
 MODELS=(
     "google/gemini-2.5-pro"
-    "x-ai/grok-4"
-    "anthropic/claude-opus-4"
     "openai/o3-pro"
+    "anthropic/claude-opus-4"
+    "x-ai/grok-4"
     "meta-llama/llama-4-maverick"
     "qwen/qwq-32b"
     "qwen/qwen3-8b"

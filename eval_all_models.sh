@@ -11,21 +11,21 @@ LANGUAGES=(
     "cpp"
     "csharp"
     "go"
+    "java"
     "javascript"
     "php"
     "python"
     "ruby"
     "rust"
     "typescript"
-    "java"
 )
 
 # List of API models to evaluate
 MODELS=(
     "google/gemini-2.5-pro"
-    "x-ai/grok-4"
-    "anthropic/claude-opus-4"
     "openai/o3-pro"
+    "anthropic/claude-opus-4"
+    "x-ai/grok-4"
     "qwen/qwen3-235b-a22b"
     "deepseek/deepseek-r1-0528"
 )
