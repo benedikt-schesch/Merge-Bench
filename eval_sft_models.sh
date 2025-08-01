@@ -51,7 +51,7 @@ generate_model_configs() {
                     if [[ -d "eval_outputs/java/outputs/unsloth/Qwen3-14B/$config_name" ]]; then
                         configs+=("$model_path")
                     else
-                        echo "⚠️  Cached results not found: eval_outputs/java/outputs/unsloth/Qwen3-14B/$config_name"
+                        echo "⚠️  Model not found: $model_path"
                     fi
                 done
             done

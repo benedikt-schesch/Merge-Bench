@@ -51,8 +51,6 @@ class SFTModel(ModelInterface):
 
             # Set up text streamer
             self._text_streamer = TextStreamer(self._tokenizer, skip_prompt=True)
-
-            logger.info(f"SFT model loaded on device: {self._model.device}")
             self._loaded = True
 
         except Exception as e:
