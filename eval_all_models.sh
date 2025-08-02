@@ -215,16 +215,16 @@ build_performance_table() {
     echo "📝 Processing ${#MODELS[@]} models across ${#LANGUAGES[@]} languages"
 
     # ─── LaTeX Table Creation ─────────────────────────────────────────────────
-    num_cols=$((${#LANGUAGES[@]} * 3 + 1))  # 3 metrics per language + 1 for model name
+    num_cols=$((${#LANGUAGES[@]} * 5 + 1))  # 5 metrics per language + 1 for model name
 
-    # Create column specification (l for model name, then ccc for each language)
+    # Create column specification (l for model name, then ccccc for each language)
     col_spec="l"
     for lang in "${LANGUAGES[@]}"; do
-        col_spec="${col_spec}ccc"
+        col_spec="${col_spec}ccccc"
     done
 
     # Create multi-level headers
-    # First header row: Model + Language names spanning 3 columns each
+    # First header row: Model + Language names spanning 5 columns each
     header1="Model"
     for lang in "${LANGUAGES[@]}"; do
         case "$lang" in
@@ -266,7 +266,7 @@ build_performance_table() {
                 lang_display="$(echo "${lang:0:1}" | tr '[:lower:]' '[:upper:]')${lang:1}"
                 ;;
         esac
-        header1="${header1} & \\multicolumn{3}{c}{${lang_display}}"
+        header1="${header1} & \\multicolumn{5}{c}{${lang_display}}"
     done
     header1="${header1} \\\\"
     echo "$header1" > "$OUTPUT_FILE"
@@ -274,7 +274,7 @@ build_performance_table() {
     # Second header row: empty + metric names for each language
     header2=""
     for lang in "${LANGUAGES[@]}"; do
-        header2="${header2} & Correct & Semantic & Conflict"
+        header2="${header2} & Correct & Semantic & Conflict & Different & Invalid"
     done
     header2="${header2} \\\\"
     echo "$header2" >> "$OUTPUT_FILE"
@@ -323,9 +323,9 @@ build_performance_table() {
                 lang_display="$(echo "${lang:0:1}" | tr '[:lower:]' '[:upper:]')${lang:1}"
                 ;;
         esac
-        md_header1="${md_header1} | ${lang_display} | | |"
-        md_header2="${md_header2} | ---: | ---: | ---: |"
-        md_subheader="${md_subheader} Correct | Semantic | Conflict |"
+        md_header1="${md_header1} | ${lang_display} | | | | |"
+        md_header2="${md_header2} | ---: | ---: | ---: | ---: | ---: |"
+        md_subheader="${md_subheader} Correct | Semantic | Conflict | Different | Invalid |"
     done
     md_header1="${md_header1} |"
     md_header2="${md_header2} |"
@@ -350,17 +350,31 @@ build_performance_table() {
 
             # Add to LaTeX row
             if [[ "$correct" == "N/A" ]]; then
-                latex_row="${latex_row} & -- & -- & --"
+                latex_row="${latex_row} & -- & -- & -- & -- & --"
             else
                 # Round to 1 decimal place
                 correct_rounded=$(printf "%.1f" "$correct")
                 semantic_rounded=$(printf "%.1f" "$semantic")
                 conflict_rounded=$(printf "%.1f" "$conflict")
 
+                # Calculate invalid markdown percentage (100 - valid markdown)
+                if [[ "$markdown" != "N/A" && "$markdown" != "" ]]; then
+                    invalid_markdown=$(echo "scale=1; 100 - $markdown" | bc -l)
+                else
+                    invalid_markdown=0.0
+                fi
+                invalid_rounded=$(printf "%.1f" "$invalid_markdown")
+
+                # Calculate different percentage: 100 - semantic - conflict - invalid_markdown
+                different_rounded=$(echo "scale=1; 100 - $semantic_rounded - $conflict_rounded - $invalid_rounded" | bc -l)
+                different_rounded=$(printf "%.1f" "$different_rounded")
+
                 # Add phantom spacing for single-digit percentages
                 latex_correct="${correct_rounded}\\%"
                 latex_semantic="${semantic_rounded}\\%"
                 latex_conflict="${conflict_rounded}\\%"
+                latex_different="${different_rounded}\\%"
+                latex_invalid="${invalid_rounded}\\%"
 
                 if (( $(echo "$correct_rounded < 10" | bc -l) )); then
                     latex_correct="\\phantom{0}${correct_rounded}\\%"
@@ -371,19 +385,38 @@ build_performance_table() {
                 if (( $(echo "$conflict_rounded < 10" | bc -l) )); then
                     latex_conflict="\\phantom{0}${conflict_rounded}\\%"
                 fi
+                if (( $(echo "$different_rounded < 10" | bc -l) )); then
+                    latex_different="\\phantom{0}${different_rounded}\\%"
+                fi
+                if (( $(echo "$invalid_rounded < 10" | bc -l) )); then
+                    latex_invalid="\\phantom{0}${invalid_rounded}\\%"
+                fi
 
-                latex_row="${latex_row} & ${latex_correct} & ${latex_semantic} & ${latex_conflict}"
+                latex_row="${latex_row} & ${latex_correct} & ${latex_semantic} & ${latex_conflict} & ${latex_different} & ${latex_invalid}"
             fi
 
             # Add to Markdown row
             if [[ "$correct" == "N/A" ]]; then
-                md_row="${md_row} | -- | -- | --"
+                md_row="${md_row} | -- | -- | -- | -- | --"
             else
                 # Round to 1 decimal place
                 correct_rounded=$(printf "%.1f" "$correct")
                 semantic_rounded=$(printf "%.1f" "$semantic")
                 conflict_rounded=$(printf "%.1f" "$conflict")
-                md_row="${md_row} | ${correct_rounded}% | ${semantic_rounded}% | ${conflict_rounded}%"
+
+                # Calculate invalid markdown percentage (100 - valid markdown)
+                if [[ "$markdown" != "N/A" && "$markdown" != "" ]]; then
+                    invalid_markdown=$(echo "scale=1; 100 - $markdown" | bc -l)
+                else
+                    invalid_markdown=0.0
+                fi
+                invalid_rounded=$(printf "%.1f" "$invalid_markdown")
+
+                # Calculate different percentage: 100 - semantic - conflict - invalid_markdown
+                different_rounded=$(echo "scale=1; 100 - $semantic_rounded - $conflict_rounded - $invalid_rounded" | bc -l)
+                different_rounded=$(printf "%.1f" "$different_rounded")
+
+                md_row="${md_row} | ${correct_rounded}% | ${semantic_rounded}% | ${conflict_rounded}% | ${different_rounded}% | ${invalid_rounded}%"
             fi
         done
 

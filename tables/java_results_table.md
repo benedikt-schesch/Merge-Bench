@@ -1,9 +1,9 @@
 | Model | Equivalent to developer | Code normalized equivalent to developer | Conflicts | Different from code normalized to developer | Invalid Markdown |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Gemini 2.5 Pro | **54.7%** | **62.5%** | 3.4% | 34.1% | 0.0% |
-| Grok 4 | 33.4% | 39.7% | 42.4% | 17.9% | 0.0% |
-| Claude Opus 4 | 44.4% | 51.2% | 21.2% | 27.6% | 0.0% |
 | o3 Pro | 46.1% | 54.3% | 10.6% | 35.1% | 0.0% |
+| Claude Opus 4 | 44.4% | 51.2% | 21.2% | 27.6% | 0.0% |
+| Grok 4 | 33.4% | 39.7% | 42.4% | 17.9% | 0.0% |
 | Llama 4 Maverick | 26.2% | 32.6% | 40.1% | 27.1% | 0.2% |
 | QwQ 32B | 32.1% | 43.2% | 20.5% | 30.9% | 5.5% |
 | Qwen3 8B | 5.5% | 9.1% | 86.1% | 4.7% | 0.1% |
