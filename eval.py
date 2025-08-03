@@ -165,8 +165,13 @@ def main() -> None:
     def generate_completion(item: tuple) -> None:
         idx, example = item
         output_file_path = output_dir / f"example_{idx}.txt"
+
+        # Force model creation for debugging (even if cached results exist)
+        print("[DEBUG] Creating model for debugging purposes...")
+        model = ModelFactory.create_model(args.model_name)
+        print(f"[DEBUG] Model created: {type(model).__name__}")
+
         if not output_file_path.exists():
-            logger.info(f"Processing example {idx}...")
             full = model_inference(example, args.model_name, args.verbose)
             output_file_path.write_text(full, encoding="utf-8")
 
@@ -234,12 +239,10 @@ def main() -> None:
 
         # If the model resolves the conflict semantically
         if reward >= 0.5:
-            logger.info(f"Semantically resolved {idx}.")
             count_resolved_semantically += 1
 
         # If the model resolves the conflict perfectly
         if reward == 1.0:
-            logger.info(f"Perfectly resolved {idx}.")
             count_resolved_perfectly += 1
 
         # Update progress bar with current percentages
@@ -260,7 +263,7 @@ def main() -> None:
     )
 
     # Log results
-    logger.success("Evaluation Results:")
+    logger.success(f"Evaluation Results {args.model_name}:")
     logger.success(f"Total merges evaluated: {total}")
     logger.success(f"Percentage with valid thinking format: {pct_thinking:.2f}%")
     logger.success(f"Percentage with valid markdown format: {pct_code_md:.2f}%")

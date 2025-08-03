@@ -33,20 +33,36 @@ def format_reward(completion: str) -> float:
 
 def code_markdown_reward(completion: str) -> float:
     """
-    Evaluates if the answer contains a properly formatted code block.
+    Evaluates if the answer contains a properly formatted code block for the specified language.
+
+    Args:
+        completion: The model's completion
+        language: The programming language to match (e.g., "java", "python", "javascript")
 
     Returns:
-        1.0 if the answer contains ```...``` markdown
+        1.0 if the answer contains ```language...``` markdown
         0.0 otherwise
     """
-    # Match any code block with any language specifier (or none)
     pattern = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
 
     answer = extract_answer(completion)
     return 1.0 if pattern.search(answer) else 0.0
 
 
-def merged_conflict_reward(
+def has_conflict_markers(code: str) -> bool:
+    """
+    Check if code contains any Git conflict markers.
+
+    Args:
+        code: The code string to check
+
+    Returns:
+        True if any conflict markers are found, False otherwise
+    """
+    return any(marker in code for marker in CONFLICT_MARKERS)
+
+
+def merged_conflict_reward(  # pylint: disable=unused-argument
     prompt: str, completion: str, answer: str, language: str = "generic"
 ) -> float:
     """
@@ -61,12 +77,9 @@ def merged_conflict_reward(
     Returns:
         1.0 if the resolution exactly matches the ground truth
         0.5 if the resolution is semantically correct (ignoring whitespace/comments)
-        0.1 if the model preserves the conflict (returns the original conflicted code)
+        0.1 if the model preserves the conflict (has conflict markers)
         0.0 otherwise
     """
-    # Extract the conflicted code block from the prompt
-    goal_code_block = extract_code_block(prompt)
-
     # Extract code block from the answer portion
     answer_text = extract_answer(completion)
     code_block = extract_code_block(answer_text)
@@ -79,7 +92,7 @@ def merged_conflict_reward(
     if normalize_code(code_block, language) == normalize_code(answer.strip(), language):
         # Semantic match (ignoring whitespace/comments)
         return 0.5
-    if code_block == goal_code_block:
-        # Model preserved the conflict
+    if has_conflict_markers(code_block):
+        # Model preserved/identified the conflict (has conflict markers)
         return 0.1
     return 0.0
