@@ -45,15 +45,10 @@ generate_model_configs() {
                 for sched in "${SCHEDULER[@]}"; do
                     local lr_fmt=$(format_lr "$lr")
                     local wd_fmt=$(format_wd "$wd")
-                    local model_path="outputs/unsloth/Qwen3-14B/direct_sft_lr${lr_fmt}_epochs${epochs}_wd${wd_fmt}_${sched}"
+                    local model_path="checkpoints_sft/unsloth/Qwen3-14B/direct_sft_lr${lr_fmt}_epochs${epochs}_wd${wd_fmt}_${sched}"
                     local config_name="direct_sft_lr${lr_fmt}_epochs${epochs}_wd${wd_fmt}_${sched}"
 
-                    # Only add if the cached evaluation results exist
-                    if [[ -d "eval_outputs/java/outputs/unsloth/Qwen3-14B/$config_name" ]]; then
-                        configs+=("$model_path")
-                    else
-                        echo "⚠️  Model not found: $model_path"
-                    fi
+                    configs+=("$model_path")
                 done
             done
         done

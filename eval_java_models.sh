@@ -26,7 +26,7 @@ MODELS=(
     "deepseek/deepseek-r1-distill-qwen-32b"
     "deepseek/deepseek-r1-distill-llama-70b"
     "deepseek/deepseek-r1-0528"
-    "outputs/unsloth/DeepSeek-R1-Distill-Qwen-14B/checkpoint-2000"
+    "checkpoints/checkpoint-2000"
 )
 
 # ─── EVALUATION FUNCTIONS ─────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ format_model_name() {
         "openai/o3-pro")
             display_model="o3 Pro"
             ;;
-        "outputs/unsloth/DeepSeek-R1-Distill-Qwen-14B/checkpoint-2000")
+        "checkpoints/checkpoint-2000")
             display_model="LLMergeJ 14B"
             ;;
         "qwen/qwq-32b")

@@ -99,7 +99,7 @@ format_model_name() {
         "openai/o3-pro")
             display_model="o3 Pro"
             ;;
-        "outputs/unsloth/DeepSeek-R1-Distill-Qwen-14B/checkpoint-2000")
+        "checkpoint/checkpoint-2000")
             display_model="LLMergeJ 14B"
             ;;
         "qwen/qwq-32b")
