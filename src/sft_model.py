@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """SFT model implementation matching LLMerge eval.py logic."""
 
-import os
 from typing import Any, Optional
 from loguru import logger
 from .model_interface import ModelInterface
@@ -18,35 +17,6 @@ class SFTModel(ModelInterface):
         self._tokenizer: Optional[Any] = None
         self._text_streamer: Optional[Any] = None
         self._loaded = False
-
-        import sys
-
-        print(f"[DEBUG] SFTModel trying to load from: {self._model_name}")
-        print(
-            f"[DEBUG] Full path: {
-                os.path.abspath(self._model_name)
-                if os.path.exists(self._model_name)
-                else 'PATH DOES NOT EXIST'
-            }"
-        )
-        print(f"[DEBUG] Current working directory: {os.getcwd()}")
-
-        # Check if path exists and what's in it
-        if os.path.exists(self._model_name):
-            print("[DEBUG] Path exists! Contents:")
-            try:
-                contents = os.listdir(self._model_name)
-                for item in contents[:10]:  # Show first 10 items
-                    print(f"[DEBUG]   - {item}")
-                if len(contents) > 10:
-                    print(f"[DEBUG]   ... and {len(contents) - 10} more items")
-            except Exception as e:
-                print(f"[DEBUG] Error listing contents: {e}")
-        else:
-            print("[DEBUG] Path does not exist!")
-
-        print("[DEBUG] Exiting for testing purposes...")
-        sys.exit(0)
 
     def _load_model(self) -> None:
         """Load the SFT model using same logic as LLMerge eval.py"""
@@ -151,9 +121,6 @@ class SFTModel(ModelInterface):
     def is_sft_model(cls, model_name: str) -> bool:
         """Check if a model name corresponds to an SFT model"""
         sft_patterns = [
-            "outputs/unsloth/",
-            "direct_sft_",
-            "checkpoint-",
-            "/unsloth_",
+            "checkpoints_sft",
         ]
         return any(pattern in model_name for pattern in sft_patterns)

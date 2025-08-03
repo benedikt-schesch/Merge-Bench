@@ -23,7 +23,7 @@ from src.api_model import APIModel
 # Language to dataset mapping
 LANGUAGE_DATASETS = {
     "javascript": "repos_github_javascript",
-    "java": "repos_reaper_java_test",
+    "java": "repos_reaper_java",
     "rust": "repos_github_rust",
     "c": "repos_reaper_c",
     "cpp": "repos_reaper_cpp",
@@ -86,7 +86,8 @@ def main() -> None:
     parser.add_argument(
         "--model_name",
         type=str,
-        required=True,
+        required=False,
+        default="openai/o3-pro",
         help="Universal model identifier. Supports:\n"
         "  API models: 'api/deepseek-r1', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4'\n"
         "  Local checkpoints: 'checkpoint/path/to/model'",
@@ -94,7 +95,8 @@ def main() -> None:
     parser.add_argument(
         "--language",
         type=str,
-        required=True,
+        required=False,
+        default="csharp",
         choices=list(LANGUAGE_DATASETS.keys()),
         help="Programming language to evaluate",
     )
@@ -165,12 +167,6 @@ def main() -> None:
     def generate_completion(item: tuple) -> None:
         idx, example = item
         output_file_path = output_dir / f"example_{idx}.txt"
-
-        # Force model creation for debugging (even if cached results exist)
-        print("[DEBUG] Creating model for debugging purposes...")
-        model = ModelFactory.create_model(args.model_name)
-        print(f"[DEBUG] Model created: {type(model).__name__}")
-
         if not output_file_path.exists():
             full = model_inference(example, args.model_name, args.verbose)
             output_file_path.write_text(full, encoding="utf-8")
