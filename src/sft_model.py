@@ -6,9 +6,6 @@ from typing import Any, Optional
 from loguru import logger
 from .model_interface import ModelInterface
 
-# Set HF_HOME to avoid re-downloading models
-os.environ["HF_HOME"] = "/m-coriander/coriander/scheschb/.cache/"
-
 
 class SFTModel(ModelInterface):
     """SFT model using exact same logic as LLMerge eval.py"""
@@ -19,8 +16,11 @@ class SFTModel(ModelInterface):
 
         print(f"[DEBUG] SFTModel trying to load from: {model_name}")
         print(
-            f"[DEBUG] Full path: {os.path.abspath(model_name) if os.path.exists(model_name) else \
-                                  'PATH DOES NOT EXIST'}"
+            f"[DEBUG] Full path: {
+                os.path.abspath(model_name)
+                if os.path.exists(model_name)
+                else 'PATH DOES NOT EXIST'
+            }"
         )
         print(f"[DEBUG] Current working directory: {os.getcwd()}")
 
