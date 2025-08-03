@@ -166,10 +166,10 @@ def main() -> None:
         idx, example = item
         output_file_path = output_dir / f"example_{idx}.txt"
 
-        # # Force model creation for debugging (even if cached results exist)
-        # print(f"[DEBUG] Creating model for debugging purposes...")
-        # model = ModelFactory.create_model(args.model_name)
-        # print(f"[DEBUG] Model created: {type(model).__name__}")
+        # Force model creation for debugging (even if cached results exist)
+        print("[DEBUG] Creating model for debugging purposes...")
+        model = ModelFactory.create_model(args.model_name)
+        print(f"[DEBUG] Model created: {type(model).__name__}")
 
         if not output_file_path.exists():
             full = model_inference(example, args.model_name, args.verbose)

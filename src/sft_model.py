@@ -12,23 +12,30 @@ class SFTModel(ModelInterface):
 
     def __init__(self, model_name: str):
         """Initialize SFT model with debug output."""
+        # Original initialization code (won't be reached)
+        self._model_name = model_name + "/final_model"
+        self._model: Optional[Any] = None
+        self._tokenizer: Optional[Any] = None
+        self._text_streamer: Optional[Any] = None
+        self._loaded = False
+
         import sys
 
-        print(f"[DEBUG] SFTModel trying to load from: {model_name}")
+        print(f"[DEBUG] SFTModel trying to load from: {self._model_name}")
         print(
             f"[DEBUG] Full path: {
-                os.path.abspath(model_name)
-                if os.path.exists(model_name)
+                os.path.abspath(self._model_name)
+                if os.path.exists(self._model_name)
                 else 'PATH DOES NOT EXIST'
             }"
         )
         print(f"[DEBUG] Current working directory: {os.getcwd()}")
 
         # Check if path exists and what's in it
-        if os.path.exists(model_name):
+        if os.path.exists(self._model_name):
             print("[DEBUG] Path exists! Contents:")
             try:
-                contents = os.listdir(model_name)
+                contents = os.listdir(self._model_name)
                 for item in contents[:10]:  # Show first 10 items
                     print(f"[DEBUG]   - {item}")
                 if len(contents) > 10:
@@ -40,13 +47,6 @@ class SFTModel(ModelInterface):
 
         print("[DEBUG] Exiting for testing purposes...")
         sys.exit(0)
-
-        # Original initialization code (won't be reached)
-        self._model_name = model_name
-        self._model: Optional[Any] = None
-        self._tokenizer: Optional[Any] = None
-        self._text_streamer: Optional[Any] = None
-        self._loaded = False
 
     def _load_model(self) -> None:
         """Load the SFT model using same logic as LLMerge eval.py"""
