@@ -6,6 +6,13 @@
 
 A benchmarking toolkit for evaluating Large Language Models (LLMs) on merge conflict resolution in code. 🤖
 
+## Dataset Availability
+
+The pre-built Merge-Bench dataset is publicly available at:
+https://github.com/benedikt-schesch/Merge-Bench/releases/tag/main
+
+This includes merge conflicts from 11 programming languages across 1000+ repositories.
+
 ## Evaluation Results 🚀
 
 
