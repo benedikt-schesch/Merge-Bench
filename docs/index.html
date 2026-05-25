@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merge-Bench: Resolve Merge Conflicts with Large Language Models</title>
+<meta name="description" content="Merge-Bench is a scalable benchmark of 7,938 real-world merge conflict hunks from 1,439 GitHub repositories across 11 programming languages. LLMergeJ is a 14B-parameter model trained with GRPO that resolves Java merge conflicts.">
+<meta property="og:title" content="Merge-Bench: Resolve Merge Conflicts with Large Language Models">
+<meta property="og:description" content="A reinforcement-learning task for code that scales to millions of samples with zero human labeling. Applied to merge conflict resolution: LLMergeJ, a 14B GRPO-trained model competitive with much larger commercial LLMs.">
+<meta property="og:type" content="website">
+<meta name="color-scheme" content="light only">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555;
+  --accent: #0b5fff;
+  --accent-soft: #e8efff;
+  --border: #e5e7eb;
+  --code-bg: #f6f8fa;
+  --max: 880px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.6;
+  font-size: 17px;
+}
+header {
+  padding: 4rem 1.5rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+header h1 {
+  font-size: 2.1rem;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  max-width: var(--max);
+  margin-inline: auto;
+}
+header .subtitle {
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin: 0 0 1.5rem;
+}
+.authors {
+  font-size: 1rem;
+  margin: 0.5rem 0 0.25rem;
+}
+.authors a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--border); }
+.authors a:hover { color: var(--accent); border-color: var(--accent); }
+.affil {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.affil-mark {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 1px;
+}
+.affil-mark:hover { color: var(--accent); }
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--fg);
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: #fff;
+  transition: all 0.15s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.primary:hover { background: #084ad1; border-color: #084ad1; color: #fff; }
+main {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+section { margin-bottom: 3rem; }
+h2 {
+  font-size: 1.4rem;
+  margin: 0 0 1rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+p { margin: 0 0 1rem; }
+.figure {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.figure figcaption {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+.contributions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.tldr {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 1.1rem 1.25rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1.5rem 0 2rem;
+}
+.tldr strong { color: var(--accent); }
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.stat {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.stat .num {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.stat .lbl {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+  display: block;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.1rem;
+  background: #fff;
+}
+.card h3 {
+  font-size: 1rem;
+  margin: 0 0 0.4rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.card p { font-size: 0.93rem; margin: 0; color: var(--muted); }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+  margin-top: 0.5rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+th { font-weight: 600; background: var(--code-bg); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.highlight td { font-weight: 600; }
+.bibtex {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.5;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Merge-Bench: Resolve Merge Conflicts with Large Language Models</h1>
+  <p class="subtitle">Merge conflict resolution as a reinforcement-learning task for code that scales to <strong>millions of samples with zero human labeling</strong>.</p>
+  <p class="authors">
+    <a href="https://benedikt-schesch.github.io/">Benedikt Schesch</a><sup>1</sup>
+    &nbsp;·&nbsp;
+    <a href="https://homes.cs.washington.edu/~mernst/">Michael D. Ernst</a><sup>2</sup>
+  </p>
+  <p class="affil"><sup>1</sup>Amazon<a href="#amazon-disclaimer" class="affil-mark">*</a> &nbsp;·&nbsp; <sup>2</sup>University of Washington</p>
+  <div class="links">
+    <a class="btn primary" href="https://arxiv.org/abs/XXXX.XXXXX">📄 Paper (arXiv)</a>
+    <a class="btn" href="https://github.com/benedikt-schesch/Merge-Bench">💻 Merge-Bench (eval)</a>
+    <a class="btn" href="https://github.com/benedikt-schesch/Merge-Bench-Builder">🛠 Merge-Bench-Builder (data)</a>
+    <a class="btn" href="https://github.com/benedikt-schesch/LLMerge">🧠 LLMergeJ (training)</a>
+    <a class="btn" href="#bibtex">📑 BibTeX</a>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="tldr">
+    <p style="margin:0">
+      <strong>TL;DR.</strong> The field is racing to find <strong>RLVR tasks that scale</strong>.
+      Most existing recipes for code mine GitHub <em>issues and pull requests</em>, but the
+      <strong>git history itself contains another rich, mostly untapped source of verifiable rewards</strong>.
+      Every merge is a (problem, ground-truth) pair where the developer's committed resolution
+      <em>is</em> the label. The task is <strong>built to scale to millions of samples with
+      zero human labeling</strong>; even on a small slice of it, our 14B model already rivals
+      frontier commercial LLMs.
+    </p>
+  </div>
+
+  <h2>Abstract</h2>
+  <p>
+    This paper applies machine learning to the difficult and important task of version control merging.
+    <strong>(1)</strong> We constructed a dataset, <strong>Merge-Bench</strong>, of <strong>7,938 real-world merge conflict hunks</strong>
+    from <strong>1,439 GitHub repositories</strong>. The ground truth is the merge resolution that developers
+    committed to the repository. Our dataset construction methodology is scalable to arbitrary amounts of data
+    since no manual labeling is required.
+    <strong>(2)</strong> We trained a model, <strong>LLMergeJ</strong>, to resolve merge conflicts in Java programs.
+    Our approach uses Group Relative Policy Optimization (GRPO), an online reinforcement learning method,
+    to train a Large Language Model.
+    <strong>(3)</strong> On Java, LLMergeJ with 14B parameters outperforms three commercial LLMs, trailing only
+    Gemini 2.5 Pro. Across 11 programming languages, commercial LLM performance is largely stable from language
+    to language. The best models correctly resolve less than 60% of merge conflicts.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat"><span class="num">0</span><span class="lbl">human labels needed</span></div>
+    <div class="stat"><span class="num">millions</span><span class="lbl">of samples available on GitHub</span></div>
+    <div class="stat"><span class="num">11</span><span class="lbl">programming languages</span></div>
+    <div class="stat"><span class="num">14B</span><span class="lbl">parameters in LLMergeJ</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>A new RLVR task hiding inside git history</h2>
+  <p>
+    Most RLVR (reinforcement learning with verifiable rewards) work for code today mines GitHub
+    <em>issues and pull requests</em>: SWE-RL, SWE-Gym, and the SWE-Bench-style pipelines all
+    take this route. The <strong>git history itself</strong> is a parallel and largely untapped
+    source of the same kind of signal. We show that one slice of it, merge conflicts, yields
+    an RLVR task with the properties everyone is searching for:
+  </p>
+  <ul>
+    <li><strong>Ground truth comes for free.</strong> The developer's committed merge resolution
+    <em>is</em> the label. Every merge in every git history on GitHub is a (problem, solution) pair.</li>
+    <li><strong>No prompt-side data leakage.</strong> A merge conflict (with
+    <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>/<code>=======</code>/<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> markers)
+    is reconstructed locally and never appears in any GitHub repo, so it is unlikely to be in pre-training data.</li>
+    <li><strong>Test-free, programmatic reward.</strong> Normalized source-code equivalence to the
+    developer's resolution. No test execution, no test suites, no reward-hacking via deleted tests.</li>
+    <li><strong>Robust to ambiguity.</strong> When multiple resolutions are valid, GRPO's group-relative
+    advantage assigns small positive reward to "preserve the conflict marker," so the model learns to abstain rather than guess.</li>
+    <li><strong>Fully programmatic pipeline.</strong> Repository selection → branch enumeration → merge replay → hunk extraction → filtering. No human in the loop, ever.</li>
+  </ul>
+  <p>
+    Merge-Bench's 7,938 hunks are just the slice we filtered for evaluation. The same pipeline
+    pointed at GitHub's 420M+ repositories yields an essentially unbounded RLVR training signal,
+    orthogonal to, and stackable with, issue/PR-based tasks.
+  </p>
+</section>
+
+<section>
+  <h2>Contributions</h2>
+  <div class="contributions">
+    <div class="card">
+      <h3>Human-filter-free SWE-RL</h3>
+      <p>An RL task that combines internet-scale data with <strong>zero</strong> human filtering, labeling, or manual adjustments.</p>
+    </div>
+    <div class="card">
+      <h3>Test-free evaluation</h3>
+      <p>Bypasses test execution, enabling scalable training on millions of resolved conflicts without reward-hacking vulnerabilities.</p>
+    </div>
+    <div class="card">
+      <h3>Merge-Bench</h3>
+      <p>A scalable benchmark of real-world conflicts resistant to reward hacking and requiring no manual annotation.</p>
+    </div>
+    <div class="card">
+      <h3>LLMergeJ</h3>
+      <p>The first model trained with online RL for merge conflict resolution: 49% exact-match, 59% source-code-match accuracy.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Dataset</h2>
+  <p>
+    Merge-Bench mines real merge conflicts from public GitHub repositories (using the Reaper dataset and top-starred
+    repos for languages not in Reaper), replays each merge with git, and keeps the developer's committed resolution
+    as ground truth. No manual labeling required.
+  </p>
+  <table>
+    <thead>
+      <tr><th>Language</th><th class="num">Hunks</th><th class="num">Repos</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>C</td><td class="num">630</td><td class="num">62</td></tr>
+      <tr><td>C++</td><td class="num">787</td><td class="num">150</td></tr>
+      <tr><td>C#</td><td class="num">777</td><td class="num">172</td></tr>
+      <tr><td>Go</td><td class="num">676</td><td class="num">87</td></tr>
+      <tr><td>Java</td><td class="num">806</td><td class="num">44</td></tr>
+      <tr><td>JavaScript</td><td class="num">759</td><td class="num">157</td></tr>
+      <tr><td>PHP</td><td class="num">574</td><td class="num">109</td></tr>
+      <tr><td>Python</td><td class="num">761</td><td class="num">184</td></tr>
+      <tr><td>Ruby</td><td class="num">653</td><td class="num">157</td></tr>
+      <tr><td>Rust</td><td class="num">716</td><td class="num">147</td></tr>
+      <tr><td>TypeScript</td><td class="num">799</td><td class="num">170</td></tr>
+      <tr class="highlight"><td>Total</td><td class="num">7,938</td><td class="num">1,439</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Java Results</h2>
+  <p>
+    LLMergeJ (14B parameters) ranks second on Java merge conflict resolution, outperforming Claude Opus 4, o3 Pro,
+    and Grok 4, all of which have orders of magnitude more parameters.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class="num">Exact text</th>
+        <th class="num">Code-norm. equiv.</th>
+        <th class="num">Conflict (no res.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Gemini 2.5 Pro</td><td class="num">54.7%</td><td class="num"><strong>62.5%</strong></td><td class="num">3.4%</td></tr>
+      <tr class="highlight"><td>LLMergeJ 14B (ours)</td><td class="num">48.8%</td><td class="num">58.9%</td><td class="num">5.6%</td></tr>
+      <tr><td>o3 Pro</td><td class="num">46.1%</td><td class="num">54.3%</td><td class="num">10.6%</td></tr>
+      <tr><td>Claude Opus 4</td><td class="num">44.4%</td><td class="num">51.2%</td><td class="num">21.2%</td></tr>
+      <tr><td>Qwen3-14B SFT (baseline)</td><td class="num">36.6%</td><td class="num">44.7%</td><td class="num">19.2%</td></tr>
+      <tr><td>Grok 4</td><td class="num">33.4%</td><td class="num">39.7%</td><td class="num">42.4%</td></tr>
+    </tbody>
+  </table>
+  <figure class="figure">
+    <img src="static/merge_conflict_reward.png" alt="Merge conflict reward over training steps for LLMergeJ">
+    <figcaption>Merge conflict reward over time during GRPO training of LLMergeJ.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Cross-Language Evaluation</h2>
+  <p>
+    Performance patterns of commercial LLMs are broadly stable across the 11 languages in Merge-Bench. C tends to be
+    the hardest; Java, PHP, and Python are among the easiest. Models become noticeably more conservative on C,
+    preserving conflicts rather than risking incorrect resolutions.
+  </p>
+  <figure class="figure">
+    <img src="static/performance_stacked_bar_chart.png" alt="Performance comparison across models and programming languages">
+    <figcaption>Performance across models and programming languages on Merge-Bench.</figcaption>
+  </figure>
+</section>
+
+<section id="bibtex">
+  <h2>BibTeX</h2>
+  <pre class="bibtex">@inproceedings{ScheschE2026MergeBench,
+  title     = {Merge-Bench: Resolve Merge Conflicts with Large Language Models},
+  author    = {Benedikt Schesch and Michael D. Ernst},
+  booktitle = {Proceedings of the 28th International Conference on Pattern Recognition (ICPR)},
+  year      = {2026}
+}</pre>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2026 Benedikt Schesch and Michael D. Ernst. Page source on <a href="https://github.com/benedikt-schesch/Merge-Bench">GitHub</a>.</p>
+  <p id="amazon-disclaimer" style="font-size:0.78rem;margin-top:0.6rem;">
+    <sup>*</sup> This work was performed independently of the author's role at Amazon and is not affiliated with, endorsed by, or representative of Amazon.
+  </p>
+</footer>
+
+</body>
+</html>
